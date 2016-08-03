@@ -31,7 +31,6 @@ printhdr = @(str) fprintf('%s\n%s\n%s\n', dashes, str, dashes);
 % Example:
 
 printhdr('This example prints some numbers:')
-x = 5; y = 3.1415926535;
-fprintf('Integer: %d\tfloat: %3.4f \n', x, y);
-
+x = 5; y = 4*atan(-1.0);
+fprintf('Integer: %d\tfloat: %3.14f \n', x, y);
 
