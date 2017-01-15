@@ -50,7 +50,7 @@ else
     [npsplus, netnames, imgnames] = load_image_set('npsplus');
     npsplus.image_names = netnames;
     
-    riverplot(m, 'layer2', npsplus, 'pos', 'layer1colors', DAT.colors, 'layer2colors', seaborn_colors(4), 'thin');
+    riverplot(m, 'layer2', npsplus, 'pos', 'layer1colors', DAT.colors, 'layer2colors', seaborn_colors(length(netnames)), 'thin');
     pause(2)
     
     drawnow, snapnow
@@ -102,7 +102,7 @@ else
         
     end
     
-    riverplot(m, 'layer2', npsplus, 'pos', 'layer1colors', DAT.colors, 'layer2colors', seaborn_colors(4), 'thin');
+    riverplot(m, 'layer2', npsplus, 'pos', 'layer1colors', DAT.colors, 'layer2colors', seaborn_colors(length(netnames)), 'thin');
     
 end
 

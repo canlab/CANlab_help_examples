@@ -5,7 +5,7 @@
 % a_set_up_paths_always_run_first.m
 % prep_1_set_conditions_contrasts_colors.m
 
-a_set_up_paths_always_run_first.m
-prep_1_set_conditions_contrasts_colors.m
-prep_2_load_image_data_and_save.m
-prep_3_calc_univariate_contrast_maps_and_save.m
+a_set_up_paths_always_run_first
+prep_1_set_conditions_contrasts_colors
+prep_2_load_image_data_and_save
+prep_3_calc_univariate_contrast_maps_and_save
