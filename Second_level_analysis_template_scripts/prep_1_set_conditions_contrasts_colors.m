@@ -40,7 +40,7 @@ DAT.contrastnames = format_strings_for_legend(DAT.contrastnames);
 
 DAT.colors = custom_colors([.8 .7 .2], [.5 .2 .8], length(DAT.conditions));
 
-DAT.contrastcolors = {[.2 .2 .8] [.2 .8 .2]};
+DAT.contrastcolors = custom_colors ([.2 .2 .8], [.2 .8 .2], length (DAT.contrasts));
 
 % colors = colormap; % default list of n x 3 color vector
 % colors = mat2cell(colors, ones(size(colors, 1), 1), 3)';
