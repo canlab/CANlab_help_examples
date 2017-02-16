@@ -12,9 +12,9 @@ pubdir = fullfile(resultsdir, 'published_output');
 if ~exist(pubdir, 'dir'), mkdir(pubdir), end
 
 % ------------------------------------------------------------------------
-pubfilename = ['results_' scn_get_datetime];
+pubfilename = ['analysis_results_' scn_get_datetime];
 
 p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
     'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
 
-publish('z_batch_list_to_publish.m', p)
+publish('z_batch_analyses.m', p)

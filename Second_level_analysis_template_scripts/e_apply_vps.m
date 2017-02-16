@@ -101,13 +101,13 @@ for c = 1:size(DAT.contrasts, 1)
     mycontrast = DAT.contrasts(c, :);
     wh = find(mycontrast);
     
-    DAT.vpscontrasts{c} = cat(2, DAT.vpsresponsesc{wh}) * mycontrast(wh)';
+    DAT.vpscontrastssc{c} = cat(2, DAT.vpsresponsesc{wh}) * mycontrast(wh)';
 end
 
 figtitle = 'VPS contrasts - CSF-adjusted images';
 create_figure('vps');
 
-barplot_columns(DAT.vpscontrasts, figtitle, 'colors', DAT.contrastcolors, 'nofig');
+barplot_columns(DAT.vpscontrastssc, figtitle, 'colors', DAT.contrastcolors, 'nofig');
 set(gca, 'XTickLabel', DAT.contrastnames, 'XTickLabelRotation', 45, 'FontSize', 16);
 
 drawnow, snapnow

@@ -9,7 +9,7 @@ addpath(scriptsdir)
 pubfilename = 'bmrk3_analysis_by_temp_walkthrough';
 
 p = struct('useNewFigure', false, 'maxHeight', 1200, 'maxWidth', 2000, ...
-    'format', 'pdf', 'outputDir', fullfile(pwd, pubfilename), 'showCode', true);
+    'format', 'html', 'outputDir', fullfile(pwd, pubfilename), 'showCode', true);
 
 publish('bmrk3_analysis_by_temp_walkthrough.m', p)
 

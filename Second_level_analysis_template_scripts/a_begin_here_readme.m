@@ -18,6 +18,25 @@
 %
 % Then the rest should run correctly, for most datasets
 %
+% FEATURES
+% ------------------------------------------------------------------------
+% - Time-stamped HTML printouts of all figures and results for archival/reference purposes
+% - Short, modular scripts are easy to customize and extend
+% - Common naming and data storage conventions across all analyses increase readability and organization
+% - Separate process for loading/preparing datasets/contrasts and running analyses, to make it easier to re-run analyses quickly
+% - Loading and visualization of all image sets in fmri_data for quality checks
+% - Extraction of global gray, white, and CSF components
+% - Quality plots and warning messages based on CSF components' relationship with gray matter and other measures
+% - Regression-based rescaling of data to remove CSF components
+% - Easily customizable specification of contrasts and colors
+% - Voxel-wise maps for each contrast
+% - SVM classifier maps for each contrast
+% - Extraction of the NPS and subregions
+% - Plots and stats on NPS responses by condition and for each contrast
+% - Extraction, plots, and stats on other signatures: VPS, PINES, Rejection, ANS signatures
+% - Extraction, plots, and stats on Buckner Lab resting-state component maps
+% - Polar plots and "river plots" for relationships between image sets/contrasts and resting-state maps/signatures
+%
 % SETTING UP A NEW ANALYSIS FOR A NEW DATASET
 % ------------------------------------------------------------------------
 % - Make sure you have a master folder, MASTER_FOLDER_NAME

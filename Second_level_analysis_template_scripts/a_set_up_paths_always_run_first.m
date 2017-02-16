@@ -31,7 +31,7 @@
 % --------------------------------------------------------
 
 % Base directory for whole study/analysis
-basedir = '/Users/tor/Dropbox/SHARED_DATASETS/RAINVILLE_GROUP_CONTRAST_IMAGES/MKUNZ_heat_facial_expression';
+basedir = '/Users/tor/Dropbox (Data_organization)/ItchPainImagination';
 cd(basedir)
 
 datadir = fullfile(basedir, 'data');

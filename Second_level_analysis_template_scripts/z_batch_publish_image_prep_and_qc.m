@@ -11,7 +11,7 @@ pubdir = fullfile(resultsdir, 'published_output');
 if ~exist(pubdir, 'dir'), mkdir(pubdir), end
 
 % ------------------------------------------------------------------------
-pubfilename = ['results_' scn_get_datetime];
+pubfilename = ['data_prep_' scn_get_datetime];
 
 p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
     'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
