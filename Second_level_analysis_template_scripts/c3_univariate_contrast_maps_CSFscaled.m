@@ -6,34 +6,24 @@ if ~isfield(DAT, 'contrasts') || isempty(DAT.contrasts)
     return
 end
 
-
-%% T-test on each contrast image
+%% T-test on Windsorized and CSF-adjusted contrast images
 % ------------------------------------------------------------------------
-docompact2 = 0;  % 0 for default, 1 for compact2 version
-
     
-printhdr('Contrast maps - OLS t-tests');
+printhdr('Contrast maps - OLS t-tests, Windsorized and CSF-adjusted');
 
 k = size(DAT.contrasts, 1);
 contrast_t_fdr = {};
 
-if docompact2
-    o2 = canlab_results_fmridisplay([], 'compact2', 'noverbose');
-    whmontage = 1;
-else
-    create_figure('fmridisplay'); axis off
-    o2 = canlab_results_fmridisplay([], 'noverbose');
-    whmontage = 5;
-end
+o2 = removeblobs(o2);
 
 for i = 1:k
     
-    figtitle = sprintf('%s_05_FDR', DAT.contrastnames{i});
+    figtitle = sprintf('%s_05_WMCSFsc_FDR', DAT.contrastnames{i});
     figstr = format_strings_for_legend(figtitle); 
     figstr = figstr{1};
     printhdr(figstr);
 
-    contrast_t_fdr{i} = ttest(DATA_OBJ_CON{i}, .05, 'fdr');
+    contrast_t_fdr{i} = ttest(DATA_OBJ_CONsc{i}, .05, 'fdr');
     
     % 1st plot at 0.05 FDR
     % -----------------------------------------------
@@ -49,7 +39,7 @@ for i = 1:k
 
     % 2nd plot at 0.01 uncorrected
     % -----------------------------------------------
-    figtitle = sprintf('%s_01_unc', DAT.contrastnames{i});
+    figtitle = sprintf('%s_WMCSFsc_01_unc', DAT.contrastnames{i});
     figstr = format_strings_for_legend(figtitle);
     figstr = figstr{1};
     printhdr(figstr);
@@ -66,4 +56,3 @@ for i = 1:k
     saveas(gcf, savename);
     
 end
-

@@ -1,3 +1,11 @@
+
+% Initialize display if needed
+if ~exist('o2', 'var') || ~isa(o2, 'fmridisplay')
+    create_figure('fmridisplay'); axis off
+    o2 = canlab_results_fmridisplay([], 'noverbose');
+    whmontage = 5;
+end
+
 printhdr('Cross-validated SVM to discriminate contrasts');
 
 % create_figure('SVM weight map'); axis off
@@ -42,11 +50,13 @@ for c = 1:kc
 
     [cverr, stats, optout] = predict(cat_obj, 'algorithm_name', 'cv_svm', 'nfolds', holdout_set, 'error_type', 'mcr');
     
+
     % Summarize output and create ROC plot
     % -------------------------------------------------------------------- 
     
     create_figure('ROC');
-    printstr(DAT.contrastnames{c}); printstr(dashes);
+    disp(' ');
+    printstr(['Results: ' DAT.contrastnames{c}]); printstr(dashes);
     
     ROC = roc_plot(stats.dist_from_hyperplane_xval, logical(cat_obj.Y > 0), 'color', DAT.contrastcolors{c}, 'twochoice');
     
@@ -54,6 +64,12 @@ for c = 1:kc
     figtitle = sprintf('SVM ROC %s', DAT.contrastnames{c});
     savename = fullfile(figsavedir, [figtitle '.png']);
     saveas(gcf, savename);
+
+    % Effect size, cross-validated, paired samples
+    dfun2 = @(x, Y) mean(x(Y > 0) - x(Y < 0)) ./ std(x(Y > 0) - x(Y < 0));
+    d = dfun2(stats.dist_from_hyperplane_xval, stats.Y);
+    fprintf('Effect size, cross-val: d = %3.2f\n\n', d);
+    
 
     % Plot the SVM map
     % --------------------------------------------------------------------
@@ -68,5 +84,7 @@ for c = 1:kc
     figtitle = sprintf('SVM weight map nothresh %s', DAT.contrastnames{c});
     savename = fullfile(figsavedir, [figtitle '.png']);
     saveas(gcf, savename);
+    
+    o2 = removeblobs(o2);
     
 end  % contrast

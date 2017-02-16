@@ -130,7 +130,7 @@ for c = 1:size(DAT.contrasts, 1)
 end
 
 figtitle = 'NPS contrasts unscaled data';
-create_figure('nps');
+create_figure('nps contrasts');
 
 barplot_columns(DAT.npscontrasts, figtitle, 'colors', DAT.contrastcolors, 'nofig');
 set(gca, 'XTickLabel', DAT.contrastnames, 'XTickLabelRotation', 45);
@@ -141,7 +141,7 @@ saveas(gcf, savename);
 
 %% NPS Subregions: Contrasts
 
-printhdr('NPS subregions');
+printhdr('NPS contrasts subregions');
 % ------------------------------------------------------------------------
 
 kc = size(DAT.contrasts, 1);
