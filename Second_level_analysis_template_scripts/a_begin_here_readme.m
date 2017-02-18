@@ -33,7 +33,8 @@
 % - SVM classifier maps for each contrast
 % - Extraction of the NPS and subregions
 % - Plots and stats on NPS responses by condition and for each contrast
-% - Extraction, plots, and stats on other signatures: VPS, PINES, Rejection, ANS signatures
+% - Extraction, plots, and stats on other signatures (these require access to the private CANlab masks repository): 
+%   Vicarious pain (VPS), Negative emotion (PINES), Rejection, autonomic signatures, fibromyalgia, cerebral contributions to pain (SIIPS1)
 % - Extraction, plots, and stats on Buckner Lab resting-state component maps
 % - Polar plots and "river plots" for relationships between image sets/contrasts and resting-state maps/signatures
 %
