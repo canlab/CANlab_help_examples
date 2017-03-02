@@ -104,7 +104,9 @@ DATA_CAT = cat(DATA_OBJ{:});
 
 DATA_CAT = preprocess(DATA_CAT, 'windsorize');
 
-for i = 1:size(DATA_OBJ, 2), sz(i) = size(DATA_OBJ{i}.dat, 2); end
+clear sz
+
+for i = 1:size(DATA_OBJ, 2), sz(1, i) = size(DATA_OBJ{i}.dat, 2); end
 DATA_CAT.images_per_session = sz;
 DATA_CAT.removed_images = 0;
 

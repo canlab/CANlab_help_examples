@@ -1,8 +1,10 @@
-mycolors = seaborn_colors(7);
+
 
 [~, netnames] = load_image_set('bucknerlab');
 
 [~, npsplusnames] = load_image_set('npsplus');
+
+mycolors = seaborn_colors(max(length(netnames), length(npsplusnames)));
 
 %% Profiles across Buckner Lab rsFMRI networks
 
@@ -27,7 +29,7 @@ for i = 1:k
     axh(i) = gca;
     set(gca, 'XTickLabel', netnames, 'XTickLabelRotation', 45);
     ylabel('Cosine similarity');
-    
+    xlabel('')
     title(DAT.conditions{i});
     axis tight
 
@@ -65,7 +67,7 @@ if isfield(DAT, 'contrasts') && ~isempty(DAT.contrasts)
         axh(i) = gca;
         set(gca, 'XTickLabel', netnames, 'XTickLabelRotation', 45);
         ylabel('Cosine similarity');
-        
+        xlabel('')
         title(DAT.contrastnames{i});
         axis tight
         
@@ -103,7 +105,7 @@ for i = 1:k
     axh(i) = gca;
     set(gca, 'XTickLabel', npsplusnames, 'XTickLabelRotation', 45);
     ylabel('Cosine similarity');
-    
+    xlabel('')
     title(DAT.conditions{i});
     axis tight
     
@@ -143,7 +145,7 @@ if isfield(DAT, 'contrasts') && ~isempty(DAT.contrasts)
         axh(i) = gca;
         set(gca, 'XTickLabel', npsplusnames, 'XTickLabelRotation', 45);
         ylabel('Cosine similarity');
-        
+        xlabel('')        
         title(DAT.contrastnames{i});
         axis tight
         
