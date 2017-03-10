@@ -23,7 +23,7 @@ for i = 1:k
     subplot(1, k, i);
     [stats hh hhfill table_group multcomp_group] = image_similarity_plot(DATA_OBJ{i}, 'average', 'cosine_similarity', 'colors', DAT.colors(i), 'nofigure', 'noplot');
     
-    barplot_columns(stats.r', 'colors', mycolors, 'noviolin', 'nofig', 'noind');
+    barplot_columns(stats.r', 'colors', mycolors, 'noviolin', 'nofig', 'noind', 'names', netnames);
     hold on; plot_horizontal_line(0);
     
     axh(i) = gca;
@@ -61,7 +61,7 @@ if isfield(DAT, 'contrasts') && ~isempty(DAT.contrasts)
         subplot(1, kc, i);
         [stats hh hhfill table_group multcomp_group] = image_similarity_plot(DATA_OBJ_CON{i}, 'average', 'cosine_similarity', 'colors', DAT.colors(i), 'nofigure', 'noplot');
         
-        barplot_columns(stats.r', 'colors', mycolors, 'noviolin', 'nofig', 'noind');
+        barplot_columns(stats.r', 'colors', mycolors, 'noviolin', 'nofig', 'noind', 'names', netnames);
         hold on; plot_horizontal_line(0);
         
         axh(i) = gca;
@@ -99,7 +99,7 @@ for i = 1:k
     subplot(1, k, i);
     [stats hh hhfill table_group multcomp_group] = image_similarity_plot(DATA_OBJ{i}, 'average', 'cosine_similarity', 'mapset', 'npsplus', 'colors', DAT.colors(i), 'nofigure', 'noplot');
     
-    barplot_columns(stats.r', 'colors', mycolors, 'noviolin', 'nofig', 'noind');
+    barplot_columns(stats.r', 'colors', mycolors, 'noviolin', 'nofig', 'noind', 'names', npsplusnames);
     hold on; plot_horizontal_line(0);
     
     axh(i) = gca;
@@ -139,7 +139,7 @@ if isfield(DAT, 'contrasts') && ~isempty(DAT.contrasts)
         subplot(1, kc, i);
         [stats hh hhfill table_group multcomp_group] = image_similarity_plot(DATA_OBJ_CON{i}, 'average', 'cosine_similarity', 'mapset', 'npsplus', 'colors', DAT.colors(i), 'nofigure', 'noplot');
         
-        barplot_columns(stats.r', 'colors', mycolors, 'noviolin', 'nofig', 'noind');
+        barplot_columns(stats.r', 'colors', mycolors, 'noviolin', 'nofig', 'noind', 'names', npsplusnames);
         hold on; plot_horizontal_line(0);
         
         axh(i) = gca;
