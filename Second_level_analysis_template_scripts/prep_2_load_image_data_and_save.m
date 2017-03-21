@@ -4,12 +4,13 @@
 %  apply NPS
 % --------------------------------------------------------
 
-dofullplot = 1;
+dofullplot = 0;
 
 clear imgs cimgs
 for i = 1:length(DAT.conditions)
     
     %% CONDITION
+
     printhdr(sprintf('Raw data, condition %3.0f, %s', i, DAT.conditions{i}));
     
     % This will vary based on your naming conventions
@@ -43,51 +44,43 @@ for i = 1:length(DAT.conditions)
     
     DAT.imgs{i} = char(cimgs{i}{:});
     
-    % optional: load full objects
-    DATA_OBJ{i} = fmri_data(DAT.imgs{i});
+    % Load full objects
+    % -------------------------------------------------------------------
+    % If images are less than 2 mm res, sample in native space:
+    %DATA_OBJ{i} = fmri_data(DAT.imgs{i});
+
+    % If images are very large/high-res, you may want to sample to the mask space instead:
+    DATA_OBJ{i} = fmri_data(DAT.imgs{i}, which('brainmask.nii'), 'sample2mask');
+
+    % QUALITY CONTROL METRICS
+    printstr('QC metrics');
+    printstr(dashes);
     
+    [group_metrics individual_metrics values gwcsf gwcsfmean gwcsfl2norm] = qc_metrics_second_level(DATA_OBJ{i});
+    
+    DAT.gray_white_csf{i} = values;
+    drawnow; snapnow
+        
     % optional: plot
+    % -------------------------------------------------------------------
+
     if dofullplot
         fprintf('%s\nPlot of images: %s\n%s\n', dashes, DAT.functional_wildcard{i}, dashes);
         disp(DATA_OBJ{i}.fullpath)
         
         plot(DATA_OBJ{i}); drawnow; snapnow
-        
-        % QUALITY CONTROL METRICS
-        [group_metrics individual_metrics gwcsf gwcsfmean] = qc_metrics_second_level(DATA_OBJ{i}); 
-        drawnow; snapnow
-        
+
         hist_han = histogram(DATA_OBJ{i}, 'byimage', 'by_tissue_type');
         drawnow; snapnow
         
     end
     
     % derived measures
-    
-    %DAT.nps_vals(i) = apply_nps(DATA_OBJ{i});
-    
+
     DATA_OBJ{i} = remove_empty(DATA_OBJ{i}); 
     DAT.globalmeans{i} = mean(DATA_OBJ{i}.dat)'; 
     DAT.globalstd{i} = std(DATA_OBJ{i}.dat)';
-    
-    % scaled measures
-    
-    %DATA_OBJsc{i} = rescale(DATA_OBJ{i}, 'centerimages'); 
-    
-    %DAT.nps_vals_centered(i) = apply_nps(DATA_OBJsc{i});
-    
-    %DATA_OBJz{i} = rescale(DATA_OBJ{i}, 'zscoreimages'); 
-    
-    %DAT.nps_vals_zscored(i) = apply_nps(DATA_OBJsc{i});
-    
-    DAT.gray_white_csf{i} = extract_gray_white_csf(DATA_OBJ{i});
-        
-    % scaled by WM/CSF values -
-    % ----------------------------------------------------------------
-    %     DATA_OBJwmsc{i} = DATA_OBJ{i}; % old: change from average WM
-    %     wmvals = repmat(DAT.gray_white_csf{i}(:, 2)', size(DATA_OBJ{i}.dat, 1), 1);
-    %     DATA_OBJwmsc{i}.dat = (DATA_OBJwmsc{i}.dat - wmvals) ./ wmvals;
-      
+
     drawnow, snapnow
 end
 
@@ -102,21 +95,24 @@ end
 
 DATA_CAT = cat(DATA_OBJ{:});
 
-DATA_CAT = preprocess(DATA_CAT, 'windsorize');
-
 clear sz
 
 for i = 1:size(DATA_OBJ, 2), sz(1, i) = size(DATA_OBJ{i}.dat, 2); end
 DATA_CAT.images_per_session = sz;
 DATA_CAT.removed_images = 0;
 
-DATA_CAT = preprocess(DATA_CAT, 'remove_csf');
-DATA_CAT = preprocess(DATA_CAT, 'rescale_by_csf');
+%DATA_CAT = preprocess(DATA_CAT, 'remove_csf');
+%DATA_CAT = preprocess(DATA_CAT, 'rescale_by_csf');
+%DATA_CAT = preprocess(DATA_CAT, 'divide_by_csf_l2norm');
+
+DATA_CAT = rescale(DATA_CAT, 'l2norm_images');     % scaling sensitive to mean and variance.
+
+DATA_CAT = preprocess(DATA_CAT, 'windsorize'); % entire data matrix
 
 DATA_OBJsc = split(DATA_CAT);
 
 if dofullplot
-    disp('AFTER WINDSORIZING AND ADJUSTING FOR WM/CSF');
+    disp('AFTER WINDSORIZING AND RESCALING BY L2NORM'); %'ADJUSTING FOR WM/CSF');
     
     plot(DATA_CAT); drawnow; snapnow
     
