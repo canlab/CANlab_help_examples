@@ -1,4 +1,4 @@
-behavioral_data_filename = 'paindata_Failla2Wager.xlsx';
+behavioral_data_filename = 'Physical_Behavioural_Outcomes_short.xlsx';
 behavioral_fname_path = fullfile(datadir, behavioral_data_filename);
 
 if ~exist(behavioral_fname_path, 'file'), fprintf(1, 'CANNOT FIND FILE: %s\n',behavioral_fname_path); end
@@ -7,65 +7,64 @@ behavioral_data_table = readtable(behavioral_fname_path,'FileType','spreadsheet'
 
 
 
+%% INITIALIZE CONDITION/CONTRAST-SPECIFIC BETWEEN-PERSON DATA TABLES
+
+% Cell array with table of group (between-person) variables for each
+% condition, and for each contrast.  
+% If variables are entered:
+% 1. they will be controlled for in analyses of the
+% overall condition/contrast effects. 
+% 2. Analyses relating conditions/contrasts to these variables will be
+% performed.
+% If no variables are entered (empty elements), only
+% within-person/whole-group effects will be analyzed.
+
+% Initialize empty variables
+DAT.BETWEENPERSON = [];
+
+DAT.BETWEENPERSON.conditions = cell(1, length(DAT.conditions));
+[DAT.BETWEENPERSON.conditions{:}] = deal(table());  % empty tables
+
+DAT.BETWEENPERSON.contrasts = cell(1, length(DAT.contrastnames));
+[DAT.BETWEENPERSON.contrasts{:}] = deal(table());  % empty tables
+
+
+
 %% CUSTOM CODE: TRANSFORM INTO between_design_table
 %
-% you need to arrange the variables in your behavioral data file into a
-% table variable called between_design_table.  This contains a matrix of
-% behavioral observations to match with your images.
+% Create a table for each condition/contrast with the between-person design, or leave empty.
 %
 % a variable called 'id' contains subject identfiers.  Other variables will
 % be used as regressors.  Variables with only two levels should be effects
-% coded, with [1 -1] values.a
+% coded, with [1 -1] values.
 
-% This file starts with entries both between- and within-person: Multiple
-% entries per subject. 
+% Vars of interest
+%
+% fMRIWeight_Mean         % Pressure, in kg/cm^2MAYBE
+% fMRIWeightVAS_Mean      % VAS ratings pressure, 0-10??
+% fMRItemp_Mean           % temperature - Degrees C below baseline?
+% fMRItempVAS_Mean        % VAS ratings, cold pain
+% GenderID                % Sex, Fem = 2???
 
-% First create behavioral_data_table_all with all variables.
+id = behavioral_data_table.ImageID;
 
-id = behavioral_data_table.DataShareID;
-whok = behavioral_data_table.Runs == 1;
+between_subject_design = table(id);
 
-% Excluded subjects (missing brain data)
-exclude_id = [116];
-for i = 1:length(exclude_id)
-    
-    whomit = id == exclude_id(i);
-    whok(whomit) = 0;
-    
-end
+between_subject_design.pressure = behavioral_data_table.fMRIWeight_Mean;
+between_subject_design.pressurepain = behavioral_data_table.fMRIWeightVAS_Mean;
 
-id = id(whok);
-group = behavioral_data_table.Group(whok);
-group = contrast_code(scale(group, 1));     % effects code
+between_subject_design.coldtemp = behavioral_data_table.fMRItemp_Mean;
+between_subject_design.coldpain = behavioral_data_table.fMRItempVAS_Mean;
 
-[id, ~, wh] = unique(id);
+between_subject_design.patientvscontrol = contrast_code(scale(behavioral_data_table.Patient1_Control0, 1));
 
-group = group(wh);
-behavioral_indiv_diffs = table(id, group);    
+between_subject_design.femalevsmale = contrast_code(scale(behavioral_data_table.GenderID, 1));   % Fem = 1, Male = -1
 
-clear pain
+DAT.BETWEENPERSON.between_subject_design = between_subject_design;
 
-for i = 1:length(id)
-    
-    whi = behavioral_data_table.DataShareID == id(i);
-    
-    paini = behavioral_data_table.PainRating(whi);
-    
-    pain(i, 1) = nanmean(paini);  % issue if missing not at random; but likely ok here
-    
-end
-
-behavioral_indiv_diffs.pain = pain;
-
-
-%% Add pain within group
-
-pain(isnan(pain)) = nanmean(pain); % impute mean
-
-X = behavioral_indiv_diffs.group; 
-X(:, end+1) = 1;
-pain_within_group = resid(X, pain);
-
-between_subject_design = table(group, pain_within_group);
-    
-DAT.BEHAVIOR = struct('behavioral_data_table', behavioral_data_table, 'behavioral_indiv_diffs', behavioral_indiv_diffs, 'between_subject_design', between_subject_design);
+% Single group variable, optional, for convenience
+% These fields are mandatory, but they can be empty
+% -------------------------------------------------------------------------
+DAT.BETWEENPERSON.group = between_subject_design.patientvscontrol;
+DAT.BETWEENPERSON.groupnames = {'Patients' 'Controls'};
+DAT.BETWEENPERSON.groupcolors = {[.7 .3 .5] [.3 .5 .7]};

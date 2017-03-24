@@ -1,7 +1,11 @@
 mymetric = 'cosine_sim';    % 'dotproduct' or 'cosine_sim'
 
 % Controlling for group admin order covariate (mean-centered by default)
-group = DAT.BEHAVIOR.between_subject_design.group; % empty for no variable to control/remove
+
+group = [];
+if isfield(DAT, 'BETWEENPERSON') && isfield(DAT.BETWEENPERSON, 'group')
+    group = DAT.BETWEENPERSON.group; % empty for no variable to control/remove
+end
 
 
 % subregion names

@@ -3,15 +3,19 @@
 
 mysignature =   {'NPS', 'NPSpos', 'NPSneg', 'SIIPS'};   % 'NPS' 'NPSpos' 'NPSneg' 'SIIPS' etc.  See load_image_set('npsplus')
 scalenames =    {'raw'};                                % or scaled
-simnames =      {'cosine_sim'};                         % or 'dotproduct'
+simnames =      {'dotproduct'};                         % or 'cosine_sim' 'dotproduct'
 
 % Define groups
 % -------------------------------------------------------------------------
-group = DAT.BEHAVIOR.between_subject_design.group;
-groupnames = {'Control', 'Autism'};
 
-% 1 is autism, 2 is control
-% -1 is autism, 1 is control
+if isfield(DAT, 'BETWEENPERSON') && isfield(DAT.BETWEENPERSON, 'group')
+    group = DAT.BETWEENPERSON.group; % empty for no variable to control/remove
+    groupnames = DAT.BETWEENPERSON.groupnames;
+    groupcolors = DAT.BETWEENPERSON.groupcolors;
+else
+    printhdr('DAT.BETWEENPERSON.group not defined. See prep1b between person setup script. Skipping.');
+    return
+end
 
 
 % Loop through signatures, create one plot per contrast
@@ -37,13 +41,13 @@ for s = 1:length(mysignature)
         %y = {DAT.(myfield){i}(group > 0) DAT.(myfield){i}(group < 0)};
         y = {contrastdata(group > 0, i) contrastdata(group < 0, i)};
         
-        subplot(1, 3, i)
+        subplot(1, kc, i)
         
         printstr(' ');
         printstr(sprintf('Group differences: %s, %s', mysignature{s}, DAT.contrastnames{i}));
         printstr(dashes)
         
-        barplot_columns(y, 'nofig', 'colors', {[.3 .3 .5] [.5 .3 .5]}, 'names', groupnames);
+        barplot_columns(y, 'nofig', 'colors', groupcolors, 'names', groupnames);
         
         title(DAT.conditions{i})
         xlabel('Group');
@@ -89,7 +93,7 @@ for i = 1:kc  % for each contrast
         
         printhdr(posnames{j});
         
-        barplot_columns(y, 'nofig', 'colors', {[.3 .3 .5] [.5 .3 .5]}, 'noviolin', 'noind', 'names', groupnames );
+        barplot_columns(y, 'nofig', 'colors', groupcolors, 'noviolin', 'noind', 'names', groupnames );
         
         title(posnames{j})
         xlabel('Group');
@@ -136,7 +140,7 @@ for i = 1:3
         
         printhdr(negnames{j});
         
-        barplot_columns(y, 'nofig', 'colors', {[.3 .3 .5] [.5 .3 .5]}, 'noviolin', 'noind', 'names', groupnames );
+        barplot_columns(y, 'nofig', 'colors', groupcolors, 'noviolin', 'noind', 'names', groupnames );
         
         title(negnames{j})
         xlabel('Group');

@@ -1,16 +1,16 @@
-% load brain 
+% load brain
 %  get filenames
 %  load data
 %  apply NPS
 % --------------------------------------------------------
 
-dofullplot = 0;
+dofullplot = 1;
 
 clear imgs cimgs
 for i = 1:length(DAT.conditions)
     
     %% CONDITION
-
+    
     printhdr(sprintf('Raw data, condition %3.0f, %s', i, DAT.conditions{i}));
     
     % This will vary based on your naming conventions
@@ -35,7 +35,7 @@ for i = 1:length(DAT.conditions)
         try eval(['!gunzip ' str '.gz']), catch, end
         
         cimgs{i} = filenames(str, 'absolute');
-    
+        
     end
     
     %  CHECK that files exist
@@ -48,10 +48,10 @@ for i = 1:length(DAT.conditions)
     % -------------------------------------------------------------------
     % If images are less than 2 mm res, sample in native space:
     %DATA_OBJ{i} = fmri_data(DAT.imgs{i});
-
+    
     % If images are very large/high-res, you may want to sample to the mask space instead:
     DATA_OBJ{i} = fmri_data(DAT.imgs{i}, which('brainmask.nii'), 'sample2mask');
-
+    
     % QUALITY CONTROL METRICS
     printstr('QC metrics');
     printstr(dashes);
@@ -60,33 +60,33 @@ for i = 1:length(DAT.conditions)
     
     DAT.gray_white_csf{i} = values;
     drawnow; snapnow
-        
+    
     % optional: plot
     % -------------------------------------------------------------------
-
+    
     if dofullplot
         fprintf('%s\nPlot of images: %s\n%s\n', dashes, DAT.functional_wildcard{i}, dashes);
         disp(DATA_OBJ{i}.fullpath)
         
         plot(DATA_OBJ{i}); drawnow; snapnow
-
+        
         hist_han = histogram(DATA_OBJ{i}, 'byimage', 'by_tissue_type');
         drawnow; snapnow
         
     end
     
     % derived measures
-
-    DATA_OBJ{i} = remove_empty(DATA_OBJ{i}); 
-    DAT.globalmeans{i} = mean(DATA_OBJ{i}.dat)'; 
+    
+    DATA_OBJ{i} = remove_empty(DATA_OBJ{i});
+    DAT.globalmeans{i} = mean(DATA_OBJ{i}.dat)';
     DAT.globalstd{i} = std(DATA_OBJ{i}.dat)';
-
+    
     drawnow, snapnow
 end
 
-    %% CSF REMOVAL AND RESCALING
-    printhdr('CSF REMOVAL AND RESCALING');
-    
+%% CSF REMOVAL AND RESCALING
+printhdr('CSF REMOVAL AND RESCALING');
+
 % scaling by CSF values
 % ----------------------------------------------------------------
 % Note: Do not train cross-validated models on these scaled objects because
@@ -117,12 +117,12 @@ if dofullplot
     plot(DATA_CAT); drawnow; snapnow
     
 end
-    
-clear DATA_CAT
-    
 
-    %% CSF REMOVAL AND RESCALING
-    printhdr('Save results');
+clear DATA_CAT
+
+
+%% CSF REMOVAL AND RESCALING
+printhdr('Save results');
 
 
 savefilename = fullfile(resultsdir, 'image_names_and_setup.mat');

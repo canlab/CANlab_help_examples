@@ -7,15 +7,27 @@ printhdr('UNIVARIATE CONTRAST MAPS')
 
 c_univariate_contrast_maps
 
-%%% RE-TRAINED WHOLE BRAIN SVM
+%% RE-TRAIN within-person WHOLE BRAIN SVM
 
-%printhdr('RE-TRAINED WHOLE BRAIN SVM OMITTED - MISSING RUN 2s')
-%c2_SVM_contrasts
+printhdr('RE-TRAINED within-person WHOLE BRAIN SVM')
+c2_SVM_contrasts
+
+%% RE-TRAIN between-person WHOLE BRAIN SVM
+
+printhdr('RE-TRAINED between-person WHOLE BRAIN SVM')
+c2b_SVM_betweenperson_contrasts
 
 %% NPS
 printhdr('NPS RESPONSES')
 
-d_apply_nps
+d_plot_NPS_responses
+
+d2_plot_nps_subregions_bars
+
+%% NPS
+printhdr('SIIPS RESPONSES')
+
+d_plot_SIIPS_responses
 
 
 %% VIOLIN PLOTS BY SIGNATURE 
@@ -45,3 +57,17 @@ f2_signature_network_barplots
 printhdr('RIVER PLOTS OF NETWORKS')
 
 g_signature_network_riverplots
+
+%% GROUP DIFFERENCES
+
+printhdr('GROUP DIFFERENCES')
+
+h_group_differences
+
+%% GROUP ANCOVA
+
+printhdr('GROUP ANCOVA WITH STIM INTENSITY')
+
+i_ancova_stimintensity_nps
+
+

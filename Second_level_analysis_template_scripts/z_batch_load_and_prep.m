@@ -5,6 +5,8 @@ a_set_up_paths_always_run_first
 
 prep_1_set_conditions_contrasts_colors
 
+printhdr('BEHAVIORAL DATA - BETWEEN-PERSON DESIGN')
+
 prep1b_prep_behavioral_data
 
 % These should not need editing, 
