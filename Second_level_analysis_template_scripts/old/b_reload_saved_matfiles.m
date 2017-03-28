@@ -11,16 +11,10 @@ fprintf('Loaded DAT from results%simage_names_and_setup.mat\n', filesep);
 % ------------------------------------------------------------------------
 
 savefilenamedata = fullfile(resultsdir, 'data_objects.mat');
-load(savefilenamedata, 'DATA_OBJ');
+load(savefilenamedata, 'DATA_OBJ*');
 
 % For publish output
 fprintf('Loaded condition data from results%sDATA_OBJ\n', filesep);
-
-savefilenamedata = fullfile(resultsdir, 'data_objects_scaled.mat');
-load(savefilenamedata, 'DATA_OBJsc');
-
-% For publish output
-fprintf('Loaded condition data from results%sDATA_OBJsc\n', filesep);
 
 % Load contrast data objects if they exist
 % ------------------------------------------------------------------------

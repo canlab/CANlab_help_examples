@@ -1,10 +1,15 @@
 signatures_to_plot = {'NPS' 'NPSpos' 'NPSneg'};  % NPS, VPS, SIIPS, etc., etc.     
 myscaling = 'raw';          % 'raw' or 'scaled'
-mymetric = 'cosine_sim';    % 'dotproduct' or 'cosine_sim'
+mymetric = 'dotproduct';    % 'dotproduct' or 'cosine_sim'
 
 % Controlling for group admin order covariate (mean-centered by default)
 
-group = DAT.BEHAVIOR.between_subject_design.group; % empty for no variable to control/remove
+group = [];
+if isfield(DAT, 'BETWEENPERSON') && isfield(DAT.BETWEENPERSON, 'group')
+    group = DAT.BETWEENPERSON.group; % empty for no variable to control/remove
+    
+    printstr('Controlling for data in DAT.BETWEENPERSON.group');
+end
 
 % Format: The prep_4_apply_signatures_and_save script extracts signature responses and saves them.
 % These fields contain data tables:
@@ -25,36 +30,11 @@ group = DAT.BEHAVIOR.between_subject_design.group; % empty for no variable to co
 % DAT.SIG_conditions.raw.dotproduct = apply_all_signatures(DATA_OBJ, 'conditionnames', DAT.conditions);
 % DAT.SIG_contrasts.raw.dotproduct = apply_all_signatures(DATA_OBJ_CON, 'conditionnames', DAT.conditions);
 
-k = length(DAT.conditions);
-nplots = length(signatures_to_plot);
+kc = length(DAT.contrastnames);
+nfigures = length(signatures_to_plot);
 mysignames = strcat(signatures_to_plot{:});
 
-%% Signature Response - conditions
-% ------------------------------------------------------------------------
-
-figtitle = sprintf('%s conditions %s %s', mysignames, myscaling, mymetric);
-create_figure(figtitle);
-printhdr(figtitle);
-
-create_figure(figtitle, 1, nplots);
-
-
-for n = 1:nplots
-    
-    subplot(1, nplots, n);
-    
-    mysignature = signatures_to_plot{n};
-    mydata = table2array(DAT.SIG_conditions.(myscaling).(mymetric).(mysignature));
-    
-    barplot_columns(mydata, 'title', mysignature, 'colors', DAT.colors, 'dolines', 'nofig', 'names', DAT.conditions, 'covs', group, 'wh_reg', 0);
-    
-end
-
-drawnow, snapnow
-
-savename = fullfile(figsavedir, [figtitle '.png']);
-saveas(gcf, savename);
-
+covtables = DAT.BETWEENPERSON.contrasts;
 
 %% Signature Response - contrasts
 % ------------------------------------------------------------------------
@@ -65,23 +45,44 @@ if ~isfield(DAT, 'contrasts') || isempty(DAT.contrasts)
 end
 % ------------------------------------------------------------------------
 
-
-figtitle = sprintf('%s contrasts %s %s', mysignames, myscaling, mymetric);
+for n = 1:nfigures
+    
+    mysignature = signatures_to_plot{n};
+    
+    mydata = table2array(DAT.SIG_contrasts.(myscaling).(mymetric).(mysignature));
+    
+figtitle = sprintf('%s contrasts %s %s', mysignature, myscaling, mymetric);
 create_figure(figtitle);
 printhdr(figtitle);
 
-create_figure(figtitle, 1, nplots);
+create_figure(figtitle, 1, kc); % one panel for each contrast
 
-for n = 1:nplots
+    for i = 1:kc
+        
+    subplot(1, kc, i);
     
-    subplot(1, nplots, n);
+    % Get brain data of interest for this contrast
+    braindata = mydata(:, i); 
     
-    mysignature = signatures_to_plot{n};
-    mydata = table2array(DAT.SIG_contrasts.(myscaling).(mymetric).(mysignature));
-
-    barplot_columns(mydata, 'title', mysignature, 'colors', DAT.contrastcolors, 'nofig', 'names', DAT.contrastnames, 'covs', group, 'wh_reg', 0);
-
-end
+    % Get covariates - single cov of interest is first is array
+    mycovs = table2array(covtables{i});
+    whid = strcmp(covtables{i}.Properties.VariableNames, 'id');
+    mycovs(:, whid) = [];
+    mycovs = [mycovs group];
+    wh_of_interest = 1;
+    xname = covtables{i}.Properties.VariableNames(~whid);
+    xname = format_strings_for_legend(xname{1}); % ONLY 1 ALLOWED FOR NOW!
+    
+    [covresid, brainresid,r,p,se,meany,stats] = partialcor(mycovs, braindata, wh_of_interest, true, false);
+    
+    % Partial correlation scatterplot
+    plot_correlation_samefig(covresid, brainresid);
+    xlabel(xname);
+    ylabel(mysignature);
+    
+    end % contrast
+    
+end % figures/signatures
 
 drawnow, snapnow
 

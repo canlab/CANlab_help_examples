@@ -1,9 +1,10 @@
-behavioral_data_filename = 'Physical_Behavioural_Outcomes_short.xlsx';
+behavioral_data_filename = 'sedation_scores_for_tor.xlsx';
 behavioral_fname_path = fullfile(datadir, behavioral_data_filename);
 
 if ~exist(behavioral_fname_path, 'file'), fprintf(1, 'CANNOT FIND FILE: %s\n',behavioral_fname_path); end
 
 behavioral_data_table = readtable(behavioral_fname_path,'FileType','spreadsheet');
+
 
 
 
@@ -21,6 +22,9 @@ behavioral_data_table = readtable(behavioral_fname_path,'FileType','spreadsheet'
 
 % Initialize empty variables
 DAT.BETWEENPERSON = [];
+
+% Save everything
+DAT.BETWEENPERSON.behavioral_data_table = behavioral_data_table;
 
 DAT.BETWEENPERSON.conditions = cell(1, length(DAT.conditions));
 [DAT.BETWEENPERSON.conditions{:}] = deal(table());  % empty tables
@@ -40,31 +44,81 @@ DAT.BETWEENPERSON.contrasts = cell(1, length(DAT.contrastnames));
 
 % Vars of interest
 %
-% fMRIWeight_Mean         % Pressure, in kg/cm^2MAYBE
-% fMRIWeightVAS_Mean      % VAS ratings pressure, 0-10??
-% fMRItemp_Mean           % temperature - Degrees C below baseline?
-% fMRItempVAS_Mean        % VAS ratings, cold pain
-% GenderID                % Sex, Fem = 2???
+%   12×1 cell array
+% 
+%     'Subject'
+%     'SALINESEDATION'
+%     'REMISEDATION'
+%     'ORDER'
+%     'MSALINEINTENSITY'
+%     'MSALINEUNPL'
+%     'MREMIINTENSITY'
+%     'MREMIUNPL'
+%     'SSALINEINTENSITY'
+%     'SSALINEUNPL'
+%     'SREMIINTENSITY'
+%     'SREMIUNPL'
+% 
+%   6×1 cell array
+% 
+%     'Sal vs Remi ResistStrong'
+%     'Sal vs Remi AntStrong'
+%     'AntLinear Sal'
+%     'AntLinear Remi'
+%     'ResistStrong vs Weak Sal'
+%     'ResistStrong vs Weak Remi'
 
-id = behavioral_data_table.ImageID;
+id = behavioral_data_table.Subject;
 
-between_subject_design = table(id);
+Cov = behavioral_data_table.SSALINEINTENSITY - behavioral_data_table.SREMIINTENSITY;
+covname = 'Intensity_Saline_vs_Remi';
+mytable = table(id);
+mytable.(covname) = Cov;
 
-between_subject_design.pressure = behavioral_data_table.fMRIWeight_Mean;
-between_subject_design.pressurepain = behavioral_data_table.fMRIWeightVAS_Mean;
+DAT.BETWEENPERSON.contrasts{1} = mytable;
 
-between_subject_design.coldtemp = behavioral_data_table.fMRItemp_Mean;
-between_subject_design.coldpain = behavioral_data_table.fMRItempVAS_Mean;
+Cov = behavioral_data_table.SSALINEINTENSITY - behavioral_data_table.SREMIINTENSITY;
+covname = 'Intensity_Saline_vs_Remi';
+mytable = table(id);
+mytable.(covname) = Cov;
 
-between_subject_design.patientvscontrol = contrast_code(scale(behavioral_data_table.Patient1_Control0, 1));
+DAT.BETWEENPERSON.contrasts{2} = mytable;
 
-between_subject_design.femalevsmale = contrast_code(scale(behavioral_data_table.GenderID, 1));   % Fem = 1, Male = -1
+Cov = behavioral_data_table.SSALINEINTENSITY - behavioral_data_table.MSALINEINTENSITY;
+covname = 'Intensity_Str_vs_Mild_Saline';
+mytable = table(id);
+mytable.(covname) = Cov;
 
-DAT.BETWEENPERSON.between_subject_design = between_subject_design;
+DAT.BETWEENPERSON.contrasts{3} = mytable;
+
+Cov = behavioral_data_table.SREMIINTENSITY - behavioral_data_table.MREMIINTENSITY;
+covname = 'Intensity_Str_vs_Mild_Remi';
+mytable = table(id);
+mytable.(covname) = Cov;
+
+DAT.BETWEENPERSON.contrasts{4} = mytable;
+
+Cov = behavioral_data_table.SSALINEINTENSITY - behavioral_data_table.MSALINEINTENSITY;
+covname = 'Intensity_Str_vs_Mild_Saline';
+mytable = table(id);
+mytable.(covname) = Cov;
+
+DAT.BETWEENPERSON.contrasts{5} = mytable;
+
+Cov = behavioral_data_table.SREMIINTENSITY - behavioral_data_table.MREMIINTENSITY;
+covname = 'Intensity_Str_vs_Mild_Remi';
+mytable = table(id);
+mytable.(covname) = Cov;
+
+DAT.BETWEENPERSON.contrasts{6} = mytable;
 
 % Single group variable, optional, for convenience
 % These fields are mandatory, but they can be empty
 % -------------------------------------------------------------------------
-DAT.BETWEENPERSON.group = between_subject_design.patientvscontrol;
-DAT.BETWEENPERSON.groupnames = {'Patients' 'Controls'};
+group = behavioral_data_table.ORDER;
+[~, nms, group] = string2indicator(group);
+
+DAT.BETWEENPERSON.group = contrast_code(group  - 1.5);
+DAT.BETWEENPERSON.group_descrip = '-1 is first group name, 1 is 2nd';
+DAT.BETWEENPERSON.groupnames = nms;
 DAT.BETWEENPERSON.groupcolors = {[.7 .3 .5] [.3 .5 .7]};

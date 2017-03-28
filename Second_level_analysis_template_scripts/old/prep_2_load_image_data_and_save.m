@@ -124,11 +124,10 @@ clear DATA_CAT
 %% CSF REMOVAL AND RESCALING
 printhdr('Save results');
 
+
 savefilename = fullfile(resultsdir, 'image_names_and_setup.mat');
 save(savefilename, 'DAT', 'basedir', 'datadir', 'resultsdir', 'scriptsdir', 'figsavedir');
 
 savefilenamedata = fullfile(resultsdir, 'data_objects.mat');
-save(savefilenamedata, 'DATA_OBJ');
+save(savefilenamedata, 'DATA_OBJ*');
 
-savefilenamedata = fullfile(resultsdir, 'data_objects_scaled.mat');
-save(savefilenamedata, 'DATA_OBJsc');
