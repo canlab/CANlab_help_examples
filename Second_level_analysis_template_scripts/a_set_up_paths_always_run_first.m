@@ -31,7 +31,10 @@
 % --------------------------------------------------------
 
 % Base directory for whole study/analysis
-basedir = '/Users/tor/Dropbox (Data_organization)/ItchPainImagination';
+basedir = '/Users/tor/Google_Drive/SHARED_DATASETS_gdrive/P_Liv_Faull_breathlessless/3T full brain breathlessness with opioids and levels of resistance';
+%basedir = '/Volumes/fMRIdata/Google_Drive/SHARED_DATASETS_gdrive/P_Liv_Faull_breathlessless/3T full brain breathlessness with opioids and levels of resistance';
+
+
 cd(basedir)
 
 datadir = fullfile(basedir, 'data');

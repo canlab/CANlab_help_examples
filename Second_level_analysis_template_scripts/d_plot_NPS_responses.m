@@ -7,6 +7,8 @@ mymetric = 'dotproduct';    % 'dotproduct' or 'cosine_sim'
 group = [];
 if isfield(DAT, 'BETWEENPERSON') && isfield(DAT.BETWEENPERSON, 'group')
     group = DAT.BETWEENPERSON.group; % empty for no variable to control/remove
+    
+    printstr('Controlling for data in DAT.BETWEENPERSON.group');
 end
 
 % Format: The prep_4_apply_signatures_and_save script extracts signature responses and saves them.

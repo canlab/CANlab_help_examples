@@ -1,6 +1,14 @@
 % THIS SCRIPT RUNS BETWEEN-PERSON CONTRASTS
-% Assuming that groups are concatenated into contrast image lists 
+% Assuming that groups are separated into different conditions
 % --------------------------------------------------------------------
+% Enter conditions and colors in prep_1_set_conditions_contrasts_colors.m
+% e.g.,
+% DAT.between_condition_cons = [1 -1 0;
+%                               1 0 -1];
+% 
+% DAT.between_condition_contrastnames = {'Pain vs Nausea' 'Pain vs Itch'};
+%           
+% DAT.between_condition_contrastcolors = custom_colors ([.2 .2 .8], [.2 .8 .2], size(DAT.between_condition_cons, 1));
 
 
 myscaling = 'scaled';          % 'raw' or 'scaled'
@@ -12,20 +20,55 @@ if ~exist('o2', 'var') || ~isa(o2, 'fmridisplay')
     whmontage = 5;
 end
 
-printhdr('Cross-validated SVM to discriminate between-person contrasts');
+printhdr('Cross-validated SVM to discriminate between-condition contrasts');
 
+% --------------------------------------------------------------------
+%
+% Run between-groups SVM for each contrast
+%
+% --------------------------------------------------------------------
+
+kc = size(DAT.between_condition_cons, 1);
+
+for c = 1:kc
+    
+    convec = DAT.between_condition_cons(c, :);
+    
+    % concatenate data
+    wh = convec == 1 | convec == -1;
+    
+    if ~any(wh)
+        printhdr('CODE DAT.between_condition_cons WITH 1, -1 TO RUN BETWEEN-PERSON SVM. SKIPPING.');
+        continue
+    end
+
+        % Select data for this contrast
+    % --------------------------------------------------------------------
+    
+    switch myscaling
+        case 'raw'
+            cat_obj = cat(DATA_OBJ{wh});
+            
+        case 'scaled'
+            cat_obj = cat(DATA_OBJsc{wh});
+            
+        otherwise
+            error('myscaling must be ''raw'' or ''scaled''');
+    end
+    
+           % Build outcome values for each image
+    % --------------------------------------------------------------------
+    group = [];
+    
+    for i = 1:length(convec) % for each contrast value
+        if wh(i)
+            group = [group; convec(i) * ones(size(DAT.imgs{i}, 1), 1)];
+        end
+    end
+    
 % b. Define holdout sets: Leave one subject out
 %    Assume that subjects are in same position in each input file
 % --------------------------------------------------------------------
-
-group = DAT.BETWEENPERSON.group;
-
-if ~all(group ~= 1 | group ~= -1)
-    printhdr('CODE DAT.BETWEENPERSON.group WITH 1, -1 TO RUN BETWEEN-PERSON SVM. SKIPPING.');
-    return
-end
-
-outcome_value = group;
 
 % strategy here is to keep training set size proportional to original
 % sample proportions.  leave out pairs, 1 person from each group.
@@ -36,42 +79,15 @@ holdout_set = xval_select_holdout_set_categoricalcovs(group);
 hs = cat(2, holdout_set{:});
 [holdout_set, ~] = find(hs');
 
-% --------------------------------------------------------------------
-%
-% Run between-groups SVM for each contrast
-%
-% --------------------------------------------------------------------
 
-kc = size(DAT.contrasts, 1);
-
-for c = 1:kc
-    
-    printstr(DAT.contrastnames{c});
+    printstr(DAT.between_condition_contrastnames{c});
     printstr(dashes)
-    
-    mycontrast = DAT.contrasts(c, :);
-    wh = find(mycontrast);
-    
-    % Select data for this contrast
-    % --------------------------------------------------------------------
-    
-    switch myscaling
-        case 'raw'
-            cat_obj = DATA_OBJ_CON{c};
-            
-        case 'scaled'
-            cat_obj = DATA_OBJ_CON{c};
-            
-        otherwise
-            error('myscaling must be ''raw'' or ''scaled''');
-    end
-    
     
     
     % a. Format and attach outcomes: 1, -1 for pos/neg contrast values
     % --------------------------------------------------------------------
  
-    cat_obj.Y = outcome_value;
+    cat_obj.Y = group;
     
     % Skip if necessary
     % --------------------------------------------------------------------
@@ -94,12 +110,12 @@ for c = 1:kc
     
     create_figure('ROC');
     disp(' ');
-    printstr(['Results: ' DAT.contrastnames{c}]); printstr(dashes);
+    printstr(['Results: ' DAT.between_condition_contrastnames{c}]); printstr(dashes);
     
-    ROC = roc_plot(stats.dist_from_hyperplane_xval, logical(cat_obj.Y > 0), 'color', DAT.contrastcolors{c}, 'Optimal balanced error rate');
+    ROC = roc_plot(stats.dist_from_hyperplane_xval, logical(cat_obj.Y > 0), 'color', DAT.between_condition_contrastcolors{c}, 'Optimal balanced error rate');
     
     drawnow, snapnow
-    figtitle = sprintf('SVM ROC %s', DAT.contrastnames{c});
+    figtitle = sprintf('SVM ROC %s', DAT.between_condition_contrastnames{c});
     savename = fullfile(figsavedir, [figtitle '.png']);
     saveas(gcf, savename);
     
@@ -116,11 +132,11 @@ for c = 1:kc
     o2 = addblobs(o2, region(stats.weight_obj), 'trans');
     
     axes(o2.montage{whmontage}.axis_handles(5));
-    title(DAT.contrastnames{c}, 'FontSize', 18)
+    title(DAT.between_condition_contrastnames{c}, 'FontSize', 18)
     
-    printstr(DAT.contrastnames{c}); printstr(dashes);
+    printstr(DAT.between_condition_contrastnames{c}); printstr(dashes);
     drawnow, snapnow
-    figtitle = sprintf('SVM weight map nothresh %s', DAT.contrastnames{c});
+    figtitle = sprintf('SVM weight map nothresh %s', DAT.between_condition_contrastnames{c});
     savename = fullfile(figsavedir, [figtitle '.png']);
     saveas(gcf, savename);
     

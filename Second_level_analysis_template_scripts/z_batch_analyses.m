@@ -10,7 +10,18 @@ c_univariate_contrast_maps
 %% RE-TRAIN within-person WHOLE BRAIN SVM
 
 printhdr('RE-TRAINED within-person WHOLE BRAIN SVM')
+
+% Within-person comparisons across conditions
 c2_SVM_contrasts
+
+printhdr('RE-TRAINED between-person WHOLE BRAIN SVM')
+
+% Between-person comparisons across conditions
+% c2c_SVM_between_condition_contrasts
+
+% Between-person comparisons across images within conditions
+% c2b_SVM_betweenperson_contrasts
+
 
 %% RE-TRAIN between-person WHOLE BRAIN SVM
 

@@ -11,23 +11,23 @@ fprintf('Image data should be in /data folder\n');
 DAT = struct();
 
 % Names of subfolders in /data
-DAT.subfolders = {'S*' 'S*' 'S*' 'S*'};
+DAT.subfolders = {'Pain_copes' 'Nausea_cope4m1' 'Itch_copes_combo'};
 
 % Names of conditions
-DAT.conditions = {'itch_img_control' 'itch_imagery' 'pain_img_control' 'pain_imagery'};
+DAT.conditions = {'Pain' 'Nausea' 'Itch'};
 
 DAT.conditions = format_strings_for_legend(DAT.conditions);
 
 DAT.structural_wildcard = {};
-DAT.functional_wildcard = {'con_0001.img' 'con_0002.img' 'con_0003.img' 'con_0004.img'};
+DAT.functional_wildcard = {'cope3*nii' 'cope4*nii' 'cope1*nii'};
 
 % Set Contrasts
 % ------------------------------------------------------------------------
 
 % Vectors across conditions
-DAT.contrasts = [-1 1 0 0; 0 0 -1 1; 0 -1 0 1];
+DAT.contrasts = [1 0 0; 0 1 0; 0 0 1];
     
-DAT.contrastnames = {'Itch_imagery_v_control' 'Pain_imagery_v_control' 'Pain_v_itch_imagery'};
+DAT.contrastnames = {'Pain' 'Nausea' 'Itch'};
 
 DAT.contrastnames = format_strings_for_legend(DAT.contrastnames);
 
@@ -50,5 +50,17 @@ DAT.contrastcolors = custom_colors ([.2 .2 .8], [.2 .8 .2], length (DAT.contrast
 
 disp('SET up conditions, colors, contrasts in DAT structure.');
 
+
+
+% Set BETWEEN-CONDITION contrasts, names, and colors
+% ------------------------------------------------------------------------
+% Currently used in c2c_SVM_across_conditions
+
+DAT.between_condition_cons = [1 -1 0;
+                              1 0 -1];
+
+DAT.between_condition_contrastnames = {'Pain vs Nausea' 'Pain vs Itch'};
+          
+DAT.between_condition_contrastcolors = custom_colors ([.2 .2 .8], [.2 .8 .2], size(DAT.between_condition_cons, 1));
 
 
