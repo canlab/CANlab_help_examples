@@ -1,0 +1,730 @@
+==========================
+=
+= robust_results_batch.m
+=
+==========================
+Directory: /Users/tor/Documents/Code_Repositories/CANlab_help_examples/Robust_regression_walkthrough/Sample_analysis/robust0001/robust0001/robust0001/robust0001
+Date report generated: 05-Apr-2017
+________________________________
+
+
+Model info:
+________________________________
+Images and regressors (intercept +   1 covs)
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810001.img	1.0000	-0.2186	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810002.img	1.0000	-0.2556	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810003.img	1.0000	1.2659	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810004.img	1.0000	-0.6650	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810005.img	1.0000	-0.0048	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810006.img	1.0000	-1.4333	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810007.img	1.0000	-0.9996	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810008.img	1.0000	0.6845	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810009.img	1.0000	-0.8500	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810010.img	1.0000	0.1604	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810011.img	1.0000	-1.3141	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810012.img	1.0000	-0.0126	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810013.img	1.0000	-0.9302	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810014.img	1.0000	0.7507	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810015.img	1.0000	1.0777	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810016.img	1.0000	-2.0649	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810017.img	1.0000	-0.5004	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810018.img	1.0000	2.7888	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810019.img	1.0000	1.1919	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810020.img	1.0000	-0.1222	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810021.img	1.0000	-0.5540	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810022.img	1.0000	0.2267	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810023.img	1.0000	-0.0966	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810024.img	1.0000	-0.9086	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810025.img	1.0000	1.3167	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810026.img	1.0000	-0.5174	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810027.img	1.0000	0.5039	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810028.img	1.0000	0.9751	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810029.img	1.0000	0.2723	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810030.img	1.0000	0.2333	
+
+==========================
+
+
+Results info:________________________________
+Input options:
+mask	/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/gray_matter_mask.img	thresh	0.0010	0.0050	0.0500	
+
+size	prune	
+Results inputs
+________________________________
+
+Mask: /Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/gray_matter_mask.img
+Overlay: /Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/SPM8_colin27T1_seg.img
+
+P-value thresholds: 0.0010	0.0050	0.0500	
+
+
+Extent thresholds: 5.0000	1.0000	1.0000	
+
+
+SPM12: spm_check_registration (v6245)              08:56:05 - 05/04/2017
+========================================================================
+Display <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+________________________________
+Image dataset visualization and diagnostics
+________________________________
+Using default mask: /Users/tor/Documents/Code_External/spm12/toolbox/FieldMap/brainmask.nii
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 5975040 bytes
+Loading image number:     0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29   30
+Elapsed time is 0.215292 seconds.
+fmri_data.create: Converting 1203 NaNs to 0s.Image names entered, but fullpath attribute is empty. Getting path info.
+
+pos =
+
+   440   378   560   420
+
+Expected 50% of points within 50% normal ellipsoid, found 56.67%
+Expected 1.50 outside 95% ellipsoid, found   2
+
+SPM12: spm_check_registration (v6245)              08:56:19 - 05/04/2017
+========================================================================
+Display <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+ (<a href="matlab:spm_check_registration('/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">all</a>)  <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+        <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+________________________________
+Case (subjects) weights: Low indicates likely outliers
+________________________________
+Using default mask: /Users/tor/Documents/Code_External/spm12/toolbox/FieldMap/brainmask.nii
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 5975040 bytes
+Loading image number:     0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29   30
+Elapsed time is 0.128795 seconds.
+fmri_data.create: Converting 561422 NaNs to 0s.Image names entered, but fullpath attribute is empty. Getting path info.
+.fullpath should have image name for each image column in .dat
+Attempting to expand image filenames in case image list is unexpanded 4-D images
+Expected 50% of points within 50% normal ellipsoid, found 56.67%
+Expected 1.50 outside 95% ellipsoid, found   4
+
+SPM12: spm_check_registration (v6245)              08:56:24 - 05/04/2017
+========================================================================
+Display <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+ (<a href="matlab:spm_check_registration('/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">all</a>)  <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+        <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+
+FDR correction info (FDR not necessarily used here; just for info):________________________________
+Calculating FDR threshold across family of tests in these images:
+rob_p_0001.img
+rob_p_0002.img
+The following images' mat files or dims differed from the first:
+1  2
+First mat:
+    -2     0     0    92
+     0     2     0  -128
+     0     0     2   -74
+     0     0     0     1
+
+    91   109    91
+
+Bad mats:
+rob_p_0001.img
+   -3.4375         0         0   82.5000
+         0    3.4375         0 -116.8750
+         0         0    4.5000  -54.0000
+         0         0         0    1.0000
+
+    47    56    31
+
+rob_p_0002.img
+   -3.4375         0         0   82.5000
+         0    3.4375         0 -116.8750
+         0         0    4.5000  -54.0000
+         0         0         0    1.0000
+
+    47    56    31
+
+Reslice images so dimensions and vox sizes match.
+Try using the function scn_map_image for an easy way to do this.
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('iimg_get_data', '/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Index_image_manip_tools/iimg_get_data.m', 135)" style="font-weight:bold">iimg_get_data</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Index_image_manip_tools/iimg_get_data.m',135,0)">line 135</a>)
+Exiting.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('robust_results_fdr_threshold/run_fdr', '/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_fdr_threshold.m', 106)" style="font-weight:bold">robust_results_fdr_threshold/run_fdr</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_fdr_threshold.m',106,0)">line 106</a>)
+        pvals = iimg_get_data(maskInfo, imgs);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('robust_results_fdr_threshold', '/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_fdr_threshold.m', 68)" style="font-weight:bold">robust_results_fdr_threshold</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_fdr_threshold.m',68,0)">line 68</a>)
+        SETUP = run_fdr();
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('robust_results_batch', '/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_batch.m', 190)" style="font-weight:bold">robust_results_batch</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_batch.m',190,0)">line 190</a>)
+SETUP = robust_results_fdr_threshold('fdr', 'mask', mask);
+} 
+<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Index_image_manip_tools/iimg_get_data.m',135,1)">135 </a>        error('Exiting.');
+dbup
+In workspace belonging to <a href="matlab:matlab.internal.language.introspective.errorDocCallback('robust_results_fdr_threshold/run_fdr', '/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_fdr_threshold.m', 106)" style="font-weight:bold">robust_results_fdr_threshold/run_fdr</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_fdr_threshold.m',106,0)">line 106</a>)
+dbup
+In workspace belonging to <a href="matlab:matlab.internal.language.introspective.errorDocCallback('robust_results_fdr_threshold', '/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_fdr_threshold.m', 68)" style="font-weight:bold">robust_results_fdr_threshold</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_fdr_threshold.m',68,0)">line 68</a>)
+dbdown
+In workspace belonging to <a href="matlab:matlab.internal.language.introspective.errorDocCallback('robust_results_fdr_threshold/run_fdr', '/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_fdr_threshold.m', 106)" style="font-weight:bold">robust_results_fdr_threshold/run_fdr</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_fdr_threshold.m',106,0)">line 106</a>)
+maskInfo
+
+maskInfo = 
+
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+         fname: '/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_ca'
+           dim: [91 109 91]
+            dt: [16 0]
+         pinfo: [3×1 double]
+           mat: [4×4 double]
+             n: [1 1]
+       descrip: 'Created by iimg_reconstruct_vols'
+       private: [1×1 nifti]
+          nvox: 902629
+    image_indx: [902629×1 logical]
+     wh_inmask: [211363×1 double]
+      n_inmask: 211363
+       xyzlist: [211363×3 double]
+       cluster: [211363×1 double]
+
+imgs
+
+imgs =
+
+rob_p_0001.img
+rob_p_0002.img
+
+mask
+
+mask =
+
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/gray_matter_mask.img
+
+ls
+Results_Mask.png		ols_p_0002.img
+SETUP.mat			ols_tmap_0001.hdr
+irls-ols_p_0001.hdr		ols_tmap_0001.img
+irls-ols_p_0001.img		ols_tmap_0002.hdr
+irls-ols_p_0002.hdr		ols_tmap_0002.img
+irls-ols_p_0002.img		rob_beta_0001.hdr
+irls-ols_z_0001.hdr		rob_beta_0001.img
+irls-ols_z_0001.img		rob_beta_0002.hdr
+irls-ols_z_0002.hdr		rob_beta_0002.img
+irls-ols_z_0002.img		rob_p_0001.hdr
+mask.hdr			rob_p_0001.img
+mask.img			rob_p_0002.hdr
+nsubjects.hdr			rob_p_0002.img
+nsubjects.img			rob_tmap_0001.hdr
+ols_beta_0001.hdr		rob_tmap_0001.img
+ols_beta_0001.img		rob_tmap_0002.hdr
+ols_beta_0002.hdr		rob_tmap_0002.img
+ols_beta_0002.img		robust_results_batch_report.txt
+ols_p_0001.hdr			weights.hdr
+ols_p_0001.img			weights.img
+ols_p_0002.hdr
+
+help check_image_space
+
+check_image_space not found.
+
+Use the Help browser search field to <a href="matlab:docsearch check_image_space">search the documentation</a>, or
+type "<a href="matlab:help help">help help</a>" for help command options, such as help for methods.
+
+help resample_space
+  :Usage:
+  ::
+ 
+      [resampled_dat, SPACEto] = resample_space(dat, V, [target V or target SPACE])
+ 
+  :Inputs:
+ 
+    **imdat:**
+         3-D volume data
+ 
+    **V:**
+         spm-style .mat structure for dat, e.g., from spm_vol
+ 
+    **V.mat:**
+         4 x 4 matrix of voxel sizes and mm coords for the bottom
+                    back left vox
+ 
+    **V.dim:**
+         dimensions of image
+ 
+ 
+    **targetsp:**
+ 
+       **target V:**
+           spm-style .mat structure defining space to transform to
+ 
+       -- OR --
+ 
+       **target SPACE:**
+           target SPACE, with Xmm, Ymm, Zmm; see map_to_world_space.m
+ 
+  :Outputs:
+ 
+    **resampled_dat:**
+         data sampled in new space
+ 
+    **SPACE structure, with fields:**
+ 
+       **Xmm, Ymm, Zmm:**
+           Meshgrid for voxel volume in mm space
+ 
+       **xcoords, ycoords, zcoords:**
+           mm coordinates for rows, cols, slices
+ 
+       **V:**
+           Vol info structure for image in new space
+
+    <a href="matlab:matlab.internal.language.introspective.overloads.displayOverloads('resample_space')">Other functions named resample_space</a>
+
+help robfit
+  EXPT = robfit(EXPT, [which cons], [do ols], [mask], [nocenter])
+ 
+  This function does a robust fit on contrasts specified in EXPT.SNPM.connames,
+  using images in EXPT.SNPM.P
+  The model should be stored (without intercept) in EXPT.cov
+  Empty EXPT.cov will result in a one-sample t-test
+ 
+  For each contrast, it saves con, t, p, filtered t imgs, and clusters.mat
+  p-value images are 2-tailed!
+ 
+  All predictors should be in a matrix of column vectors, stored in EXPT.cov.
+  
+  All covariates are scaled to mean=0 and sd=1, UNLESS they are composed of 0's, 1's, and -1's,
+  in which case they are assumed to be contrast codes and are not scaled.
+  the 'nocenter' flag prevents automatic scaling.  This behavior was
+  slightly modified on 5/29/2014 -- see programmer's notes below. 
+ 
+  Intercept is added as 1st predictor
+ 
+  fields should be:
+  EXPT.SNPM.P           containing image names of individual subjects
+  EXPT.SNPM.connames    str mtx of contrast names for each P string matrix
+  EXPT.SNPM.connums     contrast numbers for each P
+  EXPT.cov              empty for 1-sample ttest, or containing covariates
+  EXPT.mask             optional mask file for voxels to run
+  [mask] is the name of the mask file to use
+  [nocenter] is a flag to be used if you don't want to center some
+  variables (e.g., you have three different groups, two sets of contrasts)
+ 
+ 
+  [Which cons] optional vector of which arrays in EXPT.SNPM.P to use
+  e.g., [1 2 4] runs the first, second, and 4th sets of image names
+ 
+  Example:
+  %load('subjs');
+  %cd into results directory first!
+  EXPT.cov = [];
+  load(sprintf('%s/SPM.mat', subjs{1}));
+  wh_spm_cons = strmatch('T', char(SPM.xCon.STAT));
+  EXPT.SNPM.connames = strvcat(SPM.xCon(wh_spm_cons).name);
+  EXPT.SNPM.connums = 1:size(EXPT.SNPM.connames, 1);
+  EXPT.SNPM.P = {};
+  for i=1:length(wh_spm_cons)
+        EXPT.SNPM.P{i} = filenames(sprintf('%s/*/con_%04d.img', pwd(), wh_spm_cons(i)), 'char');
+  end
+ 
+  EXPT.mask = fullfile(study_root, 'rscalped_avg152T1_graymatter.img');
+  %or
+  EXPT.mask = fullfile(study_root, 'scalped_avg152T1_graymatter.img');
+  %or if you need to make a new mask:
+  mask = which('scalped_avg152T1_graymatter_smoothed.img');
+  [dummy, EXPT.mask] = reslice_imgs(EXPT.SNPM.P{1}(1,:),mask);
+ 
+  EXPT = robfit(EXPT, 1:length(EXPT.SNPM.connums), 0, EXPT.mask);
+ 
+  To do OLS, cons 1-4, and use gray matter mask:
+  EXPT = robfit(EXPT, 1:4, 1, EXPT.mask);
+ 
+  Programmer's notes:
+ 
+  On 5/19/2014, covariates are automatically scaled unless composed solely
+  of 0s, 1s, and -1s.  Previously, if ANY covariate was not composed soley
+  of 0s, 1s, and -1s, then NO covariate was centered.  Now, this decision
+  is made for each covariate separately.
+
+help reslice_imgs
+  arguments are file names of .img files
+  if empty, select from GUI% :Usage:
+ 
+  ::
+ 
+      function [P, reslicedImgs] = reslice_imgs(sampleTo, resliceThis, [domask], [overwrite])
+ 
+  if domask, recalculates a 1 or 0 mask for each image file in resliceThis
+  if overwrite, overwrite the original instead of prepending an 'r'
+ 
+  :Examples:
+  ::
+ 
+     % Reslice a mask image into the space of some functional images, and move to the current directory
+ 
+     [tmp, maskname] = reslice_imgs(image_names(1, :), maskname, 1);
+     eval(['!mv ' maskname ' ./'])
+     eval(['!mv ' maskname(1:end-4) '.hdr ./'])
+
+mask2 = reslice_imgs(deblank(imgs(1,:)), mask);
+{Attempt to add "mask2" to a static workspace.
+ See <a href="matlab: helpview([docroot '/techdoc/matlab_prog/matlab_prog.map'],'adding_variables_dynamically')">Variables in Nested and Anonymous Functions</a>.
+} 
+<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Index_image_manip_tools/iimg_get_data.m',135,1)">135 </a>        error('Exiting.');
+global mask2
+mask2 = reslice_imgs(deblank(imgs(1,:)), mask);
+{Undefined function or variable 'imgs'.
+} 
+<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Index_image_manip_tools/iimg_get_data.m',135,1)">135 </a>        error('Exiting.');
+imgs
+{Undefined function or variable 'imgs'.
+} 
+<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Index_image_manip_tools/iimg_get_data.m',135,1)">135 </a>        error('Exiting.');
+dbquit
+dbstack
+> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('iimg_get_data', '/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Index_image_manip_tools/iimg_get_data.m', 135)" style="font-weight:bold">iimg_get_data</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Index_image_manip_tools/iimg_get_data.m',135,0)">line 135</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('robust_results_fdr_threshold/run_fdr', '/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_fdr_threshold.m', 106)" style="font-weight:bold">robust_results_fdr_threshold/run_fdr</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_fdr_threshold.m',106,0)">line 106</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('robust_results_fdr_threshold', '/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_fdr_threshold.m', 68)" style="font-weight:bold">robust_results_fdr_threshold</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_fdr_threshold.m',68,0)">line 68</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('robust_results_batch', '/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_batch.m', 190)" style="font-weight:bold">robust_results_batch</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_batch.m',190,0)">line 190</a>)
+dbup
+In workspace belonging to <a href="matlab:matlab.internal.language.introspective.errorDocCallback('robust_results_fdr_threshold/run_fdr', '/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_fdr_threshold.m', 106)" style="font-weight:bold">robust_results_fdr_threshold/run_fdr</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/RobustToolbox/robust_toolbox/robust_results_fdr_threshold.m',106,0)">line 106</a>)
+mask = reslice_imgs(deblank(imgs(1,:)), mask);
+
+SPM12: spm_reslice (v5929)                         09:01:48 - 05/04/2017
+========================================================================
+Completed                               :          09:01:48 - 05/04/2017
+mask
+
+mask =
+
+rob_p_0001.img                                                                                                                     
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/gray_matter_mask.img
+
+spm_check_registration(mask);
+
+SPM12: spm_check_registration (v6245)              09:02:35 - 05/04/2017
+========================================================================
+Display <a href="matlab:spm_image('display','rob_p_0001.img,1');">rob_p_0001.img,1</a>
+ (<a href="matlab:spm_check_registration('rob_p_0001.img,1','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/gray_matter_mask.img,1');">all</a>)  <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/gray_matter_mask.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/gray_matter_mask.img,1</a>
+help reslice_imgs
+  arguments are file names of .img files
+  if empty, select from GUI% :Usage:
+ 
+  ::
+ 
+      function [P, reslicedImgs] = reslice_imgs(sampleTo, resliceThis, [domask], [overwrite])
+ 
+  if domask, recalculates a 1 or 0 mask for each image file in resliceThis
+  if overwrite, overwrite the original instead of prepending an 'r'
+ 
+  :Examples:
+  ::
+ 
+     % Reslice a mask image into the space of some functional images, and move to the current directory
+ 
+     [tmp, maskname] = reslice_imgs(image_names(1, :), maskname, 1);
+     eval(['!mv ' maskname ' ./'])
+     eval(['!mv ' maskname(1:end-4) '.hdr ./'])
+
+maskobj = fmri_data(mask);
+{Attempt to add "maskobj" to a static workspace.
+ See <a href="matlab: helpview([docroot '/techdoc/matlab_prog/matlab_prog.map'],'adding_variables_dynamically')">Variables in Nested and Anonymous Functions</a>.
+} 
+<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Index_image_manip_tools/iimg_get_data.m',135,1)">135 </a>        error('Exiting.');
+robust_results_batch('mask', EXPT.mask, 'thresh', [.001 .005 .05], 'size', [5 1 1], 'prune');
+==========================
+=
+= robust_results_batch.m
+=
+==========================
+Directory: /Users/tor/Documents/Code_Repositories/CANlab_help_examples/Robust_regression_walkthrough/Sample_analysis/robust0001/robust0001/robust0001/robust0001
+Date report generated: 05-Apr-2017
+________________________________
+
+
+Model info:
+________________________________
+Images and regressors (intercept +   1 covs)
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810001.img	1.0000	-0.2186	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810002.img	1.0000	-0.2556	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810003.img	1.0000	1.2659	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810004.img	1.0000	-0.6650	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810005.img	1.0000	-0.0048	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810006.img	1.0000	-1.4333	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810007.img	1.0000	-0.9996	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810008.img	1.0000	0.6845	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810009.img	1.0000	-0.8500	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810010.img	1.0000	0.1604	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810011.img	1.0000	-1.3141	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810012.img	1.0000	-0.0126	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810013.img	1.0000	-0.9302	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810014.img	1.0000	0.7507	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810015.img	1.0000	1.0777	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810016.img	1.0000	-2.0649	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810017.img	1.0000	-0.5004	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810018.img	1.0000	2.7888	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810019.img	1.0000	1.1919	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810020.img	1.0000	-0.1222	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810021.img	1.0000	-0.5540	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810022.img	1.0000	0.2267	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810023.img	1.0000	-0.0966	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810024.img	1.0000	-0.9086	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810025.img	1.0000	1.3167	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810026.img	1.0000	-0.5174	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810027.img	1.0000	0.5039	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810028.img	1.0000	0.9751	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810029.img	1.0000	0.2723	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810030.img	1.0000	0.2333	
+
+==========================
+
+
+Results info:________________________________
+Input options:
+mask	/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/gray_matter_mask.img	thresh	0.0010	0.0050	0.0500	
+
+size	prune	
+Results inputs
+________________________________
+
+Mask: /Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/gray_matter_mask.img
+Overlay: /Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/SPM8_colin27T1_seg.img
+
+P-value thresholds: 0.0010	0.0050	0.0500	
+
+
+Extent thresholds: 5.0000	1.0000	1.0000	
+
+
+SPM12: spm_check_registration (v6245)              09:07:04 - 05/04/2017
+========================================================================
+Display <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+________________________________
+Image dataset visualization and diagnostics
+________________________________
+Using default mask: /Users/tor/Documents/Code_External/spm12/toolbox/FieldMap/brainmask.nii
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 5975040 bytes
+Loading image number:     0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29   30
+Elapsed time is 0.209601 seconds.
+fmri_data.create: Converting 1203 NaNs to 0s.Image names entered, but fullpath attribute is empty. Getting path info.
+Expected 50% of points within 50% normal ellipsoid, found 56.67%
+Expected 1.50 outside 95% ellipsoid, found   2
+
+SPM12: spm_check_registration (v6245)              09:07:16 - 05/04/2017
+========================================================================
+Display <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+ (<a href="matlab:spm_check_registration('/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">all</a>)  <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+        <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+________________________________
+Case (subjects) weights: Low indicates likely outliers
+________________________________
+Using default mask: /Users/tor/Documents/Code_External/spm12/toolbox/FieldMap/brainmask.nii
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 5975040 bytes
+Loading image number:     0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29   30
+Elapsed time is 0.129158 seconds.
+fmri_data.create: Converting 561422 NaNs to 0s.Image names entered, but fullpath attribute is empty. Getting path info.
+.fullpath should have image name for each image column in .dat
+Attempting to expand image filenames in case image list is unexpanded 4-D images
+Expected 50% of points within 50% normal ellipsoid, found 56.67%
+Expected 1.50 outside 95% ellipsoid, found   4
+
+SPM12: spm_check_registration (v6245)              09:07:21 - 05/04/2017
+========================================================================
+Display <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+ (<a href="matlab:spm_check_registration('/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">all</a>)  <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+        <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+
+FDR correction info (FDR not necessarily used here; just for info):________________________________
+Calculating FDR threshold across family of tests in these images:
+rob_p_0001.img
+rob_p_0002.img
+Using default mask: /Users/tor/Documents/Code_External/spm12/toolbox/FieldMap/brainmask.nii
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 1409312 bytes
+Loading image number:     0    1
+Elapsed time is 0.025220 seconds.
+Image names entered, but fullpath attribute is empty. Getting path info.
+Using default mask: /Users/tor/Documents/Code_External/spm12/toolbox/FieldMap/brainmask.nii
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 398336 bytes
+Loading image number:     0    1    2
+Elapsed time is 0.018076 seconds.
+fmri_data.create: Converting 37428 NaNs to 0s.Image names entered, but fullpath attribute is empty. Getting path info.
+Total p-values:   61144
+Combined FDR threshold is 0.002855
+Returning output in SETUP.fdr_p_thresh (you must save this yourself in the .mat file)
+ 
+Getting FDR thresholds for individual images:
+rob_p_0001.img	 FDR (q < .05) =     Inf
+rob_p_0002.img	 FDR (q < .05) =     Inf
+Returning output in SETUP.fdr_p_thresh_indiv (you must save this yourself in the .mat file)
+
+________________________________
+Colors: Normal
+==========================
+==========================
+=
+= Results for rob0
+=
+==========================
+Unknown version of SPM!
+Will print tables.
+Will show slices.
+Saving log file: rob_p_0001_001_005_05_k5_1_1_prune_log.txt
+Other key results in: rob_p_0001_001_005_05_k5_1_1_prune_results.txt
+Will also save figures of slice montages if 'slices' requested.
+==========================
+=
+= robust_results_batch.m
+=
+==========================
+Directory: /Users/tor/Documents/Code_Repositories/CANlab_help_examples/Robust_regression_walkthrough/Sample_analysis/robust0001
+Date report generated: 05-Apr-2017
+________________________________
+
+
+Model info:
+________________________________
+Images and regressors (intercept +   1 covs)
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810001.img	1.0000	-0.2186	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810002.img	1.0000	-0.2556	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810003.img	1.0000	1.2659	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810004.img	1.0000	-0.6650	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810005.img	1.0000	-0.0048	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810006.img	1.0000	-1.4333	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810007.img	1.0000	-0.9996	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810008.img	1.0000	0.6845	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810009.img	1.0000	-0.8500	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810010.img	1.0000	0.1604	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810011.img	1.0000	-1.3141	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810012.img	1.0000	-0.0126	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810013.img	1.0000	-0.9302	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810014.img	1.0000	0.7507	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810015.img	1.0000	1.0777	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810016.img	1.0000	-2.0649	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810017.img	1.0000	-0.5004	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810018.img	1.0000	2.7888	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810019.img	1.0000	1.1919	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810020.img	1.0000	-0.1222	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810021.img	1.0000	-0.5540	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810022.img	1.0000	0.2267	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810023.img	1.0000	-0.0966	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810024.img	1.0000	-0.9086	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810025.img	1.0000	1.3167	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810026.img	1.0000	-0.5174	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810027.img	1.0000	0.5039	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810028.img	1.0000	0.9751	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810029.img	1.0000	0.2723	
+/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810030.img	1.0000	0.2333	
+
+==========================
+
+
+Results info:________________________________
+Input options:
+mask	/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/gray_matter_mask.img	thresh	0.0010	0.0050	0.0500	
+
+size	5.0000	1.0000	1.0000	
+
+prune	
+Results inputs
+________________________________
+
+Mask: /Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/gray_matter_mask.img
+Overlay: /Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/SPM8_colin27T1_seg.img
+
+P-value thresholds: 0.0010	0.0050	0.0500	
+
+
+Extent thresholds: 5.0000	1.0000	1.0000	
+
+
+SPM12: spm_check_registration (v6245)              14:52:21 - 05/04/2017
+========================================================================
+Display <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+________________________________
+Image dataset visualization and diagnostics
+________________________________
+Using default mask: /Users/tor/Documents/Code_External/spm12/toolbox/FieldMap/brainmask.nii
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 5975040 bytes
+Loading image number:     0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29   30
+Elapsed time is 0.246784 seconds.
+fmri_data.create: Converting 1203 NaNs to 0s.Image names entered, but fullpath attribute is empty. Getting path info.
+
+pos =
+
+   440   378   560   420
+
+Expected 50% of points within 50% normal ellipsoid, found 56.67%
+Expected 1.50 outside 95% ellipsoid, found   2
+
+SPM12: spm_check_registration (v6245)              14:52:36 - 05/04/2017
+========================================================================
+Display <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+ (<a href="matlab:spm_check_registration('/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">all</a>)  <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+        <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+________________________________
+Case (subjects) weights: Low indicates likely outliers
+________________________________
+Using default mask: /Users/tor/Documents/Code_External/spm12/toolbox/FieldMap/brainmask.nii
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 5975040 bytes
+Loading image number:     0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29   30
+Elapsed time is 0.137764 seconds.
+fmri_data.create: Converting 561422 NaNs to 0s.Image names entered, but fullpath attribute is empty. Getting path info.
+.fullpath should have image name for each image column in .dat
+Attempting to expand image filenames in case image list is unexpanded 4-D images
+Expected 50% of points within 50% normal ellipsoid, found 56.67%
+Expected 1.50 outside 95% ellipsoid, found   4
+
+SPM12: spm_check_registration (v6245)              14:52:41 - 05/04/2017
+========================================================================
+Display <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+ (<a href="matlab:spm_check_registration('/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">all</a>)  <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+        <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1</a>
+
+FDR correction info (FDR not necessarily used here; just for info):________________________________
+Calculating FDR threshold across family of tests in these images:
+rob_p_0001.img
+rob_p_0002.img
+Using default mask: /Users/tor/Documents/Code_External/spm12/toolbox/FieldMap/brainmask.nii
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 1409312 bytes
+Loading image number:     0    1
+Elapsed time is 0.021767 seconds.
+Image names entered, but fullpath attribute is empty. Getting path info.
+Using default mask: /Users/tor/Documents/Code_External/spm12/toolbox/FieldMap/brainmask.nii
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 398336 bytes
+Loading image number:     0    1    2
+Elapsed time is 0.017145 seconds.
+fmri_data.create: Converting 37428 NaNs to 0s.Image names entered, but fullpath attribute is empty. Getting path info.
+Total p-values:   61144
+Combined FDR threshold is 0.002855
+Returning output in SETUP.fdr_p_thresh (you must save this yourself in the .mat file)
+ 
+Getting FDR thresholds for individual images:
+rob_p_0001.img	 FDR (q < .05) =     Inf
+rob_p_0002.img	 FDR (q < .05) =     Inf
+Returning output in SETUP.fdr_p_thresh_indiv (you must save this yourself in the .mat file)
+
+________________________________
+Colors: Normal
+==========================
+==========================
+=
+= Results for rob0
+=
+==========================
+Unknown version of SPM!
+Will print tables.
+Will show slices.
+Saving log file: rob_p_0001_001_005_05_k5_1_1_prune_log.txt
+Other key results in: rob_p_0001_001_005_05_k5_1_1_prune_results.txt
+Will also save figures of slice montages if 'slices' requested.

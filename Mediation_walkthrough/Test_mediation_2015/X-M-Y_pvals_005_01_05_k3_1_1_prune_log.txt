@@ -1,0 +1,112 @@
+
+iimg_multi_threshold viewer
+=====================================================
+Showing positive or negative: pos
+Overlay is: /Applications/CANLAB/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/SPM8_colin27T1_seg.img
+Mask is entered in iimg_multi_threshold as a vector of numerical values
+Entered p-value image? : Yes
+Height thresholds:0.0050 0.0100 0.0500 
+Extent thresholds:   3   1   1 
+Show only contiguous with seed regions: Yes
+ 
+Warning: p-values in cl.Z will not give valid spm_max subclusters.
+log(1/p) saved in output cl.Z field.
+
+iimg_multi_threshold viewer
+=====================================================
+Showing positive or negative: neg
+Overlay is: /Applications/CANLAB/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/SPM8_colin27T1_seg.img
+Mask is entered in iimg_multi_threshold as a vector of numerical values
+Entered p-value image? : Yes
+Height thresholds:0.0050 0.0100 0.0500 
+Extent thresholds:   3   1   1 
+Show only contiguous with seed regions: Yes
+ 
+Warning: p-values in cl.Z will not give valid spm_max subclusters.
+log(1/p) saved in output cl.Z field.
+Extracting image data for significant clusters. Using cached image names.
+
+Extracting image data for significant clusters. Using cached image names.
+
+Saving clusters in cl_X-M-Y_pvals_005_01_05_k3_1_1_prune
+Saving image of slices: orth_X-M-Y_pvals_005_01_05_k3_1_1_prune_coronal.png
+[Warning: Zbuffer is not supported
+for printing, using OpenGL
+instead.] 
+[> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('inputcheck', '/Applications/MATLAB_R2015b.app/toolbox/matlab/graphics/private/inputcheck.p', 242)" style="font-weight:bold">inputcheck</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2015b.app/toolbox/matlab/graphics/private/inputcheck.p',242,0)">line 242</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('print', '/Applications/MATLAB_R2015b.app/toolbox/matlab/graphics/print.m', 153)" style="font-weight:bold">print</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2015b.app/toolbox/matlab/graphics/print.m',153,0)">line 153</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mediation_brain_results/do_slice_view', '/Applications/CANLAB/mediation_toolbox/mediation_brain_results.m', 739)" style="font-weight:bold">mediation_brain_results/do_slice_view</a> (<a href="matlab: opentoline('/Applications/CANLAB/mediation_toolbox/mediation_brain_results.m',739,0)">line 739</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mediation_brain_results', '/Applications/CANLAB/mediation_toolbox/mediation_brain_results.m', 365)" style="font-weight:bold">mediation_brain_results</a> (<a href="matlab: opentoline('/Applications/CANLAB/mediation_toolbox/mediation_brain_results.m',365,0)">line 365</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mediation_brain_results_all_script', '/Applications/CANLAB/mediation_toolbox/mediation_brain_results_all_script.m', 217)" style="font-weight:bold">mediation_brain_results_all_script</a> (<a href="matlab: opentoline('/Applications/CANLAB/mediation_toolbox/mediation_brain_results_all_script.m',217,0)">line 217</a>)] 
+Saving image of slices: orth_X-M-Y_pvals_005_01_05_k3_1_1_prune_sagittal.png
+[Warning: Zbuffer is not supported
+for printing, using OpenGL
+instead.] 
+[> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('inputcheck', '/Applications/MATLAB_R2015b.app/toolbox/matlab/graphics/private/inputcheck.p', 242)" style="font-weight:bold">inputcheck</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2015b.app/toolbox/matlab/graphics/private/inputcheck.p',242,0)">line 242</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('print', '/Applications/MATLAB_R2015b.app/toolbox/matlab/graphics/print.m', 153)" style="font-weight:bold">print</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2015b.app/toolbox/matlab/graphics/print.m',153,0)">line 153</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mediation_brain_results/do_slice_view', '/Applications/CANLAB/mediation_toolbox/mediation_brain_results.m', 756)" style="font-weight:bold">mediation_brain_results/do_slice_view</a> (<a href="matlab: opentoline('/Applications/CANLAB/mediation_toolbox/mediation_brain_results.m',756,0)">line 756</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mediation_brain_results', '/Applications/CANLAB/mediation_toolbox/mediation_brain_results.m', 365)" style="font-weight:bold">mediation_brain_results</a> (<a href="matlab: opentoline('/Applications/CANLAB/mediation_toolbox/mediation_brain_results.m',365,0)">line 365</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mediation_brain_results_all_script', '/Applications/CANLAB/mediation_toolbox/mediation_brain_results_all_script.m', 217)" style="font-weight:bold">mediation_brain_results_all_script</a> (<a href="matlab: opentoline('/Applications/CANLAB/mediation_toolbox/mediation_brain_results_all_script.m',217,0)">line 217</a>)] 
+Saving image of slices: orth_X-M-Y_pvals_005_01_05_k3_1_1_prune_axial.png
+[Warning: Zbuffer is not supported
+for printing, using OpenGL
+instead.] 
+[> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('inputcheck', '/Applications/MATLAB_R2015b.app/toolbox/matlab/graphics/private/inputcheck.p', 242)" style="font-weight:bold">inputcheck</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2015b.app/toolbox/matlab/graphics/private/inputcheck.p',242,0)">line 242</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('print', '/Applications/MATLAB_R2015b.app/toolbox/matlab/graphics/print.m', 153)" style="font-weight:bold">print</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2015b.app/toolbox/matlab/graphics/print.m',153,0)">line 153</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mediation_brain_results/do_slice_view', '/Applications/CANLAB/mediation_toolbox/mediation_brain_results.m', 774)" style="font-weight:bold">mediation_brain_results/do_slice_view</a> (<a href="matlab: opentoline('/Applications/CANLAB/mediation_toolbox/mediation_brain_results.m',774,0)">line 774</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mediation_brain_results', '/Applications/CANLAB/mediation_toolbox/mediation_brain_results.m', 365)" style="font-weight:bold">mediation_brain_results</a> (<a href="matlab: opentoline('/Applications/CANLAB/mediation_toolbox/mediation_brain_results.m',365,0)">line 365</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mediation_brain_results_all_script', '/Applications/CANLAB/mediation_toolbox/mediation_brain_results_all_script.m', 217)" style="font-weight:bold">mediation_brain_results_all_script</a> (<a href="matlab: opentoline('/Applications/CANLAB/mediation_toolbox/mediation_brain_results_all_script.m',217,0)">line 217</a>)] 
+
+iimg_multi_threshold viewer
+=====================================================
+Showing positive or negative: pos
+Overlay is: /Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/SPM8_colin27T1_seg.img
+Mask is entered in iimg_multi_threshold as a vector of numerical values
+Entered p-value image? : Yes
+Height thresholds:0.0050 0.0100 0.0500 
+Extent thresholds:   3   1   1 
+Show only contiguous with seed regions: Yes
+ 
+Warning: p-values in cl.Z will not give valid spm_max subclusters.
+log(1/p) saved in output cl.Z field.
+
+SPM12: spm_check_registration (v6245)              10:02:00 - 05/04/2017
+========================================================================
+Display <a href="matlab:spm_image('display','/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/SPM8_colin27T1_seg.img,1');">/Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/SPM8_colin27T1_seg.img,1</a>
+
+iimg_multi_threshold viewer
+=====================================================
+Showing positive or negative: neg
+Overlay is: /Users/tor/Documents/Code_Repositories/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/SPM8_colin27T1_seg.img
+Mask is entered in iimg_multi_threshold as a vector of numerical values
+Entered p-value image? : Yes
+Height thresholds:0.0050 0.0100 0.0500 
+Extent thresholds:   3   1   1 
+Show only contiguous with seed regions: Yes
+ 
+Warning: p-values in cl.Z will not give valid spm_max subclusters.
+log(1/p) saved in output cl.Z field.
+Extracting image data for significant clusters. Images are not valid files.
+Extracting image data for significant clusters. Images are not valid files.
+Appending clusters in cl_X-M-Y_pvals_005_01_05_k3_1_1_prune
+Saving image of slices: orth_X-M-Y_pvals_005_01_05_k3_1_1_prune_coronal.png
+[Warning: Zbuffer is not supported for printing, using OpenGL instead.] 
+[> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('inputcheck', '/Applications/MATLAB_R2016b.app/toolbox/matlab/graphics/private/inputcheck.p', 259)" style="font-weight:bold">inputcheck</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2016b.app/toolbox/matlab/graphics/private/inputcheck.p',259,0)">line 259</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('print', '/Applications/MATLAB_R2016b.app/toolbox/matlab/graphics/print.m', 41)" style="font-weight:bold">print</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2016b.app/toolbox/matlab/graphics/print.m',41,0)">line 41</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mediation_brain_results/do_slice_view', '/Users/tor/Documents/Code_Repositories/MediationToolbox/mediation_toolbox/mediation_brain_results.m', 739)" style="font-weight:bold">mediation_brain_results/do_slice_view</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/MediationToolbox/mediation_toolbox/mediation_brain_results.m',739,0)">line 739</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mediation_brain_results', '/Users/tor/Documents/Code_Repositories/MediationToolbox/mediation_toolbox/mediation_brain_results.m', 365)" style="font-weight:bold">mediation_brain_results</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/MediationToolbox/mediation_toolbox/mediation_brain_results.m',365,0)">line 365</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mediation_brain_results_all_script', '/Users/tor/Documents/Code_Repositories/MediationToolbox/mediation_toolbox/mediation_brain_results_all_script.m', 217)" style="font-weight:bold">mediation_brain_results_all_script</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/MediationToolbox/mediation_toolbox/mediation_brain_results_all_script.m',217,0)">line 217</a>)] 
+Saving image of slices: orth_X-M-Y_pvals_005_01_05_k3_1_1_prune_sagittal.png
+[Warning: Zbuffer is not supported for printing, using OpenGL instead.] 
+[> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('inputcheck', '/Applications/MATLAB_R2016b.app/toolbox/matlab/graphics/private/inputcheck.p', 259)" style="font-weight:bold">inputcheck</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2016b.app/toolbox/matlab/graphics/private/inputcheck.p',259,0)">line 259</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('print', '/Applications/MATLAB_R2016b.app/toolbox/matlab/graphics/print.m', 41)" style="font-weight:bold">print</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2016b.app/toolbox/matlab/graphics/print.m',41,0)">line 41</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mediation_brain_results/do_slice_view', '/Users/tor/Documents/Code_Repositories/MediationToolbox/mediation_toolbox/mediation_brain_results.m', 756)" style="font-weight:bold">mediation_brain_results/do_slice_view</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/MediationToolbox/mediation_toolbox/mediation_brain_results.m',756,0)">line 756</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mediation_brain_results', '/Users/tor/Documents/Code_Repositories/MediationToolbox/mediation_toolbox/mediation_brain_results.m', 365)" style="font-weight:bold">mediation_brain_results</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/MediationToolbox/mediation_toolbox/mediation_brain_results.m',365,0)">line 365</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mediation_brain_results_all_script', '/Users/tor/Documents/Code_Repositories/MediationToolbox/mediation_toolbox/mediation_brain_results_all_script.m', 217)" style="font-weight:bold">mediation_brain_results_all_script</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/MediationToolbox/mediation_toolbox/mediation_brain_results_all_script.m',217,0)">line 217</a>)] 
+Saving image of slices: orth_X-M-Y_pvals_005_01_05_k3_1_1_prune_axial.png
+[Warning: Zbuffer is not supported for printing, using OpenGL instead.] 
+[> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('inputcheck', '/Applications/MATLAB_R2016b.app/toolbox/matlab/graphics/private/inputcheck.p', 259)" style="font-weight:bold">inputcheck</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2016b.app/toolbox/matlab/graphics/private/inputcheck.p',259,0)">line 259</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('print', '/Applications/MATLAB_R2016b.app/toolbox/matlab/graphics/print.m', 41)" style="font-weight:bold">print</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2016b.app/toolbox/matlab/graphics/print.m',41,0)">line 41</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mediation_brain_results/do_slice_view', '/Users/tor/Documents/Code_Repositories/MediationToolbox/mediation_toolbox/mediation_brain_results.m', 774)" style="font-weight:bold">mediation_brain_results/do_slice_view</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/MediationToolbox/mediation_toolbox/mediation_brain_results.m',774,0)">line 774</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mediation_brain_results', '/Users/tor/Documents/Code_Repositories/MediationToolbox/mediation_toolbox/mediation_brain_results.m', 365)" style="font-weight:bold">mediation_brain_results</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/MediationToolbox/mediation_toolbox/mediation_brain_results.m',365,0)">line 365</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mediation_brain_results_all_script', '/Users/tor/Documents/Code_Repositories/MediationToolbox/mediation_toolbox/mediation_brain_results_all_script.m', 217)" style="font-weight:bold">mediation_brain_results_all_script</a> (<a href="matlab: opentoline('/Users/tor/Documents/Code_Repositories/MediationToolbox/mediation_toolbox/mediation_brain_results_all_script.m',217,0)">line 217</a>)] 

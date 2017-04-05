@@ -1,0 +1,40 @@
+Summary of output images:
+rob_p_0001.img
+Results clusters clpos and clneg are returned for the LAST image in this set.
+ 
+Printing Tables.
+NOTE: FULL MEDIATION TABLES DO NOT WORK YET FOR SINGLE-LEVEL RESULTS
+Printing abbreviated tables.
+Positive effects
+ 
+Z field contains: Robust regression predictor. (shown in maxstat)
+ 
+Name	index	x	y	z	corr	voxels	volume_mm3	maxstat	
+R1	  1	 10	 17	 27	NaN	5507	-292828	20.49	
+Negative effects
+ 
+Z field contains: Robust regression predictor. (shown in maxstat)
+ 
+Name	index	x	y	z	corr	voxels	volume_mm3	maxstat	
+R1	  1	-17	-45	-18	NaN	174	-9252	9.27	
+R2	  2	 52	-21	 22	NaN	204	-10847	8.35	
+Summary of output images:
+rob_p_0001.img
+Results clusters clpos and clneg are returned for the LAST image in this set.
+ 
+Printing Tables.
+NOTE: FULL MEDIATION TABLES DO NOT WORK YET FOR SINGLE-LEVEL RESULTS
+Printing abbreviated tables.
+Positive effects
+ 
+Z field contains: Robust regression predictor. (shown in maxstat)
+ 
+Name	index	x	y	z	corr	voxels	volume_mm3	maxstat	
+R1	  1	 10	 17	 27	NaN	5507	-292828	20.49	
+Negative effects
+ 
+Z field contains: Robust regression predictor. (shown in maxstat)
+ 
+Name	index	x	y	z	corr	voxels	volume_mm3	maxstat	
+R1	  1	-17	-45	-18	NaN	174	-9252	9.27	
+R2	  2	 52	-21	 22	NaN	204	-10847	8.35	
