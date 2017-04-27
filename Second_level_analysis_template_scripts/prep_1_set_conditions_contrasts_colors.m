@@ -51,10 +51,11 @@ DAT.contrastcolors = custom_colors ([.2 .2 .8], [.2 .8 .2], length (DAT.contrast
 disp('SET up conditions, colors, contrasts in DAT structure.');
 
 
-
 % Set BETWEEN-CONDITION contrasts, names, and colors
 % ------------------------------------------------------------------------
-% Currently used in c2c_SVM_across_conditions
+% Currently used in c2c_SVM_between_condition_contrasts
+%
+% Matrix of [n contrasts x k conditions]
 
 DAT.between_condition_cons = [1 -1 0;
                               1 0 -1];

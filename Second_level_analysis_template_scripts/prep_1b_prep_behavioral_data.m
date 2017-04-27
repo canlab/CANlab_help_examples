@@ -1,3 +1,5 @@
+%% READ behavioral data from file. These data will be put into standard structure compatible with analyses
+
 behavioral_data_filename = 'sedation_scores_for_tor.xlsx';
 behavioral_fname_path = fullfile(datadir, behavioral_data_filename);
 
@@ -6,15 +8,25 @@ if ~exist(behavioral_fname_path, 'file'), fprintf(1, 'CANNOT FIND FILE: %s\n',be
 behavioral_data_table = readtable(behavioral_fname_path,'FileType','spreadsheet');
 
 
+%% INITIALIZE GROUP VARIABLE
+
+% Single group variable, optional, for convenience
+% These fields are mandatory, but they can be empty
+% If group variable and between-person variables vary by
+% condition/contrast, leave these empty
+% -------------------------------------------------------------------------
+DAT.BETWEENPERSON.group = [];
+DAT.BETWEENPERSON.groupnames = {};
+DAT.BETWEENPERSON.groupcolors = {};
 
 
 %% INITIALIZE CONDITION/CONTRAST-SPECIFIC BETWEEN-PERSON DATA TABLES
 
 % Cell array with table of group (between-person) variables for each
-% condition, and for each contrast.  
+% condition, and for each contrast.
 % If variables are entered:
 % 1. they will be controlled for in analyses of the
-% overall condition/contrast effects. 
+% overall condition/contrast effects.
 % 2. Analyses relating conditions/contrasts to these variables will be
 % performed.
 % If no variables are entered (empty elements), only
@@ -23,11 +35,16 @@ behavioral_data_table = readtable(behavioral_fname_path,'FileType','spreadsheet'
 % Initialize empty variables
 DAT.BETWEENPERSON = [];
 
-% Save everything
-DAT.BETWEENPERSON.behavioral_data_table = behavioral_data_table;
+% Between-person variables influencing each condition
+% Table of [n images in condition x q variables]
+% names in table can be any valid name.
 
 DAT.BETWEENPERSON.conditions = cell(1, length(DAT.conditions));
 [DAT.BETWEENPERSON.conditions{:}] = deal(table());  % empty tables
+
+% Between-person variables influencing each condition
+% Table of [n images in contrast x q variables]
+% names in table can be any valid name.
 
 DAT.BETWEENPERSON.contrasts = cell(1, length(DAT.contrastnames));
 [DAT.BETWEENPERSON.contrasts{:}] = deal(table());  % empty tables

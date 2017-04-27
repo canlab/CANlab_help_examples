@@ -38,7 +38,6 @@ mysignames = strcat(signatures_to_plot{:});
 % ------------------------------------------------------------------------
 
 figtitle = sprintf('%s conditions %s %s', mysignames, myscaling, mymetric);
-create_figure(figtitle);
 printhdr(figtitle);
 
 create_figure(figtitle, 1, nplots);
@@ -55,10 +54,10 @@ for n = 1:nplots
     
 end
 
-drawnow, snapnow
 
 savename = fullfile(figsavedir, [figtitle '.png']);
 saveas(gcf, savename);
+drawnow, snapnow
 
 
 %% Signature Response - contrasts
@@ -72,7 +71,6 @@ end
 
 
 figtitle = sprintf('%s contrasts %s %s', mysignames, myscaling, mymetric);
-create_figure(figtitle);
 printhdr(figtitle);
 
 create_figure(figtitle, 1, nplots);
@@ -88,9 +86,9 @@ for n = 1:nplots
 
 end
 
-drawnow, snapnow
 
 savename = fullfile(figsavedir, [figtitle '.png']);
 saveas(gcf, savename);
+drawnow, snapnow
 
 

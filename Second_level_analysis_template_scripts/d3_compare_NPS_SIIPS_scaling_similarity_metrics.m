@@ -67,7 +67,7 @@ title(format_strings_for_legend(myname), 'FontSize', 12);
 set(gca, 'XTickLabel', {});
 
 %%
-drawnow, snapnow
 
 savename = fullfile(figsavedir, [figtitle '.png']);
 saveas(gcf, savename);
+drawnow, snapnow

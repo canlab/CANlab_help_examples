@@ -1,15 +1,23 @@
 % THIS SCRIPT RUNS BETWEEN-PERSON CONTRASTS
-% Assuming that groups are concatenated into contrast image lists 
+% Assuming that groups are concatenated into contrast image lists.
+% Requires DAT.BETWEENPERSON.group field specifying group membership for
+% each image.
 % --------------------------------------------------------------------
 
 
 myscaling = 'scaled';          % 'raw' or 'scaled'
 
-% Initialize display if needed
+% Initialize slice display if needed, or clear existing display
+% --------------------------------------------------------------------
+
 if ~exist('o2', 'var') || ~isa(o2, 'fmridisplay')
     create_figure('fmridisplay'); axis off
     o2 = canlab_results_fmridisplay([], 'noverbose');
-    whmontage = 5;
+    whmontage = 5; % for title
+else
+    o2 = removeblobs(o2);
+    axes(o2.montage{whmontage}.axis_handles(5));
+    title(' ');
 end
 
 printhdr('Cross-validated SVM to discriminate between-person contrasts');
@@ -18,10 +26,15 @@ printhdr('Cross-validated SVM to discriminate between-person contrasts');
 %    Assume that subjects are in same position in each input file
 % --------------------------------------------------------------------
 
+if ~isfield(DAT, 'BETWEENPERSON') || ~isfield(DAT.BETWEENPERSON, 'group')
+        printhdr('Enter DAT.BETWEENPERSON.group CODED WITH 1, -1 TO RUN BETWEEN-PERSON SVM. SKIPPING.');
+    return
+end
+
 group = DAT.BETWEENPERSON.group;
 
 if ~all(group ~= 1 | group ~= -1)
-    printhdr('CODE DAT.BETWEENPERSON.group WITH 1, -1 TO RUN BETWEEN-PERSON SVM. SKIPPING.');
+        printhdr('Code DAT.BETWEENPERSON.group WITH 1, -1 TO RUN BETWEEN-PERSON SVM. SKIPPING.');
     return
 end
 
@@ -57,9 +70,11 @@ for c = 1:kc
     
     switch myscaling
         case 'raw'
+            printstr('Raw (unscaled) images used in between-person SVM');
             cat_obj = DATA_OBJ_CON{c};
             
         case 'scaled'
+            printstr('Scaled images used in between-person SVM');
             cat_obj = DATA_OBJ_CON{c};
             
         otherwise
@@ -119,11 +134,12 @@ for c = 1:kc
     title(DAT.contrastnames{c}, 'FontSize', 18)
     
     printstr(DAT.contrastnames{c}); printstr(dashes);
-    drawnow, snapnow
+
     figtitle = sprintf('SVM weight map nothresh %s', DAT.contrastnames{c});
     savename = fullfile(figsavedir, [figtitle '.png']);
     saveas(gcf, savename);
-    
+    drawnow, snapnow
+       
     o2 = removeblobs(o2);
     
 end  % within-person contrast

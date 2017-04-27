@@ -6,13 +6,26 @@
 
 mycolors = seaborn_colors(max(length(netnames), length(npsplusnames)));
 
+k = length(DAT.conditions);
+
+% get font size
+if k > 8
+    myfontsize = 12;
+elseif k > 5
+    myfontsize = 14;
+elseif k > 2
+    myfontsize = 18;
+else
+    myfontsize = 22;
+end
+
+ 
 %% Profiles across Buckner Lab rsFMRI networks
 
 % Barplot: All conditions
 % ----------------------------------------------------------------
 printhdr('BucknerLab rsFMRI Cosine Similarity : All conditions');
 
-k = length(DAT.conditions);
 create_figure('bucknerlab', 1, k);
 
 
@@ -21,13 +34,16 @@ clear axh
 for i = 1:k
     
     subplot(1, k, i);
+    
+   
+    
     [stats hh hhfill table_group multcomp_group] = image_similarity_plot(DATA_OBJ{i}, 'average', 'cosine_similarity', 'colors', DAT.colors(i), 'nofigure', 'noplot');
     
     barplot_columns(stats.r', 'colors', mycolors, 'noviolin', 'nofig', 'noind', 'names', netnames);
     hold on; plot_horizontal_line(0);
     
     axh(i) = gca;
-    set(gca, 'XTickLabel', netnames, 'XTickLabelRotation', 45);
+    set(gca, 'XTickLabel', netnames, 'XTickLabelRotation', 45, 'FontSize', myfontsize);
     ylabel('Cosine similarity');
     xlabel('')
     title(DAT.conditions{i});
@@ -36,11 +52,11 @@ for i = 1:k
 end
 
 equalize_axes(axh);
-drawnow, snapnow
+
 figtitle = 'Bucknerlab networks all conditions';
 savename = fullfile(figsavedir, [figtitle '.png']);
 saveas(gcf, savename);
-    
+drawnow, snapnow    
 
 %%
 
@@ -74,10 +90,11 @@ if isfield(DAT, 'contrasts') && ~isempty(DAT.contrasts)
     end
 
     equalize_axes(axh);
-    drawnow, snapnow
+
     figtitle = 'Bucknerlab networks all contrasts';
     savename = fullfile(figsavedir, [figtitle '.png']);
     saveas(gcf, savename);
+    drawnow, snapnow
     
 end
 
@@ -112,10 +129,11 @@ for i = 1:k
 end
 
 equalize_axes(axh);
-drawnow, snapnow
+
 figtitle = 'CANlab signatures all conditions';
 savename = fullfile(figsavedir, [figtitle '.png']);
 saveas(gcf, savename);
+drawnow, snapnow
 
 % Contrasts: All conditions
 % ------------------------------------------------------------------------
@@ -152,11 +170,12 @@ if isfield(DAT, 'contrasts') && ~isempty(DAT.contrasts)
     end
 
     equalize_axes(axh);
-    drawnow, snapnow
+
     figtitle = 'CANlab signatures all contrasts';
     savename = fullfile(figsavedir, [figtitle '.png']);
     saveas(gcf, savename);
-    
+    drawnow, snapnow
+        
 end % if
 
 

@@ -12,10 +12,10 @@ o2 = addblobs(o2, region(fmri_data(which('canonical_ventricles.img'))), 'outline
 
 o2 = addblobs(o2, region(mean(DATA_OBJ{1})), 'trans', 'wh_montage', [3:4]);
 
-drawnow, snapnow
-
 savename = fullfile(figsavedir, [figtitle '.png']);
 saveas(gcf, savename);
+
+drawnow, snapnow
 
 clear o2
 

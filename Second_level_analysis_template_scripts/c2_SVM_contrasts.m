@@ -1,9 +1,18 @@
+% THIS SCRIPT RUNS SVMs for WITHIN-PERSON CONTRASTS
+% Specified in DAT.contrasts
+% --------------------------------------------------------------------
 
-% Initialize display if needed
+% Initialize slice display if needed, or clear existing display
+% --------------------------------------------------------------------
+
 if ~exist('o2', 'var') || ~isa(o2, 'fmridisplay')
     create_figure('fmridisplay'); axis off
     o2 = canlab_results_fmridisplay([], 'noverbose');
-    whmontage = 5;
+    whmontage = 5; % for title
+else
+    o2 = removeblobs(o2);
+    axes(o2.montage{whmontage}.axis_handles(5));
+    title(' ');
 end
 
 printhdr('Cross-validated SVM to discriminate contrasts');
@@ -71,11 +80,11 @@ for c = 1:kc
     
     ROC = roc_plot(stats.dist_from_hyperplane_xval, logical(cat_obj.Y > 0), 'color', DAT.contrastcolors{c}, 'twochoice');
     
-    drawnow, snapnow
     figtitle = sprintf('SVM ROC %s', DAT.contrastnames{c});
     savename = fullfile(figsavedir, [figtitle '.png']);
     saveas(gcf, savename);
-
+    drawnow, snapnow
+    
     % Effect size, cross-validated, paired samples
     dfun2 = @(x, Y) mean(x(Y > 0) - x(Y < 0)) ./ std(x(Y > 0) - x(Y < 0));
     d = dfun2(stats.dist_from_hyperplane_xval, stats.Y);
@@ -91,10 +100,15 @@ for c = 1:kc
     title(DAT.contrastnames{c}, 'FontSize', 18)
     
     printstr(DAT.contrastnames{c}); printstr(dashes);
-    drawnow, snapnow
+    
     figtitle = sprintf('SVM weight map nothresh %s', DAT.contrastnames{c});
     savename = fullfile(figsavedir, [figtitle '.png']);
     saveas(gcf, savename);
+    drawnow, snapnow
+    
+    % Remove title in case fig is re-printed in html
+    axes(o2.montage{whmontage}.axis_handles(5));
+    title(' ', 'FontSize', 18)
     
     o2 = removeblobs(o2);
     

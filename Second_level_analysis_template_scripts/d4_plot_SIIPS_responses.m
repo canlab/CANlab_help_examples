@@ -53,10 +53,9 @@ for n = 1:nplots
     
 end
 
-drawnow, snapnow
-
 savename = fullfile(figsavedir, [figtitle '.png']);
 saveas(gcf, savename);
+drawnow, snapnow
 
 
 %% Signature Response - contrasts
@@ -86,9 +85,8 @@ for n = 1:nplots
 
 end
 
-drawnow, snapnow
-
 savename = fullfile(figsavedir, [figtitle '.png']);
 saveas(gcf, savename);
+drawnow, snapnow
 
 

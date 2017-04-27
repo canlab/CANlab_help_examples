@@ -72,10 +72,10 @@ for i = 1:k
     
 end
 
-drawnow, snapnow
 
 savename = fullfile(figsavedir, [figtitle '.png']);
 saveas(gcf, savename);
+drawnow, snapnow
 
 
 
@@ -112,9 +112,8 @@ for i = 1:kc
     
 end
 
-drawnow, snapnow
 
 savename = fullfile(figsavedir, [figtitle '.png']);
 saveas(gcf, savename);
-
+drawnow, snapnow
 

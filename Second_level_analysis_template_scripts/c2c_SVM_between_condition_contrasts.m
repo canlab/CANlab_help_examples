@@ -13,11 +13,17 @@
 
 myscaling = 'scaled';          % 'raw' or 'scaled'
 
-% Initialize display if needed
+% Initialize slice display if needed, or clear existing display
+% --------------------------------------------------------------------
+
 if ~exist('o2', 'var') || ~isa(o2, 'fmridisplay')
     create_figure('fmridisplay'); axis off
     o2 = canlab_results_fmridisplay([], 'noverbose');
-    whmontage = 5;
+    whmontage = 5; % for title
+else
+    o2 = removeblobs(o2);
+    axes(o2.montage{whmontage}.axis_handles(5));
+    title(' ');
 end
 
 printhdr('Cross-validated SVM to discriminate between-condition contrasts');
@@ -32,6 +38,11 @@ kc = size(DAT.between_condition_cons, 1);
 
 for c = 1:kc
     
+    if ~isfield(DAT, 'between_condition_cons') 
+        printhdr('Enter DAT.between_condition_cons CODED WITH 1, -1 TO RUN BETWEEN-PERSON across condition SVM. SKIPPING.');
+    return
+    end
+
     convec = DAT.between_condition_cons(c, :);
     
     % concatenate data
@@ -135,11 +146,12 @@ hs = cat(2, holdout_set{:});
     title(DAT.between_condition_contrastnames{c}, 'FontSize', 18)
     
     printstr(DAT.between_condition_contrastnames{c}); printstr(dashes);
-    drawnow, snapnow
+
     figtitle = sprintf('SVM weight map nothresh %s', DAT.between_condition_contrastnames{c});
     savename = fullfile(figsavedir, [figtitle '.png']);
     saveas(gcf, savename);
-    
+    drawnow, snapnow
+        
     o2 = removeblobs(o2);
     
 end  % within-person contrast
