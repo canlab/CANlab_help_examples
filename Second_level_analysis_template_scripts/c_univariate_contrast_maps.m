@@ -43,9 +43,7 @@ for i = 1:k
     axes(o2.montage{whmontage}.axis_handles(5));
     title(figstr, 'FontSize', 18)
 
-    savename = fullfile(figsavedir, [figtitle '.png']);
-    saveas(gcf, savename);
-    drawnow, snapnow
+    plugin_save_figure;
 
     % 2nd plot at 0.01 uncorrected
     % -----------------------------------------------
@@ -61,9 +59,7 @@ for i = 1:k
     axes(o2.montage{whmontage}.axis_handles(5));
     title(figstr, 'FontSize', 18)
     
-    savename = fullfile(figsavedir, [figtitle '.png']);
-    saveas(gcf, savename);
-    drawnow, snapnow
+    plugin_save_figure;
         
 end
 

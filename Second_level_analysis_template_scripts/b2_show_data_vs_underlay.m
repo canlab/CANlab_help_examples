@@ -12,10 +12,8 @@ o2 = addblobs(o2, region(fmri_data(which('canonical_ventricles.img'))), 'outline
 
 o2 = addblobs(o2, region(mean(DATA_OBJ{1})), 'trans', 'wh_montage', [3:4]);
 
-savename = fullfile(figsavedir, [figtitle '.png']);
-saveas(gcf, savename);
+plugin_save_figure
 
-drawnow, snapnow
-
+close % to save memory, etc., as we are printing figs
 clear o2
 

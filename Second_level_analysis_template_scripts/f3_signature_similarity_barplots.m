@@ -46,15 +46,15 @@ for i = 1:k
     title(DAT.conditions{i});
     axis tight
     
+    drawnow
 end
 
 equalize_axes(axh);
 
 if nrows == 1, kludgy_fix_for_y_axis(axh); end
 
-savename = fullfile(figsavedir, [figtitle '.png']);
-saveas(gcf, savename);
-drawnow, snapnow
+plugin_save_figure;
+close
 
 %%
 
@@ -93,15 +93,15 @@ if isfield(DAT, 'contrasts') && ~isempty(DAT.contrasts)
         title(DAT.contrastnames{i});
         axis tight
         
+        drawnow
     end
     
     equalize_axes(axh);
     
     if nrows == 1, kludgy_fix_for_y_axis(axh); end
     
-    savename = fullfile(figsavedir, [figtitle '.png']);
-    saveas(gcf, savename);
-    drawnow, snapnow
+    plugin_save_figure;
+    close
     
 end
 

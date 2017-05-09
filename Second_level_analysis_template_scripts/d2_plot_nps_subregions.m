@@ -101,9 +101,7 @@ for i = 1:kc
     
 end
 
-drawnow, snapnow
-
-savename = fullfile(figsavedir, [figtitle '.png']);
-saveas(gcf, savename);
+plugin_save_figure;
+close
 
 

@@ -68,6 +68,5 @@ set(gca, 'XTickLabel', {});
 
 %%
 
-savename = fullfile(figsavedir, [figtitle '.png']);
-saveas(gcf, savename);
-drawnow, snapnow
+plugin_save_figure;
+close

@@ -119,16 +119,15 @@ hs = cat(2, holdout_set{:});
     % Summarize output and create ROC plot
     % --------------------------------------------------------------------
     
-    create_figure('ROC');
+    figtitle = sprintf('SVM ROC %s', DAT.between_condition_contrastnames{c});
+    create_figure(figtitle);
     disp(' ');
     printstr(['Results: ' DAT.between_condition_contrastnames{c}]); printstr(dashes);
     
     ROC = roc_plot(stats.dist_from_hyperplane_xval, logical(cat_obj.Y > 0), 'color', DAT.between_condition_contrastcolors{c}, 'Optimal balanced error rate');
     
-    drawnow, snapnow
-    figtitle = sprintf('SVM ROC %s', DAT.between_condition_contrastnames{c});
-    savename = fullfile(figsavedir, [figtitle '.png']);
-    saveas(gcf, savename);
+    plugin_save_figure;
+    close
     
     % Effect size, cross-validated
     dfun2 = @(x, Y) (mean(x(Y > 0)) - mean(x(Y < 0))) ./ sqrt(var(x(Y > 0)) + var(x(Y < 0))); % check this.
@@ -148,9 +147,7 @@ hs = cat(2, holdout_set{:});
     printstr(DAT.between_condition_contrastnames{c}); printstr(dashes);
 
     figtitle = sprintf('SVM weight map nothresh %s', DAT.between_condition_contrastnames{c});
-    savename = fullfile(figsavedir, [figtitle '.png']);
-    saveas(gcf, savename);
-    drawnow, snapnow
+    plugin_save_figure;
         
     o2 = removeblobs(o2);
     

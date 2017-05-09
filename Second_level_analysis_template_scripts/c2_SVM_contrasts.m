@@ -102,9 +102,7 @@ for c = 1:kc
     printstr(DAT.contrastnames{c}); printstr(dashes);
     
     figtitle = sprintf('SVM weight map nothresh %s', DAT.contrastnames{c});
-    savename = fullfile(figsavedir, [figtitle '.png']);
-    saveas(gcf, savename);
-    drawnow, snapnow
+    plugin_save_figure;
     
     % Remove title in case fig is re-printed in html
     axes(o2.montage{whmontage}.axis_handles(5));

@@ -50,9 +50,8 @@ equalize_axes(axh);
 
 if nrows == 1, kludgy_fix_for_y_axis(axh); end
 
-savename = fullfile(figsavedir, [figtitle '.png']);
-saveas(gcf, savename);
-drawnow, snapnow
+plugin_save_figure;
+
 
 %%
 
@@ -97,9 +96,8 @@ if isfield(DAT, 'contrasts') && ~isempty(DAT.contrasts)
     
     if nrows == 1, kludgy_fix_for_y_axis(axh); end
     
-    savename = fullfile(figsavedir, [figtitle '.png']);
-    saveas(gcf, savename);
-    drawnow, snapnow
+    plugin_save_figure;
+    
     
 end
 

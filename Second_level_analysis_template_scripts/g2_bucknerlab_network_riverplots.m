@@ -3,8 +3,8 @@
 %% Profiles across signatures
 
 % Load signature maps
-[npsplus, netnames, imgnames] = load_image_set('npsplus');
-npsplus.image_names = netnames;
+[bucknerlab, netnames, imgnames] = load_image_set('bucknerlab');
+bucknerlab.image_names = netnames;
 
 % Riverplot
 % ----------------------------------------------------------------
@@ -14,7 +14,7 @@ printhdr('Cosine Similarity : All conditions');
 for i = 1:length(DATA_OBJ), DATA_OBJ{i}.image_names = DAT.conditions{i}; end
 
 % plot significant associations only
-riverplot(DATA_OBJ, 'layer2', npsplus, 'pos', 'significant_only', 'layer1colors', DAT.colors, 'layer2colors', seaborn_colors(length(netnames)));
+riverplot(DATA_OBJ, 'layer2', bucknerlab, 'pos', 'significant_only', 'layer1colors', DAT.colors, 'layer2colors', seaborn_colors(length(netnames)));
 
 % Old way: not statistically thresholded, but works:
 % Get mean data across subjects
@@ -29,13 +29,12 @@ riverplot(DATA_OBJ, 'layer2', npsplus, 'pos', 'significant_only', 'layer1colors'
 %     end
 %
 %
-%     riverplot(m, 'layer2', npsplus, 'pos', 'layer1colors', DAT.colors, 'layer2colors', seaborn_colors(length(netnames)), 'thin');
+%     riverplot(m, 'layer2', bucknerlab, 'pos', 'layer1colors', DAT.colors, 'layer2colors', seaborn_colors(length(netnames)), 'thin');
 %     pause(2)
 
 figtitle = 'CANlab signatures riverplot of conditions';
-savename = fullfile(figsavedir, [figtitle '.png']);
-saveas(gcf, savename);
-drawnow, snapnow
+plugin_save_figure;
+
 
 
 %% Contrasts: All signatures
@@ -57,7 +56,7 @@ k = size(DAT.contrasts, 1);
 for i = 1:length(DATA_OBJ_CON), DATA_OBJ_CON{i}.image_names = DAT.contrastnames{i}; end
 
 % plot significant associations only
-riverplot(DATA_OBJ_CON, 'layer2', npsplus, 'pos', 'significant_only', 'layer1colors', DAT.contrastcolors, 'layer2colors', seaborn_colors(length(netnames)));
+riverplot(DATA_OBJ_CON, 'layer2', bucknerlab, 'pos', 'significant_only', 'layer1colors', DAT.contrastcolors, 'layer2colors', seaborn_colors(length(netnames)));
 
 % Old way: not statistically thresholded, but works:
 % Get mean data across subjects
@@ -71,10 +70,9 @@ riverplot(DATA_OBJ_CON, 'layer2', npsplus, 'pos', 'significant_only', 'layer1col
 %
 %     end
 %
-%     riverplot(m, 'layer2', npsplus, 'pos', 'layer1colors', DAT.contrastcolors, 'layer2colors', seaborn_colors(length(netnames)), 'thin');
+%     riverplot(m, 'layer2', bucknerlab, 'pos', 'layer1colors', DAT.contrastcolors, 'layer2colors', seaborn_colors(length(netnames)), 'thin');
 
 figtitle = 'CANlab signatures riverplot of contrasts';
-savename = fullfile(figsavedir, [figtitle '.png']);
-saveas(gcf, savename);
-drawnow, snapnow
+plugin_save_figure;
+
 

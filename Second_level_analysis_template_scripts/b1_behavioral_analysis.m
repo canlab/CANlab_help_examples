@@ -52,9 +52,8 @@ xlabel(xname)
 ylabel(yname)
 axis auto
 
-drawnow, snapnow
-savename = fullfile(figsavedir, [figtitle '.png']);
-saveas(gcf, savename);
+plugin_save_figure;
+close               % to save memory
 
 
 %% FIGURE 2: BARPLOTS OF PATIENT VS. CONTROL IN STIM INTENSITY
@@ -86,7 +85,6 @@ bardat{2} = var1(wh2);
 
 barplot_columns(bardat, 'title', paneltitle, 'nofig', 'names', DAT.BETWEENPERSON.groupnames, 'colors', DAT.BETWEENPERSON.groupcolors);
 
-drawnow, snapnow
-savename = fullfile(figsavedir, [figtitle '.png']);
-saveas(gcf, savename);
+plugin_save_figure;
+close               % to save memory
 

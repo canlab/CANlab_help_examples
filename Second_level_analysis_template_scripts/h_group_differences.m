@@ -6,16 +6,13 @@ scalenames =    {'raw'};                                % or scaled
 simnames =      {'dotproduct'};                         % or 'cosine_sim' 'dotproduct'
 
 % Define groups
+% There are two ways to define groups. The other is condition- and
+% contrast-specific.  These are entered in DAT.BETWEENPERSON.conditions and
+% DAT.BETWEENPERSON.contrasts, in cells.  1 -1 codes work best. 
+% These are set up in prep_1b_prep_behavioral_data.m
+% If they are missing, using DAT.BETWEENPERSON.group will be used as a
+% generic option.
 % -------------------------------------------------------------------------
-
-if isfield(DAT, 'BETWEENPERSON') && isfield(DAT.BETWEENPERSON, 'group')
-    group = DAT.BETWEENPERSON.group; % empty for no variable to control/remove
-    groupnames = DAT.BETWEENPERSON.groupnames;
-    groupcolors = DAT.BETWEENPERSON.groupcolors;
-else
-    printhdr('DAT.BETWEENPERSON.group not defined. See prep1b between person setup script. Skipping.');
-    return
-end
 
 
 % Loop through signatures, create one plot per contrast
@@ -37,6 +34,11 @@ for s = 1:length(mysignature)
     create_figure(figtitle, 1, kc);
     
     for i = 1:kc
+        
+        mygroupnamefield = 'contrasts';  % 'conditions' or 'contrasts'
+        [group, groupnames, groupcolors] = plugin_get_group_names_colors(DAT, mygroupnamefield, i);
+        
+        if isempty(group), continue, end % skip this condition/contrast - no groups
         
         %y = {DAT.(myfield){i}(group > 0) DAT.(myfield){i}(group < 0)};
         y = {contrastdata(group > 0, i) contrastdata(group < 0, i)};
@@ -74,6 +76,10 @@ mysubrfieldneg = 'npsneg_by_region_contrasts'; % 'npsneg_by_region_cosinesim';  
 clear means p T
 
 for i = 1:kc  % for each contrast
+    
+    mygroupnamefield = 'contrasts';  % 'conditions' or 'contrasts'
+    [group, groupnames, groupcolors] = plugin_get_group_names_colors(DAT, mygroupnamefield, i);
+    if isempty(group), continue, end % skip this condition/contrast - no groups
     
     mydat = DAT.NPSsubregions.(mysubrfield){i};
     k = size(mydat, 2);
@@ -120,7 +126,12 @@ end % panels
 
 %% Subregions - Neg
 
-for i = 1:3
+for i = 1:kc
+    
+    mygroupnamefield = 'contrasts';  % 'conditions' or 'contrasts'
+    [group, groupnames, groupcolors] = plugin_get_group_names_colors(DAT, mygroupnamefield, i);
+    
+    if isempty(group), continue, end % skip this condition/contrast - no groups
     
     mydat = DAT.NPSsubregions.(mysubrfieldneg){i};
     k = size(mydat, 2);
@@ -166,3 +177,41 @@ for i = 1:3
 end
 
 
+function [group, groupnames, groupcolors] = plugin_get_group_names_colors(DAT, mygroupnamefield, i)
+
+group = []; groupnames = []; groupcolors = [];
+
+if isfield(DAT, 'BETWEENPERSON') && ...
+        isfield(DAT.BETWEENPERSON, mygroupnamefield) && ...
+        iscell(DAT.BETWEENPERSON.(mygroupnamefield)) && ...
+        length(DAT.BETWEENPERSON.(mygroupnamefield)) >= i && ...
+        ~isempty(DAT.BETWEENPERSON.(mygroupnamefield){i})
+    
+    group = DAT.BETWEENPERSON.(mygroupnamefield){i};
+    
+elseif isfield(DAT, 'BETWEENPERSON') && ...
+        isfield(DAT.BETWEENPERSON, 'group') && ...
+        ~isempty(DAT.BETWEENPERSON.group)
+    
+    group = DAT.BETWEENPERSON.group;
+
+end
+
+
+if isfield(DAT, 'BETWEENPERSON') && isfield(DAT.BETWEENPERSON, 'groupnames')
+    groupnames = DAT.BETWEENPERSON.groupnames;
+elseif istable(group)
+    groupnames = group.Properties.VariableNames(1);
+else
+    groupnames = {'Group-Pos' 'Group-neg'};
+end
+
+if isfield(DAT, 'BETWEENPERSON') && isfield(DAT.BETWEENPERSON, 'groupcolors')
+    groupcolors = DAT.BETWEENPERSON.groupcolors;
+else
+    groupcolors = seaborn_colors(2);
+end
+
+if istable(group), group = table2array(group); end
+
+end

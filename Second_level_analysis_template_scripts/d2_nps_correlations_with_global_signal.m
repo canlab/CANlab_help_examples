@@ -19,7 +19,8 @@ if isfield(DAT, 'gray_white_csf_contrasts') || isempty(DAT.gray_white_csf_contra
     
     print_matrix(r, gwcsfnames, DAT.contrastnames);
     
-    create_figure('correlation between NPS contrast value and global signal components', 1, 3);
+    figtitle = 'correlation between NPS contrast value and global signal components';
+    create_figure(figtitle, 1, 3);
     
     clear allhan
     
@@ -52,7 +53,8 @@ if isfield(DAT, 'gray_white_csf_contrasts') || isempty(DAT.gray_white_csf_contra
         end
     end
     
-    drawnow, snapnow
+    plugin_save_figure;
+    close
     
 else
     

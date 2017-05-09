@@ -70,9 +70,7 @@ for s = 1:length(mysignature)
     title('Contrasts');
     ylabel(figtitle);
     
-    savename = fullfile(figsavedir, [figtitle '.png']);
-    saveas(gcf, savename);
-    
-    drawnow, snapnow
+    plugin_save_figure;
+    close
     
 end % signature
