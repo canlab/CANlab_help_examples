@@ -9,9 +9,15 @@ if ~exist(infofilename)
 else
     
     textdat = fileread(infofilename);
+    
 end
 
-infostruct = jsondecode(textdat);
+try
+    infostruct = jsondecode(textdat);
+catch
+    error('plugin_display_study_info_json cannot decode JSON file. Check file format.');
+    return
+end
 
 N = fieldnames(infostruct);
 

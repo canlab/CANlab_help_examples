@@ -29,51 +29,51 @@ end
 %% SIGNATURE RIVER PLOTS
 printhdr('RIVER PLOTS OF SIGNATURES')
 
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'd10_signature_riverplots'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'd10_signature_riverplots'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
 
 %% NETWORK POLAR PLOTS
 printhdr('BAR PLOTS OF NETWORKS AND SIGNATURES')
 
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'd11_signature_similarity_barplots'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'd11_signature_similarity_barplots'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
 
 %% PAIN SIGNATURES
 printhdr('PAIN-RELATED SIGNATURE RESPONSES')
 
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'd1_pain_signature_responses_dotproduct'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'd1_pain_signature_responses_dotproduct'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'd2_pain_signature_responses'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'd2_pain_signature_responses'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'd3_plot_nps_subregions_bars'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'd3_plot_nps_subregions_bars'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
 %% EMOTION SIGNATURES
 printhdr('EMOTION-RELATED SIGNATURE RESPONSES')
 
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'd5_emotion_signature_responses'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'd5_emotion_signature_responses'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
 %% EMPATHY SIGNATURES
 printhdr('EMPATHY-RELATED SIGNATURE RESPONSES')
 
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'd6_empathy_signature_responses'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'd6_empathy_signature_responses'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
 %% AUTONOMIC SIGNATURES
 printhdr('AUTONOMIC-RELATED SIGNATURE RESPONSES')
 
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'd7_autonomic_signature_responses'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'd7_autonomic_signature_responses'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
 %% FIBROMYALGIA SIGNATURES
 printhdr('FIBROMYALGIA-RELATED SIGNATURE RESPONSES')
 
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'd8_fibromyalgia_signature_responses'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'd8_fibromyalgia_signature_responses'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
 
@@ -85,15 +85,15 @@ close all
 
 printhdr('GROUP DIFFERENCES IN NPS RESPONSES')
 
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'h_group_differences'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'h_group_differences'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
 %% GLOBAL SIGNAL AND ALTERNATE SCALING
 
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'd9_nps_correlations_with_global_signal'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'd9_nps_correlations_with_global_signal'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'd4_compare_NPS_SIIPS_scaling_similarity_metrics'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'd4_compare_NPS_SIIPS_scaling_similarity_metrics'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
 
