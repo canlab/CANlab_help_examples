@@ -51,6 +51,11 @@ printhdr('NPS subregions');
 figtitle = 'NPS subregions raw data';
 create_figure(figtitle, 2, k);
 
+% extend fig a bit
+mypos = get(gcf, 'Position');
+mypos(2) = mypos(2) - 150; mypos(4) = mypos(4) + 150;
+set(gcf, 'Position', mypos);
+
 clear axh axh2
 
 for i = 1:k
@@ -101,6 +106,13 @@ myfontsize = get_font_size(kc);
 
 figtitle = 'Contrasts on NPS subregions raw data';
 create_figure(figtitle, 2, kc);
+
+% extend fig a bit
+if kc > 4
+    mypos = get(gcf, 'Position');
+    mypos(2) = mypos(2) - 150; mypos(4) = mypos(4) + 150;
+    set(gcf, 'Position', mypos);
+end
 
 clear axh axh2
 

@@ -73,7 +73,7 @@ t = cellfun(tfun, DAT.gray_white_csf_contrasts, 'UniformOutput', false)';
 T_Gray_White_CSF = cat(1, t{:});
 
 Contrast_colors = cat(1, DAT.contrastcolors{:});
-Contrast_colors = Contrast_colors(1:length(Contrasts));
+Contrast_colors = Contrast_colors(1:length(Contrasts), :);
 
 try
     tabledat = table(Contrasts, N_images, Contrast_colors, T_Gray_White_CSF);

@@ -25,6 +25,7 @@ if do_coverage_contrasts
     
     publish('z_batch_coverage_and_contrasts.m', p)
     
+    close all
 end
 
 % ------------------------------------------------------------------------
@@ -37,5 +38,6 @@ if do_signature_analyses
     
     publish('z_batch_signature_analyses.m', p)
     
+    close all
 end
 
