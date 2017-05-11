@@ -31,22 +31,25 @@ DAT.contrastnames = {'Pain' 'Nausea' 'Itch'};
 
 DAT.contrastnames = format_strings_for_legend(DAT.contrastnames);
 
-
 % Set Colors
 % ------------------------------------------------------------------------
 
-% Default colors: Use Matlab's default colormap
-% Other options: custom_colors, seaborn_colors, bucknerlab_colors
+% There are several options for defining colors for conditions and
+% contrasts, or enter your own in a cell array of length(conditions) for
+% DAT.colors, and size(contrasts, 1) for DAT.contrastcolors
+% It is better if contrasts have distinct colors from conditions
 
-DAT.colors = custom_colors([.8 .7 .2], [.5 .2 .8], length(DAT.conditions));
+% Some options: scn_standard_colors, custom_colors, colorcube_colors, seaborn_colors, bucknerlab_colors
 
-DAT.contrastcolors = custom_colors ([.2 .2 .8], [.2 .8 .2], length (DAT.contrasts));
+% DAT.colors = scn_standard_colors(length(DAT.conditions));
+% DAT.colors = custom_colors(cm(1, :), cm(end, :), length(DAT.conditions));
+% DAT.contrastcolors = custom_colors([.2 .2 .8], [.2 .8 .2], length(DAT.contrasts));
 
-% colors = colormap; % default list of n x 3 color vector
-% colors = mat2cell(colors, ones(size(colors, 1), 1), 3)';
-% DAT.colors = colors;
-% clear colors
-%close
+mycolors = colorcube_colors(length(DAT.conditions) + size(DAT.contrasts, 1));
+
+DAT.colors = mycolors(1:length(DAT.conditions));
+DAT.contrastcolors = mycolors(length(DAT.conditions) + 1:length(mycolors));
+
 
 disp('SET up conditions, colors, contrasts in DAT structure.');
 

@@ -22,7 +22,7 @@ negnames = {'rLOC'    'lLOC'    'rpLOC'    'pgACC'    'lSTS'    'rIPL'    'PCC'}
 DAT.NPSsubregions.posnames = posnames;
 DAT.NPSsubregions.negnames = negnames;
 
-printhdr('Exctracting NPS, adding to DAT')
+printhdr('Extracting NPS, adding to DAT')
 
 % NPS, dot product and cosine sim
 % -------------------------------------------------------------------------

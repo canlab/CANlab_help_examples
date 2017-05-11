@@ -1,3 +1,42 @@
+% QUICK START - STEPS TO SET UP A NEW ANALYSIS ON A DATASET
+% ------------------------------------------------------------------------
+
+% Copy TEMPLATE scripts into STUDY FOLDER/scripts for your new study.
+cd('STUDY FOLDER/scripts')
+
+% Don't copy all the scripts -- just those you want to edit
+% You must copy the batch scripts that load your study-specific file, e.g.,
+% those that run a_set_up_paths_always_run_first
+%
+% COPY OVER these at a minimum:
+% a_set_up_paths_always_run_first
+% b1_behavioral_analysis
+% prep_0_batch_run_once
+% prep_1_set_conditions_contrasts_colors
+% z_batch_load_and_prep
+% z_batch_publish_analyses
+% z_batch_publish_image_prep_and_qc
+
+edit a_set_up_paths_always_run_first
+edit prep_1_set_conditions_contrasts_colors
+
+% when ready:
+z_batch_load_and_prep % run('z_batch_load_and_prep.m')
+
+% OR, to save plots and output in .html format, run: 
+z_batch_publish_image_prep_and_qc
+
+% If there are problems, you can run the individual scripts and debug:
+a_set_up_paths_always_run_first
+prep_1_set_conditions_contrasts_colors
+prep_2_load_image_data_and_save
+
+% When complete, run: 
+z_batch_publish_analyses
+
+% WHAT THESE TEMPLATE SCRIPTS ARE AND WHAT THEY DO
+% ------------------------------------------------------------------------
+
 % This is a set of scripts that is designed to facilitate second-level analysis
 % across beta (COPE), or contrast images from a group of participants.
 % It's particularly helpful for signature-based
@@ -18,6 +57,15 @@
 %
 % Then the rest should run correctly, for most datasets
 %
+% You do not have to copy over all the scripts from the master
+% "Second_level_analysis_template_scripts" folder to use them. You can run
+% the scripts directly from the master copy - the standard versions of most 
+% scripts will run without editing.
+% But do not edit/customize the master scripts!  
+% If you choose, you can copy any of them to your individual project directory 
+% and customize them, and run those customized versions instead of the
+% standard versions.
+%
 % FEATURES
 % ------------------------------------------------------------------------
 % - Time-stamped HTML printouts of all figures and results for archival/reference purposes
@@ -31,13 +79,17 @@
 % - Easily customizable specification of contrasts and colors
 % - Voxel-wise maps for each contrast
 % - SVM classifier maps for each contrast
+% - Between-person contrasts and between-condition contrasts if different
+%       conditions include different subjects
 % - Extraction of the NPS and subregions
 % - Plots and stats on NPS responses by condition and for each contrast
 % - Extraction, plots, and stats on other signatures (these require access to the private CANlab masks repository): 
 %   Vicarious pain (VPS), Negative emotion (PINES), Rejection, autonomic signatures, fibromyalgia, cerebral contributions to pain (SIIPS1)
 % - Extraction, plots, and stats on Buckner Lab resting-state component maps
 % - Polar plots and "river plots" for relationships between image sets/contrasts and resting-state maps/signatures
-%
+% - You can load and integrate text summaries and interpretation into your
+%   HTML report file.
+
 % SETTING UP A NEW ANALYSIS FOR A NEW DATASET
 % ------------------------------------------------------------------------
 % - Make sure you have a master folder, MASTER_FOLDER_NAME
@@ -52,7 +104,8 @@
 %   prep_1_set_conditions_contrasts_colors.m
 %   prep_2_load_image_data_and_save.m
 %   prep_3_calc_univariate_contrast_maps_and_save.m
-% 
+%   prep_4_apply_signatures_and_save
+%
 %   OR
 %   Run the script "prep_0_batch_run_once.m", which runs the above.
 %   You should only need to run the "prep" scripts once. This saves files
@@ -98,28 +151,5 @@
 % - saved in results folder:
 %   figures
 %   html report with figures and stats, in "published_output"
-
-% QUICK START - STEPS TO SET UP A NEW ANALYSIS ON A DATASET
-% ------------------------------------------------------------------------
-
-% Copy TEMPLATE scripts into STUDY FOLDER/scripts for your new study.
-cd('STUDY FOLDER/scripts')
-
-edit a_set_up_paths_always_run_first
-edit prep_1_set_conditions_contrasts_colors
-
-% when ready:
-z_batch_load_and_prep % run('z_batch_load_and_prep.m')
-
-% OR, to save plots and output in .html format, run: 
-z_batch_publish_image_prep_and_qc
-
-% If there are problems, you can run the individual scripts and debug:
-a_set_up_paths_always_run_first
-prep_1_set_conditions_contrasts_colors
-prep_2_load_image_data_and_save
-
-% When complete, run: 
-z_batch_publish_analyses
 
 

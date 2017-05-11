@@ -40,6 +40,8 @@ for i = 1:length(signames)
             
             barplot_columns(mydat, myname, 'colors', DAT.contrastcolors, 'nofig', 'names', DAT.contrastnames, 'noviolin');
             
+            xlabel(''); ylabel('')
+            set(gca, 'FontSize', 10);
             if indx > 1, set(gca, 'XTickLabel', {});  end
             
             set(gca, 'Position', axpos); 

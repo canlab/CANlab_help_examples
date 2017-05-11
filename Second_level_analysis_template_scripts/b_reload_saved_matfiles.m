@@ -1,4 +1,8 @@
-% Load DAT structure with setup info
+%% Load and display JSON file with study info, if we have it
+
+plugin_display_study_info_json;
+
+%% Load DAT structure with setup info
 % ------------------------------------------------------------------------
 
 savefilename = fullfile(resultsdir, 'image_names_and_setup.mat');
@@ -7,7 +11,7 @@ load(savefilename, 'DAT')
 disp(basedir)
 fprintf('Loaded DAT from results%simage_names_and_setup.mat\n', filesep);
 
-% Load image data objects
+%% Load image data objects
 % ------------------------------------------------------------------------
 
 savefilenamedata = fullfile(resultsdir, 'data_objects.mat');
@@ -22,7 +26,7 @@ load(savefilenamedata, 'DATA_OBJsc');
 % For publish output
 fprintf('Loaded condition data from results%sDATA_OBJsc\n', filesep);
 
-% Load contrast data objects if they exist
+%% Load contrast data objects if they exist
 % ------------------------------------------------------------------------
 
 savefilenamedata = fullfile(resultsdir, 'contrast_data_objects.mat');
@@ -69,28 +73,35 @@ t = cellfun(tfun, DAT.gray_white_csf_contrasts, 'UniformOutput', false)';
 T_Gray_White_CSF = cat(1, t{:});
 
 Contrast_colors = cat(1, DAT.contrastcolors{:});
-tabledat = table(Contrasts, N_images, Contrast_colors, T_Gray_White_CSF);
-disp(tabledat);
+Contrast_colors = Contrast_colors(1:length(Contrasts));
+
+try
+    tabledat = table(Contrasts, N_images, Contrast_colors, T_Gray_White_CSF);
+    disp(tabledat);
+catch
+    disp('WARNING: TABLE OF CONTRASTS WILL NOT DISPLAY. CHECK SETUP VARIABLES AND SIZES TO FIX.')
+end
 
 printstr(dashes)
 
-%% Correlations with some global values (diagnostic of some potential issues)
 
-rnames = {'Mean' 'STD' 'Gray' 'White' 'CSF'};
-
-disp('Mean: Mean condition image correlations with mean whole-brain Gray, White, CSF signal');
-disp('STD: Std. deviation across condition image correlations with mean whole-brain Gray, White, CSF signal');
-
-for i = 1:length(DAT.globalmeans)
-    
-    fprintf('\n%s  Global metrics\n', DAT.conditions{i});
-    
-    selected_vars = [DAT.globalmeans{i} DAT.globalstd{i} DAT.gray_white_csf{i}];
-    
-    r = corr(selected_vars);
-    
-    print_matrix(r, rnames, rnames);
-    
-end
-
+% %% Correlations with some global values (diagnostic of some potential issues)
+% 
+% rnames = {'Mean' 'STD' 'Gray' 'White' 'CSF'};
+% 
+% disp('Mean: Mean condition image correlations with mean whole-brain Gray, White, CSF signal');
+% disp('STD: Std. deviation across condition image correlations with mean whole-brain Gray, White, CSF signal');
+% 
+% for i = 1:length(DAT.globalmeans)
+%     
+%     fprintf('\n%s  Global metrics\n', DAT.conditions{i});
+%     
+%     selected_vars = [DAT.globalmeans{i} DAT.globalstd{i} DAT.gray_white_csf{i}];
+%     
+%     r = corr(selected_vars);
+%     
+%     print_matrix(r, rnames, rnames);
+%     
+% end
+% 
 
