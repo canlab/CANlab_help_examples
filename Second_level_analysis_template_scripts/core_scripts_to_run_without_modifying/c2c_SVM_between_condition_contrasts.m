@@ -10,6 +10,10 @@
 %           
 % DAT.between_condition_contrastcolors = custom_colors ([.2 .2 .8], [.2 .8 .2], size(DAT.between_condition_cons, 1));
 
+spath = which('use_spider.m');
+if isempty(spath)
+    disp('Warning: spider toolbox not found on path; prediction may break')
+end
 
 myscaling = 'scaled';          % 'raw' or 'scaled'
 

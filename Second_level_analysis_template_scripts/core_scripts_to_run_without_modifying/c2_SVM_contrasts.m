@@ -2,6 +2,11 @@
 % Specified in DAT.contrasts
 % --------------------------------------------------------------------
 
+spath = which('use_spider.m');
+if isempty(spath)
+    disp('Warning: spider toolbox not found on path; prediction may break')
+end
+
 % Initialize slice display if needed, or clear existing display
 % --------------------------------------------------------------------
 
