@@ -121,7 +121,8 @@ end
 clear DATA_CAT
 
 
-%% CSF REMOVAL AND RESCALING
+%% SAVE
+
 printhdr('Save results');
 
 savefilename = fullfile(resultsdir, 'image_names_and_setup.mat');
