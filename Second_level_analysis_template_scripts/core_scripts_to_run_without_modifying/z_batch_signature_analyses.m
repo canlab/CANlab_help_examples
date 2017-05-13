@@ -32,13 +32,11 @@ printhdr('RIVER PLOTS OF SIGNATURES')
 scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'd10_signature_riverplots'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
-
-%% NETWORK POLAR PLOTS
-printhdr('BAR PLOTS OF NETWORKS AND SIGNATURES')
+%% SIGNATURE BAR PLOTS
+printhdr('BAR PLOTS OF SIGNATURES')
 
 scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'd11_signature_similarity_barplots'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
-
 
 %% PAIN SIGNATURES
 printhdr('PAIN-RELATED SIGNATURE RESPONSES')

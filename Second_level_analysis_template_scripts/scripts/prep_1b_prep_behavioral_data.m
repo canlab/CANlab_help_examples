@@ -7,8 +7,6 @@ if ~exist(behavioral_fname_path, 'file'), fprintf(1, 'CANNOT FIND FILE: %s\n',be
 
 behavioral_data_table = readtable(behavioral_fname_path,'FileType','spreadsheet');
 
-% Add to DAT for record, and flexible use later
-DAT.BEHAVIOR.behavioral_data_table = behavioral_data_table;
 
 %% INITIALIZE GROUP VARIABLE
 
@@ -141,17 +139,3 @@ DAT.BETWEENPERSON.group = contrast_code(group  - 1.5);
 DAT.BETWEENPERSON.group_descrip = '-1 is first group name, 1 is 2nd';
 DAT.BETWEENPERSON.groupnames = nms;
 DAT.BETWEENPERSON.groupcolors = {[.7 .3 .5] [.3 .5 .7]};
-
-%% Save if DAT field looks complete
-
-if isfield(DAT, 'SIG_conditions') && isfield(DAT, 'gray_white_csf')
-    % Looks complete, save
-    
-    printhdr('Save results');
-    
-    savefilename = fullfile(resultsdir, 'image_names_and_setup.mat');
-    save(savefilename, 'DAT', '-append');
-    
-else
-    printhdr('DAT FIELD DOES NOT LOOK COMPLETE. Are you sure you want to save? Skipping...');
-end
