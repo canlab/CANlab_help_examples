@@ -13,7 +13,7 @@ if ~exist(pubdir, 'dir'), mkdir(pubdir), end
 
 do_coverage_contrasts = true;
 do_signature_analyses = true;
-
+do_meta_analysis_masks = true;
 
 % ------------------------------------------------------------------------
 if do_coverage_contrasts
@@ -41,3 +41,16 @@ if do_signature_analyses
     close all
 end
 
+% ------------------------------------------------------------------------
+
+if do_meta_analysis_masks
+    
+    pubfilename = ['analysis_meta_analysis_masks_' scn_get_datetime];
+    
+    p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
+        'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
+    
+    publish('z_batch_meta_analysis_mask_analyses.m', p)
+    
+    close all
+end

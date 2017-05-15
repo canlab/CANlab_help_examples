@@ -1,4 +1,7 @@
     savename = fullfile(figsavedir, [figtitle '.png']);
+    
+    disp(sprintf('Saving: %s', [figtitle '.png']));
+    
     saveas(gcf, savename);
     
     drawnow, snapnow    % for HTML printouts
