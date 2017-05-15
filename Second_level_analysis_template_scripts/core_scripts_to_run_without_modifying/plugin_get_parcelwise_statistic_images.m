@@ -57,6 +57,7 @@ for i = 1:k
         t_obj.dfe = dfe;
     end
     
+    t_obj = remove_empty(t_obj);
     input_struct.t_statistic_obj{i} = t_obj;
     
 end % conditions

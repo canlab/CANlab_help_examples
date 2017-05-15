@@ -5,6 +5,9 @@
 % - Preps file Parcellation_data.mat saved in "results" folder.  
 % - Allow us to compare local pattern expression across parcels and compare 
 %   local patterns within parcels.
+%
+% Saves variable named whatever the var "parcellation_name" is set to
+% - Need to break files up into one file per parcellation due to memory space 
 
 % Get parcels
 % --------------------------------------------------------------------
@@ -12,6 +15,7 @@ tic
 disp('Loading parcels');
 
 atlas_name = which('shen_2mm_268_parcellation.nii');
+parcellation_name = 'Shen';
 
 if ~exist(atlas_name, 'file')
     error('Add parcellation atlas to your Matlab path.');
@@ -19,9 +23,9 @@ end
 
 parcel_obj = fmri_data(atlas_name);
 
-PARCELS.Shen = [];
-PARCELS.Shen.parcel_obj = parcel_obj;
-PARCELS.Shen.regions = region(parcel_obj, 'unique_mask_values');
+PARCELS.(parcellation_name) = [];
+PARCELS.(parcellation_name).parcel_obj = parcel_obj;
+PARCELS.(parcellation_name).regions = region(parcel_obj, 'unique_mask_values');
 
 toc
 
@@ -30,7 +34,7 @@ toc
 tic
 printhdr('Extracting parcel mean values');
 
-PARCELS.Shen.conditions = DAT.conditions;
+PARCELS.(parcellation_name).conditions = DAT.conditions;
 
 k = length(DAT.conditions);
 
@@ -40,24 +44,24 @@ for i = 1:k
     
     parcel_means = apply_parcellation(DATA_OBJ{i}, parcel_obj);
     
-    PARCELS.Shen.means.dat{i} = parcel_means;
+    PARCELS.(parcellation_name).means.dat{i} = parcel_means;
     
     % Do a t-test on each parcel
     [h, p, ci, stat] = ttest(double(parcel_means));
     
-    PARCELS.Shen.means.group_t{i} = stat.tstat;
-    PARCELS.Shen.means.group_p{i} = p;
+    PARCELS.(parcellation_name).means.group_t{i} = stat.tstat;
+    PARCELS.(parcellation_name).means.group_p{i} = p;
     
 end
 
 % FDR-correct across all conditions and parcels
 
-all_p = cat(2, PARCELS.Shen.means.group_p{:});
-PARCELS.Shen.means.fdr_p_thresh = FDR(all_p, .05);
+all_p = cat(2, PARCELS.(parcellation_name).means.group_p{:});
+PARCELS.(parcellation_name).means.fdr_p_thresh = FDR(all_p, .05);
 
 for i = 1:k
     
-    PARCELS.Shen.means.fdr_sig{i} = PARCELS.Shen.means.group_p{i} < PARCELS.Shen.means.fdr_p_thresh;
+    PARCELS.(parcellation_name).means.fdr_sig{i} = PARCELS.(parcellation_name).means.group_p{i} < PARCELS.(parcellation_name).means.fdr_p_thresh;
     
 end
 
@@ -85,26 +89,26 @@ for mysig = 1:length(signames)
         
         % Extract mean values
         
-        local_pattern = apply_parcellation(DATA_OBJ{i}, parcel_obj, 'pattern_expression', nps);
+        local_pattern = apply_parcellation(DATA_OBJ{i}, parcel_obj, 'pattern_expression', sig_obj);
         
-        PARCELS.Shen.(signame).dat{i} = local_pattern;
+        PARCELS.(parcellation_name).(signame).dat{i} = local_pattern;
         
         % Do a t-test on each parcel
         [h, p, ci, stat] = ttest(double(local_pattern));
         
-        PARCELS.Shen.(signame).group_t{i} = stat.tstat;
-        PARCELS.Shen.(signame).group_p{i} = p;
+        PARCELS.(parcellation_name).(signame).group_t{i} = stat.tstat;
+        PARCELS.(parcellation_name).(signame).group_p{i} = p;
         
     end
     
     % FDR-correct across all conditions and parcels
     
-    all_p = cat(2, PARCELS.Shen.(signame).group_p{:});
-    PARCELS.Shen.(signame).fdr_p_thresh = FDR(all_p, .05);
+    all_p = cat(2, PARCELS.(parcellation_name).(signame).group_p{:});
+    PARCELS.(parcellation_name).(signame).fdr_p_thresh = FDR(all_p, .05);
     
     for i = 1:k
         
-        PARCELS.Shen.(signame).fdr_sig{i} = PARCELS.Shen.(signame).group_p{i} < PARCELS.Shen.(signame).fdr_p_thresh;
+        PARCELS.(parcellation_name).(signame).fdr_sig{i} = PARCELS.(parcellation_name).(signame).group_p{i} < PARCELS.(parcellation_name).(signame).fdr_p_thresh;
         
     end
     
@@ -115,9 +119,9 @@ end  % signature
 %% Format into statistic_image objects for display, etc.
 % ADD these to PARCEL structure
 %
-% display with, e.g., orthviews(PARCELS.Shen.(signame).t_statistic_obj{3})
+% display with, e.g., orthviews(PARCELS.(parcellation_name).(signame).t_statistic_obj{3})
 
-%parcel_obj = PARCELS.Shen.parcel_obj;
+%parcel_obj = PARCELS.(parcellation_name).parcel_obj;
 
 printhdr('Reconstructing parcel-wise t-statistic objects');
 
@@ -129,7 +133,7 @@ for mysig = 1:length(signames)
     
     printstr(signame)
     
-    PARCELS.Shen.(signame) = plugin_get_parcelwise_statistic_images(parcel_obj, PARCELS.Shen.(signame) );
+    PARCELS.(parcellation_name).(signame) = plugin_get_parcelwise_statistic_images(parcel_obj, PARCELS.(parcellation_name).(signame) );
     
 end
 
@@ -138,6 +142,15 @@ end
 
 %% Save
 
-savefilenamedata = fullfile(resultsdir, 'Parcellation_data.mat');
-save(savefilenamedata, 'PARCELS');
-printhdr('Saved parcels');
+% savefilenamedata = fullfile(resultsdir, 'Parcellation_data.mat');
+% save(savefilenamedata, 'PARCELS');
+% printhdr('Saved parcels');
+
+str = [parcellation_name ' = PARCELS.(parcellation_name);'];
+eval(str)
+
+savefilenamedata = fullfile(resultsdir, ['Parcellation_data_' parcellation_name '.mat']);
+
+save(savefilenamedata, parcellation_name, '-v7.3');
+printhdr(sprintf('Saved parcels: %s', parcellation_name));
+
