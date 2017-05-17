@@ -9,7 +9,7 @@ end
 
 % Load and print summary of study from study_info.json and contrast info
 % -------------------------------------------------------------------------
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'b_reload_saved_matfiles'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'b_reload_saved_matfiles'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
 

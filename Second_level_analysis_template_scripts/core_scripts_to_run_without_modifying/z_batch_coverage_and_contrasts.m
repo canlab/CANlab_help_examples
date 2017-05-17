@@ -8,18 +8,18 @@ end
 
 % Load and print summary of study from study_info.json and contrast info
 % -------------------------------------------------------------------------
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'b_reload_saved_matfiles'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'b_reload_saved_matfiles'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
 %% COVERAGE
 
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'b2_show_data_vs_underlay'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts','core_scripts_to_run_without_modifying', 'b2_show_data_vs_underlay'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
 %% UNIVARIATE CONTRASTS
 printhdr('UNIVARIATE CONTRAST MAPS')
 
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'c_univariate_contrast_maps'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'c_univariate_contrast_maps'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
 
@@ -29,7 +29,7 @@ run(scriptname); % Run from master script, not local script. This script should 
 
 printhdr('RE-TRAINED within-person WHOLE BRAIN SVM')
 
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'c2_SVM_contrasts'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts','core_scripts_to_run_without_modifying', 'c2_SVM_contrasts'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
 %% RE-TRAIN across-condition WHOLE BRAIN SVM
@@ -38,7 +38,7 @@ run(scriptname); % Run from master script, not local script. This script should 
 
 printhdr('RE-TRAINED across-condition WHOLE BRAIN SVM')
 
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'c2c_SVM_between_condition_contrasts'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts','core_scripts_to_run_without_modifying', 'c2c_SVM_between_condition_contrasts'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
 %% RE-TRAIN between-person WHOLE BRAIN SVM
@@ -47,6 +47,6 @@ run(scriptname); % Run from master script, not local script. This script should 
 
 printhdr('RE-TRAINED between-person WHOLE BRAIN SVM')
 
-scriptname = which(fullfile('Second_level_analysis_template_scripts', 'c2b_SVM_betweenperson_contrasts'));
+scriptname = which(fullfile('Second_level_analysis_template_scripts','core_scripts_to_run_without_modifying', 'c2b_SVM_betweenperson_contrasts'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
