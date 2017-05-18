@@ -4,6 +4,17 @@
 % each image.
 % --------------------------------------------------------------------
 
+% Check for required DAT fields. Skip analysis and print warnings if missing.
+% ---------------------------------------------------------------------
+% List required fields in DAT, in cell array:
+required_fields = {'BETWEENPERSON', 'contrastnames', 'contrasts' 'contrastcolors'};
+
+ok_to_run = plugin_check_required_fields(DAT, required_fields); % Checks and prints warnings
+if ~ok_to_run
+    return
+end
+
+
 spath = which('use_spider.m');
 if isempty(spath)
     disp('Warning: spider toolbox not found on path; prediction may break')
@@ -11,18 +22,16 @@ end
 
 myscaling = 'scaled';          % 'raw' or 'scaled'
 
-% Initialize slice display if needed, or clear existing display
+
+% Initialize fmridisplay slice display if needed, or clear existing display
 % --------------------------------------------------------------------
 
-if ~exist('o2', 'var') || ~isa(o2, 'fmridisplay')
-    create_figure('fmridisplay'); axis off
-    o2 = canlab_results_fmridisplay([], 'noverbose');
-    whmontage = 5; % for title
-else
-    o2 = removeblobs(o2);
-    axes(o2.montage{whmontage}.axis_handles(5));
-    title(' ');
-end
+% Specify which montage to add title to. This is fixed for a given slice display
+whmontage = 5; 
+plugin_check_or_create_slice_display; % script, checks for o2 and uses whmontage
+
+% --------------------------------------------------------------------
+
 
 printhdr('Cross-validated SVM to discriminate between-person contrasts');
 

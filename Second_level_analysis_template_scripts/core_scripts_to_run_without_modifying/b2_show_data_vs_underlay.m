@@ -12,6 +12,15 @@ o2 = addblobs(o2, region(fmri_data(which('canonical_ventricles.img'))), 'outline
 
 o2 = addblobs(o2, region(mean(DATA_OBJ{1})), 'trans', 'wh_montage', [3:4]);
 
+% Add titles
+wh_axis = 6;
+axes(o2.montage{2}.axis_handles(wh_axis));
+title('Red = gray matter, green = CSF space');
+
+axes(o2.montage{4}.axis_handles(wh_axis));
+title('Image coverage: Mean of first condition');
+
+
 plugin_save_figure
 
 close % to save memory, etc., as we are printing figs

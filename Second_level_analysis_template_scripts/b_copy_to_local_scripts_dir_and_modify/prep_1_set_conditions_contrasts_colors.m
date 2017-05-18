@@ -23,6 +23,29 @@ DAT.functional_wildcard = {'cope3*nii' 'cope4*nii' 'cope1*nii'};
 
 % Set Contrasts
 % ------------------------------------------------------------------------
+% There are three ways to set up contrasts, which will be displayed as
+% maps, run in SVM analyses (if contrast weights are 1 and -1), and used in
+% signature and network analyses.
+%
+% 1. For within-person contrasts, where each individual has an
+% image for each condition being compared, use DAT.contrasts, here.
+% Important: You must have the same number of images in each condition
+% being compared, and the images must be in the SAME SUBJECT ORDER.
+% Contrasts are paired tests across these conditions.
+% These contrasts should be used if condition is crossed with participant
+% (i.e., within-subject design).
+% These will be used in c2_SVM_contrasts.m
+%
+% 2. If your lists of images for each condition include participants from
+% different groups, set up prep1b_...behavioral script, which creates
+% DAT.BETWEENPERSON.group and group vectors for each condition and
+% contrast. These will be used in c2b_SVM_betweenperson_contrasts.m
+%
+% 3. If conditions being compared include images for different subjects
+% i.e., condition{1} and condition{2} include different individuals, 
+% use DAT.between_condition_cons below. These contrasts should be used if 
+% subjects are nested within conditions (i.e., between-subject design).
+% These will be used in c2c_SVM_between_condition_contrasts.
 
 % Vectors across conditions
 DAT.contrasts = [1 0 0; 0 1 0; 0 0 1];
@@ -56,8 +79,14 @@ disp('SET up conditions, colors, contrasts in DAT structure.');
 
 % Set BETWEEN-CONDITION contrasts, names, and colors
 % ------------------------------------------------------------------------
-% Currently used in c2c_SVM_between_condition_contrasts
-%
+%    If conditions being compared include images for different subjects
+%    i.e., condition{1} and condition{2} include different individuals, 
+%    enter contrasts in DAT.between_condition_cons below.
+%    These will be used in c2c_SVM_between_condition_contrasts.
+%    You do not need to have the same number of images in each condition
+%    being compared.
+%    Contrasts are unpaired tests across these conditions.
+
 % Matrix of [n contrasts x k conditions]
 
 DAT.between_condition_cons = [1 -1 0;

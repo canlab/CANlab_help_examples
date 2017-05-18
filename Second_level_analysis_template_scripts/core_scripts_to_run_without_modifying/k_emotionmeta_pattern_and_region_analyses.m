@@ -1,4 +1,5 @@
-roimask = which('Buhle_Silvers_2014_Emotion_Regulation_Meta_thresh.img'); % not 1/0
+roimask_imagename = 'Buhle_Silvers_2014_Emotion_Regulation_Meta_thresh.img';
+roimask = which(roimask_imagename); % not 1/0
 roimask_shortname = 'EmoMetaMask'; % this is a short, unique name identifying this map in saved output
 
 mymetric = 'cosine_similarity'; % 'dotproduct', 'cosine_similarity', or 'correlation'
@@ -8,9 +9,15 @@ mymetric = 'cosine_similarity'; % 'dotproduct', 'cosine_similarity', or 'correla
 regionnames = {'L vl/dlPFC'    'L STS'    'R vlPFC'    'L IPL'    'R IPL'    'aMCC/pSMA' 'R dlPFC'};
 
 printhdr('Pattern of interest and ROIs');
-printstr(roimask);
-printstr(sprintf('Saving figures named: %s', roimask_shortname));
-printstr(sprintf('Similarity metric: %s', mymetric));
+
+if isempty(roimask)
+    fprintf('%s is not on path. Skipping this analysis.\n', roimask_imagename);
+    return
+else
+    printstr(roimask);
+    printstr(sprintf('Saving figures named: %s', roimask_shortname));
+    printstr(sprintf('Similarity metric: %s', mymetric));
+end
 
 %% Load mask, prep thresholded and unthresholded versions
 % --------------------------------------------------------------------
@@ -19,18 +26,15 @@ roimask_obj = fmri_data(roimask, [], 'noverbose');
 roimask_thresh = threshold(roimask_obj, [2.68 Inf], 'raw-between', 'k', 75); % p < .005 equivalent, extent thresholded  0.05 FWE-corr
 
 
-%% Initialize slice display if needed, or clear existing display
+%% Initialize fmridisplay slice display if needed, or clear existing display
 % --------------------------------------------------------------------
 
-if ~exist('o2', 'var') || ~isa(o2, 'fmridisplay')
-    create_figure('fmridisplay'); axis off
-    o2 = canlab_results_fmridisplay([], 'noverbose');
-    whmontage = 5; % for title
-else
-    o2 = removeblobs(o2);
-    axes(o2.montage{whmontage}.axis_handles(5));
-    title(' ');
-end
+% Specify which montage to add title to. This is fixed for a given slice display
+whmontage = 5; 
+plugin_check_or_create_slice_display; % script, checks for o2 and uses whmontage
+
+% --------------------------------------------------------------------
+
 
 %% Visualize and save unthresholded mask
 % ------------------------------------------------------------------------

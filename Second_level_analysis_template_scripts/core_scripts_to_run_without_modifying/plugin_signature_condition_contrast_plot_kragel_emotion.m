@@ -1,3 +1,13 @@
+% Check for required DAT fields. Skip analysis and print warnings if missing.
+% ---------------------------------------------------------------------
+% List required fields in DAT, in cell array:
+required_fields = {'conditions', 'colors', 'EMO_CAT_SIG_conditions'};
+
+ok_to_run = plugin_check_required_fields(DAT, required_fields); % Checks and prints warnings
+if ~ok_to_run
+    return
+end
+
 % Controlling for group admin order covariate (mean-centered by default)
 
 group = [];
@@ -76,12 +86,16 @@ plugin_save_figure;
 %% Signature Response - contrasts
 % ------------------------------------------------------------------------
 
-if ~isfield(DAT, 'contrasts') || isempty(DAT.contrasts)
-    % skip
+% Check for required DAT fields. Skip analysis and print warnings if missing.
+% ---------------------------------------------------------------------
+% List required fields in DAT, in cell array:
+required_fields = {'contrasts', 'contrastnames', 'contrastcolors', 'EMO_CAT_SIG_contrasts'};
+
+ok_to_run = plugin_check_required_fields(DAT, required_fields); % Checks and prints warnings
+if ~ok_to_run
     return
 end
 % ------------------------------------------------------------------------
-
 
 figtitle = sprintf('%s contrasts %s %s', mysignames, myscaling, mymetric);
 printhdr(figtitle);
