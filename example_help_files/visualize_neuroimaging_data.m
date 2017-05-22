@@ -64,6 +64,8 @@ close all
 % ----------------------------------------------
 % There are multple options for producing 3D brains.
 
+% See fmri_data.isosurface
+
 % --------
 % OPT1 - Plot on a 'slab' of brain like Reddan, Lindquist, Wager (2016)
 % Effect Size paper
