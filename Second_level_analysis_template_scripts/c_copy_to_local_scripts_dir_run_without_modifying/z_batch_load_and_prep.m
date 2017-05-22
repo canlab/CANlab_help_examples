@@ -7,7 +7,11 @@ prep_1_set_conditions_contrasts_colors
 
 printhdr('BEHAVIORAL DATA - BETWEEN-PERSON DESIGN')
 
-prep1b_prep_behavioral_data
+try
+    prep1b_prep_behavioral_data
+catch
+    disp('prep1b_prep_behavioral_data.m did not run correctly. Either configure and test this or omit this script.');
+end
 
 % These should not need editing, 
 % can run template scripts directly
@@ -30,3 +34,16 @@ prep_3_calc_univariate_contrast_maps_and_save
 
 printhdr('SIGNATURE EXTRACTION')
 prep_4_apply_signatures_and_save
+
+prep_6_apply_kragel_emotion_signatures_and_save
+
+%% PARCELLATION PREP
+
+printhdr('SHEN PARCELLATION EXTRACTION')
+prep_5_apply_shen_parcellation_and_save
+
+printhdr('SHEN PARCELLATION EXTRACTION')
+prep_5b_apply_spmanatomy_parcellation_and_save
+
+
+

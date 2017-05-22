@@ -80,6 +80,9 @@ try
     disp(tabledat);
 catch
     disp('WARNING: TABLE OF CONTRASTS WILL NOT DISPLAY. CHECK SETUP VARIABLES AND SIZES TO FIX.')
+    disp('These should have the same number of rows, or you likely have errors in your setup:');
+    whos Contrasts N_images Contrast_colors T_Gray_White_CSF
+    
 end
 
 printstr(dashes)
