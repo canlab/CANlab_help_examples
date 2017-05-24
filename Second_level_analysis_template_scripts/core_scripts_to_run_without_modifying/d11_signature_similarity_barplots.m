@@ -84,7 +84,7 @@ if isfield(DAT, 'contrasts') && ~isempty(DAT.contrasts)
     for i = 1:kc
         
         subplot(nrows, ncols, i);
-        [stats hh hhfill table_group multcomp_group] = image_similarity_plot(DATA_OBJ_CON{i}, 'mapset', mapset, 'networknames', netnames, 'average', 'cosine_similarity', 'colors', DAT.colors(i), 'nofigure', 'noplot');
+        [stats hh hhfill table_group multcomp_group] = image_similarity_plot(DATA_OBJ_CON{i}, 'mapset', mapset, 'networknames', netnames, 'average', 'cosine_similarity', 'colors', DAT.contrastcolors(i), 'nofigure', 'noplot');
         
         handles{i} = barplot_columns(stats.r', 'colors', mycolors, 'noviolin', 'nofig', 'noind', 'names', netnames, 'MarkerSize', mystarsize);
         hold on; plot_horizontal_line(0);

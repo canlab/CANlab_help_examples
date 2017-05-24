@@ -36,23 +36,12 @@ for c = 1:kc
     [cat_obj, condition_codes] = cat(DATA_OBJ{wh});
     
     % a. Format and attach outcomes: 1, -1 for pos/neg contrast values
-    % b. Define holdout sets: Leave one subject out
+    % b. Define holdout sets: Define based on plugin script
     %    Assume that subjects are in same position in each input file
     % --------------------------------------------------------------------
 
-    outcome_value = zeros(size(condition_codes));
-    holdout_set = {};
+    plugin_get_holdout_sets;
     
-    for i = 1:length(wh)
-
-        n = sum(condition_codes == i);
-        holdout_set{i} = [1:n]';
-        
-        outcome_value(condition_codes == i) = sign(mycontrast(wh(i)));
-        
-    end
-    
-    holdout_set = cat(1, holdout_set{:});
     cat_obj.Y = outcome_value;
     
     % Skip if necessary
@@ -79,17 +68,35 @@ for c = 1:kc
     disp(' ');
     printstr(['Results: ' DAT.contrastnames{c}]); printstr(dashes);
     
-    ROC = roc_plot(stats.dist_from_hyperplane_xval, logical(cat_obj.Y > 0), 'color', DAT.contrastcolors{c}, 'twochoice');
+    % ROC plot is different for paired samples and unpaired. Paired samples
+    % must be in specific order, 1:n for condition 1 and 1:n for condition 2.
+    % If samples are paired, this is set up by default in these scripts.
+    % But some contrasts entered by the user may be unbalanced, so check
+    % for this here and run paired or unpaired as appropriate.
     
-    figtitle = sprintf('SVM ROC %s', DAT.contrastnames{c});
-    savename = fullfile(figsavedir, [figtitle '.png']);
-    saveas(gcf, savename);
-    drawnow, snapnow
+    ispaired = sum(cat_obj.Y > 0) == sum(cat_obj.Y < 0);
     
-    % Effect size, cross-validated, paired samples
-    dfun2 = @(x, Y) mean(x(Y > 0) - x(Y < 0)) ./ std(x(Y > 0) - x(Y < 0));
+    if ispaired
+        rocpairstring = 'twochoice';
+        
+        % Effect size, cross-validated, paired samples
+        dfun2 = @(x, Y) mean(x(Y > 0) - x(Y < 0)) ./ std(x(Y > 0) - x(Y < 0));
+        
+    else
+        rocpairstring = 'unpaired';
+        
+        % Effect size, cross-validated, unpaired sampled
+        dfun2 = @(x, Y) (mean(x(Y > 0)) - mean(x(Y < 0))) ./ sqrt(var(x(Y > 0)) + var(x(Y < 0))); % check this.
+        
+    end
+        
+    ROC = roc_plot(stats.dist_from_hyperplane_xval, logical(cat_obj.Y > 0), 'color', DAT.contrastcolors{c}, rocpairstring);
+    
     d = dfun2(stats.dist_from_hyperplane_xval, stats.Y);
     fprintf('Effect size, cross-val: d = %3.2f\n\n', d);
+    
+    figtitle = sprintf('SVM ROC %s', DAT.contrastnames{c});
+    plugin_save_figure
     
 
     % Plot the SVM map
