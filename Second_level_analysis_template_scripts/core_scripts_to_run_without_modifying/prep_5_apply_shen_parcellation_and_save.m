@@ -23,9 +23,12 @@ end
 
 parcel_obj = fmri_data(atlas_name);
 
+% Space-saving
+parcel_obj = enforce_variable_types(parcel_obj);
+
 PARCELS.(parcellation_name) = [];
 PARCELS.(parcellation_name).parcel_obj = parcel_obj;
-PARCELS.(parcellation_name).regions = region(parcel_obj, 'unique_mask_values');
+% PARCELS.(parcellation_name).regions = region(parcel_obj, 'unique_mask_values');
 
 toc
 

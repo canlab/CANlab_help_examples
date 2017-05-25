@@ -8,6 +8,8 @@
 %
 % Saves variable named whatever the var "parcellation_name" is set to
 % - Need to break files up into one file per parcellation due to memory space 
+%
+
 
 % Get parcels
 % --------------------------------------------------------------------
@@ -23,21 +25,26 @@ end
 
 % SPM anatomy toolbox has some regions without names,  junk parcels.
 % This script loads the regions and names for the good ones.
-[spm_anatomy_regions, region_names_cell] = canlab_load_spmanatomy_regions;
+[spm_anatomy_regions, region_names_cell] = canlab_load_spmanatomy_regions; % - NOTE: Need to "undo" origin correction in SPM anatomy toolbox to match the standard SPM MNI template **
 parcel_obj = region2fmri_data(spm_anatomy_regions, fmri_data(atlas_name));
 
 %parcel_obj = fmri_data(atlas_name);
 
+% Space-saving
+parcel_obj = enforce_variable_types(parcel_obj);
+
 PARCELS.(parcellation_name) = [];
 PARCELS.(parcellation_name).parcel_obj = parcel_obj;
-PARCELS.(parcellation_name).regions = region(parcel_obj, 'unique_mask_values');
 
-% add names
-for i = 1:length(region_names_cell)
-    
-    PARCELS.(parcellation_name).regions(i).shorttitle = region_names_cell{i};
-    
-end
+% Omit this to save space
+% PARCELS.(parcellation_name).regions = region(parcel_obj, 'unique_mask_values');
+% 
+% % add names
+% for i = 1:length(region_names_cell)
+%     
+%     PARCELS.(parcellation_name).regions(i).shorttitle = region_names_cell{i};
+%     
+% end
 
 PARCELS.(parcellation_name).parcel_names = region_names_cell;
 
@@ -138,23 +145,6 @@ end  % signature
 %parcel_obj = PARCELS.(parcellation_name).parcel_obj;
 
 printhdr('Reconstructing parcel-wise t-statistic objects');
-
-for mysig = 1:length(signames)
-    
-    signame = signames{mysig};
-    signame = strrep(signame, '-', '_');
-    signame = strrep(signame, ' ', '_');
-    
-    printstr(signame)
-    
-    PARCELS.(parcellation_name).(signame) = plugin_get_parcelwise_statistic_images(parcel_obj, PARCELS.(parcellation_name).(signame) );
-    
-end
-
-
-%% Remove empty voxels to save space
-
-PARCELS.(parcellation_name).parcel_obj = remove_empty(PARCELS.(parcellation_name).parcel_obj);
 
 for mysig = 1:length(signames)
     
