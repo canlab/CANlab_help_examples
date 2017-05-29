@@ -35,15 +35,14 @@ prep_3_calc_univariate_contrast_maps_and_save
 printhdr('SIGNATURE EXTRACTION')
 prep_4_apply_signatures_and_save
 
-prep_6_apply_kragel_emotion_signatures_and_save
-
 %% PARCELLATION PREP
 
-printhdr('SHEN PARCELLATION EXTRACTION')
+printhdr('PARCELLATIONS')
 prep_5_apply_shen_parcellation_and_save
-
-printhdr('SHEN PARCELLATION EXTRACTION')
 prep_5b_apply_spmanatomy_parcellation_and_save
 
+%% EMOTION MAPS
 
+printhdr('EMOTION MAPS')
+prep_6_apply_kragel_emotion_signatures_and_save
 

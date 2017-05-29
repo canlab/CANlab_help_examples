@@ -5,6 +5,8 @@
 % directly from the master scripts folder.
 
 % Go to your new analysis folder and run this from within it.
+% Note: type a_set_up<tab key> from command line. Do not drag and drop from
+% master folder (or it will set up scripts in master folder)
 
 % -----------------------------------------------------------------------
 % Check for master scripts and get dir
