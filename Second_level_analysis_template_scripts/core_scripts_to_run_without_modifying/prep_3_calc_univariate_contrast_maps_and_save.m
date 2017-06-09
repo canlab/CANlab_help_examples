@@ -67,6 +67,8 @@ for c = 1:size(DAT.contrasts, 1)
     DATA_OBJ_CON{c}.image_names = DAT.contrastnames;
     DATA_OBJ_CON{c}.source_notes = DAT.contrastnames;
     
+    % Enforce variable types in objects to save space
+    DATA_OBJ_CON{c} = enforce_variable_types(DATA_OBJ_CON{c}); 
     
     % QUALITY CONTROL METRICS
     % ------------------------------------------------------------------------
@@ -83,7 +85,8 @@ for c = 1:size(DAT.contrasts, 1)
         
 end
 
-% Same, for CSF-adjusted images
+%% Same, for CSF-adjusted images
+% -------------------------------------------------------------------------
 
 for i = 1:k
     DATA_OBJsc{i} = replace_empty(DATA_OBJsc{i});
@@ -133,6 +136,9 @@ for c = 1:size(DAT.contrasts, 1)
     DATA_OBJ_CONsc{c}.image_names = DAT.contrastnames;
     DATA_OBJ_CONsc{c}.source_notes = DAT.contrastnames;
     
+    % Enforce variable types in objects to save space
+    DATA_OBJ_CONsc{c} = enforce_variable_types(DATA_OBJ_CONsc{c}); 
+    
     % QUALITY CONTROL METRICS
     % ------------------------------------------------------------------------
     
@@ -148,17 +154,17 @@ for c = 1:size(DAT.contrasts, 1)
     
 end
 
-% Save results
+%% Save results
 % ------------------------------------------------------------------------
 
-savefilenamedata = fullfile(resultsdir, 'contrast_data_objects.mat');
-save(savefilenamedata, 'DATA_OBJ_CON*');
+savefilenamedata = fullfile(resultsdir, 'contrast_data_objects.mat');   % both scaled and unscaled
+save(savefilenamedata, 'DATA_OBJ_CON*', '-v7.3');                       % Note: 6/7/17 Tor switched to -v7.3 format by default 
 
 % For publish output
 disp(basedir)
 fprintf('Saved results%sDATA_OBJ_CON\n', filesep);
 
-% Get contrasts in global gray, white, CSF values
+%% Get contrasts in global gray, white, CSF values
 % ------------------------------------------------------------------------
 
 DAT.gray_white_csf_contrasts = {};
@@ -186,7 +192,7 @@ for c = 1:size(DAT.contrasts, 1)
     
 end
 
-% Save results
+%% Save results
 % ------------------------------------------------------------------------
 savefilename = fullfile(resultsdir, 'image_names_and_setup.mat');
 save(savefilename, '-append', 'DAT');
