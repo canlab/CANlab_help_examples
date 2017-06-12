@@ -3,7 +3,9 @@
 % numbers of images, as occurs with between-person designs, as
 % long as the contrast weights are zero for all elements with
 % different numbers of images.
-            
+
+omit_histograms = false;
+
 % Create contrast images
 % ------------------------------------------------------------------------
 if ~isfield(DAT, 'contrasts') || isempty(DAT.contrasts)
@@ -78,11 +80,15 @@ for c = 1:size(DAT.contrasts, 1)
     [group_metrics individual_metrics gwcsf gwcsfmean] = qc_metrics_second_level(DATA_OBJ_CON{c});
     drawnow; snapnow
     
-    figure;
-    hist_han = histogram(DATA_OBJ_CON{c}, 'byimage', 'by_tissue_type');
-    drawnow; snapnow
-    close, close
+    if ~omit_histograms
         
+        figure;
+        hist_han = histogram(DATA_OBJ_CON{c}, 'byimage', 'by_tissue_type');
+        drawnow; snapnow
+        close, close
+        
+    end
+    
 end
 
 %% Same, for CSF-adjusted images
@@ -147,10 +153,14 @@ for c = 1:size(DAT.contrasts, 1)
     [group_metrics individual_metrics gwcsf gwcsfmean] = qc_metrics_second_level(DATA_OBJ_CONsc{c});
     drawnow; snapnow
     
-    figure
-    hist_han = histogram(DATA_OBJ_CONsc{c}, 'byimage', 'by_tissue_type');
-    drawnow; snapnow
-    close, close
+    if ~omit_histograms
+        
+        figure
+        hist_han = histogram(DATA_OBJ_CONsc{c}, 'byimage', 'by_tissue_type');
+        drawnow; snapnow
+        close, close
+        
+    end
     
 end
 

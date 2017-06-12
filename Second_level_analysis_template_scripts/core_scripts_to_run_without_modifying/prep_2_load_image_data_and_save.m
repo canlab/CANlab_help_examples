@@ -4,7 +4,8 @@
 %  apply NPS
 % --------------------------------------------------------
 
-dofullplot = 1;
+dofullplot = true;
+omit_histograms = false;
 
 clear imgs cimgs
 
@@ -108,8 +109,12 @@ for i = 1:length(DAT.conditions)
         
         plot(DATA_OBJ{i}); drawnow; snapnow
         
-        hist_han = histogram(DATA_OBJ{i}, 'byimage', 'by_tissue_type');
-        drawnow; snapnow
+        if ~omit_histograms
+            
+            hist_han = histogram(DATA_OBJ{i}, 'byimage', 'by_tissue_type');
+            drawnow; snapnow
+            
+        end
         
     end
     
