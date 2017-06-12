@@ -1,0 +1,2 @@
+z_batch_publish_image_prep_and_qc
+z_batch_publish_analyses
