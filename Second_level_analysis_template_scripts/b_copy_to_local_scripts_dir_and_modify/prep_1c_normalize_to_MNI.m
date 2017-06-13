@@ -7,7 +7,7 @@
 anat_path=fullfile(datadir, DAT.structural_folder, DAT.structural_wildcard);
 anat_files=dir(anat_path{1});
 spm_jobman('initcfg');
-for s=158:length(anat_files)
+for s=1:length(anat_files)
     clear matlabbatch
     anat_file=fullfile(datadir,DAT.structural_folder,anat_files(s).name);
     matlabbatch{1}.spm.spatial.preproc.channel.vols = anat_file;
