@@ -52,8 +52,8 @@ end
 sourcedir = fullfile(masterscriptdir, 'b_copy_to_local_scripts_dir_and_modify', '*');
 [SUCCESS,MESSAGE,MESSAGEID] = copyfile(sourcedir, scriptsdir);
 
-sourcedir = fullfile(masterscriptdir, 'c_copy_to_local_scripts_dir_run_without_modifying', '*');
-[SUCCESS,MESSAGE,MESSAGEID] = copyfile(sourcedir, scriptsdir);
+% sourcedir = fullfile(masterscriptdir, 'c_copy_to_local_scripts_dir_run_without_modifying', '*');
+% [SUCCESS,MESSAGE,MESSAGEID] = copyfile(sourcedir, scriptsdir);
 
 
 checkfile = fullfile(basedir, 'study_info.json');

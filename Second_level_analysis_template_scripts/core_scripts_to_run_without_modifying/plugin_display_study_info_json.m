@@ -12,6 +12,13 @@ else
     
 end
 
+if ~exist('jsondecode', 'builtin')
+
+    disp('Matlab version needs updating: jsondecode.m is missing');
+    return
+   
+end
+
 try
     infostruct = jsondecode(textdat);
 catch

@@ -1,17 +1,34 @@
-% publish script
+% Runs batch analyses and publishes HTML report with figures and stats to 
+% results/published_output in local study-specific analysis directory.
 
-% Run this from the 'scripts' directory where it is stored
+% Run this from the main base directory (basedir)
 
 close all
 clear all
 
-a_set_up_paths_always_run_first
+% ------------------------------------------------------------------------
+% Set paths based on local study-specific base analysis directory.
+% Add the study-specific scripts to the top of the path.
+% Load saved data.
+
+scriptname = fullfile(pwd, 'scripts', 'a_set_up_paths_always_run_first');
+
+if ~exist(scriptname, 'file')
+    error('Run from base directory (basedir) of 2nd-level analysis folder.');
+else
+    run(scriptname)
+end
+
+% Reload all saved data
 b_reload_saved_matfiles           % done in indivdidual scripts to save output info in html, but re-run here so vars are available
+
+% ------------------------------------------------------------------------
+
 
 pubdir = fullfile(resultsdir, 'published_output');
 if ~exist(pubdir, 'dir'), mkdir(pubdir), end
 
-do_coverage_contrasts = true;
+do_coverage_contrasts = false;
 do_signature_analyses = true;
 do_meta_analysis_masks = true;
 
