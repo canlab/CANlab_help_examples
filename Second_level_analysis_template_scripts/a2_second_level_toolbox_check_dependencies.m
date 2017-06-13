@@ -1,8 +1,32 @@
+% Check and set up paths to toolboxes
+%
+% Example of what you will need on your matlab path:
+% -----------------------------------------------------------------------
+% cd('/Users/tor/Documents/code_repositories/spm12')
+% addpath(pwd);
+% 
+% cd('/Users/tor/Documents/code_repositories/CanlabCore')
+% g = genpath(pwd); addpath(pwd);
+% 
+% cd('/Users/tor/Documents/code_repositories/CANlab_help_examples')
+% g = genpath(pwd); addpath(pwd);
+% 
+% cd('/Users/tor/Documents/code_repositories/MasksPrivate')
+% g = genpath(pwd); addpath(pwd);
+% 
+% cd('/Users/tor/Google Drive/CanlabDataRepository/ROI_masks_and_parcellations/Parcellation_images_for_studies')
+% g = genpath(pwd); addpath(pwd);
+
+
 [matlabversion, matlabdate] = version;
 
 if datetime(matlabdate) < datetime('01-July-2016')
+    
     disp('Matlab is older than 2016b. Some functions may not work.')
-    disp('jsondecode is newer than this version.');
+    disp('Known issues:')
+    disp('- Some scripts use function definitions within them, introduced in 2016b')
+    disp('- jsondecode is newer than this version.');
+    
 end
 
 % Check paths to toolboxes
@@ -11,6 +35,25 @@ end
 disp(' ')
 disp('Checking required toolboxes and adding paths with subfolders');
 disp(' ')
+
+% -----------------------------------------------------------------------
+% SPM
+% -----------------------------------------------------------------------
+
+checkfile = which(['spm12' filesep 'spm.m']); 
+toolboxdir = fileparts(fileparts(checkfile));
+
+if ~exist(toolboxdir, 'dir')
+    
+    disp('Cannot find SPM12 toolbox');
+    disp('You need SPM5/8/12 on your path, ')
+
+else
+    disp('Found SPM12 toolbox');
+    % do not add everything
+    %g = genpath(toolboxdir);
+    %addpath(g);
+end
 
 % -----------------------------------------------------------------------
 % CANlab Core toolbox
@@ -90,6 +133,40 @@ catch
     disp('Signatures did not load.');
     disp(' ')
 end
+
+
+% -----------------------------------------------------------------------
+% Atlases for parcel extraction
+% -----------------------------------------------------------------------
+
+checkfile = which(['Parcellation_images_for_studies' filesep 'Shen_Constable_NIMG_2013_268_parcellation' filesep 'shen_2mm_268_parcellation.nii']);
+toolboxdir = fileparts(fileparts(checkfile));
+
+% if ~exist(toolboxdir, 'dir')  % Try to find and add it
+%     toolboxdir = fullfile(mainrepodir, 'CANlab_help_examples', 'Second_level_analysis_template_scripts');
+% end
+
+if ~exist(toolboxdir, 'dir')
+    
+    disp('Cannot find parcellation .nii files');
+    disp('You should have the ROI_masks_and_parcellations/Parcellation_images_for_studies folder on your path, with subfolders.')
+    disp('These are in the CanlabDataRepository and have .nii/.img files for parcellations shared by multiple groups');
+    disp(' ');
+    
+else
+    disp('Found parcellation image files.');
+    g = genpath(toolboxdir);
+    addpath(g);
+end
+
+atlas_name = which('shen_2mm_268_parcellation.nii');
+parcellation_name = 'Shen';
+
+if ~exist(atlas_name, 'file')
+    error('Add parcellation atlas to your Matlab path.');
+end
+
+
 
 % -----------------------------------------------------------------------
 % Spider toolbox for SVM
