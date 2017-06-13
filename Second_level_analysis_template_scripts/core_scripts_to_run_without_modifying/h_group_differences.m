@@ -1,3 +1,8 @@
+% Runs a two-sample t-test for a set of signature responses, for each
+% contrast.  Also runs NPS subregions. 
+% Signatures, scaling, etc. are defined below.
+
+
 % Define test conditions of interest
 % -------------------------------------------------------------------------
 
@@ -36,6 +41,8 @@ for s = 1:length(mysignature)
     for i = 1:kc
         
         mygroupnamefield = 'contrasts';  % 'conditions' or 'contrasts'
+        
+        % Load group variable
         [group, groupnames, groupcolors] = plugin_get_group_names_colors(DAT, mygroupnamefield, i);
         
         if isempty(group), continue, end % skip this condition/contrast - no groups
@@ -51,7 +58,7 @@ for s = 1:length(mysignature)
         
         barplot_columns(y, 'nofig', 'colors', groupcolors, 'names', groupnames);
         
-        title(DAT.conditions{i})
+        title(DAT.contrastnames{i})
         xlabel('Group');
         ylabel(sprintf('%s Response', mysignature{s}));
         
@@ -72,6 +79,9 @@ end % signature
 % which variables to use
 mysubrfield = 'npspos_by_region_contrasts'; % 'npspos_by_region_cosinesim';     %'npspos_by_regionsc';
 mysubrfieldneg = 'npsneg_by_region_contrasts'; % 'npsneg_by_region_cosinesim';  % 'npsneg_by_regionsc';
+
+posnames = DAT.NPSsubregions.posnames;
+negnames = DAT.NPSsubregions.negnames;
 
 clear means p T
 
@@ -177,41 +187,41 @@ for i = 1:kc
 end
 
 
-function [group, groupnames, groupcolors] = plugin_get_group_names_colors(DAT, mygroupnamefield, i)
-
-group = []; groupnames = []; groupcolors = [];
-
-if isfield(DAT, 'BETWEENPERSON') && ...
-        isfield(DAT.BETWEENPERSON, mygroupnamefield) && ...
-        iscell(DAT.BETWEENPERSON.(mygroupnamefield)) && ...
-        length(DAT.BETWEENPERSON.(mygroupnamefield)) >= i && ...
-        ~isempty(DAT.BETWEENPERSON.(mygroupnamefield){i})
-    
-    group = DAT.BETWEENPERSON.(mygroupnamefield){i};
-    
-elseif isfield(DAT, 'BETWEENPERSON') && ...
-        isfield(DAT.BETWEENPERSON, 'group') && ...
-        ~isempty(DAT.BETWEENPERSON.group)
-    
-    group = DAT.BETWEENPERSON.group;
-
-end
-
-
-if isfield(DAT, 'BETWEENPERSON') && isfield(DAT.BETWEENPERSON, 'groupnames')
-    groupnames = DAT.BETWEENPERSON.groupnames;
-elseif istable(group)
-    groupnames = group.Properties.VariableNames(1);
-else
-    groupnames = {'Group-Pos' 'Group-neg'};
-end
-
-if isfield(DAT, 'BETWEENPERSON') && isfield(DAT.BETWEENPERSON, 'groupcolors')
-    groupcolors = DAT.BETWEENPERSON.groupcolors;
-else
-    groupcolors = seaborn_colors(2);
-end
-
-if istable(group), group = table2array(group); end
-
-end
+% function [group, groupnames, groupcolors] = plugin_get_group_names_colors(DAT, mygroupnamefield, i)
+% 
+% group = []; groupnames = []; groupcolors = [];
+% 
+% if isfield(DAT, 'BETWEENPERSON') && ...
+%         isfield(DAT.BETWEENPERSON, mygroupnamefield) && ...
+%         iscell(DAT.BETWEENPERSON.(mygroupnamefield)) && ...
+%         length(DAT.BETWEENPERSON.(mygroupnamefield)) >= i && ...
+%         ~isempty(DAT.BETWEENPERSON.(mygroupnamefield){i})
+%     
+%     group = DAT.BETWEENPERSON.(mygroupnamefield){i};
+%     
+% elseif isfield(DAT, 'BETWEENPERSON') && ...
+%         isfield(DAT.BETWEENPERSON, 'group') && ...
+%         ~isempty(DAT.BETWEENPERSON.group)
+%     
+%     group = DAT.BETWEENPERSON.group;
+% 
+% end
+% 
+% 
+% if isfield(DAT, 'BETWEENPERSON') && isfield(DAT.BETWEENPERSON, 'groupnames')
+%     groupnames = DAT.BETWEENPERSON.groupnames;
+% elseif istable(group)
+%     groupnames = group.Properties.VariableNames(1);
+% else
+%     groupnames = {'Group-Pos' 'Group-neg'};
+% end
+% 
+% if isfield(DAT, 'BETWEENPERSON') && isfield(DAT.BETWEENPERSON, 'groupcolors')
+%     groupcolors = DAT.BETWEENPERSON.groupcolors;
+% else
+%     groupcolors = seaborn_colors(2);
+% end
+% 
+% if istable(group), group = table2array(group); end
+% 
+% end

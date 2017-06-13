@@ -28,7 +28,7 @@ b_reload_saved_matfiles           % done in indivdidual scripts to save output i
 pubdir = fullfile(resultsdir, 'published_output');
 if ~exist(pubdir, 'dir'), mkdir(pubdir), end
 
-do_coverage_contrasts = false;
+do_coverage_contrasts = true;
 do_signature_analyses = true;
 do_meta_analysis_masks = true;
 

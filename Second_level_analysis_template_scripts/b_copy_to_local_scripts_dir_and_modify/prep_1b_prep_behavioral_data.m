@@ -60,8 +60,9 @@ DAT.BETWEENPERSON.contrasts = cell(1, length(DAT.contrastnames));
 % a variable called 'id' contains subject identfiers.  Other variables will
 % be used as regressors.  Variables with only two levels should be effects
 % coded, with [1 -1] values.
-
-% Vars of interest
+%
+% 
+% e.g., Vars of interest
 %
 %   12×1 cell array
 % 
@@ -86,6 +87,21 @@ DAT.BETWEENPERSON.contrasts = cell(1, length(DAT.contrastnames));
 %     'AntLinear Remi'
 %     'ResistStrong vs Weak Sal'
 %     'ResistStrong vs Weak Remi'
+
+% Enter the behavioral grouping codes (1, -1) for individual differences in each 
+% condition or contrast here.  You can enter them separately for
+% conditions/contrasts, or skip this code block and just enter a single
+% variable in DAT.BETWEENPERSON.group below, which will be used for all
+% conditions and contrasts.
+%
+% Contrast numbers below refer to the contrasts you entered and named in the prep_1_
+% script.  The numbers refer to the rows of the contrast matrix you entered.
+%
+% Often, you will want to use the same behavioral variable for multiple
+% contrasts.  If  you have different between-person covariates for different
+% contrasts, e.g., I-C RT for I-C images and ratings or diagnosis for
+% emotion contrasts, you can enter different behavioral variables in the
+% different cells.  Ditto for conditions.
 
 id = behavioral_data_table.Subject;
 
@@ -133,6 +149,15 @@ DAT.BETWEENPERSON.contrasts{6} = mytable;
 
 % Single group variable, optional, for convenience
 % These fields are mandatory, but they can be empty
+%
+% Make sure:
+% - DAT.BETWEENPERSON.group is a numeric vector,  coded 1, -1
+% - If you have string inputs, the function string2indicator can help
+% transform them to numbers
+% - If you have numeric codes that are not 1, -1 then contrast_code can
+% help recode them.
+%
+% Group can be empty.
 % -------------------------------------------------------------------------
 group = behavioral_data_table.ORDER;
 [~, nms, group] = string2indicator(group);
