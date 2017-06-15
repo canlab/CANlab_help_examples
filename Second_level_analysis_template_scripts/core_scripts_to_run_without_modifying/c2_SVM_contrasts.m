@@ -2,6 +2,20 @@
 % Specified in DAT.contrasts
 % --------------------------------------------------------------------
 
+% USER OPTIONS
+
+% Now set in a2_set_default_options
+if ~exist('dosavesvmstats', 'var') || ~exist('dobootstrap', 'var') || ~exist('boot_n', 'var')
+    a2_set_default_options;
+end
+
+% dosavesvmstats = true;  % default false
+% dobootstrap = true;    % default false
+% boot_n = 100;           % default number of boot samples is 5,000
+
+% Specified in DAT.contrasts
+% --------------------------------------------------------------------
+
 spath = which('use_spider.m');
 if isempty(spath)
     disp('Warning: spider toolbox not found on path; prediction may break')
@@ -57,9 +71,23 @@ for c = 1:kc
     
     % Run prediction model
     % --------------------------------------------------------------------
-
-    [cverr, stats, optout] = predict(cat_obj, 'algorithm_name', 'cv_svm', 'nfolds', holdout_set, 'error_type', 'mcr');
+    if dobootstrap
+        [cverr, stats, optout] = predict(cat_obj, 'algorithm_name', 'cv_svm', 'nfolds', holdout_set, 'bootsamples', boot_n, 'error_type', 'mcr');
+        stats.weight_obj = threshold(stats.weight_obj, .05, 'unc');
+        
+    else
+        [cverr, stats, optout] = predict(cat_obj, 'algorithm_name', 'cv_svm', 'nfolds', holdout_set, 'error_type', 'mcr');
+    end
     
+    % to do: remove cv maps to save storage space
+    % saving svm stats for later use of weight object, etc
+    if dosavesvmstats
+        
+        stats.weight_obj = enforce_variable_types(stats.weight_obj);
+        svm_stats_results{c}=stats;
+        
+    end
+        
 
     % Summarize output and create ROC plot
     % -------------------------------------------------------------------- 
@@ -118,5 +146,17 @@ for c = 1:kc
     
     o2 = removeblobs(o2);
     
+    axes(o2.montage{whmontage}.axis_handles(5));
+    title('Intentionally Blank', 'FontSize', 18);
+    
 end  % within-person contrast
 
+%% Save
+if dosavesvmstats
+    
+    savefilenamedata = fullfile(resultsdir, 'svm_stats_results_contrasts.mat');
+
+    save(savefilenamedata, 'svm_stats_results', '-v7.3');
+    printhdr('Saved svm_stats_results for contrasts');
+    
+end

@@ -4,8 +4,14 @@
 %  apply NPS
 % --------------------------------------------------------
 
-dofullplot = true;
-omit_histograms = false;
+% Now set in a2_set_default_options
+if ~exist('dofullplot', 'var') || ~exist('omit_histograms', 'var') || ~exist('dozipimages', 'var')
+    a2_set_default_options;
+end
+
+% dofullplot = true;
+% omit_histograms = true;
+% dozipimages = false;
 
 clear imgs cimgs
 
@@ -81,9 +87,11 @@ for i = 1:length(DAT.conditions)
     % this is new and could be a source of errors - beta testing!
     DATA_OBJ{i} = enforce_variable_types(DATA_OBJ{i});
      
-    % zip original files to save space (we are done using them now).
-    try eval(['!gzip ' filename_string{i}]), catch, end
-        
+    if dozipimages
+        % zip original files to save space (we are done using them now).
+        try eval(['!gzip ' filename_string{i}]), catch, end
+    end
+    
     % QUALITY CONTROL METRICS
     % -------------------------------------------------------------------
 

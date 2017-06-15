@@ -4,7 +4,12 @@
 % long as the contrast weights are zero for all elements with
 % different numbers of images.
 
-omit_histograms = false;
+% Now set in a2_set_default_options
+if ~exist('omit_histograms', 'var')
+    a2_set_default_options;
+end
+
+% omit_histograms = true;
 
 % Create contrast images
 % ------------------------------------------------------------------------
