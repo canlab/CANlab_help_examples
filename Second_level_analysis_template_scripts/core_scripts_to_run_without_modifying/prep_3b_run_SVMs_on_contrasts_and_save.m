@@ -23,18 +23,6 @@ end
 
 kc = size(DAT.contrasts, 1);
 
-% Select subjects
-% --------------------------------------------------------------------
-which_subjects_to_include = DAT.BEHAVIOR.wh_healthy;
-
-for i = 1:length(DATA_OBJ)  % for each condition
-    
-    %DATA_OBJ{i} = remove_empty(DATA_OBJ{i}, [], ~wh);
-    
-    DATA_OBJ{i}.dat = DATA_OBJ{i}.dat(:, which_subjects_to_include);   
-    
-end
-    
 if dobootstrap, svmtime = tic; end
 
 %% Train all models
