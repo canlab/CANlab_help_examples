@@ -23,17 +23,20 @@
 %   figures
 %   html report with figures and stats, in "published_output"
 
-% NOTES:
-% s56 is missing for two beta images
-% moved into excluded folder
 
-% Set up paths
+% Set base directory
 % --------------------------------------------------------
 
 % Base directory for whole study/analysis
-basedir = '/Users/tor/Google_Drive/SHARED_DATASETS_gdrive/P_Liv_Faull_breathlessless/3T full brain breathlessness with opioids and levels of resistance';
-%basedir = '/Volumes/fMRIdata/Google_Drive/SHARED_DATASETS_gdrive/P_Liv_Faull_breathlessless/3T full brain breathlessness with opioids and levels of resistance';
+basedir = '/Users/tor/Google_Drive/SHARED_DATASETS_gdrive/A_Multi_lab_world_map/2017_MID_Meffert';
 
+% Set user options
+% --------------------------------------------------------
+
+a2_set_default_options
+
+% Set up paths
+% --------------------------------------------------------
 
 cd(basedir)
 
@@ -52,6 +55,7 @@ if ~exist(figsavedir, 'dir'), mkdir(figsavedir); end
 % addpath(g)
 
 % Display helper functions: Called by later scripts
+% --------------------------------------------------------
 
 dashes = '----------------------------------------------';
 printstr = @(dashes) disp(dashes);

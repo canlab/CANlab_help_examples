@@ -1,27 +1,17 @@
-% THIS SCRIPT RUNS SVMs for WITHIN-PERSON CONTRASTS
-% Specified in DAT.contrasts
-% --------------------------------------------------------------------
 
-% USER OPTIONS
+%% Load stats
+savefilenamedata = fullfile(resultsdir, 'svm_stats_results_contrasts.mat');
 
-% Now set in a2_set_default_options
-if ~exist('dosavesvmstats', 'var') || ~exist('dobootstrap', 'var') || ~exist('boot_n', 'var')
-    a2_set_default_options;
+if ~exist(savefilenamedata, 'file')
+    disp('Run prep_3b_run_SVMs_on_contrasts_and_save with dosavesvmstats = true option to get SVM results.'); 
+    disp('No saved results file.  Skipping this analysis.')
+    return
 end
 
-% dosavesvmstats = true;  % default false
-% dobootstrap = true;    % default false
-% boot_n = 100;           % default number of boot samples is 5,000
+fprintf('\nLoading SVM results and maps from %s\n\n', savefilenamedata);
+load(savefilenamedata, 'svm_stats_results');
 
-% Specified in DAT.contrasts
-% --------------------------------------------------------------------
-
-spath = which('use_spider.m');
-if isempty(spath)
-    disp('Warning: spider toolbox not found on path; prediction may break')
-end
-
-% Initialize fmridisplay slice display if needed, or clear existing display
+%% Initialize fmridisplay slice display if needed, or clear existing display
 % --------------------------------------------------------------------
 
 % Specify which montage to add title to. This is fixed for a given slice display
@@ -30,105 +20,80 @@ plugin_check_or_create_slice_display; % script, checks for o2 and uses whmontage
 
 % --------------------------------------------------------------------
 
-printhdr('Cross-validated SVM to discriminate contrasts');
+printhdr('Cross-validated SVM to discriminate within-person contrasts');
 
-% create_figure('SVM weight map'); axis off
-% o2 = canlab_results_fmridisplay;
+%% Average images collected on the same person within each SVM class, for testing
+% --------------------------------------------------------------------
+
+[dist_from_hyperplane, Y, svm_dist_pos_neg] = plugin_svm_contrasts_get_results_per_subject(DAT, svm_stats_results, DATA_OBJ);
+
+%% Check that we have paired images and skip if not. See below for details
+% --------------------------------------------------------------------
 
 kc = size(DAT.contrasts, 1);
+
+ispaired = false(1, kc);
+
+for i = 1:kc
+    ispaired(i) = sum(Y{i} > 0) == sum(Y{i} < 0);
+end
+
+if ~all(ispaired)
+    disp('This script should only be run on paired, within-person contrasts');
+    disp('Check images and results. Skipping this analysis.');
+    return
+end
+
+
+%% Define effect size functions and between/within ROC type
+% --------------------------------------------------------------------
+% Define paired and uppaired functions here for reference
+% This script uses the paired option because it runs within-person
+% contrasts
+
+% ROC plot is different for paired samples and unpaired. Paired samples
+% must be in specific order, 1:n for condition 1 and 1:n for condition 2.
+% If samples are paired, this is set up by default in these scripts.
+% But some contrasts entered by the user may be unbalanced, i.e., different
+% numbers of images in each condition, unpaired. Other SVM scripts are set up
+% to handle this condition explicitly and run the unpaired version.  
+
+% Effect size, cross-validated, paired samples
+dfun_paired = @(x, Y) mean(x(Y > 0) - x(Y < 0)) ./ std(x(Y > 0) - x(Y < 0));
+
+% Effect size, cross-validated, unpaired sampled
+dfun_unpaired = @(x, Y) (mean(x(Y > 0)) - mean(x(Y < 0))) ./ sqrt(var(x(Y > 0)) + var(x(Y < 0))); % check this.
+
+rocpairstring = 'twochoice';  % 'twochoice' or 'unpaired'
+
+
+%% Cross-validated accuracy and ROC plots for each contrast
+% --------------------------------------------------------------------
 
 for c = 1:kc
     
     printstr(DAT.contrastnames{c});
     printstr(dashes)
     
-    mycontrast = DAT.contrasts(c, :);
-    wh = find(mycontrast);
-    
-    % Create combined data object with all input images
-    % --------------------------------------------------------------------
-    [cat_obj, condition_codes] = cat(DATA_OBJ{wh});
-    
-    % a. Format and attach outcomes: 1, -1 for pos/neg contrast values
-    % b. Define holdout sets: Define based on plugin script
-    %    Assume that subjects are in same position in each input file
-    % --------------------------------------------------------------------
-
-    plugin_get_holdout_sets;
-    
-    cat_obj.Y = outcome_value;
-    
-    % Skip if necessary
+    % ROC plot
     % --------------------------------------------------------------------
     
-    if all(cat_obj.Y > 0) || all(cat_obj.Y < 0)
-        % Only positive or negative weights - nothing to compare
-        
-        printhdr(' Only positive or negative weights - nothing to compare');
-        
-        continue    
-    end
+    figtitle = sprintf('SVM ROC healthy %s', DAT.contrastnames{c});
+    create_figure(figtitle);
     
-    % Run prediction model
-    % --------------------------------------------------------------------
-    if dobootstrap
-        [cverr, stats, optout] = predict(cat_obj, 'algorithm_name', 'cv_svm', 'nfolds', holdout_set, 'bootsamples', boot_n, 'error_type', 'mcr');
-        stats.weight_obj = threshold(stats.weight_obj, .05, 'unc');
-        
-    else
-        [cverr, stats, optout] = predict(cat_obj, 'algorithm_name', 'cv_svm', 'nfolds', holdout_set, 'error_type', 'mcr');
-    end
+    ROC = roc_plot(dist_from_hyperplane{c}, logical(Y{c} > 0), 'color', DAT.contrastcolors{c}, rocpairstring);
     
-    % to do: remove cv maps to save storage space
-    % saving svm stats for later use of weight object, etc
-    if dosavesvmstats
-        
-        stats.weight_obj = enforce_variable_types(stats.weight_obj);
-        svm_stats_results{c}=stats;
-        
-    end
-        
-
-    % Summarize output and create ROC plot
-    % -------------------------------------------------------------------- 
+    d_paired = dfun_paired(dist_from_hyperplane{c}, Y{c});
+    fprintf('Effect size, cross-val: Forced choice: d = %3.2f\n\n', d_paired);
     
-    create_figure('ROC');
-    disp(' ');
-    printstr(['Results: ' DAT.contrastnames{c}]); printstr(dashes);
-    
-    % ROC plot is different for paired samples and unpaired. Paired samples
-    % must be in specific order, 1:n for condition 1 and 1:n for condition 2.
-    % If samples are paired, this is set up by default in these scripts.
-    % But some contrasts entered by the user may be unbalanced, so check
-    % for this here and run paired or unpaired as appropriate.
-    
-    ispaired = sum(cat_obj.Y > 0) == sum(cat_obj.Y < 0);
-    
-    if ispaired
-        rocpairstring = 'twochoice';
-        
-        % Effect size, cross-validated, paired samples
-        dfun2 = @(x, Y) mean(x(Y > 0) - x(Y < 0)) ./ std(x(Y > 0) - x(Y < 0));
-        
-    else
-        rocpairstring = 'unpaired';
-        
-        % Effect size, cross-validated, unpaired sampled
-        dfun2 = @(x, Y) (mean(x(Y > 0)) - mean(x(Y < 0))) ./ sqrt(var(x(Y > 0)) + var(x(Y < 0))); % check this.
-        
-    end
-        
-    ROC = roc_plot(stats.dist_from_hyperplane_xval, logical(cat_obj.Y > 0), 'color', DAT.contrastcolors{c}, rocpairstring);
-    
-    d = dfun2(stats.dist_from_hyperplane_xval, stats.Y);
-    fprintf('Effect size, cross-val: d = %3.2f\n\n', d);
-    
-    figtitle = sprintf('SVM ROC %s', DAT.contrastnames{c});
     plugin_save_figure
     
 
     % Plot the SVM map
     % --------------------------------------------------------------------
+    % Get the stats results for this contrast, with weight map
+    stats = svm_stats_results{c};
+    
     o2 = removeblobs(o2);
     o2 = addblobs(o2, region(stats.weight_obj), 'trans');
         
@@ -147,16 +112,7 @@ for c = 1:kc
     o2 = removeblobs(o2);
     
     axes(o2.montage{whmontage}.axis_handles(5));
-    title('Intentionally Blank', 'FontSize', 18);
+    title('Intentionally Blank', 'FontSize', 18); % For published reports
     
 end  % within-person contrast
 
-%% Save
-if dosavesvmstats
-    
-    savefilenamedata = fullfile(resultsdir, 'svm_stats_results_contrasts.mat');
-
-    save(savefilenamedata, 'svm_stats_results', '-v7.3');
-    printhdr('Saved svm_stats_results for contrasts');
-    
-end
