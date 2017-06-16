@@ -37,9 +37,13 @@ prep_4_apply_signatures_and_save
 
 %% PARCELLATION PREP
 
-printhdr('PARCELLATIONS')
-prep_5_apply_shen_parcellation_and_save
-prep_5b_apply_spmanatomy_parcellation_and_save
+try 
+    printhdr('PARCELLATIONS')
+    prep_5_apply_shen_parcellation_and_save
+    prep_5b_apply_spmanatomy_parcellation_and_save
+catch 
+    warning('Parcellation image atlas not on path. Images stored on Canlab Drive. Contact Canlab if you want to include this step.')
+end
 
 %% EMOTION MAPS
 
