@@ -11,7 +11,7 @@ clear all
 % Add the study-specific scripts to the top of the path.
 % Load saved data.
 
-scriptname = fullfile(pwd, 'scripts', 'a_set_up_paths_always_run_first');
+scriptname = fullfile(pwd, 'scripts', 'a_set_up_paths_always_run_first.m');
 
 if ~exist(scriptname, 'file')
     error('Run from base directory (basedir) of 2nd-level analysis folder.');
