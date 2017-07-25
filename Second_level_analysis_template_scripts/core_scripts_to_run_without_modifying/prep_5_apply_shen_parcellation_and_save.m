@@ -107,7 +107,11 @@ for mysig = 1:length(signames)
     % FDR-correct across all conditions and parcels
     
     all_p = cat(2, PARCELS.(parcellation_name).(signame).group_p{:});
-    PARCELS.(parcellation_name).(signame).fdr_p_thresh = FDR(all_p, .05);
+    
+    pthr = FDR(all_p, .05);
+    if isempty(pthr), pthr = eps; end
+        
+    PARCELS.(parcellation_name).(signame).fdr_p_thresh = pthr;
     
     for i = 1:k
         

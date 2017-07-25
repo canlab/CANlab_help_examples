@@ -3,6 +3,8 @@
 % -------------------------------------------------------
 a_set_up_paths_always_run_first
 
+a2_set_default_options
+
 prep_1_set_conditions_contrasts_colors
 
 printhdr('BEHAVIORAL DATA - BETWEEN-PERSON DESIGN')
@@ -26,6 +28,14 @@ prep_2_load_image_data_and_save
 
 printhdr('CONTRAST PLOTS')
 prep_3_calc_univariate_contrast_maps_and_save
+
+% You can also run z_batch_publish_image_prep_and_qc to run these and
+% create an .html file with the output.
+
+%% SVMs with optional bootstrapping
+
+printhdr('CONTRAST SUPPORT VECTOR MACHINES')
+prep_3b_run_SVMs_on_contrasts_and_save
 
 % You can also run z_batch_publish_image_prep_and_qc to run these and
 % create an .html file with the output.

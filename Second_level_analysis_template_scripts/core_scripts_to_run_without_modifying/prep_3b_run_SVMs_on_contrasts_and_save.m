@@ -86,7 +86,7 @@ end  % Contrasts - run
 %% Save
 if dosavesvmstats
     
-    savefilenamedata = fullfile(resultsdir, 'svm_stats_results_contrasts_healthy.mat');
+    savefilenamedata = fullfile(resultsdir, 'svm_stats_results_contrasts.mat');
 
     save(savefilenamedata, 'svm_stats_results', '-v7.3');
     printhdr('Saved svm_stats_results for contrasts');
