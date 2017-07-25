@@ -1,9 +1,9 @@
 
 %% Load stats
-savefilenamedata = fullfile(resultsdir, 'svm_stats_results_contrasts.mat');
+savefilenamedata = fullfile(resultsdir, 'svm_stats_results_contrasts_masked.mat');
 
 if ~exist(savefilenamedata, 'file')
-    disp('Run prep_3b_run_SVMs_on_contrasts_and_save with dosavesvmstats = true option to get SVM results.'); 
+    disp('Run prep_3c_run_SVMs_on_contrasts_masked with dosavesvmstats = true option to get SVM results.'); 
     disp('No saved results file.  Skipping this analysis.')
     return
 end
@@ -78,7 +78,7 @@ for c = 1:kc
     % ROC plot
     % --------------------------------------------------------------------
     
-    figtitle = sprintf('SVM ROC %s', DAT.contrastnames{c});
+    figtitle = sprintf('SVM ROC masked %s', DAT.contrastnames{c});
     create_figure(figtitle);
     
     ROC = roc_plot(dist_from_hyperplane{c}, logical(Y{c} > 0), 'color', DAT.contrastcolors{c}, rocpairstring);
@@ -102,7 +102,7 @@ for c = 1:kc
     
     printstr(DAT.contrastnames{c}); printstr(dashes);
     
-    figtitle = sprintf('SVM weight map nothresh %s', DAT.contrastnames{c});
+    figtitle = sprintf('SVM weight map nothresh masked %s', DAT.contrastnames{c});
     plugin_save_figure;
     
     % Remove title in case fig is re-printed in html
@@ -134,7 +134,7 @@ accuracy = cell2mat(accuracy);
 
 % Figure
 % -------------------------------------------------------------------------
-figtitle = sprintf('SVM Cross_classification');
+figtitle = sprintf('SVM Cross_classification masked');
 create_figure(figtitle);
 
 pos = get(gcf, 'Position');

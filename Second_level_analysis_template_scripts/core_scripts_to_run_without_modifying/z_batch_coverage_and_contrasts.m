@@ -4,7 +4,16 @@ if isempty(masterscriptdir)
     error('Add Second_level_analysis_template_scripts folder from CANlab_help_examples repository to your path'); 
 end
 
-%% SUMMARY
+%% CHECK DEPENDENCIES AND SET DEFAULT VARIABLES
+
+% Load and print summary of study from study_info.json and contrast info
+% -------------------------------------------------------------------------
+scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'a2_second_level_toolbox_check_dependencies'));
+run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
+
+a2_set_default_options
+
+%% LOAD AND SUMMARY
 
 % Load and print summary of study from study_info.json and contrast info
 % -------------------------------------------------------------------------

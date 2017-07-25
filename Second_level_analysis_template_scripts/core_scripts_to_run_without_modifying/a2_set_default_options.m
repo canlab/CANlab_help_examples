@@ -18,3 +18,14 @@ dobootstrap = true;         % default false     Takes a lot of time
 boot_n = 1000;              % default number of bootstrap samples. Very slow. Recommend 5,000 for final published analysis
 parallelstr = 'noparallel';   % parallel proc for boot. 'parallel' or 'noparallel'
 
+
+% prep_3c_run_SVMs_on_contrasts_masked options 
+% --------------------------------------------------------------------
+maskdir = fullfile(basedir, 'masks');
+maskname = fullfile(maskdir, 'HarvardOxford-dACC-maxprob-thr0-2mm.nii');
+
+% Also uses these from above
+% dosavesvmstats = true;      % default true      Save statistics and weight map objects for SVM contrasts
+% dobootstrap = false;         % default false     Takes a lot of time
+% boot_n = 1000;              % default number of bootstrap samples. Very slow. Recommend 5,000 for final published analysis
+% parallelstr = 'noparallel';   % parallel proc for boot. 'parallel' or 'noparallel'
