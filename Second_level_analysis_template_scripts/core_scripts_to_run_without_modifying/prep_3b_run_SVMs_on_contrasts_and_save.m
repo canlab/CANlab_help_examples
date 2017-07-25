@@ -65,12 +65,12 @@ for c = 1:kc
     % Run prediction model
     % --------------------------------------------------------------------
     if dobootstrap
-        [cverr, stats, optout] = predict(cat_obj, 'algorithm_name', 'cv_svm', 'nfolds', holdout_set, 'bootsamples', boot_n, 'error_type', 'mcr');
+        [cverr, stats, optout] = predict(cat_obj, 'algorithm_name', 'cv_svm', 'nfolds', holdout_set, 'bootsamples', boot_n, 'error_type', 'mcr', parallelstr);
         % Threshold, if possible - can re-threshold later with threshold() method
         stats.weight_obj = threshold(stats.weight_obj, .05, 'unc'); 
         
     else
-        [cverr, stats, optout] = predict(cat_obj, 'algorithm_name', 'cv_svm', 'nfolds', holdout_set, 'error_type', 'mcr');
+        [cverr, stats, optout] = predict(cat_obj, 'algorithm_name', 'cv_svm', 'nfolds', holdout_set, 'error_type', 'mcr', parallelstr);
     end
     
     % Save stats objects for results later

@@ -14,7 +14,6 @@ if ~ok_to_run
     return
 end
 
-
 spath = which('use_spider.m');
 if isempty(spath)
     disp('Warning: spider toolbox not found on path; prediction may break')
