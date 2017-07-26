@@ -90,7 +90,7 @@ for c = 1:kc
     stats = svm_stats_results{c};
     
     % For each transfer contrast to be tested...
-    for c2 = c:kc
+    for c2 = 1:kc
         
         % Get transfer image set
         % stats_test = svm_stats_results{c2};
@@ -109,6 +109,7 @@ for c = 1:kc
         yfit_transfer = NaN * ones(size(YY));
         
         fold_testset = stats.teIdx;  % cell array, one cell per fold
+        %w_obj = replace_empty(stats.weight_obj);    % Starting value, weights will be replaced.
         w_obj = stats.weight_obj;    % Starting value, weights will be replaced.
         
         % Get results for each fold
@@ -119,7 +120,18 @@ for c = 1:kc
             
             % put weights into object, so we can apply even if voxels don't
             % match up (e.g., if training data were masked)
-            w_obj.dat = w;
+            % predict.m method returns voxel weights in cv output
+            % inconsistently, in two different vector spaces, so we have to
+            % detect which is right.
+            if size(w, 1) == size(w_obj.removed_voxels, 1) 
+                % full-length vector
+                w_obj.dat = w(~w_obj.removed_voxels);
+                
+            elseif size(w, 1) == size(w_obj.dat, 1)
+                w_obj.dat = w;
+            else
+                error('Voxel sizes do not match!! Check code and input and debug.');
+            end
 
             teidx = fold_testset{f};             % this requires that the matched (paired) images exist in both training and transfer samples.
             test_wh = find(teidx);
@@ -148,8 +160,8 @@ for c = 1:kc
         svm_dist_pos = mean(svm_dist_pos, 2);
         svm_dist_neg = mean(svm_dist_neg, 2);
         
-        [svm_dist_pos_neg_matrix{c, c2}, svm_dist_pos_neg_matrix{c2, c}] = deal([svm_dist_pos svm_dist_neg]);
-        [outcome_matrix{c, c2} outcome_matrix{c2, c}] = deal(YY);
+        svm_dist_pos_neg_matrix{c, c2} = [svm_dist_pos svm_dist_neg];
+        outcome_matrix{c, c2} = YY;
         
     end
     
