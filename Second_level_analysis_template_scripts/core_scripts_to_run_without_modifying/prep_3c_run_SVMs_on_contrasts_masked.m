@@ -25,6 +25,13 @@ kc = size(DAT.contrasts, 1);
 
 if dobootstrap, svmtime = tic; end
 
+%% Get mask
+if exist('maskname', 'var') && ~isempty(maskname)
+    
+    svmmask = fmri_data(maskname);
+    
+end
+
 %% Train all models
 % --------------------------------------------------------------------
 
@@ -41,6 +48,14 @@ for c = 1:kc
     % Create combined data object with all input images
     % --------------------------------------------------------------------
     [cat_obj, condition_codes] = cat(DATA_OBJ{wh});
+    
+    % Apply mask
+    
+    if exist('svmmask', 'var')
+        
+        cat_obj = apply_mask(cat_obj, svmmask);
+        
+    end
     
     % a. Format and attach outcomes: 1, -1 for pos/neg contrast values
     % b. Define holdout sets: Define based on plugin script
@@ -79,6 +94,13 @@ for c = 1:kc
     stats.weight_obj = enforce_variable_types(stats.weight_obj);
     svm_stats_results{c} = stats;
         
+    if exist('svmmask', 'var')
+    
+        svm_stats_results{c}.mask = svmmask;
+        svm_stats_results{c}.maskname = maskname;
+    
+    end
+    
     if dobootstrap, disp('Cumulative run time:'), toc(svmtime); end
 
 end  % Contrasts - run
@@ -86,10 +108,10 @@ end  % Contrasts - run
 %% Save
 if dosavesvmstats
     
-    savefilenamedata = fullfile(resultsdir, 'svm_stats_results_contrasts.mat');
+    savefilenamedata = fullfile(resultsdir, 'svm_stats_results_contrasts_masked.mat');
 
     save(savefilenamedata, 'svm_stats_results', '-v7.3');
-    printhdr('Saved svm_stats_results for contrasts');
+    printhdr('Saved svm_stats_results for contrasts - masked');
     
 end
 
