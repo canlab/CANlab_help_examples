@@ -23,11 +23,13 @@
 %   figures
 %   html report with figures and stats, in "published_output"
 
-
 % Set base directory
 % --------------------------------------------------------
 
 % Base directory for whole study/analysis
+
+<<<EDIT A COPY OF THIS IN YOUR LOCAL SCRIPTS DIRECTORY AND DELETE THIS LINE AND THE FOLLOWING ONE>>>
+<<<EDIT THE ONE LINE DEFINING "basedir" BELOW ONLY>>>
 basedir = '/Users/tor/Google_Drive/SHARED_DATASETS_gdrive/A_Multi_lab_world_map/2017_MID_Meffert';
 
 % Set user options
@@ -44,6 +46,7 @@ datadir = fullfile(basedir, 'data');
 resultsdir = fullfile(basedir, 'results');
 scriptsdir = fullfile(basedir, 'scripts');
 figsavedir = fullfile(resultsdir, 'figures');
+notesdir = fullfile(resultsdir, 'notes');
 
 addpath(scriptsdir)
 

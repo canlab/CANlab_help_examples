@@ -1,5 +1,7 @@
 %% READ behavioral data from file. These data will be put into standard structure compatible with analyses
 
+<<<EDIT A COPY OF THIS IN YOUR LOCAL SCRIPTS DIRECTORY AND DELETE THIS LINE>>>
+
 behavioral_data_filename = 'sedation_scores_for_tor.xlsx';
 behavioral_fname_path = fullfile(datadir, behavioral_data_filename);
 

@@ -1,6 +1,8 @@
 %% Set up conditions 
 % ------------------------------------------------------------------------
 
+<<<EDIT A COPY OF THIS IN YOUR LOCAL SCRIPTS DIRECTORY AND DELETE THIS LINE>>>
+
 % conditions = {'C1' 'C2' 'C3' 'etc'};
 % structural_wildcard = {'c1*nii' 'c2*nii' 'c3*nii' 'etc*nii'};
 % functional_wildcard = {'fc1*nii' 'fc2*nii' 'fc3*nii' 'etc*nii'};

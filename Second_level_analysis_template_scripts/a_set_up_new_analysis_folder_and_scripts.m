@@ -7,7 +7,7 @@
 % Go to your new analysis folder and run this from within it.
 % Note: type a_set_up<tab key> from command line. Do not drag and drop from
 % master folder (or it will set up scripts in master folder)
-
+  
 % -----------------------------------------------------------------------
 % Check for master scripts and get dir
 % -----------------------------------------------------------------------
@@ -28,6 +28,7 @@ datadir = fullfile(basedir, 'data');
 resultsdir = fullfile(basedir, 'results');
 scriptsdir = fullfile(basedir, 'scripts');
 figsavedir = fullfile(resultsdir, 'figures');
+notesdir = fullfile(resultsdir, 'notes');
 
 addpath(scriptsdir)
 
@@ -35,6 +36,7 @@ if ~exist(datadir, 'dir'), mkdir(datadir); end
 if ~exist(resultsdir, 'dir'), mkdir(resultsdir); end
 if ~exist(scriptsdir, 'dir'), mkdir(scriptsdir); end
 if ~exist(figsavedir, 'dir'), mkdir(figsavedir); end
+if ~exist(notesdir, 'dir'), mkdir(notesdir); end
 
 % -----------------------------------------------------------------------
 % Copy scripts in
@@ -73,3 +75,17 @@ printstr = @(dashes) disp(dashes);
 printhdr = @(str) fprintf('%s\n%s\n%s\n', dashes, str, dashes);
 
 printhdr('Done setting up new analysis folder');
+
+% -----------------------------------------------------------------------
+% Open scripts we need to edit in the Matlab editor
+% -------------------------------------------------------------------------
+
+edit(fullfile(scriptsdir, 'a_set_up_paths_always_run_first'))
+
+edit(checkfile)
+
+edit(fullfile(scriptsdir, 'prep_1_set_conditions_contrasts_colors'))
+
+edit(fullfile(scriptsdir, 'prep_1b_prep_behavioral_data'))
+
+printhdr('In Editor: Opened local scripts to edit and save');
