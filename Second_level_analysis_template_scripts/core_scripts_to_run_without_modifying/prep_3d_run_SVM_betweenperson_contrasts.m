@@ -4,6 +4,13 @@
 % each image.
 % --------------------------------------------------------------------
 
+% USER OPTIONS
+
+% Now set in a2_set_default_options
+if ~exist('dosavesvmstats', 'var') || ~exist('dobootstrap', 'var') || ~exist('boot_n', 'var')
+    a2_set_default_options;
+end
+
 % Check for required DAT fields. Skip analysis and print warnings if missing.
 % ---------------------------------------------------------------------
 % List required fields in DAT, in cell array:
@@ -19,15 +26,15 @@ if isempty(spath)
     disp('Warning: spider toolbox not found on path; prediction may break')
 end
 
-myscaling = 'scaled';          % 'raw' or 'scaled'
+myscaling = 'raw';          % 'raw' or 'scaled'
 
 
 % Initialize fmridisplay slice display if needed, or clear existing display
 % --------------------------------------------------------------------
 
 % Specify which montage to add title to. This is fixed for a given slice display
-whmontage = 5; 
-plugin_check_or_create_slice_display; % script, checks for o2 and uses whmontage
+% whmontage = 5; 
+% plugin_check_or_create_slice_display; % script, checks for o2 and uses whmontage
 
 % --------------------------------------------------------------------
 
@@ -35,27 +42,15 @@ plugin_check_or_create_slice_display; % script, checks for o2 and uses whmontage
 printhdr('Cross-validated SVM to discriminate between-person contrasts');
 
 
-% if ~isfield(DAT, 'BETWEENPERSON') || ~isfield(DAT.BETWEENPERSON, 'group')
-%         printhdr('Enter DAT.BETWEENPERSON.group CODED WITH 1, -1 TO RUN BETWEEN-PERSON SVM. SKIPPING.');
-%     return
-% end
-% 
-% group = DAT.BETWEENPERSON.group;
-% 
-% if ~all(group ~= 1 | group ~= -1)
-%         printhdr('Code DAT.BETWEENPERSON.group WITH 1, -1 TO RUN BETWEEN-PERSON SVM. SKIPPING.');
-%     return
-% end
-% 
-% outcome_value = group;
-
 % --------------------------------------------------------------------
 %
-% Run between-groups SVM for each contrast
+% Run between-person SVM for each contrast
 %
 % --------------------------------------------------------------------
 
 kc = size(DAT.contrasts, 1);
+
+svm_stats_results = cell(1, kc);
 
 for c = 1:kc
     
@@ -104,7 +99,7 @@ for c = 1:kc
             error('myscaling must be ''raw'' or ''scaled''');
     end
     
-    
+  
     
     % a. Format and attach outcomes: 1, -1 for pos/neg contrast values
     % --------------------------------------------------------------------
@@ -125,7 +120,18 @@ for c = 1:kc
     % Run prediction model
     % --------------------------------------------------------------------
     
-    [cverr, stats, optout] = predict(cat_obj, 'algorithm_name', 'cv_svm', 'nfolds', holdout_set, 'error_type', 'mcr');
+    % [cverr, stats, optout] = predict(cat_obj, 'algorithm_name', 'cv_svm', 'nfolds', holdout_set, 'error_type', 'mcr');
+    
+        % Run prediction model
+    % --------------------------------------------------------------------
+    if dobootstrap
+        [cverr, stats, optout] = predict(cat_obj, 'algorithm_name', 'cv_svm', 'nfolds', holdout_set, 'bootsamples', boot_n, 'error_type', 'mcr', parallelstr);
+        % Threshold, if possible - can re-threshold later with threshold() method
+        stats.weight_obj = threshold(stats.weight_obj, .05, 'unc'); 
+        
+    else
+        [cverr, stats, optout] = predict(cat_obj, 'algorithm_name', 'cv_svm', 'nfolds', holdout_set, 'error_type', 'mcr', parallelstr);
+    end
     
     % Summarize output and create ROC plot
     % --------------------------------------------------------------------
@@ -146,25 +152,42 @@ for c = 1:kc
     d = dfun2(stats.dist_from_hyperplane_xval, stats.Y);
     fprintf('Effect size, cross-val: d = %3.2f\n\n', d);
     
-    
-    % Plot the SVM map
+    % Save stats objects for results later
     % --------------------------------------------------------------------
-    o2 = removeblobs(o2);
-    o2 = addblobs(o2, region(stats.weight_obj), 'trans');
     
-    axes(o2.montage{whmontage}.axis_handles(5));
-    title(DAT.contrastnames{c}, 'FontSize', 18)
+    stats.weight_obj = enforce_variable_types(stats.weight_obj);
+    svm_stats_results{c} = stats;
+        
+    if dobootstrap, disp('Cumulative run time:'), toc(svmtime); end
     
-    printstr(DAT.contrastnames{c}); printstr(dashes);
-
-    figtitle = sprintf('SVM weight map nothresh %s', DAT.contrastnames{c});
-    plugin_save_figure;
-       
-    o2 = removeblobs(o2);
     
-end  % within-person contrast
+%     % Plot the SVM map
+%     % --------------------------------------------------------------------
+%     o2 = removeblobs(o2);
+%     o2 = addblobs(o2, region(stats.weight_obj), 'trans');
+%     
+%     axes(o2.montage{whmontage}.axis_handles(5));
+%     title(DAT.contrastnames{c}, 'FontSize', 18)
+%     
+%     printstr(DAT.contrastnames{c}); printstr(dashes);
+% 
+%     figtitle = sprintf('SVM weight map nothresh %s', DAT.contrastnames{c});
+%     plugin_save_figure;
+%        
+%     o2 = removeblobs(o2);
+    
+end  % between-person contrast
 
+% Save
+% --------------------------------------------------------------------
+if dosavesvmstats
+    
+    savefilenamedata = fullfile(resultsdir, 'svm_stats_results_betweenperson_contrasts.mat');
 
+    save(savefilenamedata, 'svm_stats_results', '-v7.3');
+    printhdr('Saved svm_stats_results for contrasts');
+    
+end
 
 
 

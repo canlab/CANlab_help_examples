@@ -25,6 +25,24 @@ printhdr('Cross-validated SVM to discriminate within-person contrasts');
 %% Average images collected on the same person within each SVM class, for testing
 % --------------------------------------------------------------------
 
+% The purpose of this plugin is to average over replicates of images with the
+% same outcome collected on the same individuals.  We want one average
+% image for outcome 1 and one average image for outcome -1 per person, and
+% we want to test person-wise classification.
+%
+% Depending on how contrasts are specified, stats results structure from SVM training
+% may involve multiple images coded
+% with 1 or -1 per person, in which case the svm_stats_results stats
+% structures will contain image-wise classification results, not
+% person-wise averaging over images for each person.
+% This function calculates an average pattern expression value (distance from hyperplane)
+% for each person for images coded as 1 and those coded as -1.
+%
+% For example, if you are testing a [1 1 1 1 -1 -1 -1 -1] contrast, you
+% will end up with 8 images per person in the SVM analysis, 4 for each
+% condition. You want to test the average of the first 4 vs. the average of
+% the last 4 when you caculate test accuracy.
+
 [dist_from_hyperplane, Y, svm_dist_pos_neg, svm_dist_pos_neg_matrix, outcome_matrix] = plugin_svm_contrasts_get_results_per_subject(DAT, svm_stats_results, DATA_OBJ);
 
 %% Check that we have paired images and skip if not. See below for details
