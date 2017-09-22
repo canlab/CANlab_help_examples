@@ -29,6 +29,7 @@ pubdir = fullfile(resultsdir, 'published_output');
 if ~exist(pubdir, 'dir'), mkdir(pubdir), end
 
 do_coverage_contrasts = true;
+do_svm_analyses = true;
 do_signature_analyses = true;
 do_meta_analysis_masks = true;
 
@@ -43,6 +44,21 @@ if do_coverage_contrasts
     publish('z_batch_coverage_and_contrasts.m', p)
     
     close all
+end
+
+% ------------------------------------------------------------------------
+
+if do_svm_analyses
+    
+    pubfilename = ['analysis_SVM_on_contrasts_' scn_get_datetime];
+    
+    p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
+        'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
+    
+    publish('z_batch_svm_analysis.m', p)
+    
+    close all
+    
 end
 
 % ------------------------------------------------------------------------

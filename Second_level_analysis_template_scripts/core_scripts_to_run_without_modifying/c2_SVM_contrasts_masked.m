@@ -3,7 +3,7 @@
 savefilenamedata = fullfile(resultsdir, 'svm_stats_results_contrasts_masked.mat');
 
 if ~exist(savefilenamedata, 'file')
-    disp('Run prep_3c_run_SVMs_on_contrasts_masked with dosavesvmstats = true option to get SVM results.'); 
+    disp('Run prep_3b_run_SVMs_on_contrasts_and_save with dosavesvmstats = true option to get SVM results.'); 
     disp('No saved results file.  Skipping this analysis.')
     return
 end
@@ -24,6 +24,13 @@ printhdr('Cross-validated SVM to discriminate within-person contrasts');
 
 %% Average images collected on the same person within each SVM class, for testing
 % --------------------------------------------------------------------
+% - This plugin function calculates (a) cross-validated distances from the
+% SVM hyerplane, and (b) a cross-classification matrix across contrasts
+% - It averages images within the same subject and condition (+ or -,
+% on/off in the SVM analysis) into one image for testing purposes, so that
+% it performs a subject-wise forced choice classification
+% - It assumes that the image lists for each condition contain images for subjects 1:n
+% in each condition, in the same order.
 
 % The purpose of this plugin is to average over replicates of images with the
 % same outcome collected on the same individuals.  We want one average
@@ -97,7 +104,7 @@ for c = 1:kc
     % ROC plot
     % --------------------------------------------------------------------
     
-    figtitle = sprintf('SVM ROC masked %s', DAT.contrastnames{c});
+    figtitle = sprintf('SVM ROC %s', DAT.contrastnames{c});
     create_figure(figtitle);
     
     ROC = roc_plot(dist_from_hyperplane{c}, logical(Y{c} > 0), 'color', DAT.contrastcolors{c}, rocpairstring);
@@ -106,7 +113,6 @@ for c = 1:kc
     fprintf('Effect size, cross-val: Forced choice: d = %3.2f\n\n', d_paired);
     
     plugin_save_figure
-    
 
     % Plot the SVM map
     % --------------------------------------------------------------------
@@ -121,7 +127,7 @@ for c = 1:kc
     
     printstr(DAT.contrastnames{c}); printstr(dashes);
     
-    figtitle = sprintf('SVM weight map nothresh masked %s', DAT.contrastnames{c});
+    figtitle = sprintf('SVM weight map nothresh %s', DAT.contrastnames{c});
     plugin_save_figure;
     
     % Remove title in case fig is re-printed in html
@@ -142,9 +148,13 @@ diff_function = @(x) x(:, 1) - x(:, 2);         % should be positive for correct
 
 iscorrect = @(x) sign(diff_function(x)) > 0;
 
+cohens_d_function = @(x) mean(x) ./ std(x);
+
 acc_function = @(corr_idx) 100 * sum(corr_idx) ./ length(corr_idx);
 
 svm_dist_per_subject_and_condition = cellfun(diff_function, svm_dist_pos_neg_matrix, 'UniformOutput', false);
+
+svm_cohens_d_train_transfer = cell2mat(cellfun(cohens_d_function, svm_dist_per_subject_and_condition, 'UniformOutput', false));
 
 accuracy_by_subject_and_condition = cellfun(iscorrect, svm_dist_pos_neg_matrix, 'UniformOutput', false);
 
@@ -153,7 +163,7 @@ accuracy = cell2mat(accuracy);
 
 % Figure
 % -------------------------------------------------------------------------
-figtitle = sprintf('SVM Cross_classification masked');
+figtitle = sprintf('SVM Cross_classification');
 create_figure(figtitle);
 
 pos = get(gcf, 'Position');
@@ -202,3 +212,26 @@ print_matrix(accuracy, DAT.contrastnames, DAT.contrastnames);
 
 plugin_save_figure;
 
+%% Figure and stats on effect sizes
+% -------------------------------------------------------------------------
+figtitle = sprintf('SVM Cross-classification effect sizes');
+create_figure(figtitle);
+
+% pos = get(gcf, 'Position');
+% pos(3) = pos(3) * 1.7;
+% set(gcf, 'Position', pos)
+
+printhdr(figtitle);
+
+imagesc(svm_cohens_d_train_transfer)
+set(gca, 'YDir', 'reverse', 'YTick', 1:kc,  'YTickLabel', xtick_text(1:kc), 'XTick', 1:kc, 'XTickLabel', DAT.contrastnames, 'XTickLabelRotation', 45);
+title(figtitle);
+xlabel('Test condition');
+ylabel('Training condition');
+colorbar
+cm = colormap_tor([1 1 1], [1 0 0]);
+colormap(cm)
+
+plugin_save_figure;
+
+print_matrix(svm_cohens_d_train_transfer, DAT.contrastnames, xtick_text(1:kc));
