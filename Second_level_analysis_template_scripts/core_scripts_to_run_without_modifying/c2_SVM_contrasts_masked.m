@@ -101,6 +101,15 @@ for c = 1:kc
     printstr(DAT.contrastnames{c});
     printstr(dashes)
     
+    if isempty(dist_from_hyperplane{c})
+        
+        disp('Contrast not suitable for SVM');
+        disp(dashes)
+        disp(' ')
+        continue
+        
+    end
+    
     % ROC plot
     % --------------------------------------------------------------------
     
@@ -144,6 +153,11 @@ end  % within-person contrast
 %% Cross-classification matrix
 % uses svm_dist_pos_neg_matrix, outcome_matrix from plugin
 
+% Get rid of empties (invalid contrasts)
+isemptymtx = cellfun(@isempty, svm_dist_pos_neg_matrix);
+wh_ok = ~all(isemptymtx);
+%svm_dist_pos_neg_matrix(wh_ok, wh_ok)
+
 diff_function = @(x) x(:, 1) - x(:, 2);         % should be positive for correct classification
 
 iscorrect = @(x) sign(diff_function(x)) > 0;
@@ -152,16 +166,16 @@ cohens_d_function = @(x) mean(x) ./ std(x);
 
 acc_function = @(corr_idx) 100 * sum(corr_idx) ./ length(corr_idx);
 
-svm_dist_per_subject_and_condition = cellfun(diff_function, svm_dist_pos_neg_matrix, 'UniformOutput', false);
+svm_dist_per_subject_and_condition = cellfun(diff_function, svm_dist_pos_neg_matrix(wh_ok, wh_ok), 'UniformOutput', false);
 
 svm_cohens_d_train_transfer = cell2mat(cellfun(cohens_d_function, svm_dist_per_subject_and_condition, 'UniformOutput', false));
 
-accuracy_by_subject_and_condition = cellfun(iscorrect, svm_dist_pos_neg_matrix, 'UniformOutput', false);
+accuracy_by_subject_and_condition = cellfun(iscorrect, svm_dist_pos_neg_matrix(wh_ok, wh_ok), 'UniformOutput', false);
 
 accuracy = cellfun(acc_function, accuracy_by_subject_and_condition, 'UniformOutput', false);
 accuracy = cell2mat(accuracy);
 
-% Figure
+%% Figure
 % -------------------------------------------------------------------------
 figtitle = sprintf('SVM Cross_classification');
 create_figure(figtitle);
@@ -172,11 +186,13 @@ set(gcf, 'Position', pos)
 
 printhdr('Cross-validated distance from hyperplane. > 0 is correct classification');
 
-ntransfer = size(svm_dist_per_subject_and_condition, 2);
+[ntrain, ntransfer] = size(svm_dist_per_subject_and_condition);
 text_xval = [];
 han = {};
 
-for c = 1:kc
+trainnames = DAT.contrastnames(wh_ok);
+
+for c = 1:ntrain  % for non-empty contrasts only
    
     dat = svm_dist_per_subject_and_condition(c, :);
     
@@ -185,16 +201,14 @@ for c = 1:kc
     xvals = xvals + c - 1; % skip a space
 
     text_xval(c) = mean(xvals);
-    mycolors = DAT.contrastcolors;
+    mycolors = DAT.contrastcolors(wh_ok);
     
-    trainname = DAT.contrastnames{c};
+    trainname = trainnames{c};
     xtick_text{c} = sprintf('Train %s', trainname);
-
-    mynames = DAT.contrastnames;  % for barplot_columns output
     
     printhdr(sprintf('Train on %s', trainname));
     
-    han{c} = barplot_columns(dat, 'nofig', 'noviolin', 'colors', mycolors, 'x', xvals, 'names', mynames);
+    han{c} = barplot_columns(dat, 'nofig', 'noviolin', 'colors', mycolors, 'x', xvals, 'names', trainnames);
     set(gca, 'XLim', [.5 xvals(end) + .5]);
     
 end
@@ -203,12 +217,12 @@ xlabel(' ');
 ylabel('Distance from hyperplane');
 
 barhandles = cat(2, han{1}.bar_han{:});
-legend(barhandles, DAT.contrastnames)
+legend(barhandles, trainnames)
 
 set(gca, 'XTick', text_xval, 'XTickLabel', xtick_text, 'XTickLabelRotation', 0);
 
 printhdr('Accuracy matrix - training (rows) by test contrasts (columns)');
-print_matrix(accuracy, DAT.contrastnames, DAT.contrastnames);
+print_matrix(accuracy, trainnames, trainnames);
 
 plugin_save_figure;
 
@@ -223,8 +237,8 @@ create_figure(figtitle);
 
 printhdr(figtitle);
 
-imagesc(svm_cohens_d_train_transfer)
-set(gca, 'YDir', 'reverse', 'YTick', 1:kc,  'YTickLabel', xtick_text(1:kc), 'XTick', 1:kc, 'XTickLabel', DAT.contrastnames, 'XTickLabelRotation', 45);
+imagesc(svm_cohens_d_train_transfer, [0 max(svm_cohens_d_train_transfer(:))])
+set(gca, 'YDir', 'reverse', 'YTick', 1:ntrain,  'YTickLabel', xtick_text(1:ntrain), 'XTick', 1:ntrain, 'XTickLabel', trainnames, 'XTickLabelRotation', 45);
 title(figtitle);
 xlabel('Test condition');
 ylabel('Training condition');
@@ -234,4 +248,6 @@ colormap(cm)
 
 plugin_save_figure;
 
-print_matrix(svm_cohens_d_train_transfer, DAT.contrastnames, xtick_text(1:kc));
+disp('Cohen''s d for training and transfer');
+print_matrix(svm_cohens_d_train_transfer, trainnames, xtick_text(1:ntrain));
+

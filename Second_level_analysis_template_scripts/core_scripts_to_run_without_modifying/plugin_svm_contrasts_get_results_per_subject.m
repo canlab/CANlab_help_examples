@@ -59,6 +59,11 @@ for c = 1:kc
     %     printstr(DAT.contrastnames{c});
     %     printstr(dashes)
     
+    if isempty(svm_stats_results{c})  
+        % invalid contrast
+        continue
+    end
+    
     % Get SVM stats for this contrast
     stats = svm_stats_results{c};
     
@@ -85,11 +90,14 @@ for c = 1:kc
     
     dist_from_hyperplane{c} = [svm_dist_pos; svm_dist_neg];
     
-    % Get true outcome values to save
+    % Get true outcome values to save in average-condition list, matching dist_from_hyperplane
+    % just rebuild
+    YYout = [ones(size(svm_dist_pos)); -ones(size(svm_dist_neg))];
     
-    YYout = reshape(YY, 2*n, sum(wh_pos));  % assume pos and neg conditions equally balanced
-    YYout = mean(YYout, 2);                 % average to reduce redundant replicates
-    if ~all(YYout == 1 | YYout == -1), error('Outcomes for images considered replicates are not identical. Debug.'); end
+    % This does not work under some conditions
+%     YYout = reshape(YY, 2*n, sum(wh_pos));  % assume pos and neg conditions equally balanced
+%     YYout = mean(YYout, 2);                 % average to reduce redundant replicates
+%     if ~all(YYout == 1 | YYout == -1), error('Outcomes for images considered replicates are not identical. Debug.'); end
     
     Y{c} = YYout; %[ones(size(svm_dist_pos)); -ones(size(svm_dist_neg))];
     
@@ -119,6 +127,11 @@ subject_indices = get_subject_ids(all_condition_codes);
 
 for c = 1:kc
     
+    if isempty(svm_stats_results{c})
+        % invalid contrast
+        continue
+    end
+    
     % For each contrast run...
     stats = svm_stats_results{c}; 
         
@@ -135,6 +148,11 @@ for c = 1:kc
 
     % For each transfer contrast to be tested...
     for c2 = 1:kc
+        
+        if isempty(svm_stats_results{c2})
+            % invalid contrast
+            continue
+        end
         
         % Get transfer image set
         % stats_test = svm_stats_results{c2};
