@@ -10,6 +10,10 @@ dofullplot = true;         % default true  Can set to false to save time
 omit_histograms = false;     % default false Histograms not useful for large samples 
 dozipimages = true;        % default true  Set to false to avoid load on data upload/download when re-running often
 
+% prep_3a_run_second_level_regression_and_save options 
+% --------------------------------------------------------------------
+dorobust = true;            % robust statistics [true, false] -- default true
+myscaling = 'raw';          % 'raw' or 'scaled'
 
 % prep_3b_run_SVMs_on_contrasts_and_save options 
 % --------------------------------------------------------------------
