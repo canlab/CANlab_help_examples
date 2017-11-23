@@ -87,10 +87,12 @@ for c = 1:kc
     % a. Format and attach outcomes: 1, -1 group variable FOR NOW
     % --------------------------------------------------------------------
  
-    % Done in fmri_data.regress:
     % Confirm outcome_value is 1, -1, or mean-centered
+    % *****add this*****
+    
     % Check multilinearity, variance in all regressors; error for bad
     % design matrix
+    % *****add this*****
     
     cat_obj.X = outcome_value;
     
@@ -128,8 +130,9 @@ for c = 1:kc
     regression_stats.contrastname = DAT.contrastnames{c};
     regression_stats.contrast = DAT.contrasts(c, :);
     
-    
-    % ****** do this*****
+    % add names for analyses and variables: 
+    regression_stats.analysis_name = DAT.contrastnames{c};
+    regression_stats.variable_names = {'Group' 'Intercept'}
     
     % Save stats objects for results later
     % --------------------------------------------------------------------
