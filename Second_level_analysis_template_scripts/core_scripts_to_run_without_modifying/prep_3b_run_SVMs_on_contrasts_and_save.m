@@ -25,6 +25,7 @@ kc = size(DAT.contrasts, 1);
 
 if dobootstrap, svmtime = tic; end
 
+
 %% Train all models
 % --------------------------------------------------------------------
 
@@ -42,6 +43,17 @@ for c = 1:kc
     % --------------------------------------------------------------------
     [cat_obj, condition_codes] = cat(DATA_OBJ{wh});
     
+    % possibly normalize_each_subject_by_l2norm; can help with numerical scaling and inter-subject scaling diffs
+    % Sometimes condition differences are very small relative to baseline
+    % values and SVM is numerically unstable. If so, re-normalizing each
+    % subject can help.
+    
+    if exist('dosubjectnorm', 'var') && dosubjectnorm
+        % cat_obj = normalize_each_subject_by_l2norm(cat_obj, condition_codes);
+        
+        cat_obj = normalize_images_by_l2norm(cat_obj);
+    end
+
     % a. Format and attach outcomes: 1, -1 for pos/neg contrast values
     % b. Define holdout sets: Define based on plugin script
     %    Assume that subjects are in same position in each input file
@@ -94,3 +106,54 @@ if dosavesvmstats
 end
 
 
+
+
+
+
+
+
+function cat_obj = normalize_each_subject_by_l2norm(cat_obj, condition_codes)
+% normalize_each_subject_by_l2norm; can help with numerical scaling and inter-subject scaling diffs
+% Sometimes condition differences are very small relative to baseline
+% values and SVM is numerically unstable. If so, re-normalizing each
+% subject can help.
+
+disp('Normalizing images for each subject by L2 norm of Condition 1 image');
+
+wh = find(condition_codes == 1);
+
+wh2 = find(condition_codes == 2);
+
+% nv: normalization values, to be determined from condition 1 and applied
+% to conditions 1 and 2.  This keeps same scaling applied to both
+% conditions, for each participant
+
+nv = zeros(size(wh));
+
+for i = 1:length(wh)
+    
+    nv(i) = norm(cat_obj.dat(:, wh(i)));
+
+    % do normalization
+    cat_obj.dat(:, wh(i)) = cat_obj.dat(:, wh(i)) ./ nv(i);
+    
+    cat_obj.dat(:, wh2(i)) = cat_obj.dat(:, wh2(i)) ./ nv(i);
+     
+end
+
+end
+
+
+function cat_obj = normalize_images_by_l2norm(cat_obj, condition_codes)
+% normalize_images_by_l2norm; can help with numerical scaling and inter-subject scaling diffs
+% Sometimes condition differences are very small relative to baseline
+% values and SVM is numerically unstable. If so, re-normalizing each
+% subject can help.
+%
+% This version normalizes each image separately, not each subject/pair
+
+disp('Normalizing images for each image by L2 norm');
+cat_obj = rescale(cat_obj, 'l2norm_images');
+
+
+end

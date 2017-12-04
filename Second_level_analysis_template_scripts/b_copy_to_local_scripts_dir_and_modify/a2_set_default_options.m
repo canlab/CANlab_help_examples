@@ -17,6 +17,7 @@ myscaling = 'raw';          % 'raw' or 'scaled'
 
 % prep_3b_run_SVMs_on_contrasts_and_save options 
 % --------------------------------------------------------------------
+dosubjectnorm = false;      % default false     normalize_each_subject_by_l2norm; can help with numerical scaling and inter-subject scaling diffs
 dosavesvmstats = true;      % default true      Save statistics and weight map objects for SVM contrasts
 dobootstrap = true;         % default false     Takes a lot of time
 boot_n = 1000;              % default number of bootstrap samples. Very slow. Recommend 5,000 for final published analysis
