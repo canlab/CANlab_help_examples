@@ -1,4 +1,4 @@
-%% TITLE OF HELP FILE - e.g., HOW_DO_I_VISUALIZE_DATA
+%% HOW_DO_I_VISUALIZE_DATA
 % The help file shows you how to display neuroimaging data for publication
 % by marianne reddan, 2016
 

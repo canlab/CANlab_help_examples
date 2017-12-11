@@ -8,7 +8,7 @@ basedir = fileparts(which('con_00810001.img'));
 
 % Load behavioral data
 %    "Reappraisal success", one score per person, in our example
-beh = importdata('X_Y_data.txt')
+beh = importdata('Wager_2008_emotionreg_behavioral_data.txt')
 success = beh.data(:, 2);           % Reappraisal success
 
 % Load brain data
