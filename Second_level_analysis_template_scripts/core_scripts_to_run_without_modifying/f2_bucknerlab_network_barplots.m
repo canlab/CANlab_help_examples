@@ -31,7 +31,10 @@ for i = 1:k
     subplot(nrows, ncols, i);
     
     [stats hh hhfill table_group multcomp_group] = image_similarity_plot(DATA_OBJ{i}, 'mapset', mapset, 'networknames', netnames, 'average', 'cosine_similarity', 'colors', DAT.colors(i), 'nofigure', 'noplot');
-    
+ 
+    %[stats hh hhfill table_group multcomp_group] = image_similarity_plot(DATA_OBJ{i}, 'mapset', mapset, 'networknames', netnames, 'average', 'cosine_similarity', 'colors', [DAT.colors(i) {DAT.colors{i}./2.5}], 'nofigure');
+
+        
     % Could also do this with just the keyword, but this re-loads the map set
     %[stats hh hhfill table_group multcomp_group] = image_similarity_plot(DATA_OBJ{i}, image_set_name, 'average', 'cosine_similarity', 'colors', DAT.colors(i), 'nofigure', 'noplot');
     

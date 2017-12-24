@@ -43,12 +43,55 @@ for i = 1:length(wh)
     mysignature = get_wh_image(npsobj, wh(i));
     
     % Plot similarity
-    stats = image_similarity_plot(mysignature, 'cosine_similarity', 'bucknerlab_wholebrain', 'colors', {[1 .7 0]});
+    stats = image_similarity_plot(mysignature, 'cosine_similarity', 'bucknerlab_wholebrain', 'colors', {[1 .7 0] [.3 0 .7]}, 'bicolor');
     title(npsobjnames{wh(i)});
     
     % Same, but use older polar plot style
     % stats = image_similarity_plot(mysignature, 'cosine_similarity', 'bucknerlab_wholebrain', 'plotstyle', 'polar');
     
+%     %     
+%     stats = image_similarity_plot(mysignature, 'cosine_similarity', 'bucknerlab_wholebrain', 'colors', {[1 .7 0]});
+%     title(npsobjnames{wh(i)});
 end
 
+%% Try using stripes for negative values
 
+create_figure('Signature wedge plots 2', 1, k);
+colors = colorcube_colors(length(wh));
+
+for i = 1:length(wh)
+    
+    disp(npsobjnames{wh(i)})
+    disp('-----------------------------------------');
+    
+    subplot(1, k, i);
+    hold on
+    
+    mysignature = get_wh_image(npsobj, wh(i));
+    
+    % Plot similarity
+    stats = image_similarity_plot(mysignature, 'cosine_similarity', 'bucknerlab_wholebrain', 'colors', colors(i));
+    title(npsobjnames{wh(i)});
+    
+end
+
+%% Polar plot style
+
+create_figure('Signature polar plots', 1, k);
+colors = colorcube_colors(length(wh));
+
+for i = 1:length(wh)
+    
+    disp(npsobjnames{wh(i)})
+    disp('-----------------------------------------');
+    
+    subplot(1, k, i);
+    hold on
+    
+    mysignature = get_wh_image(npsobj, wh(i));
+    
+    % Plot similarity
+    stats = image_similarity_plot(mysignature, 'cosine_similarity', 'bucknerlab_wholebrain', 'colors', colors(i), 'plotstyle', 'polar');
+    title(npsobjnames{wh(i)});
+    
+end
