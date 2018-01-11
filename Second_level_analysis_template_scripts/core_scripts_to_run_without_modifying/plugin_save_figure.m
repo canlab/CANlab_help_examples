@@ -1,10 +1,20 @@
-    savename = fullfile(figsavedir, [figtitle '.png']);
+savename = fullfile(figsavedir, [figtitle '.png']);
+
+disp(sprintf('Saving: %s', [figtitle '.png']));
+
+fighan = findobj('Type', 'figure', 'Tag', figtitle);
+
+if isempty(fighan)
+    disp('Cannot find figure - Tag field was not set or figure was closed. Skipping save operation.');
     
-    disp(sprintf('Saving: %s', [figtitle '.png']));
-    
-    saveas(gcf, savename);
+else
+    saveas(fighan, savename);
     
     drawnow, snapnow    % for HTML printouts
-    
-    %close               % to save memory, etc., as we are printing figs
-    
+end
+
+%close               % to save memory, etc., as we are printing figs
+
+% Updated: 11/13/17 by Tor Wager, to provide robustness to users
+% interacting with figure windows during run-time
+

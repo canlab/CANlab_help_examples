@@ -95,3 +95,49 @@ for i = 1:length(wh)
     title(npsobjnames{wh(i)});
     
 end
+
+%% We can also make polar and wedge plots for averages across individual subject maps.
+% This example loads a sample emotion regulation dataset, and makes several
+% kinds of plots: Wedge and polar plots of average network similarity
+% across subjects, with error bars, and a polar plot of the individual
+% subjects.
+
+obj = load_image_set('emotionreg');
+create_figure('wedge_and_polar_emoreg', 1, 3);
+
+% Yellow: positive associations. Blue: Negative associations.  Plot shows mean +- std. error for each pattern of interest
+stats = image_similarity_plot(obj, 'plotstyle', 'wedge', 'bucknerlab', 'nofigure');
+
+subplot(1, 3, 2);
+
+% Outside circle: positive associations. Inside circle: Negative associations.  Plot shows mean +- std. error for each pattern of interest
+stats = image_similarity_plot(obj, 'plotstyle', 'polar', 'average', 'bucknerlab', 'nofigure', 'colors', {[1 0 0] [.7 0 0]});
+
+subplot(1, 3, 3);
+
+[stats hh hhfill] = image_similarity_plot(obj, 'plotstyle', 'polar', 'bucknerlab', 'nofigure');
+delete(hhfill{1})  % Delete fill so we can see all the lines
+
+drawnow, snapnow
+
+%% Apply the PLS signatures from Kragel et al. 2018 to the emotion regulation dataset
+
+% Load PLS signatures from Kragel et al. 2018
+[obj, names] = load_image_set('pain_cog_emo');
+bpls_wholebrain = get_wh_image(obj, [8 16 24]);
+names_wholebrain = names([8 16 24]);
+bpls_subregions = get_wh_image(obj, [1:6 9:14 17:22]);
+names_subregions = names([1:6 9:14 17:22]);
+
+% Load test data: Emotion regulation from Wager et al. 2008
+test_data_obj = load_image_set('emotionreg');
+
+% Make plots
+% Yellow: positive associations. Blue: Negative associations.  Plot shows mean +- std. error for each pattern of interest
+
+create_figure('Kragel Pain-Cog-Emo maps', 1, 2);
+stats = image_similarity_plot(test_data_obj, 'average', 'mapset', bpls_wholebrain, 'networknames', names_wholebrain, 'nofigure');
+subplot(1, 2, 2)
+stats = image_similarity_plot(test_data_obj, 'average', 'mapset', bpls_subregions, 'networknames', names_subregions, 'nofigure');
+
+drawnow, snapnow
