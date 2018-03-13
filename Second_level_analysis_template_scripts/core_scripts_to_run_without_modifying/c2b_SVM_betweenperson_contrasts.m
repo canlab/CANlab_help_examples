@@ -71,7 +71,9 @@ for c = 1:kc
     
     printstr(DAT.contrastnames{c}); printstr(dashes);
 
+    hh = figure(fig_number);  % fig_number set in slice display plugin
     figtitle = sprintf('SVM weight map nothresh %s', DAT.contrastnames{c});
+    set(hh, 'Tag', figtitle);
     plugin_save_figure;
        
     o2 = removeblobs(o2);

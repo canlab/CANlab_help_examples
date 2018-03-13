@@ -24,3 +24,8 @@ else % Ok, reactivate, clear blobs, and clear name
     axes(o2.montage{whmontage}.axis_handles(5));
     title(' ');
 end
+
+% Get figure number - to reactivate figure later, even if we are changing its tag
+hh = get(o2.montage{whmontage}.axis_handles, 'Parent');  %findobj('Tag', 'fmridisplay');
+if iscell(hh), hh = hh{1}; end
+fig_number = hh(1).Number;

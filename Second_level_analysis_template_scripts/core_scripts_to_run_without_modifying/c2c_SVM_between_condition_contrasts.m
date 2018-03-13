@@ -163,10 +163,12 @@ hs = cat(2, holdout_set{:});
     title(DAT.between_condition_contrastnames{c}, 'FontSize', 18)
     
     printstr(DAT.between_condition_contrastnames{c}); printstr(dashes);
-
+    
+    hh = figure(fig_number);  % fig_number set in slice display plugin
     figtitle = sprintf('SVM weight map nothresh %s', DAT.between_condition_contrastnames{c});
+    set(hh, 'Tag', figtitle);
     plugin_save_figure;
-        
+    
     o2 = removeblobs(o2);
     
 end  % within-person contrast
