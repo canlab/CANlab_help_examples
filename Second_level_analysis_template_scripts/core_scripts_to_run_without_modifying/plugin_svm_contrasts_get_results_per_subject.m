@@ -1,5 +1,5 @@
-function [dist_from_hyperplane, Y, svm_dist_pos_neg, svm_dist_pos_neg_matrix, outcome_matrix] = plugin_svm_contrasts_get_results_per_subject(DAT, svm_stats_results, DATA_OBJ)
-% [dist_from_hyperplane, Y, svm_dist_pos_neg, svm_dist_pos_neg_matrix, outcome_matrix] = plugin_svm_contrasts_get_results_per_subject(DAT, svm_stats_results, DATA_OBJ)
+function [dist_from_hyperplane, Y, svm_dist_pos_neg, svm_dist_pos_neg_matrix] = plugin_svm_contrasts_get_results_per_subject(DAT, svm_stats_results, DATA_OBJ)
+% [dist_from_hyperplane, Y, svm_dist_pos_neg, svm_dist_pos_neg_matrix] = plugin_svm_contrasts_get_results_per_subject(DAT, svm_stats_results, DATA_OBJ)
 %
 % The purpose of this plugin is to average over replicates of images with the
 % same outcome collected on the same individuals.  We want one average
@@ -35,6 +35,8 @@ function [dist_from_hyperplane, Y, svm_dist_pos_neg, svm_dist_pos_neg_matrix, ou
 % x 2), using the same training folds as in the within-class SVM
 % classification.  This assesses transfer of a classifier trained on one
 % contrast to images from other contrasts.
+%
+% % outcome_matrix no longer used in c2_SVM_contrasts...
 
 %% Getting numbers of images in each condition
 
@@ -244,14 +246,16 @@ for c = 1:kc
         % true outcomes: one value per subject for pos and neg outcomes stacked
         % check that all images considered replicates have same outcome value
         
-        if sum(wh_pos) ~= sum(wh_neg), error('There must be equal numbers of pos and neg contrasts weights, or edit script to increase flexibility.'); end
+        % if sum(wh_pos) ~= sum(wh_neg), error('There must be equal numbers of pos and neg contrasts weights, or edit script to increase flexibility.'); end
         
-        Y_transfer_out = reshape(Y_transfer, 2*n, sum(wh_pos)); % assume pos and neg conditions equally balanced
+        % Y_transfer_out = reshape(Y_transfer, 2*n, sum(wh_pos)); % assume pos and neg conditions equally balanced
 %         if any(diff(Y_transfer_out', 1))
 %             error('Ourcomes for images considered replicates are not identical. Debug.');
 %         end
-        Y_transfer_out = mean(Y_transfer_out, 2);
-        outcome_matrix{c, c2} = Y_transfer_out;
+        % Y_transfer_out = mean(Y_transfer_out, 2);
+        
+        % outcome_matrix no longer used in c2_SVM_contrasts...
+        % outcome_matrix{c, c2} = [ones(size(svm_dist_pos)) -ones(size(svm_dist_neg))]; %Y_transfer_out;
         
     end % transfer contrast
     

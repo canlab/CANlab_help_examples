@@ -51,7 +51,7 @@ printhdr('Cross-validated SVM to discriminate within-person contrasts');
 % the last 4 when you caculate test accuracy.
 
 
-[dist_from_hyperplane, Y, svm_dist_pos_neg, svm_dist_pos_neg_matrix, outcome_matrix] = plugin_svm_contrasts_get_results_per_subject(DAT, svm_stats_results, DATA_OBJ);
+[dist_from_hyperplane, Y, svm_dist_pos_neg, svm_dist_pos_neg_matrix] = plugin_svm_contrasts_get_results_per_subject(DAT, svm_stats_results, DATA_OBJ);
 
 %% Check that we have paired images and skip if not. See below for details
 % --------------------------------------------------------------------
@@ -136,7 +136,9 @@ for c = 1:kc
     
     printstr(DAT.contrastnames{c}); printstr(dashes);
     
+    hh = figure(fig_number);  % fig_number set in slice display plugin
     figtitle = sprintf('SVM weight map nothresh %s', DAT.contrastnames{c});
+    set(hh, 'Tag', figtitle);
     plugin_save_figure;
     
     % Remove title in case fig is re-printed in html
@@ -151,7 +153,7 @@ for c = 1:kc
 end  % within-person contrast
 
 %% Cross-classification matrix
-% uses svm_dist_pos_neg_matrix, outcome_matrix from plugin
+% uses svm_dist_pos_neg_matrix from plugin
 
 % Get rid of empties (invalid contrasts)
 isemptymtx = cellfun(@isempty, svm_dist_pos_neg_matrix);
