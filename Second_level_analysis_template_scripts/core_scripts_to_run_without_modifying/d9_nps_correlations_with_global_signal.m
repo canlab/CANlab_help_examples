@@ -31,9 +31,16 @@ if isfield(DAT, 'gray_white_csf_contrasts') || isempty(DAT.gray_white_csf_contra
         for j = 1:k
             
             [~, infostring, sig, han] = plot_correlation_samefig(DAT.gray_white_csf_contrasts{j}(:, i), DAT.npscontrasts{j});
-            set(han, 'Color', DAT.contrastcolors{j} ./ 2, 'MarkerFaceColor', DAT.contrastcolors{j});
             
-            allhan(j) = han;
+            if isa(han(1), 'matlab.graphics.chart.primitive.Scatter')
+                % Newer Matlab (2017b+) uses scatter object:
+                set(han(1), 'MarkerEdgeColor', DAT.contrastcolors{j} ./ 2, 'MarkerFaceColor', DAT.contrastcolors{j});
+                
+            else
+                set(han(1), 'Color', DAT.contrastcolors{j} ./ 2, 'MarkerFaceColor', DAT.contrastcolors{j});
+            end
+            
+            allhan(j) = han(1);
         end
         
         xlabel(sprintf('Mean %s', gwcsfnames{i}));

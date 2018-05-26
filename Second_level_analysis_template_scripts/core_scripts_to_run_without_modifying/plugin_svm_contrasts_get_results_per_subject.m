@@ -42,15 +42,15 @@ function [dist_from_hyperplane, Y, svm_dist_pos_neg, svm_dist_pos_neg_matrix] = 
 
 nconditions = length(DATA_OBJ);
 images_per_condition = cellfun(@(OBJ) size(OBJ.dat, 2), DATA_OBJ);
-n = images_per_condition(1);
 
 % starting and ending indices for each condition
-% Assumes all conditions have same number of images for this plugin!
-n = images_per_condition(1);
+
 en = cumsum(images_per_condition);
 st = en - images_per_condition(1) + 1;
 
-if any(diff(images_per_condition')), error('Must have same number of images in each condition in DATA_OBJ'); end
+% used to assume that all n images are the same; not anymore
+%n = images_per_condition(1);
+% if any(diff(images_per_condition')), error('Must have same number of images in each condition in DATA_OBJ'); end
 
 kc = size(DAT.contrasts, 1);
 
@@ -80,14 +80,9 @@ for c = 1:kc
     svm_dist_pos = stats.dist_from_hyperplane_xval(YY > 0); % Positively-valued true outcome
     svm_dist_neg = stats.dist_from_hyperplane_xval(YY < 0);
     
-    % assume all equal n's, reshape
-    svm_dist_pos = reshape(svm_dist_pos, n, sum(wh_pos));
-    svm_dist_neg = reshape(svm_dist_neg, n, sum(wh_neg));
+    [svm_dist_pos, svm_dist_neg] = reshape_and_average(svm_dist_pos, svm_dist_neg, mycontrast);
     
-    % average to get one score per pos/neg contrast value per subject
-    svm_dist_pos = mean(svm_dist_pos, 2);
-    svm_dist_neg = mean(svm_dist_neg, 2);
-    
+
     svm_dist_pos_neg{c} = [svm_dist_pos svm_dist_neg];
     
     dist_from_hyperplane{c} = [svm_dist_pos; svm_dist_neg];
@@ -230,16 +225,18 @@ for c = 1:kc
         svm_dist_pos = yfit_transfer(Y_transfer > 0); % Positively-valued true outcome
         svm_dist_neg = yfit_transfer(Y_transfer < 0);
         
-        % assume all equal n's, reshape
-        wh_pos = mytransfercontrast > 0;
-        wh_neg = mytransfercontrast < 0;
-
-        svm_dist_pos = reshape(svm_dist_pos, n, sum(wh_pos));
-        svm_dist_neg = reshape(svm_dist_neg, n, sum(wh_neg));
+        [svm_dist_pos, svm_dist_neg] = reshape_and_average(svm_dist_pos, svm_dist_neg, mytransfercontrast);
         
-        % average to get one score per pos/neg contrast value per subject
-        svm_dist_pos = mean(svm_dist_pos, 2);
-        svm_dist_neg = mean(svm_dist_neg, 2);
+%         % assume all equal n's, reshape
+%         wh_pos = mytransfercontrast > 0;
+%         wh_neg = mytransfercontrast < 0;
+% 
+%         svm_dist_pos = reshape(svm_dist_pos, n, sum(wh_pos));
+%         svm_dist_neg = reshape(svm_dist_neg, n, sum(wh_neg));
+%         
+%         % average to get one score per pos/neg contrast value per subject
+%         svm_dist_pos = mean(svm_dist_pos, 2);
+%         svm_dist_neg = mean(svm_dist_neg, 2);
         
         svm_dist_pos_neg_matrix{c, c2} = [svm_dist_pos svm_dist_neg];
         
@@ -356,3 +353,29 @@ for i = 1:length(wh)  % loop through conditions in this stats object
 end
 
 end
+
+
+
+function [svm_dist_pos, svm_dist_neg] = reshape_and_average(svm_dist_pos, svm_dist_neg, mycontrast)
+
+% k is number of pos and neg contrast weights - average over k values
+% per subject to get one score per pos/neg contrast value per subject
+% n is number of images (rows) in matrix,
+% if there are multiple contrast weights with pos and/or neg values
+kpos = sum(mycontrast > 0);
+kneg = sum(mycontrast < 0);
+npos = length(svm_dist_pos) ./ kpos;
+nneg = length(svm_dist_neg) ./ kneg;
+
+% reshape so that we can average
+%     svm_dist_pos = reshape(svm_dist_pos, n, sum(wh_pos));
+%     svm_dist_neg = reshape(svm_dist_neg, n, sum(wh_neg));
+svm_dist_pos = reshape(svm_dist_pos, npos, kpos);
+svm_dist_neg = reshape(svm_dist_neg, nneg, kneg);
+
+% average to get one score per pos/neg contrast value per subject
+svm_dist_pos = mean(svm_dist_pos, 2);
+svm_dist_neg = mean(svm_dist_neg, 2);
+
+end
+

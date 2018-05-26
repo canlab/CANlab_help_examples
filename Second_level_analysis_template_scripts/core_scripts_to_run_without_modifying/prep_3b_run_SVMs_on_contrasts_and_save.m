@@ -43,6 +43,8 @@ for c = 1:kc
     % --------------------------------------------------------------------
     [cat_obj, condition_codes] = cat(DATA_OBJ{wh});
     
+    % Norm options:
+    % --------------------------------------------------------------------
     % possibly normalize_each_subject_by_l2norm; can help with numerical scaling and inter-subject scaling diffs
     % Sometimes condition differences are very small relative to baseline
     % values and SVM is numerically unstable. If so, re-normalizing each
@@ -50,8 +52,20 @@ for c = 1:kc
     
     if exist('dosubjectnorm', 'var') && dosubjectnorm
         % cat_obj = normalize_each_subject_by_l2norm(cat_obj, condition_codes);
+        disp('Normalizing intensity of all images by L2 norm before SVM.')
         
         cat_obj = normalize_images_by_l2norm(cat_obj);
+    end
+    
+    % Z-score each input image, removing image mean and forcing std to 1.
+    % Removes overall effects of image intensity and scale. Can be useful
+    % across studies but also removes information. Use judiciously.
+    
+    if exist('dozscoreimages', 'var') && dozscoreimages
+        
+        disp('Z-scoring each image before SVM.')
+        cat_obj = rescale(cat_obj, 'zscoreimages');
+        
     end
 
     % a. Format and attach outcomes: 1, -1 for pos/neg contrast values

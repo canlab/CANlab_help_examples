@@ -47,6 +47,15 @@ for s = 1:length(mysignature)
         
         if isempty(group), continue, end % skip this condition/contrast - no groups
         
+        if length(unique(group)) > 2  % this is a continuous variable
+            disp('Binarizing continuous grouping variable via median split.')
+            group = mediansplit(group);  
+        end
+        
+        % In case we forgot to assign colors or groupnames in prep 1b script
+        if length(groupcolors) < 2, groupcolors = seaborn_colors(2); end
+        if length(groupnames) < 2, groupnames = {'High' 'Low'}; end
+        
         %y = {DAT.(myfield){i}(group > 0) DAT.(myfield){i}(group < 0)};
         y = {contrastdata(group > 0, i) contrastdata(group < 0, i)};
         
@@ -91,6 +100,15 @@ for i = 1:kc  % for each contrast
     [group, groupnames, groupcolors] = plugin_get_group_names_colors(DAT, mygroupnamefield, i);
     if isempty(group), continue, end % skip this condition/contrast - no groups
     
+    if length(unique(group)) > 2  % this is a continuous variable
+        disp('Binarizing continuous grouping variable via median split.')
+        group = mediansplit(group);
+    end
+    
+    % In case we forgot to assign colors or groupnames in prep 1b script
+    if length(groupcolors) < 2, groupcolors = seaborn_colors(2); end
+    if length(groupnames) < 2, groupnames = {'High' 'Low'}; end
+        
     mydat = DAT.NPSsubregions.(mysubrfield){i};
     k = size(mydat, 2);
     
@@ -141,6 +159,16 @@ for i = 1:kc
     mygroupnamefield = 'contrasts';  % 'conditions' or 'contrasts'
     [group, groupnames, groupcolors] = plugin_get_group_names_colors(DAT, mygroupnamefield, i);
     
+    if length(unique(group)) > 2  % this is a continuous variable
+        disp('Binarizing continuous grouping variable via median split.')
+        group = mediansplit(group);
+    end
+    
+    % In case we forgot to assign colors or groupnames in prep 1b script
+    if length(groupcolors) < 2, groupcolors = seaborn_colors(2); end
+    if length(groupnames) < 2, groupnames = {'High' 'Low'}; end
+    
+        
     if isempty(group), continue, end % skip this condition/contrast - no groups
     
     mydat = DAT.NPSsubregions.(mysubrfieldneg){i};

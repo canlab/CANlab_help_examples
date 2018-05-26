@@ -234,7 +234,11 @@ for i = 1:kc
     
 end
 
+if length(axh) > 1
+    
 kludgy_fix_for_y_axis(axh);
+
+end
 
 plugin_save_figure;
 

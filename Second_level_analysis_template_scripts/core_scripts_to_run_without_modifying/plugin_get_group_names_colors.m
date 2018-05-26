@@ -28,7 +28,7 @@ if isfield(DAT, 'BETWEENPERSON') && ...
     % strip id variable
     wh_omit = strcmp(group.Properties.VariableNames, 'id');
     omitname = group.Properties.VariableNames(wh_omit);
-    group.(omitname{1}) = [];
+    if ~isempty(omitname), group.(omitname{1}) = []; end
     
     % ...We have only a single group variable
 elseif isfield(DAT, 'BETWEENPERSON') && ...

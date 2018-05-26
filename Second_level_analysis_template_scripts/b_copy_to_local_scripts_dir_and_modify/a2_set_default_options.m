@@ -18,19 +18,22 @@ myscaling = 'raw';          % 'raw' or 'scaled'
 % prep_3b_run_SVMs_on_contrasts_and_save options 
 % --------------------------------------------------------------------
 dosubjectnorm = false;      % default false     normalize_each_subject_by_l2norm; can help with numerical scaling and inter-subject scaling diffs
+  dozscoreimages = false;   % default false     Z-score each input image, removing image mean and forcing std to 1. Removes overall effects of image intensity and scale. Can be useful across studies but also removes information. Use judiciously.
 dosavesvmstats = true;      % default true      Save statistics and weight map objects for SVM contrasts
 dobootstrap = true;         % default false     Takes a lot of time
 boot_n = 1000;              % default number of bootstrap samples. Very slow. Recommend 5,000 for final published analysis
-parallelstr = 'noparallel';   % parallel proc for boot. 'parallel' or 'noparallel'
+parallelstr = 'parallel';   % parallel proc for boot. 'parallel' or 'noparallel'
 
 
 % prep_3c_run_SVMs_on_contrasts_masked options 
 % --------------------------------------------------------------------
+% see options in prep_3b above as well as the following:
 maskdir = fullfile(basedir, 'masks');
-maskname = fullfile(maskdir, 'HarvardOxford-dACC-maxprob-thr0-2mm.nii');
+maskname = which('gray_matter_mask.img');
 
-% Also uses these from above
-% dosavesvmstats = true;      % default true      Save statistics and weight map objects for SVM contrasts
-% dobootstrap = false;         % default false     Takes a lot of time
-% boot_n = 1000;              % default number of bootstrap samples. Very slow. Recommend 5,000 for final published analysis
-% parallelstr = 'noparallel';   % parallel proc for boot. 'parallel' or 'noparallel'
+% z_batch_publish_everything, z_batch_publish_analyses options 
+% --------------------------------------------------------------------
+do_coverage_contrasts = true;
+do_signature_analyses = true;
+do_svm_analyses = true;
+do_meta_analysis_masks = true;

@@ -65,7 +65,8 @@ tabledat = table(Conditions, N_images, Condition_colors, T_Gray_White_CSF);
 disp(tabledat);
 
 % Contrasts
-Contrasts = DAT.contrastnames';
+% -------------------------------------------------------------
+Within_Ss_Contrasts = DAT.contrastnames';
 
 N_images = cellfun(Nfun, DATA_OBJ_CON)';
 
@@ -73,10 +74,31 @@ t = cellfun(tfun, DAT.gray_white_csf_contrasts, 'UniformOutput', false)';
 T_Gray_White_CSF = cat(1, t{:});
 
 Contrast_colors = cat(1, DAT.contrastcolors{:});
-Contrast_colors = Contrast_colors(1:length(Contrasts), :);
+Contrast_colors = Contrast_colors(1:length(Within_Ss_Contrasts), :);
+
+Contrast_weights = DAT.contrasts;
 
 try
-    tabledat = table(Contrasts, N_images, Contrast_colors, T_Gray_White_CSF);
+    tabledat = table(Within_Ss_Contrasts, N_images, Contrast_weights, Contrast_colors, T_Gray_White_CSF);
+    disp(tabledat);
+catch
+    disp('WARNING: TABLE OF CONTRASTS WILL NOT DISPLAY. CHECK SETUP VARIABLES AND SIZES TO FIX.')
+    disp('These should have the same number of rows, or you likely have errors in your setup:');
+    whos Contrasts N_images Contrast_colors T_Gray_White_CSF
+    
+end
+
+% Between-group contrasts
+% -------------------------------------------------------------
+Btwn_Group_Contrasts = DAT.between_condition_contrastnames';
+
+Contrast_colors = cat(1, DAT.between_condition_contrastcolors{:});
+Contrast_colors = Contrast_colors(1:length(Btwn_Group_Contrasts), :);
+
+Contrast_weights = DAT.between_condition_cons;
+
+try
+    tabledat = table(Btwn_Group_Contrasts, Contrast_weights, Contrast_colors);
     disp(tabledat);
 catch
     disp('WARNING: TABLE OF CONTRASTS WILL NOT DISPLAY. CHECK SETUP VARIABLES AND SIZES TO FIX.')

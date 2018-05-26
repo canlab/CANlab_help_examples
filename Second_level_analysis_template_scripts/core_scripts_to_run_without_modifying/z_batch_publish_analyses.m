@@ -11,7 +11,7 @@ clear all
 % Add the study-specific scripts to the top of the path.
 % Load saved data.
 
-scriptname = fullfile(pwd, 'scripts', 'a_set_up_paths_always_run_first');
+scriptname = fullfile(pwd, 'scripts', 'a_set_up_paths_always_run_first.m');
 
 if ~exist(scriptname, 'file')
     error('Run from base directory (basedir) of 2nd-level analysis folder.');
@@ -29,9 +29,9 @@ pubdir = fullfile(resultsdir, 'published_output');
 if ~exist(pubdir, 'dir'), mkdir(pubdir), end
 
 do_coverage_contrasts = true;
-do_svm_analyses = true;
+do_svm_analyses = false;
 do_signature_analyses = true;
-do_meta_analysis_masks = true;
+do_meta_analysis_masks = false;
 
 % ------------------------------------------------------------------------
 if do_coverage_contrasts

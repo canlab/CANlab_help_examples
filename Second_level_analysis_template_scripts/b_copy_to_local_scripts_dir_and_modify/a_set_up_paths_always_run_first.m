@@ -57,6 +57,8 @@ if ~exist(figsavedir, 'dir'), mkdir(figsavedir); end
 % g = genpath('/Users/tor/Documents/matlab_code_external/spider');
 % addpath(g)
 
+a2_set_default_options
+
 % Display helper functions: Called by later scripts
 % --------------------------------------------------------
 

@@ -6,25 +6,28 @@ if ~isfield(DAT, 'contrasts') || isempty(DAT.contrasts)
     return
 end
 
+% Specify which montage to add title to. This is fixed for a given slice display
+whmontage = 5; 
+plugin_check_or_create_slice_display; % script, checks for o2 and uses whmontage
+
 
 %% T-test on each contrast image
 % ------------------------------------------------------------------------
-docompact2 = 0;  % 0 for default, 1 for compact2 version
+% docompact2 = 0;  % 0 for default, 1 for compact2 version
 
-    
 printhdr('Contrast maps - OLS t-tests');
 
 k = size(DAT.contrasts, 1);
 contrast_t_fdr = {};
 
-if docompact2
-    o2 = canlab_results_fmridisplay([], 'compact2', 'noverbose');
-    whmontage = 1;
-else
-    create_figure('fmridisplay'); axis off
-    o2 = canlab_results_fmridisplay([], 'noverbose');
-    whmontage = 5;
-end
+% if docompact2
+%     o2 = canlab_results_fmridisplay([], 'compact2', 'noverbose');
+%     whmontage = 1;
+% else
+%     create_figure('fmridisplay'); axis off
+%     o2 = canlab_results_fmridisplay([], 'noverbose');
+%     whmontage = 5;
+% end
 
 for i = 1:k
     
@@ -43,6 +46,7 @@ for i = 1:k
     axes(o2.montage{whmontage}.axis_handles(5));
     title(figstr, 'FontSize', 18)
 
+    set(gcf, 'Tag', figtitle);
     plugin_save_figure;
 
     % 2nd plot at 0.01 uncorrected
@@ -59,6 +63,7 @@ for i = 1:k
     axes(o2.montage{whmontage}.axis_handles(5));
     title(figstr, 'FontSize', 18)
     
+    set(gcf, 'Tag', figtitle);
     plugin_save_figure;
         
 end
