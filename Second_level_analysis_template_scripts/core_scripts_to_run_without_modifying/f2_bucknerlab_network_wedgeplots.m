@@ -11,7 +11,9 @@ k = length(DAT.conditions);
 myfontsize = get_font_size(k); % This is a function defined below; ok in Matlab 2016 or later
 mystarsize = myfontsize ./ 2;
 
-%% Profiles across Buckner Lab rsFMRI networks
+%% Wedge plots of Yeo 2011 rsFMRI networks: Conditions
+
+disp(' ')
 
 % Barplot: All conditions
 % ----------------------------------------------------------------
@@ -28,37 +30,43 @@ clear axh handles
 
 for i = 1:k
     
+    printhdr(DAT.conditions{i});
+    
     subplot(nrows, ncols, i);
     
     [stats hh hhfill table_group multcomp_group] = image_similarity_plot(DATA_OBJ{i}, 'mapset', mapset, 'networknames', netnames, 'average', 'cosine_similarity', 'nofigure');
- 
+    
     %[stats hh hhfill table_group multcomp_group] = image_similarity_plot(DATA_OBJ{i}, 'mapset', mapset, 'networknames', netnames, 'average', 'cosine_similarity', 'colors', [DAT.colors(i) {DAT.colors{i}./2.5}], 'nofigure');
-
-        
+    
+    
     % Could also do this with just the keyword, but this re-loads the map set
     %[stats hh hhfill table_group multcomp_group] = image_similarity_plot(DATA_OBJ{i}, image_set_name, 'average', 'cosine_similarity', 'colors', DAT.colors(i), 'nofigure', 'noplot');
     
-%     handles{i} = barplot_columns(stats.r', 'colors', mycolors, 'noviolin', 'nofig', 'noind', 'names', netnames, 'MarkerSize', mystarsize);
-%     hold on; plot_horizontal_line(0);
-%     
-     axh(i) = gca;
-%     set(gca, 'XTickLabel', netnames, 'XTickLabelRotation', 45, 'FontSize', myfontsize);
-%     if i == 1, ylabel('Cosine similarity'); else, ylabel(' '); end
-%     xlabel('')
-     title(DAT.conditions{i});
-%     axis tight
+    %     handles{i} = barplot_columns(stats.r', 'colors', mycolors, 'noviolin', 'nofig', 'noind', 'names', netnames, 'MarkerSize', mystarsize);
+    %     hold on; plot_horizontal_line(0);
+    %
+    axh(i) = gca;
+    %     set(gca, 'XTickLabel', netnames, 'XTickLabelRotation', 45, 'FontSize', myfontsize);
+    %     if i == 1, ylabel('Cosine similarity'); else, ylabel(' '); end
+    %     xlabel('')
+    title(DAT.conditions{i});
+    %     axis tight
+    
+    disp(' ')
     
 end
 
 %equalize_axes(axh);
 % reset_star_y_position(handles);
-% 
+%
 % if nrows == 1, kludgy_fix_for_y_axis(axh); end
 
 plugin_save_figure;
 
 
-%%
+%% Wedge plots of Yeo 2011 rsFMRI networks: Contrasts
+
+disp(' ')
 
 % Contrasts across conditions
 % ------------------------------------------------------------------------
@@ -83,27 +91,34 @@ if isfield(DAT, 'contrasts') && ~isempty(DAT.contrasts)
     
     for i = 1:kc
         
+        printhdr(DAT.contrastnames{i});
+        
         subplot(nrows, ncols, i);
         [stats hh hhfill table_group multcomp_group] = image_similarity_plot(DATA_OBJ_CON{i}, 'mapset', mapset, 'networknames', netnames, 'average', 'cosine_similarity', 'nofigure');
         
-%         handles{i} = barplot_columns(stats.r', 'colors', mycolors, 'noviolin', 'nofig', 'noind', 'names', netnames, 'MarkerSize', mystarsize);
-%         hold on; plot_horizontal_line(0);
+        %         handles{i} = barplot_columns(stats.r', 'colors', mycolors, 'noviolin', 'nofig', 'noind', 'names', netnames, 'MarkerSize', mystarsize);
+        %         hold on; plot_horizontal_line(0);
         
         axh(i) = gca;
         title(DAT.contrastnames{i});
         
-%         set(gca, 'XTickLabel', netnames, 'XTickLabelRotation', 45, 'FontSize', myfontsize);
-%         if i == 1, ylabel('Cosine similarity'); else, ylabel(' '); end
-%         xlabel('')
+        %         set(gca, 'XTickLabel', netnames, 'XTickLabelRotation', 45, 'FontSize', myfontsize);
+        %         if i == 1, ylabel('Cosine similarity'); else, ylabel(' '); end
+        %         xlabel('')
         
-%         axis tight
+        %         axis tight
+        
+        disp(' ')
         
     end
     
+    disp(' ')
+    disp(' ')
+    
     %equalize_axes(axh);
-%     reset_star_y_position(handles);
-%     
-%     if nrows == 1, kludgy_fix_for_y_axis(axh); end
+    %     reset_star_y_position(handles);
+    %
+    %     if nrows == 1, kludgy_fix_for_y_axis(axh); end
     
     plugin_save_figure;
     

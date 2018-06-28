@@ -32,13 +32,23 @@ prep_3_calc_univariate_contrast_maps_and_save
 % You can also run z_batch_publish_image_prep_and_qc to run these and
 % create an .html file with the output.
 
+%% REGRESSIONS
+
+printhdr('REGRESSIONS')
+prep_3a_run_second_level_regression_and_save
+
 %% SVMs with optional bootstrapping
 
 printhdr('CONTRAST SUPPORT VECTOR MACHINES')
 prep_3b_run_SVMs_on_contrasts_and_save
 
+prep_3c_run_SVMs_on_contrasts_masked
+
+prep_3d_run_SVM_betweenperson_contrasts
+
 % You can also run z_batch_publish_image_prep_and_qc to run these and
 % create an .html file with the output.
+
 
 %% SIGNATURE PREP
 

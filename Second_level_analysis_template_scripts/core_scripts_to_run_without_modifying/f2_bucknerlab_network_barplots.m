@@ -11,7 +11,9 @@ k = length(DAT.conditions);
 myfontsize = get_font_size(k); % This is a function defined below; ok in Matlab 2016 or later
 mystarsize = myfontsize ./ 2;
 
-%% Profiles across Buckner Lab rsFMRI networks
+%% Bar plots of Yeo 2011 rsFMRI networks: Conditions
+
+disp(' ')
 
 % Barplot: All conditions
 % ----------------------------------------------------------------
@@ -28,13 +30,15 @@ clear axh handles
 
 for i = 1:k
     
+    printhdr(DAT.conditions{i});
+    
     subplot(nrows, ncols, i);
     
     [stats hh hhfill table_group multcomp_group] = image_similarity_plot(DATA_OBJ{i}, 'mapset', mapset, 'networknames', netnames, 'average', 'cosine_similarity', 'colors', DAT.colors(i), 'nofigure', 'noplot');
- 
+    
     %[stats hh hhfill table_group multcomp_group] = image_similarity_plot(DATA_OBJ{i}, 'mapset', mapset, 'networknames', netnames, 'average', 'cosine_similarity', 'colors', [DAT.colors(i) {DAT.colors{i}./2.5}], 'nofigure');
-
-        
+    
+    
     % Could also do this with just the keyword, but this re-loads the map set
     %[stats hh hhfill table_group multcomp_group] = image_similarity_plot(DATA_OBJ{i}, image_set_name, 'average', 'cosine_similarity', 'colors', DAT.colors(i), 'nofigure', 'noplot');
     
@@ -48,6 +52,8 @@ for i = 1:k
     title(DAT.conditions{i});
     axis tight
     
+    disp(' ')
+    
 end
 
 equalize_axes(axh);
@@ -58,7 +64,9 @@ if nrows == 1, kludgy_fix_for_y_axis(axh); end
 plugin_save_figure;
 
 
-%%
+%% Wedge plots of Yeo 2011 rsFMRI networks: Contrasts
+
+disp(' ')
 
 % Contrasts across conditions
 % ------------------------------------------------------------------------
@@ -83,6 +91,8 @@ if isfield(DAT, 'contrasts') && ~isempty(DAT.contrasts)
     
     for i = 1:kc
         
+        printhdr(DAT.contrastnames{i});
+        
         subplot(nrows, ncols, i);
         [stats hh hhfill table_group multcomp_group] = image_similarity_plot(DATA_OBJ_CON{i}, 'mapset', mapset, 'networknames', netnames, 'average', 'cosine_similarity', 'colors', DAT.colors(i), 'nofigure', 'noplot');
         
@@ -105,6 +115,7 @@ if isfield(DAT, 'contrasts') && ~isempty(DAT.contrasts)
     
     plugin_save_figure;
     
+    disp(' ')
     
 end
 

@@ -1,15 +1,25 @@
-roimask_imagename = 'Buhle_Silvers_2014_Emotion_Regulation_Meta_thresh.img';
+roimask_imagename = 'v4-topics-100_25_inhibition_response_control_pFgA_z_FDR_0.01.nii';
+
+if ~exist(which(roimask_imagename), 'file')
+    try
+    roimask = gunzip([roimask_imagename '.gz']);
+    roimask_imagename = roimask{1};
+    catch
+    end
+end
+
+% this map is similar but with fewer unique regions:
+%roimask_imagename = gunzip('v4-topics-100_49_conflict_interference_control_pFgA_z_FDR_0.01.nii.gz');
+
 roimask = which(roimask_imagename); % not 1/0
-roimask_shortname = 'EmoMetaMask'; % this is a short, unique name identifying this map in saved output
+
+roimask_shortname = 'Neurosynth_Inhib_RI'; % this is a short, unique name identifying this map in saved output
 
 mymetric = 'cosine_similarity'; % 'dotproduct', 'cosine_similarity', or 'correlation'
 
-% If you hard-code region names for thresholded regions here, they will be
-% used in later table/plot output. 10 chars max for display in table object output.
-regionnames = {'L vl/dlPFC'    'L STS'    'R vlPFC'    'L IPL'    'R IPL'    'aMCC/pSMA' 'R dlPFC'};
-
-thresh_value = 2.68;  % height threshold for defining discrete ROIs, in raw units
-thresh_k_value = 75;  % extent threshold for defining discrete ROIs
+if ~exist(roimask, 'file')
+    fprintf('Cannot find file: %s\nSkipping.\n', roimask_imagename);
+end
 
 %% Basic info
 
@@ -28,8 +38,31 @@ end
 % --------------------------------------------------------------------
 roimask_obj = fmri_data(roimask, [], 'noverbose');
 
+disp('Unthresholded:')
+r_nothr = region(roimask_obj);
+
+desc = descriptives(roimask_obj);
+
+thresh_value = double(desc.prctile_vals(desc.prctiles == 1)); % first percentile; height threshold for defining discrete ROIs, in raw units
+thresh_k_value = 50;  % extent threshold for defining discrete ROIs
+
+
 roimask_thresh = threshold(roimask_obj, [thresh_value Inf], 'raw-between', 'k', thresh_k_value); % p < .005 equivalent, extent thresholded  0.05 FWE-corr
 
+fprintf('Thresholded at %3.3f and k = %3.3f contiguous\n', thresh_value, thresh_k_value)
+
+r_thr = region(roimask_thresh);
+
+
+% If you hard-code region names for thresholded regions here, they will be
+% used in later table/plot output. 10 chars max for display in table object output.
+regionnames = {}; %{'L vl/dlPFC'    'L STS'    'R vlPFC'    'L IPL'    'R IPL'    'aMCC/pSMA' 'R dlPFC'};
+
+for i = 1:length(r_thr)
+    
+    regionnames{i} = sprintf('R%d', i);
+    
+end
 
 %% Initialize fmridisplay slice display if needed, or clear existing display
 % --------------------------------------------------------------------
@@ -47,12 +80,12 @@ plugin_check_or_create_slice_display; % script, checks for o2 and uses whmontage
 axes(o2.montage{whmontage}.axis_handles(5))
 title('Unthresholded mask');
 
-r = region(roimask_obj);
 o2 = removeblobs(o2);
-o2 = addblobs(o2, r);
+o2 = addblobs(o2, r_nothr);
 %o2 = addblobs(o2, r, 'splitcolor', {[0 0 1] [0 1 1] [1 .5 0] [1 1 0]});
 
 figtitle = sprintf('%s_unthresholded', roimask_shortname);
+set(gcf, 'Tag', figtitle);
 plugin_save_figure;
 
 
@@ -72,13 +105,13 @@ end
 figtitle = sprintf('%s_pattern_response_nothresh', roimask_shortname);
 create_figure(figtitle, 1, 2);
 
-barplot_columns(mycon_nothresh, figtitle, 'colors', DAT.contrastcolors, 'nofig');
+barplot_columns(mycon_nothresh, figtitle, 'colors', DAT.contrastcolors, 'nofig', 'names', DAT.contrastnames);
 set(gca, 'XTickLabel', DAT.contrastnames, 'XTickLabelRotation', 45);
 
 title(format_strings_for_legend(figtitle))
 
 subplot(1, 2, 2);
-barplot_columns(mycon_nothresh, figtitle, 'colors', DAT.contrastcolors, 'nofig', 'noviolin', 'noind');
+barplot_columns(mycon_nothresh, figtitle, 'colors', DAT.contrastcolors, 'nofig', 'noviolin', 'noind', 'names', DAT.contrastnames);
 set(gca, 'XTickLabel', DAT.contrastnames, 'XTickLabelRotation', 45);
 
 plugin_save_figure;
@@ -113,14 +146,14 @@ end
 figtitle = sprintf('%s_pattern_response_thresh', roimask_shortname);
 create_figure(figtitle, 1, 2);
 
-barplot_columns(mycon_thresh, figtitle, 'colors', DAT.contrastcolors, 'nofig');
-set(gca, 'XTickLabel', DAT.contrastnames, 'XTickLabelRotation', 45);
+barplot_columns(mycon_thresh, figtitle, 'colors', DAT.contrastcolors, 'nofig', 'names', DAT.contrastnames);
+set(gca, 'XTickLabelRotation', 45);
 
 title(format_strings_for_legend(figtitle))
 
 subplot(1, 2, 2);
-barplot_columns(mycon_thresh, figtitle, 'colors', DAT.contrastcolors, 'nofig', 'noviolin', 'noind');
-set(gca, 'XTickLabel', DAT.contrastnames, 'XTickLabelRotation', 45);
+barplot_columns(mycon_thresh, figtitle, 'colors', DAT.contrastcolors, 'nofig', 'noviolin', 'noind', 'names', DAT.contrastnames);
+set(gca, 'XTickLabelRotation', 45);
 
 plugin_save_figure;
 
@@ -147,15 +180,15 @@ disp(T);
 %% Show thresholded regions
 % ------------------------------------------------------------------------
 
-rois = region(roimask_thresh);
+% First figure: zoomed-in
 
 figtitle = sprintf('%s_ROIs', roimask_shortname);
 
-o3 = montage(rois, 'regioncenters', 'nosymmetric');
+o3 = montage(r_thr, 'regioncenters', 'nozoom', 'nosymmetric');
 
 set(gcf, 'Tag', figtitle);
 
-k = length(rois);
+k = length(r_thr);
 
 for i = 1:k
     
@@ -165,17 +198,28 @@ end
     
 plugin_save_figure;
 
+% Second figure: zoomed-in
+
+figtitle = sprintf('%s_ROIs_zoom_', roimask_shortname);
+set(gcf, 'Tag', figtitle);
+
+o3 = removeblobs(o3);
+o3 = montage(r_thr, o3, 'regioncenters', 'nosymmetric');
+plugin_save_figure;
+
+
+
 %% Extract ROI data for each thresholded region
 % Save extracted data, make table, plot
 % ------------------------------------------------------------------------
 
 % Get names
 if exist('regionnames', 'var') && iscell(regionnames)
-    if length(regionnames) ~= length(rois)
+    if length(regionnames) ~= length(r_thr)
         error('regionnames is not the same length as thresholded roi region object.');
     else
-        for i = 1:length(rois)
-            rois(i).shorttitle = regionnames{i};
+        for i = 1:length(r_thr)
+            r_thr(i).shorttitle = regionnames{i};
         end
     end
 end
@@ -185,7 +229,7 @@ end
 
 printhdr(sprintf('%s thresholded ROI t-tests by condition', roimask_shortname));
 
-[roi_table_conditions, rois_with_condition_data] = ttest_table_by_condition(rois, DATA_OBJ, 'conditions', DAT.conditions);
+[roi_table_conditions, rois_with_condition_data] = ttest_table_by_condition(r_thr, DATA_OBJ, 'conditions', DAT.conditions);
 
 disp(roi_table_conditions)
 
@@ -210,7 +254,7 @@ end
 
 printhdr(sprintf('%s thresholded ROI t-tests by contrast', roimask_shortname));
 
-[roi_table_contrasts, rois_with_contrast_data] = ttest_table_by_condition(rois, DATA_OBJ_CON, 'conditions', DAT.contrastnames);
+[roi_table_contrasts, rois_with_contrast_data] = ttest_table_by_condition(r_thr, DATA_OBJ_CON, 'conditions', DAT.contrastnames);
 
 disp(roi_table_contrasts)
 
@@ -238,7 +282,7 @@ myfontsize = get_font_size(kc);
 myaxislabels = format_strings_for_legend(regionnames);
 mypointsize = get_point_size(kc, nregions);
 
-clear axh 
+clear axh my_contrast_data
 
 for i = 1:kc
     
@@ -249,7 +293,7 @@ for i = 1:kc
     end
     
     printstr(DAT.contrastnames{i});
-    mycolor = repmat(DAT.contrastcolors(i), nregions); 
+    mycolor = repmat(DAT.contrastcolors(i), 1, nregions); 
     
     axh(i) = subplot(nrows, ncols, i);
     

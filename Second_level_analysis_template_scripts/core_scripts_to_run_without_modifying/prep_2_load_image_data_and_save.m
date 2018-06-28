@@ -30,8 +30,10 @@ for i = 1:length(DAT.conditions)
         
         str = fullfile(datadir, DAT.subfolders{i}, DAT.functional_wildcard{i});
         
-        % Unzip if needed - note, Matlab's gunzip() does not remove .gz images, so use eval( ) version.
-        try eval(['!gunzip ' str '.gz']), catch, end     % gunzip([str '.gz'])
+        % Unzip if needed - 
+        % note, Matlab's gunzip() does not remove .gz images, so use eval( ) version.
+        % note, replace spaces with '\ ' 
+        try eval(['!gunzip ' strrep(str, ' ', '\ ') '.gz']), catch, end     % gunzip([str '.gz'])
         
         cimgs{i} = filenames(str, 'absolute');
         
@@ -40,7 +42,9 @@ for i = 1:length(DAT.conditions)
         str = fullfile(datadir, DAT.functional_wildcard{i});
         
         % Unzip if needed
-        try eval(['!gunzip ' str '.gz']), catch, end
+        unzipstr = ['!gunzip ' strrep(str, ' ', '\ ') '.gz'];
+        
+        try eval(unzipstr), catch, end
         
         cimgs{i} = filenames(str, 'absolute');
         
@@ -52,7 +56,7 @@ for i = 1:length(DAT.conditions)
     
     DAT.imgs{i} = char(cimgs{i}{:});
     
-    filename_string{i} = str;  % used below for zipping images
+    filename_string{i} = strrep(str, ' ', '\ ');  % used below for zipping images
 end
 
 

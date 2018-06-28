@@ -1,10 +1,35 @@
-% Runs batch analyses and publishes HTML report with figures and stats to 
+function z_batch_publish_analyses(varargin)
+% Runs batch analyses and publishes HTML report with figures and stats to
 % results/published_output in local study-specific analysis directory.
-
+%
 % Run this from the main base directory (basedir)
+%
+% Enter string for which analyses to run, in any order
+%
+% 'contrasts'     : Coverage and univariate condition and contrast maps
+% 'signatures'    : Pre-defined brain 'signature' responses from CANlab
+% 'svm'           : Cross-validated Support Vector Machine analyses for each contrast
+% 'bucknerlab'    : Decomposition of each condition and contrast into loadings on resting-state network maps
+% 'meta_analysis' : Tests of "pattern of interest" analyses and ROIs derived from CANlab meta-analyses
+%
+% Default if you run z_batch_publish_analyses with no arguments is to run
+% all, in this order.
+%
+% Or run a custom set:
+% - Including an argument with a cell array of strings for analyses you want to run:
+% z_batch_publish_analyses({'svm' 'bucknerlab'})
+
+% Define strings for analyses to run
+% ------------------------------------------------------------------------
 
 close all
-clear all
+% clear all
+
+if nargin == 0
+    analyses_to_run = {'contrasts' 'signatures' 'svm' 'bucknerlab' 'meta_analysis'};
+else
+    analyses_to_run = varargin{1};
+end
 
 % ------------------------------------------------------------------------
 % Set paths based on local study-specific base analysis directory.
@@ -19,71 +44,114 @@ else
     run(scriptname)
 end
 
-% Reload all saved data
-b_reload_saved_matfiles           % done in indivdidual scripts to save output info in html, but re-run here so vars are available
+printhdr('Running analyses:');
+disp(analyses_to_run)
 
+
+% Options for publish
 % ------------------------------------------------------------------------
-
 
 pubdir = fullfile(resultsdir, 'published_output');
 if ~exist(pubdir, 'dir'), mkdir(pubdir), end
 
-do_coverage_contrasts = true;
-do_svm_analyses = false;
-do_signature_analyses = true;
-do_meta_analysis_masks = false;
+disp(' ');
+disp('Saving published HTML reports here:');
+disp(pubdir);
+disp(' ');
 
-% ------------------------------------------------------------------------
-if do_coverage_contrasts
-    
-    pubfilename = ['analysis_coverage_and_contrasts_' scn_get_datetime];
-    
-    p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
-        'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
-    
-    publish('z_batch_coverage_and_contrasts.m', p)
-    
-    close all
-end
 
+% Reload all saved data
 % ------------------------------------------------------------------------
 
-if do_svm_analyses
-    
-    pubfilename = ['analysis_SVM_on_contrasts_' scn_get_datetime];
-    
-    p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
-        'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
-    
-    publish('z_batch_svm_analysis.m', p)
-    
-    close all
-    
-end
+b_reload_saved_matfiles           % done in indivdidual scripts to save output info in html, but re-run here so vars are available
 
-% ------------------------------------------------------------------------
-if do_signature_analyses
-    
-    pubfilename = ['analysis_signature_analyses_' scn_get_datetime];
-    
-    p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
-        'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
-    
-    publish('z_batch_signature_analyses.m', p)
-    
-    close all
-end
 
+
+% Loop through and run
 % ------------------------------------------------------------------------
 
-if do_meta_analysis_masks
+for i = 1:length(analyses_to_run)
     
-    pubfilename = ['analysis_meta_analysis_masks_' scn_get_datetime];
+    analysis_str = analyses_to_run{i};
     
-    p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
-        'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
+    % 'contrasts'     : Coverage and univariate condition and contrast maps
+    % 'signatures'    : Pre-defined brain 'signature' responses from CANlab
+    % 'svm'           : Cross-validated Support Vector Machine analyses for each contrast
+    % 'bucknerlab'    : Decomposition of each condition and contrast into loadings on resting-state network maps
+    % 'meta_analysis' : Tests of "pattern of interest" analyses and ROIs derived from CANlab meta-analyses
     
-    publish('z_batch_meta_analysis_mask_analyses.m', p)
+    switch analysis_str
+        
+        case 'contrasts'
+            % ------------------------------------------------------------------------
+            
+            pubfilename = ['analysis_coverage_and_contrasts_' scn_get_datetime];
+            
+            p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
+                'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
+            
+            publish('z_batch_coverage_and_contrasts.m', p)
+            
+            close all
+            
+        case 'svm'
+            % ------------------------------------------------------------------------
+            
+            
+            pubfilename = ['analysis_SVM_on_contrasts_' scn_get_datetime];
+            
+            p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
+                'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
+            
+            publish('z_batch_svm_analysis.m', p)
+            
+            close all
+            
+            
+        case 'signatures'
+            % ------------------------------------------------------------------------
+            
+            
+            pubfilename = ['analysis_signature_analyses_' scn_get_datetime];
+            
+            p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
+                'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
+            
+            publish('z_batch_signature_analyses.m', p)
+            
+            close all
+            
+        case 'bucknerlab'
+            % ------------------------------------------------------------------------
+            
+            pubfilename = ['analysis_bucknerlab_networks_' scn_get_datetime];
+            
+            p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
+                'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
+            
+            publish('z_batch_bucknerlab_network_analyses.m', p)
+            
+            close all
+            
+        case 'meta_analysis'
+            % ------------------------------------------------------------------------
+            
+            pubfilename = ['analysis_meta_analysis_masks_' scn_get_datetime];
+            
+            p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
+                'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
+            
+            publish('z_batch_meta_analysis_mask_analyses.m', p)
+            
+            close all
+            
+        otherwise
+            
+            printhdr(sprintf('UNRECOGNIZED COMMAND STRING: %s\nSkipping.\n', analysis_str));
+            
+    end % switch
     
-    close all
-end
+end % loop
+
+end % function
+

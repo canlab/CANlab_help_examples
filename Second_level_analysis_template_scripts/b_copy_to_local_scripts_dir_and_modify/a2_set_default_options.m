@@ -33,7 +33,16 @@ maskname = which('gray_matter_mask.img');
 
 % z_batch_publish_everything, z_batch_publish_analyses options 
 % --------------------------------------------------------------------
-do_coverage_contrasts = true;
-do_signature_analyses = true;
-do_svm_analyses = true;
-do_meta_analysis_masks = true;
+% Enter string for which analyses to run, in any order
+%
+% 'contrasts'     : Coverage and univariate condition and contrast maps
+% 'signatures'    : Pre-defined brain 'signature' responses from CANlab
+% 'svm'           : Cross-validated Support Vector Machine analyses for each contrast
+% 'bucknerlab'    : Decomposition of each condition and contrast into loadings on resting-state network maps
+% 'meta_analysis' : Tests of "pattern of interest" analyses and ROIs derived from CANlab meta-analyses
+%
+% Default if you run z_batch_publish_analyses is to run all, in this order.
+% Or run a custom set:
+% batch_analyses_to_run = {'contrasts' 'signatures' 'svm' 'bucknerlab' 'meta_analysis'};
+% z_batch_publish_analyses({'svm' 'bucknerlab'})
+
