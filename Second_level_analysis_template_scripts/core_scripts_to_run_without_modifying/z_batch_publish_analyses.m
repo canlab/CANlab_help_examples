@@ -69,6 +69,7 @@ b_reload_saved_matfiles           % done in indivdidual scripts to save output i
 
 % Loop through and run
 % ------------------------------------------------------------------------
+if ~iscell(analyses_to_run), analyses_to_run = {analyses_to_run}; end
 
 for i = 1:length(analyses_to_run)
     
