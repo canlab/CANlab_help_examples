@@ -88,6 +88,9 @@ for i = 1:length(analyses_to_run)
             
             pubfilename = ['analysis_coverage_and_contrasts_' scn_get_datetime];
             
+            % move old reports to 'older' dir
+            move_old_reports(pubdir, pubfilename);
+            
             p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
                 'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
             
@@ -95,11 +98,16 @@ for i = 1:length(analyses_to_run)
             
             close all
             
+            
+            
         case 'svm'
             % ------------------------------------------------------------------------
             
             
             pubfilename = ['analysis_SVM_on_contrasts_' scn_get_datetime];
+            
+            % move old reports to 'older' dir
+            move_old_reports(pubdir, pubfilename);
             
             p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
                 'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
@@ -115,6 +123,9 @@ for i = 1:length(analyses_to_run)
             
             pubfilename = ['analysis_signature_analyses_' scn_get_datetime];
             
+            % move old reports to 'older' dir
+            move_old_reports(pubdir, pubfilename)
+            
             p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
                 'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
             
@@ -127,6 +138,9 @@ for i = 1:length(analyses_to_run)
             
             pubfilename = ['analysis_bucknerlab_networks_' scn_get_datetime];
             
+            % move old reports to 'older' dir
+            move_old_reports(pubdir, pubfilename)
+            
             p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
                 'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
             
@@ -138,6 +152,9 @@ for i = 1:length(analyses_to_run)
             % ------------------------------------------------------------------------
             
             pubfilename = ['analysis_meta_analysis_masks_' scn_get_datetime];
+            
+            % move old reports to 'older' dir
+            move_old_reports(pubdir, pubfilename)
             
             p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
                 'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
@@ -155,4 +172,27 @@ for i = 1:length(analyses_to_run)
 end % loop
 
 end % function
+
+
+function move_old_reports(pubdir, pubfilename)
+
+olddir = fullfile(pubdir, 'OLDER_REPORTS');
+if ~exist(olddir, 'dir'), mkdir(olddir); end
+
+myreportwildcard = [pubfilename(1:end - 17) '*'];
+
+oldfiles = dir(fullfile(pubdir, myreportwildcard));
+
+if length(oldfiles) > 1
+    fprintf('Moving old reports named %s to OLDER_REPORTS folder.\n', myreportwildcard);
+end
+
+for i = 1:length(oldfiles)
+    
+    myfile = fullfile(pubdir, oldfiles(i).name);
+    [SUCCESS,MESSAGE,MESSAGEID] = movefile(myfile, olddir);
+    
+end
+
+end
 
