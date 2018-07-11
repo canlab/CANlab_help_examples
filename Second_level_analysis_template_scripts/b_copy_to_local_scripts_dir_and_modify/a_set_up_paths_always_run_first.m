@@ -1,5 +1,5 @@
 % NOTES:
-% - standard folders and variable names are created by this script
+% - standard folders and variable names are created by these scripts
 %
 % - in "prep_" scripts: 
 %   image names, conditions, contrasts, colors, global gray/white/CSF

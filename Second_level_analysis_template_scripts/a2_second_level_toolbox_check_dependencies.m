@@ -17,6 +17,8 @@
 % cd('/Users/tor/Google Drive/CanlabDataRepository/ROI_masks_and_parcellations/Parcellation_images_for_studies')
 % g = genpath(pwd); addpath(pwd);
 
+dashes = '-------------------------------------------------------------';
+fprintf('\n%s\nChecking for toolboxes and functions needed\n%s\n', dashes, dashes);
 
 [matlabversion, matlabdate] = version;
 
@@ -34,6 +36,11 @@ end
 
 disp(' ')
 disp('Checking required toolboxes and adding paths with subfolders');
+disp(' - SPM12');
+disp(' - CanlabCore object-oriented tools');
+disp(' - Canlab Second_level_analysis_template_scripts');
+disp(' - Canlab Masks_Private for NPS pain signature');
+disp(' - Neuroimaging_Pattern_Masks for other signatures and atlases/parcellations');
 disp(' ')
 
 % -----------------------------------------------------------------------
@@ -46,7 +53,7 @@ toolboxdir = fileparts(fileparts(checkfile));
 if ~exist(toolboxdir, 'dir')
     
     disp('Cannot find SPM12 toolbox');
-    disp('You need SPM5/8/12 on your path, ')
+    disp('You need SPM5/8/12 on your Matlab path')
 
 else
     disp('Found SPM12 toolbox');
@@ -102,7 +109,7 @@ end
 % MasksPrivate for signature-based analyes (private repository)
 % -----------------------------------------------------------------------
 
-checkfile = which(['Masks_Private' filesep 'apply_all_signatures.m']);
+checkfile = which(['Masks_Private' filesep 'apply_nps.m']);
 toolboxdir = fileparts(checkfile);
 
 if ~exist(toolboxdir, 'dir')  % Try to find and add it
@@ -130,7 +137,7 @@ try
     disp('Loaded signature images successfully');
     disp(' ')
 catch
-    disp('Signatures did not load.');
+    disp('Signatures did not load. Signatures are in the Neuroimaging_Pattern_Masks repository and MasksPrivate repository');
     disp(' ')
 end
 
@@ -139,18 +146,14 @@ end
 % Atlases for parcel extraction
 % -----------------------------------------------------------------------
 
-checkfile = which(['Parcellation_images_for_studies' filesep 'Shen_Constable_NIMG_2013_268_parcellation' filesep 'shen_2mm_268_parcellation.nii']);
-toolboxdir = fileparts(fileparts(checkfile));
-
-% if ~exist(toolboxdir, 'dir')  % Try to find and add it
-%     toolboxdir = fullfile(mainrepodir, 'CANlab_help_examples', 'Second_level_analysis_template_scripts');
-% end
+checkfile = which(['Neuroimaging_Pattern_Masks' filesep 'Atlases_and_parcellations' filesep '2013_Shen_Constable_NIMG_268_parcellation' filesep 'Shen_atlas_object.mat']);
+toolboxdir = fileparts(fileparts(fileparts(checkfile)));
 
 if ~exist(toolboxdir, 'dir')
     
     disp('Cannot find parcellation .nii files');
     disp('You should have the ROI_masks_and_parcellations/Parcellation_images_for_studies folder on your path, with subfolders.')
-    disp('These are in the CanlabDataRepository and have .nii/.img files for parcellations shared by multiple groups');
+    disp('These are in the Neuroimaging_Pattern_Masks repository and have .nii/.img files for parcellations shared by multiple groups');
     disp(' ');
     
 else
@@ -167,6 +170,11 @@ if ~exist(atlas_name, 'file')
 end
 
 
+disp(' ')
+disp('Checking other functions we need:');
+disp(' - Spider machine learning toolbox for SVM');
+disp(' - Matlab internal jsondecode tools');
+disp(' ')
 
 % -----------------------------------------------------------------------
 % Spider toolbox for SVM
@@ -189,6 +197,8 @@ if ~exist('jsondecode', 'builtin')
     disp('jsondecode is a built-in Matlab file that is missing. Json info file reading will not work.');
 end
 
-disp('If paths have been updated by running this script, consider running strip_git_dirs and savepath');
+strip_git_dirs
+
+% disp('If paths have been updated by running this script, consider running strip_git_dirs and savepath');
 
 
