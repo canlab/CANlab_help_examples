@@ -1,4 +1,4 @@
-# CANlab_help_examples
+# CANlab_help_examples and second-level batch scripts
 
 This repository is designed to accompany the <a href = "http://canlab.github.io/CanlabCore">CANlab Core Tools repository for neuroimaging data analysis</a>. It includes:
 - How-to examples that publish HTML files with code and output, focusing on the CANlab’s interactive object-oriented tools.
@@ -25,15 +25,23 @@ The "base package" currently provides five types of date-stamped HTML analysis r
 Quick start, walkthrough, and help:
 ------------------------------------------------------------
 1 - Download the <a href = "http://canlab.github.io/CanlabCore">CANlab Core Tools repository for neuroimaging data analysis</a>
+
 2 - Open Matlab and change to the directory where you want to install the toolboxes (i.e., drag folder into Matlab cmd window)
+
 3 - Run canlab_toolbox_setup.m (in Canlab_Core) by dragging the file from Finder/Explorer into Matlab
+
 4 - Create an study analysis folder where you want to store data and analyses for a study
+
 5 - Change to that folder in Matlab
+
 6 - Run a_set_up_new_analysis_folder_and_scripts.m by typing "a_set_up_new_analysis_folder_and_scripts" in Matlab
 
 Also, see the help documents/walkthrough in the canlab_help_examples repository. They are called:
+
 0_CANLab-Help2ndlevelExampleWalkthrough.pdf
+
 0_begin_here_readme.m
+
 0_debugging_common_errors.rtf
 
 Getting help and additional information:
@@ -83,11 +91,13 @@ convert_a_statistic_image_to_fmri_data_object
 
 Quality control
 ————————————————————————————
+
 basic_fmri_data_plot
 
 
 Analysis
 ————————————————————————————
+
 parcellate_regions
 
 draw_regions_of_interest
