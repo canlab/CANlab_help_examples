@@ -44,6 +44,17 @@ Also, see the help documents/walkthrough in the canlab_help_examples repository.
 
 0_debugging_common_errors.rtf
 
+
+Dependencies: These should be installed to use this toolbox
+------------------------------------------------------------
+Matlab www.mathworks.com
+Matlab statistics toolbox
+Matlab signal processing toolbox
+Statistical Parametric Mapping (SPM) software https://www.fil.ion.ucl.ac.uk/spm/
+<a href = "http://canlab.github.io/CanlabCore">CANlab Core Tools repository https://github.com/canlab/CanlabCore
+CANlab Neuroimaging_Pattern_Masks repository https://github.com/canlab/Neuroimaging_Pattern_Masks
+<recommended> matlab_bgl (graph theory) and spider (machine learning) toolboxes; included in the CANlab Core distribution
+  
 Getting help and additional information:
 ------------------------------------------------------------
 
@@ -51,6 +62,8 @@ More information canb be found on the CANlab website, https://canlabweb.colorado
 
 This is a list of other potential topics -- the help topics are still a work in progress:  
 
+Help example topics (work in progress)
+------------------------------------------------------------
 
 Overview
 ————————————————————————————
