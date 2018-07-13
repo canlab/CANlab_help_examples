@@ -1,3 +1,11 @@
+%% About this script
+%
+% This script is an example script only.  You should modify it to fit your
+% needs, which will depend on which types of behavioral/non-imaging data
+% you have and what variables you want to store and analyze.
+% 
+% This script is an alternate example version from
+% prep_1b_prep_behavioral_data.m.  See that script for more instructions.
 
 <<<EDIT A COPY OF THIS IN YOUR LOCAL SCRIPTS DIRECTORY AND DELETE THIS LINE>>>
 
@@ -82,3 +90,26 @@ end
 
 DAT.BETWEENPERSON.groupnames = {'Anorexic' 'Control'};
 DAT.BETWEENPERSON.groupcolors = {[.8 .3 .3] [.3 .5 .8]};
+
+
+
+%% Check DAT, print warnings, save DAT structure
+
+if ~isfield(DAT, 'conditions') 
+    printhdr('Incomplete DAT structure');
+    disp('The DAT field is incomplete. Run prep_1_set_conditions_contrasts_colors before running prep_1b...')
+end
+    
+if isfield(DAT, 'SIG_conditions') && isfield(DAT, 'gray_white_csf')
+    % Looks complete, we already have data, no warnings 
+else
+    printhdr('DAT structure ready for data prep');
+    disp('DAT field does not have info from prep_2, prep_3, or prep_4 sequences');
+    disp('prep_2/3/4 scripts should be run before generating results.');
+end
+
+printhdr('Save results');
+
+savefilename = fullfile(resultsdir, 'image_names_and_setup.mat');
+save(savefilename, 'DAT', '-append');
+

@@ -78,7 +78,7 @@ for c = 1:kc
        
     o2 = removeblobs(o2);
     
-end  % within-person contrast
+end  % between-person contrast
 
 
 
