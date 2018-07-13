@@ -12,6 +12,7 @@ printhdr('BEHAVIORAL DATA - BETWEEN-PERSON DESIGN')
 try
     prep1b_prep_behavioral_data
 catch
+    printhdr('Behavioral data not included.');
     disp('prep1b_prep_behavioral_data.m did not run correctly. Either configure and test this or omit this script.');
 end
 
