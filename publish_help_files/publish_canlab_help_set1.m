@@ -2,13 +2,16 @@
 % Loading and manipulating data 
 % -------------------------------------------------------------------------
 
-canlab_help_publish('load_a_sample_dataset')
+canlab_help_publish('canlab_help_1_installing_tools')
+canlab_help_publish('canlab_help_2_load_a_sample_dataset')
 
 % -------------------------------------------------------------------------
 % Basic statistical tests
 % -------------------------------------------------------------------------
 
-canlab_help_publish('voxelwise_t_test')
+canlab_help_publish('canlab_help_3_voxelwise_t_test_walkthrough')
+canlab_help_publish('canlab_help_4_write_data_to_image_file_format')
+canlab_help_publish('canlab_help_5_regression_walkthrough')
 
 
 % -------------------------------------------------------------------------
@@ -22,3 +25,5 @@ canlab_help_publish('visualize_neuroimaging_data')
 canlab_help_publish('canlab_dataset_basic_usage')
 
 canlab_help_publish('make_polar_wedge_plots_for_signatures')
+
+canlab_help_publish('neurosynth_topic_similarity_and_wedge_plot')

@@ -1,33 +1,34 @@
-%% Prepare data files
+%% Load sample data
 % BLOCK 1
 % ---------------------------------------------------------------
 
-% Establish that images are on path
-% if not, you'll get an empty variable basedir
-basedir = fileparts(which('con_00810001.img'));
+% Load sample data using load_image_set(), which produces an fmri_data
+% object. Data loading exceeds the scope of this tutorial, but a more
+% indepth demosntration may be provided by canlab_help_2_load_a_sample_dataset.m
+
+% These are [Reappraise - Look Neg] contrast images, one image per person
+
+[image_obj, networknames, imagenames] = load_image_set('emotionreg');
+
+% Summarize and print a table with characteristics of the data:
+desc = descriptives(image_obj);
 
 % Load behavioral data
-%    "Reappraisal success", one score per person, in our example
+% This is "Reappraisal success", one score per person, in our example
+% If you do not have the file on your path, you will get an error.
+
 beh = importdata('Wager_2008_emotionreg_behavioral_data.txt')
 success = beh.data(:, 2);           % Reappraisal success
 
-% Load brain data
-%    Reappraise - Look Neg contrast images, one image per person
-imgs = filenames(fullfile(basedir, 'con_*img'), 'char', 'absolute');
-
-% Create the fmri_data object called "dat".  Store the contrast image data
-% in it.
-dat = fmri_data(imgs);
-
-% Load mask
+% Load a mask that we would like to apply to analysis/results
 
 mask = which('gray_matter_mask.img')
 
-maskdat = fmri_data(mask);
+maskdat = fmri_data(mask, 'noverbose');
 
-%% BLOCK 2
+%% Visualize the mask
 % ---------------------------------------------------------------
-% Check mask
+% BLOCK 2: Check mask
 
 % This is an underlay brain:
 
@@ -43,42 +44,48 @@ o2 = addblobs(o2, region(maskdat));
 
 drawnow, snapnow;
 
-%% BLOCK 3
+%% Visualize summary of brain coverage
 % ---------------------------------------------------------------
-% Check that we have valid data in all voxels for all subjects
+% BLOCK 3: Check that we have valid data in all voxels for all subjects
 
-% Create a mean image across the 30 contrast images, and store in "m"
-% object.  
-m = mean(dat);
+% Create a mean image across the 30 contrast images, and store in "m"  object.  
+m = mean(image_obj);
 
-% This line counts how many subjects have non-zero, non-nan data.
-% zero is treated as a missing value.  
-% This illustrates how you can do lots of customized things with the data.
-
-m.dat = sum(~isnan(dat.dat) & dat.dat ~= 0, 2);
-%o2 = addblobs(o2, region(m), 'maxcolor', [1 0 0], 'mincolor', [0 0 1]);
 orthviews(m)
 
-% problem - fix?
-% mdat = replace_empty(dat);
-% m = replace_empty(m);
-% mdat.dat = m.dat;
-% o2 = addblobs(o2, region(mdat), 'maxcolor', [1 0 0], 'mincolor', [0 0 1]);
+% Show summary of coverage - how many images have non-zero, non-NaN values in each voxel
+
+orthviews(desc.coverage_obj, 'continuous');
 
 %% BLOCK 4
 % ---------------------------------------------------------------
 % Check histograms of individual subjects for global shifts in contrast values
 
-h = qchist(dat);
-axh = get(h, 'Children')
-for i = 1:length(axh), axes(axh(i)); title(' '); end
+% The 'histogram' object method will allow you to examine a series of
+% images in one panel each.  See help fmri_data.histogram for more options,
+% including breakdown by tissue type.
+
+hist_han = histogram(image_obj, 'byimage', 'color', 'b');
+
+% This shows us that some of the images do not have the same mean as the
+% others. This is fairly common, as individual subjects can often have
+% global artifacts (e.g., task-correlated head motion or outliers) that
+% influence the whole contrast image, even when baseline conditions are
+% supposed to be "subtracted out".  
+%
+% It suggests that we may want to do an outlier analysis and/or standardize 
+% the scale of the images. We'll return to this below.
 
 %% BLOCK 5
 % ---------------------------------------------------------------
 % Examine predictor distribution and leverages
+% Leverage is a measure of how much each point influences the regression
+% line. The more extreme the predictor value, the higher the leverage.
+% Outliers will have very high leverage. High-leverage behavioral observations 
+% can strongly influence, and sometimes invalidate, an analysis.
 
-X = scale(success, 1); X(:, end+1) = 1;
-H = X * inv(X'* X) * X';
+X = scale(success, 1); X(:, end+1) = 1;         % A simple design matrix, behavioral predictor + intercept
+H = X * inv(X'* X) * X';                        % The "Hat Matrix", which produces fits. Diagonals are leverage
 
 create_figure('levs', 2, 1); 
 plot(success, 'o', 'MarkerFaceColor', [0 .3 .7], 'LineWidth', 3); 
@@ -102,15 +109,15 @@ ylabel('Leverage');
 % reappraisal success at each voxel.
 
 % .X must have the same number of observations, n, in an n x k matrix.
-% n images is the number of COLUMNS in dat.dat
+% n images is the number of COLUMNS in image_obj.image_obj
 
-% mean-center success scores and attach them to dat in dat.X
-dat.X = scale(success, 1);
+% mean-center success scores and attach them to image_obj in image_obj.X
+image_obj.X = scale(success, 1);
 
 % runs the regression at each voxel and returns statistic info and creates
 % a visual image.  regress = multiple regression.
 
-out = regress(dat);
+out = regress(image_obj);
 
 % out has statistic_image objects that have information about the betas
 % (slopes) b, t-values and p-values (t), degrees of freedom (df), and sigma
@@ -130,7 +137,7 @@ orthviews(t)
 
 % This is a multiple regression, and there are two output t images, one for
 % each regressor.  We've only entered one regressor, why two images?  The program always
-% adds an intercept by default.  Intercept is th last column of design matrix
+% adds an intercept by default.  The intercept is always the last column of the design matrix
 
 % Image   1  <--- brain contrast values correlated with "success"
 % Positive effect:   0 voxels, min p-value: 0.00001192
@@ -150,6 +157,7 @@ orthviews(t)
 % Display the results on slices
 
 o2 = removeblobs(o2);
+
 % multi_threshold lets us see the blobs with significant voxels at the
 % highest (most stringent) threshold, and voxels that are touching
 % (contiguous) down to the lowest threshold, in different colors.
@@ -173,11 +181,15 @@ o2 = removeblobs(o2);
 o2 = addblobs(o2, region(t));
 
 % Strategy 2: Extract mean signal from WM and ventricles
-m = extract_gray_white_csf(dat);
+m = extract_gray_white_csf(image_obj);
 create_figure('gray'); 
 barplot_colored(m);
 set(gca, 'XTickLabel', {'Gray' 'White' 'CSF'}, 'XTick', [1:3]);
 ylabel('Contrast values');
+
+
+% global_gray_white_csf = extract_gray_white_csf(image_obj);
+% corr([global_gray_white_csf diag(H) success])
 
 %% BLOCK 10: Compare results to meta-analysis for positive controls
 
@@ -204,8 +216,8 @@ o2 = addblobs(o2, region(t));
 %% BLOCK 12: Refine analysis by removing outlier and ranking predictor values
 
 % exclude high-leverage subject 16
-datno16 = dat;
-datno16.dat(:, 16) = [];
+datno16 = image_obj;
+datno16.image_obj(:, 16) = [];
 
 % try rank: robust...
 % Ranking is a kind of nonparametric
@@ -307,7 +319,7 @@ end
 
 %% Block 15: Multivariate prediction from unbiased ROI averages
 
-contrast_dat = cat(2, r.dat);  % these will be the predictors
+contrast_dat = cat(2, r.image_obj);  % these will be the predictors
 y = datno16.X;                 % this is the outcome to be explained
 
 STATS = xval_regression_multisubject('lasso', {y}, {contrast_dat}, 'holdout_method', 'loo', 'pca', 'ndims', 'variable');
