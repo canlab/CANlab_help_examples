@@ -109,7 +109,7 @@ ylabel('Leverage');
 % reappraisal success at each voxel.
 
 % .X must have the same number of observations, n, in an n x k matrix.
-% n images is the number of COLUMNS in image_obj.image_obj
+% n images is the number of COLUMNS in image_obj.dat
 
 % mean-center success scores and attach them to image_obj in image_obj.X
 image_obj.X = scale(success, 1);
@@ -217,7 +217,7 @@ o2 = addblobs(o2, region(t));
 
 % exclude high-leverage subject 16
 datno16 = image_obj;
-datno16.image_obj(:, 16) = [];
+datno16.dat(:, 16) = [];
 
 % try rank: robust...
 % Ranking is a kind of nonparametric
@@ -319,7 +319,7 @@ end
 
 %% Block 15: Multivariate prediction from unbiased ROI averages
 
-contrast_dat = cat(2, r.image_obj);  % these will be the predictors
+contrast_dat = cat(2, r.dat);  % these will be the predictors
 y = datno16.X;                 % this is the outcome to be explained
 
 STATS = xval_regression_multisubject('lasso', {y}, {contrast_dat}, 'holdout_method', 'loo', 'pca', 'ndims', 'variable');

@@ -27,3 +27,5 @@ canlab_help_publish('canlab_dataset_basic_usage')
 canlab_help_publish('make_polar_wedge_plots_for_signatures')
 
 canlab_help_publish('neurosynth_topic_similarity_and_wedge_plot')
+
+canlab_help_publish('mediation_example_script_2')

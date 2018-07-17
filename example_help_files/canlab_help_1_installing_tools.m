@@ -18,16 +18,17 @@
 % of outcomes based on brain data. ica(my_fmri_data_obj) will perform independent 
 % components analysis on the data, and so forth.
 
-% Dependencies:
-% -------------------------------------------------------------------------
+%% Dependencies:
+
 % Matlab statistics toolbox
 % Matlab signal processing toolbox
 % Statistical Parametric Mapping (SPM) software https://www.fil.ion.ucl.ac.uk/spm/
 
 % For full functionality, the other toolboxes below are recommended:
 
-% Toolboxes:
-% -------------------------------------------------------------------------
+%% Available Toolboxes:
+
+% CANlab Core Tools                             https://github.com/canlab/CanlabCore
 % CANlab Neuroimaging_Pattern_Masks repository  https://github.com/canlab/Neuroimaging_Pattern_Masks
 % CANlab_help_examples                          https://github.com/canlab/CANlab_help_examples
 % M3 Multilevel mediation toolbox               https://github.com/canlab/MediationToolbox
@@ -41,17 +42,26 @@
 % DCC - Martin Lindquist's dynamic correlation tbx  https://github.com/canlab/Lindquist_Dynamic_Correlation
 % CanlabScripts - in-lab Matlab/python/bash     https://github.com/canlab/CanlabScripts 
 
-%% General instructions
-%
+%% Quick start instructions
+
 % Before you start, the CANlab_Core_Tools must be added to your path with
 % subfolders. Otherwise, you will get errors.
 %
 % The script canlab_toolbox_setup can help download and install the
-% toolboxes you need. First, go to a folder where you want to install
-% toolboxes/repositories on your hard drive.  Then, type:
+% toolboxes you need.
+
+% First, go to a folder where you want to install
+% toolboxes/repositories on your hard drive. Mine are in "Github" and I've
+% already installed CanlabCore, so let's find it and go there:
+
+mypath = what('CanlabCore');
+mypath = fileparts(mypath(1).path);
+disp(mypath)
+cd(mypath)
+
+% Now I'm ready to run the setup script:
 
 canlab_toolbox_setup
 
 % This will attempt to locate toolboxes, add them to your path, and give
-% you the option to download them from Github if it can't find them. 
-
+% you the option to download them from Github if it can't find them.

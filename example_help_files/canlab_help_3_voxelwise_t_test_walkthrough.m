@@ -19,6 +19,8 @@
 %
 % By the end of this example we will have regenerated the results of figure
 % 2A of this paper.
+
+%% Executive summary of the whole analysis
 %
 % As a summary, here is a complete set of commands to load the data and run
 % the entire analysis:
@@ -29,7 +31,7 @@
     r = region(t);                                  % Turn t-map into a region object with one element per contig region
  
     % Show regions and print a table with labeled regions:
-    montage(r);
+    montage(r);  drawnow, snapnow;                  % Show results on a slice display
     table(r);                                       % Print a table of results using new region names
  
 % Now, let's walk through it step by step.
@@ -57,6 +59,7 @@ t = ttest(image_obj);
 % There are many options. See methods(statistic_image) and methods(region)
 
 orthviews(t)
+drawnow, snapnow; 
 
 % As can be seen, the ttest() result is unthresholded. The threshold
 % function can be used to apply a desired alpha level using any of a number
@@ -65,6 +68,7 @@ orthviews(t)
 
 t = threshold(t, .05, 'fdr');
 orthviews(t)
+drawnow, snapnow; 
 
 % Many neuroimaging packages (e.g., SPM and FSL) do one-tailed tests 
 % (with one-tailed p-values) and only show you positive effects 
@@ -77,6 +81,7 @@ orthviews(t)
 
 t = threshold(t, .05, 'fdr', 'k', 10);
 orthviews(t)
+drawnow, snapnow; 
 
 % montage is another visualization method. This function may require a
 % relatively large amount of memory, depending on the resolution of the 
@@ -84,6 +89,7 @@ orthviews(t)
 %
 create_figure('montage'); 
 montage(t)
+drawnow, snapnow; 
 
 %% Print a table of results
 
@@ -119,7 +125,7 @@ help region.table
 % statistic_image object (t). If we  simply write out that object, we will 
 % get t-statistics for all voxels. 
 
-t.fullpath = fullfile(pwd, 'example_t_image.img');
+t.fullpath = fullfile(pwd, 'example_t_image.nii');
 write(t)
 
 % If we use the 'thresh' option, we'll write thresholded values:
