@@ -133,17 +133,17 @@ permutation_test_on_multivariate_predictive_map
 
 
 Batch scripts: Desriptions of scripts and workflow
-------------------------------------------------------------
+------------------------------------------------------------\\
 
 
-% Step 1: Create a main analysis folder <basedir> and navigate there
-% -------------------------------------------------------------------------
-% Run: 
-a_set_up_new_analysis_folder_and_scripts            % Creates local folders and copies in relevant scripts
+% Step 1: Create a main analysis folder <basedir> and navigate there\\
+% -------------------------------------------------------------------------\\
+% Run: \\
+a_set_up_new_analysis_folder_and_scripts            % Creates local folders and copies in relevant scripts\\
 
-% Step 2: Edit these files in you local analysis  folder and save:
-% -------------------------------------------------------------------------
-study_info.json                                     % File with study/author meta-data, for reports and archive
+% Step 2: Edit these files in you local analysis  folder and save:\\
+% -------------------------------------------------------------------------\\
+study_info.json                                     % File with study/author meta-data, for reports and archive\\
 a_set_up_paths_always_run_first.m                   % Modify to specify your local analysis folder name 
 a2_set_default_options.m                            % Options used in various other scripts; change if desired, or not 
 prep_1b_prep_behavioral_data.m / prep_1b_example2.m % Optional: Modify one of these to load and attach behavioral data from files (e.g., from Excel)            
