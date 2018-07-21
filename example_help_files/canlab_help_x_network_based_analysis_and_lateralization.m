@@ -1,10 +1,13 @@
-%% Perform a voxel-wise t-test
+%% Performs a group analysis within averages in 16 unique networks
+% This primarily demonstrates the method fmri_data.ttest_table_and_lateralization_test
+% 
+% 16 unique networks are derived from large-sampe resting-state fMRI. Networks are split by
+% hemipshere and analyzed within L and R hemispheres.  In addition, 
+% lateralization (R - L hem) within each network is analyzed. 
 %
-% Edited/commented by Bogdan Petre on 9/14/2016, Tor Wager July 2018 
-%
-% In this example we perform a second level analysis on first level
-% statistical parametric maps. Specifically we use a t-test to obtain an
-% ordinary least squares estimate for the group level parameter. 
+% Currently hard-coded for the 17 networks mapped to Schaefer/Yeo et al. 2018
+% Cer Ctx (one network appears to be empty/missing), but could be extended to any 
+% symmetric parcellation, and to subcortical parcellations.
 %
 % The example uses the emotion regulation data provided with
 % CANlab_Core_Tools. This dataset consists of a set of contrast images for 

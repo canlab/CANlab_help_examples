@@ -6,6 +6,11 @@ if ~isfield(DAT, 'contrasts') || isempty(DAT.contrasts)
     return
 end
 
+% Specify which montage to add title to. This is fixed for a given slice display
+whmontage = 5; 
+plugin_check_or_create_slice_display; % script, checks for o2 and uses whmontage
+
+
 %% T-test on Windsorized and CSF-adjusted contrast images
 % ------------------------------------------------------------------------
     
@@ -18,7 +23,7 @@ o2 = removeblobs(o2);
 
 for i = 1:k
     
-    figtitle = sprintf('%s_05_WMCSFsc_FDR', DAT.contrastnames{i});
+    figtitle = sprintf('%s_05_scaleddata_FDR', DAT.contrastnames{i});
     figstr = format_strings_for_legend(figtitle); 
     figstr = figstr{1};
     printhdr(figstr);
@@ -39,7 +44,7 @@ for i = 1:k
 
     % 2nd plot at 0.01 uncorrected
     % -----------------------------------------------
-    figtitle = sprintf('%s_WMCSFsc_01_unc', DAT.contrastnames{i});
+    figtitle = sprintf('%s_scaleddata_01_unc', DAT.contrastnames{i});
     figstr = format_strings_for_legend(figtitle);
     figstr = figstr{1};
     printhdr(figstr);

@@ -1,6 +1,11 @@
 % THIS SCRIPT RUNS lassoPCR models for WITHIN-PERSON CONTRASTS it will
-% exclude data which have values of 0 and contrasts that are binary (1/-1)
-% Specified in DAT.contrasts
+% exclude conditions which have contrast values of 0 and contrasts that are binary (1/-1)
+%
+% Contrasts are pecified in DAT.contrasts
+%
+% This script makes sense to run if you have contrasts that are not simple
+% A vs. B (1 -1) comparisons. e.g., if you have linear contrasts across 4
+% levels coded [-3 -1 1 3].  
 % --------------------------------------------------------------------
 
 
