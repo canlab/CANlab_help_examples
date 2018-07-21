@@ -34,7 +34,9 @@ Batch scripts: Quick start, walkthrough, and help:
 
 5 - Change to that folder in Matlab
 
-6 - Run a_set_up_new_analysis_folder_and_scripts.m by typing "a_set_up_new_analysis_folder_and_scripts" in Matlab
+6 - create a "data" subfolder in (basedir).  Add MNI-space .nii/.img+.hdr files there. 
+
+7 - Run a_set_up_new_analysis_folder_and_scripts.m by typing "a_set_up_new_analysis_folder_and_scripts" in Matlab
 
 Also, see the help documents/walkthrough in the canlab_help_examples repository. They are called:
 
