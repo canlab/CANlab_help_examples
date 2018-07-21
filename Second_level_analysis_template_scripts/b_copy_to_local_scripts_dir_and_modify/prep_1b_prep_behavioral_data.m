@@ -1,5 +1,7 @@
 %% About this script
 %
+% Optional: Run these load and attach behavioral data from files (e.g., from Excel)            
+%
 % This script is an example script only.  You should modify it to fit your
 % needs, which will depend on which types of behavioral/non-imaging data
 % you have and what variables you want to store and analyze. The basics are

@@ -1,3 +1,5 @@
+% Always run this first before you run other scripts.
+%
 % NOTES:
 % - standard folders and variable names are created by these scripts
 %

@@ -1,3 +1,5 @@
+% Modify to specify image file subdirectories, wildcards to locate images, condition names
+%
 %% Set up conditions 
 % ------------------------------------------------------------------------
 

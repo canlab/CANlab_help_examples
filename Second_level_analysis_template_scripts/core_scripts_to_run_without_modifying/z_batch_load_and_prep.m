@@ -3,8 +3,6 @@
 % -------------------------------------------------------
 a_set_up_paths_always_run_first
 
-a2_set_default_options
-
 prep_1_set_conditions_contrasts_colors
 
 printhdr('BEHAVIORAL DATA - BETWEEN-PERSON DESIGN')
