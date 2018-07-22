@@ -1,0 +1,415 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Atlas 2012 behavioral data plot</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-07-17"><meta name="DC.source" content="atlas_2012_behavioral_plot_example_figure.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Atlas 2012 behavioral data plot</h1><!--introduction--><p>This example shows how to plot line plots for multiple conditions with error bars and calculate and plot violin plots for contrasts, with missing data.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">General instructions</a></li><li><a href="#2">Section 1: Load the data</a></li><li><a href="#3">Section 2: Make a line plot of data by condition and time (trial)</a></li><li><a href="#4">Section 3: Make bar/violin plots of the contrasts</a></li><li><a href="#5">Section 4: Print table of means to save for later</a></li></ul></div><h2 id="1">General instructions</h2><p>Before you start, the CANlab_Core_Tools must be added to your path with subfolders. Otherwise, you will get errors.</p><p>Sample datasets are in the "Sample_datasets" folder in CANlab_Core_Tools.</p><p>This example will use emotion regulation data in the file: "Atlas_2012_REMI_behavioral_data.mat" The dataset is a series of pain ratings from N = 19 participants before, during, and after open or hidden remifentanil delivery.</p><p>These data were published in: Atlas, L. Y., Whittington, R., Lindquist, M., Wielgosz, J., Sonty, N., Wager, T. D. (2012) Dissociable influences of opiates and expectations on pain. Journal of Neuroscience. 32(23): p. 8053-8064.</p><p>Here are a couple of helpful functions we will use for display: (you can ignore these.)</p><pre class="codeinput">dashes = <span class="string">'----------------------------------------------'</span>;
+printhdr = @(str) fprintf(<span class="string">'%s\n%s\n%s\n'</span>, dashes, str, dashes);
+</pre><h2 id="2">Section 1: Load the data</h2><p>The function load_image_set has a number of pre-defined image sets that you can load with one simple command.  This is the easiest way to load sample data.  The images must be on your Matlab path for this to work.</p><pre class="codeinput">filename = which(<span class="string">'Atlas_2012_REMI_behavioral_data.mat'</span>);
+<span class="keyword">if</span> isempty(filename), error(<span class="string">'Data file is not on path!'</span>); <span class="keyword">end</span>
+
+c = load(filename);
+
+<span class="comment">% c is an ad hoc data structure. The relevant fields are:</span>
+<span class="comment">% c =</span>
+<span class="comment">%</span>
+<span class="comment">%            HO: [18x19 double]  TRIALS X SUBJECTS HOT OPEN PAIN SCORES</span>
+<span class="comment">%            WO: [18x19 double]   TRIALS X SUBJECTS WARM OPEN PAIN SCORES</span>
+<span class="comment">%            HH: [18x19 double] TRIALS X SUBJECTS HOT HIDDEN PAIN SCORES</span>
+<span class="comment">%            WH: [18x19 double] TRIALS X SUBJECTS WARM HIDDEN PAIN SCORES</span>
+
+<span class="comment">% It would be a very good idea to put these data in a canlab_dataset</span>
+<span class="comment">% object, and then use the methods associated with that object to plot.</span>
+</pre><h2 id="3">Section 2: Make a line plot of data by condition and time (trial)</h2><pre class="codeinput">printhdr(<span class="string">'Line Plot by Condition'</span>);
+
+<span class="comment">% Set up the figure. create_figure is a function in the canlab toolbox that</span>
+<span class="comment">% sets figure defaults and handles in a convenient way.</span>
+
+create_figure(<span class="string">'remi pain'</span>, 1, 2);
+
+<span class="comment">% Draw some boxes to shade the background and mark off every other run</span>
+
+h1 = drawbox(.5, 3, 1, 7, [.5 .5 .5]); set(h1, <span class="string">'FaceAlpha'</span>, .2, <span class="string">'EdgeColor'</span>, <span class="string">'none'</span>);
+h1 = drawbox(6.5, 3, 1, 7, [.5 .5 .5]); set(h1, <span class="string">'FaceAlpha'</span>, .2, <span class="string">'EdgeColor'</span>, <span class="string">'none'</span>);
+h1 = drawbox(12.5, 3, 1, 7, [.5 .5 .5]); set(h1, <span class="string">'FaceAlpha'</span>, .2, <span class="string">'EdgeColor'</span>, <span class="string">'none'</span>);
+
+<span class="comment">% Draw the box showing the drug delivery (and instruction) time</span>
+
+h1 = drawbox(3.5, 9, 1, .3, [.4 .4 .4]); set(h1, <span class="string">'FaceAlpha'</span>, 1, <span class="string">'EdgeColor'</span>, [.2 .2 .2]);
+
+<span class="comment">% Plot one line for each condition</span>
+
+h = lineplot_columns(c.HH', <span class="string">'color'</span>, <span class="string">'r'</span>);
+h2 = lineplot_columns(c.HO', <span class="string">'color'</span>, <span class="string">'b'</span>);
+
+h3 = lineplot_columns(c.WH', <span class="string">'color'</span>, [1 .5 0]);
+h4 = lineplot_columns(c.WO', <span class="string">'color'</span>, [0 .5 1]);
+
+<span class="comment">% Set legend, labels</span>
+
+xlabel(<span class="string">'Trial number'</span>);
+ylabel(<span class="string">'Pain rating'</span>);
+set(gca, <span class="string">'YLim'</span>, [1 8]);
+
+legend([h.line_han h2.line_han h3.line_han h4.line_han], {<span class="string">'Hot Hidden'</span> <span class="string">'Hot Open'</span> <span class="string">'Warm Hidden'</span> <span class="string">'Warm Open'</span>});
+
+subplot(2, 2, 2)
+<span class="comment">% Now plot the trial-by-trial open vs. hidden differences</span>
+
+hot_openvs_hidden = (c.HO - c.HH)';
+
+h = lineplot_columns(hot_openvs_hidden, <span class="string">'color'</span>, <span class="string">'r'</span>);
+
+h1 = drawbox(.5, 3, -1.7, 2, [.5 .5 .5]); set(h1, <span class="string">'FaceAlpha'</span>, .2, <span class="string">'EdgeColor'</span>, <span class="string">'none'</span>);
+h1 = drawbox(6.5, 3, -1.7, 2, [.5 .5 .5]); set(h1, <span class="string">'FaceAlpha'</span>, .2, <span class="string">'EdgeColor'</span>, <span class="string">'none'</span>);
+h1 = drawbox(12.5, 3, -1.7, 2, [.5 .5 .5]); set(h1, <span class="string">'FaceAlpha'</span>, .2, <span class="string">'EdgeColor'</span>, <span class="string">'none'</span>);
+
+h1 = drawbox(3.5, 9, -1.7, .3, [.4 .4 .4]); set(h1, <span class="string">'FaceAlpha'</span>, 1, <span class="string">'EdgeColor'</span>, [.2 .2 .2]);
+h1 = plot_horizontal_line(0);
+set(h1, <span class="string">'LineStyle'</span>, <span class="string">'--'</span>);
+
+set(gca, <span class="string">'FontSize'</span>, 18);
+title(<span class="string">'Open vs. Hidden Effect'</span>);
+ylabel(<span class="string">'Pain'</span>);
+
+drawnow, snapnow
+</pre><pre class="codeoutput">----------------------------------------------
+Line Plot by Condition
+----------------------------------------------
+</pre><img vspace="5" hspace="5" src="atlas_2012_behavioral_plot_example_figure_01.png" alt=""> <h2 id="4">Section 3: Make bar/violin plots of the contrasts</h2><pre class="codeinput">printhdr(<span class="string">'Violin Plots of Contrasts'</span>);
+
+<span class="comment">% Identify trials when instructions/drug are being delivered.</span>
+
+instruction_contrast = [-1 -1 -1 1 1 1 1 1 1 1 1 1 -1 -1 -1 -1 -1 -1]';
+
+<span class="comment">% Get means for this period for each subject x condition.</span>
+<span class="comment">% Avoid NaNs by omitting case/subject-wise.</span>
+
+hot_hidden_during_instruct = nanmean(c.HH(instruction_contrast &gt; 0, :))';
+hot_open_during_instruct = nanmean(c.HO(instruction_contrast &gt; 0, :))';
+warm_hidden_during_instruct = nanmean(c.WH(instruction_contrast &gt; 0, :))';
+warm_open_during_instruct = nanmean(c.WO(instruction_contrast &gt; 0, :))';
+
+X = [hot_hidden_during_instruct hot_open_during_instruct warm_hidden_during_instruct warm_open_during_instruct ];
+names = {<span class="string">'Hot Hidden'</span> <span class="string">'Hot Open'</span> <span class="string">'Warm Hidden'</span> <span class="string">'Warm Open'</span>};
+
+<span class="comment">% Create the figure</span>
+
+create_figure(<span class="string">'bars'</span>, 1, 2);
+barplot_columns(X, <span class="string">'nofig'</span>, <span class="string">'colors'</span>, {[1 0 0] [0 0 1] [1 .5 0] [0 .5 1]})
+set(gca, <span class="string">'XTickLabel'</span>, names);
+set(gca, <span class="string">'FontSize'</span>, 16);
+ylabel(<span class="string">'Pain'</span>);
+
+title(<span class="string">'Pain during instruction period'</span>);
+
+subplot(1, 2, 2);
+contrasts = [-1 1 0 0; 0 0 -1 1]';
+convalues = X * contrasts;
+connames = {<span class="string">'Hot'</span> <span class="string">'Warm'</span>};
+
+barplot_columns(convalues, <span class="string">'nofig'</span>, <span class="string">'colors'</span>, {[1 0 0] [1 .5 0]})
+set(gca, <span class="string">'FontSize'</span>, 16);
+set(gca, <span class="string">'XTickLabel'</span>, connames);
+title(<span class="string">'Open - Hidden'</span>);
+ylabel(<span class="string">'&lt; Analgesia      Hyperalgesia &gt;'</span>);
+</pre><pre class="codeoutput">----------------------------------------------
+Violin Plots of Contrasts
+----------------------------------------------
+Column   1:	Column   2:	Column   3:	Column   4:	
+---------------------------------------------
+Tests of column means against zero
+---------------------------------------------
+      Name       Mean_Value    Std_Error      T           P         Cohens_d
+    _________    __________    _________    ______    __________    ________
+
+    'Col   1'      6.2625       0.22782      27.49    2.2204e-15     6.3065 
+    'Col   2'      5.7536       0.27784     20.708     5.277e-14     4.7508 
+    'Col   3'      2.5417       0.24867     10.221    6.3738e-09     2.3448 
+    'Col   4'      2.2509       0.18292     12.306    3.3631e-10     2.8231 
+
+
+ans = 
+
+  struct with fields:
+
+         fig_han: [1&times;1 struct]
+        axis_han: [1&times;1 Axes]
+        bar_han1: [1&times;1 Bar]
+         bar_han: {[1&times;1 Bar]  [1&times;1 Bar]  [1&times;1 Bar]  [1&times;1 Bar]}
+    errorbar_han: {1&times;4 cell}
+      point_han1: {19&times;4 cell}
+       point_han: {19&times;4 cell}
+    star_handles: [3.0171 4.0171 5.0171 6.0171]
+
+Column   1:	Column   2:	
+---------------------------------------------
+Tests of column means against zero
+---------------------------------------------
+      Name       Mean_Value    Std_Error       T          P        Cohens_d
+    _________    __________    _________    _______    ________    ________
+
+    'Col   1'     -0.50892      0.17928     -2.8386    0.010896    -0.65122
+    'Col   2'     -0.29077      0.20599     -1.4116     0.17512    -0.32384
+
+
+ans = 
+
+  struct with fields:
+
+         fig_han: [1&times;1 struct]
+        axis_han: [1&times;1 Axes]
+        bar_han1: [1&times;1 Bar]
+         bar_han: {[1&times;1 Bar]  [1&times;1 Bar]}
+    errorbar_han: {[1&times;1 ErrorBar]  [1&times;1 ErrorBar]}
+      point_han1: {19&times;2 cell}
+       point_han: {19&times;2 cell}
+    star_handles: [7.0171 8.0171]
+
+</pre><img vspace="5" hspace="5" src="atlas_2012_behavioral_plot_example_figure_02.png" alt=""> <h2 id="5">Section 4: Print table of means to save for later</h2><pre class="codeinput">printhdr(<span class="string">'Subject means by condition'</span>);
+
+print_matrix(X, names);
+</pre><pre class="codeoutput">----------------------------------------------
+Subject means by condition
+----------------------------------------------
+Hot Hidden	Hot Open	Warm Hidden	Warm Open	
+7.7434	7.6649	3.4980	3.7670	
+7.0654	7.2886	0.9093	1.1000	
+7.1419	6.6953	0.9672	1.1408	
+4.8907	5.5646	2.3020	2.8651	
+5.7341	5.2731	3.0744	1.7093	
+6.3956	6.4080	2.1806	2.2199	
+6.3687	5.0437	3.4581	2.3563	
+5.0163	4.8375	3.5910	2.9589	
+7.0158	5.4512	3.4540	1.4902	
+5.8302	4.3915	3.8674	2.3687	
+6.1806	6.1972	1.4840	1.3972	
+7.4499	7.2845	3.1915	3.8728	
+6.9351	7.0778	2.0297	2.3212	
+7.4499	5.8147	4.9444	2.8907	
+4.3837	3.9956	1.7424	1.8271	
+4.8535	4.3408	2.0152	2.5465	
+5.4943	3.5429	1.9739	1.3744	
+6.2695	6.8587	2.1083	2.2654	
+6.7698	5.5884	1.5000	2.2953	
+
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Atlas 2012 behavioral data plot
+% This example shows how to plot line plots for multiple conditions with
+% error bars and calculate and plot violin plots for contrasts, with
+% missing data.
+
+%% General instructions
+%
+% Before you start, the CANlab_Core_Tools must be added to your path with
+% subfolders. Otherwise, you will get errors.
+%
+% Sample datasets are in the "Sample_datasets" folder in CANlab_Core_Tools.
+%
+% This example will use emotion regulation data in the file: 
+% "Atlas_2012_REMI_behavioral_data.mat"
+% The dataset is a series of pain ratings from N = 19 participants
+% before, during, and after open or hidden remifentanil delivery.
+% 
+% These data were published in:
+% Atlas, L. Y., Whittington, R., Lindquist, M., Wielgosz, J., Sonty, N., Wager, T. D. 
+% (2012) Dissociable influences of opiates and expectations on pain. 
+% Journal of Neuroscience. 32(23): p. 8053-8064.
+%
+%
+% Here are a couple of helpful functions we will use for display:
+% (you can ignore these.)
+dashes = 'REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH';
+printhdr = @(str) fprintf('%s\n%s\n%s\n', dashes, str, dashes);
+
+%% Section 1: Load the data
+%
+% The function load_image_set has a number of pre-defined image sets that
+% you can load with one simple command.  This is the easiest way to load
+% sample data.  The images must be on your Matlab path for this to work.
+
+filename = which('Atlas_2012_REMI_behavioral_data.mat');
+if isempty(filename), error('Data file is not on path!'); end
+
+c = load(filename);
+
+% c is an ad hoc data structure. The relevant fields are:
+% c =
+%
+%            HO: [18x19 double]  TRIALS X SUBJECTS HOT OPEN PAIN SCORES
+%            WO: [18x19 double]   TRIALS X SUBJECTS WARM OPEN PAIN SCORES
+%            HH: [18x19 double] TRIALS X SUBJECTS HOT HIDDEN PAIN SCORES
+%            WH: [18x19 double] TRIALS X SUBJECTS WARM HIDDEN PAIN SCORES
+
+% It would be a very good idea to put these data in a canlab_dataset
+% object, and then use the methods associated with that object to plot.
+
+%% Section 2: Make a line plot of data by condition and time (trial)
+%
+printhdr('Line Plot by Condition');
+
+% Set up the figure. create_figure is a function in the canlab toolbox that
+% sets figure defaults and handles in a convenient way.
+
+create_figure('remi pain', 1, 2);
+
+% Draw some boxes to shade the background and mark off every other run
+
+h1 = drawbox(.5, 3, 1, 7, [.5 .5 .5]); set(h1, 'FaceAlpha', .2, 'EdgeColor', 'none');
+h1 = drawbox(6.5, 3, 1, 7, [.5 .5 .5]); set(h1, 'FaceAlpha', .2, 'EdgeColor', 'none');
+h1 = drawbox(12.5, 3, 1, 7, [.5 .5 .5]); set(h1, 'FaceAlpha', .2, 'EdgeColor', 'none');
+
+% Draw the box showing the drug delivery (and instruction) time 
+
+h1 = drawbox(3.5, 9, 1, .3, [.4 .4 .4]); set(h1, 'FaceAlpha', 1, 'EdgeColor', [.2 .2 .2]);
+
+% Plot one line for each condition
+
+h = lineplot_columns(c.HH', 'color', 'r');
+h2 = lineplot_columns(c.HO', 'color', 'b');
+
+h3 = lineplot_columns(c.WH', 'color', [1 .5 0]);
+h4 = lineplot_columns(c.WO', 'color', [0 .5 1]);
+
+% Set legend, labels
+
+xlabel('Trial number');
+ylabel('Pain rating');
+set(gca, 'YLim', [1 8]);
+
+legend([h.line_han h2.line_han h3.line_han h4.line_han], {'Hot Hidden' 'Hot Open' 'Warm Hidden' 'Warm Open'});
+
+subplot(2, 2, 2)
+% Now plot the trial-by-trial open vs. hidden differences
+
+hot_openvs_hidden = (c.HO - c.HH)';
+
+h = lineplot_columns(hot_openvs_hidden, 'color', 'r');
+
+h1 = drawbox(.5, 3, -1.7, 2, [.5 .5 .5]); set(h1, 'FaceAlpha', .2, 'EdgeColor', 'none');
+h1 = drawbox(6.5, 3, -1.7, 2, [.5 .5 .5]); set(h1, 'FaceAlpha', .2, 'EdgeColor', 'none');
+h1 = drawbox(12.5, 3, -1.7, 2, [.5 .5 .5]); set(h1, 'FaceAlpha', .2, 'EdgeColor', 'none');
+
+h1 = drawbox(3.5, 9, -1.7, .3, [.4 .4 .4]); set(h1, 'FaceAlpha', 1, 'EdgeColor', [.2 .2 .2]);
+h1 = plot_horizontal_line(0);
+set(h1, 'LineStyle', 'REPLACE_WITH_DASH_DASH');
+
+set(gca, 'FontSize', 18);
+title('Open vs. Hidden Effect');
+ylabel('Pain');
+
+drawnow, snapnow
+
+%% Section 3: Make bar/violin plots of the contrasts
+%
+printhdr('Violin Plots of Contrasts');
+
+% Identify trials when instructions/drug are being delivered. 
+
+instruction_contrast = [-1 -1 -1 1 1 1 1 1 1 1 1 1 -1 -1 -1 -1 -1 -1]';
+
+% Get means for this period for each subject x condition.
+% Avoid NaNs by omitting case/subject-wise.
+
+hot_hidden_during_instruct = nanmean(c.HH(instruction_contrast > 0, :))';
+hot_open_during_instruct = nanmean(c.HO(instruction_contrast > 0, :))';
+warm_hidden_during_instruct = nanmean(c.WH(instruction_contrast > 0, :))';
+warm_open_during_instruct = nanmean(c.WO(instruction_contrast > 0, :))';
+
+X = [hot_hidden_during_instruct hot_open_during_instruct warm_hidden_during_instruct warm_open_during_instruct ];
+names = {'Hot Hidden' 'Hot Open' 'Warm Hidden' 'Warm Open'};
+
+% Create the figure
+
+create_figure('bars', 1, 2); 
+barplot_columns(X, 'nofig', 'colors', {[1 0 0] [0 0 1] [1 .5 0] [0 .5 1]})
+set(gca, 'XTickLabel', names);
+set(gca, 'FontSize', 16);
+ylabel('Pain');
+
+title('Pain during instruction period');
+
+subplot(1, 2, 2);
+contrasts = [-1 1 0 0; 0 0 -1 1]';
+convalues = X * contrasts;
+connames = {'Hot' 'Warm'};
+
+barplot_columns(convalues, 'nofig', 'colors', {[1 0 0] [1 .5 0]})
+set(gca, 'FontSize', 16);
+set(gca, 'XTickLabel', connames);
+title('Open - Hidden');
+ylabel('< Analgesia      Hyperalgesia >');
+
+%% Section 4: Print table of means to save for later
+%
+printhdr('Subject means by condition');
+
+print_matrix(X, names);
+
+
+##### SOURCE END #####
+--></body></html>

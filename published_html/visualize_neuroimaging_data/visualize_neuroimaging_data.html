@@ -1,0 +1,407 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>HOW_DO_I_VISUALIZE_DATA</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-07-17"><meta name="DC.source" content="visualize_neuroimaging_data.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>HOW_DO_I_VISUALIZE_DATA</h1><!--introduction--><p>The help file shows you how to display neuroimaging data for publication by marianne reddan, 2016</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">General instructions</a></li><li><a href="#2">Section 1: Load in data and quick view</a></li><li><a href="#3">Plot slices with canlab_results_fmridisplay</a></li><li><a href="#4">For greater control over the slices displayed, use montage</a></li><li><a href="#5">For 3D Surface Plots</a></li><li><a href="#6">For plotting voxel plots of ROIs use roi_contour_map</a></li></ul></div><h2 id="1">General instructions</h2><p>-----------------------------------------------------------------------</p><p>Before you start, the CANlab_Core_Tools must be added to your path with subfolders. Otherwise, you will get errors.</p><p>This example will use the neurologic pain signature (NPS): "weights_NSF_grouppred_cvpcr" %NOTE TO TOR: This is currently in masks private</p><p>These data were published in: Wager, T. D., Atlas, L. Y., Lindquist, M. A., Roy, M., Woo, C.W., &amp; Kross, E. (2013). An fMRI-Based Neurologic Signature of Physical Pain. New England Journal of Medicine, 368:1388-97.</p><pre class="codeinput"><span class="comment">% ----------------------------------------------</span>
+</pre><h2 id="2">Section 1: Load in data and quick view</h2><p>---------------------------------------------- Load in the image (any .nii or img) as an fmri_data object</p><pre class="codeinput">nps = fmri_data(which(<span class="string">'weights_NSF_grouppred_cvpcr.img'</span>));
+
+<span class="comment">% Quickly dispaly it and eyeball its properties</span>
+figure; plot(nps)
+snapnow
+
+close <span class="string">all</span>;
+<span class="comment">% ----------------------------------------------</span>
+</pre><pre class="codeoutput">Using default mask: /Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/brainmask.nii
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 417440 bytes
+Loading image number:     1
+Elapsed time is 0.009003 seconds.
+Image names entered, but fullpath attribute is empty. Getting path info.
+
+SPM12: spm_check_registration (v6245)              03:29:58 - 17/07/2018
+========================================================================
+Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
+
+ans =
+
+     []
+
+</pre><img vspace="5" hspace="5" src="visualize_neuroimaging_data_01.png" alt=""> <img vspace="5" hspace="5" src="visualize_neuroimaging_data_02.png" alt=""> <img vspace="5" hspace="5" src="visualize_neuroimaging_data_03.png" alt=""> <h2 id="3">Plot slices with canlab_results_fmridisplay</h2><p>---------------------------------------------- You must convert the fmri_data object to a region object This takes a lot of memory, and can hang if you have too little.</p><pre class="codeinput">figure; o2 = canlab_results_fmridisplay(region(nps),<span class="string">'noverbose'</span>);
+snapnow
+
+<span class="comment">% Alternatively, display the slices you want first, then add image data</span>
+<span class="comment">% This function has advanced control like outlining blobs, transparency</span>
+<span class="comment">% overlays</span>
+figure; o2 = canlab_results_fmridisplay([],<span class="string">'noverbose'</span>);
+o2=addblobs(o2,region(nps),<span class="string">'color'</span>,[.5 0 .5],<span class="string">'outline'</span>,<span class="string">'linewidth'</span>, 2,<span class="string">'transvalue'</span>, .75)
+snapnow
+
+<span class="comment">% Change the slices with 'montagetype' function</span>
+figure; o2 = canlab_results_fmridisplay(region(nps),<span class="string">'montagetype'</span>,<span class="string">'compact2'</span>,<span class="string">'noverbose'</span>);
+snapnow
+close <span class="string">all</span>;
+<span class="comment">% ----------------------------------------------</span>
+</pre><pre class="codeoutput">Grouping contiguous voxels:  57 regions
+sagittal montage: 334 voxels displayed, 9526 not displayed on these slices
+sagittal montage: 367 voxels displayed, 9493 not displayed on these slices
+axial montage: 2231 voxels displayed, 7629 not displayed on these slices
+axial montage: 2397 voxels displayed, 7463 not displayed on these slices
+sagittal montage: 334 voxels displayed, 9526 not displayed on these slices
+sagittal montage: 367 voxels displayed, 9493 not displayed on these slices
+axial montage: 2231 voxels displayed, 7629 not displayed on these slices
+axial montage: 2397 voxels displayed, 7463 not displayed on these slices
+</pre><img vspace="5" hspace="5" src="visualize_neuroimaging_data_04.png" alt=""> <pre class="codeoutput">Grouping contiguous voxels:  57 regions
+sagittal montage: 334 voxels displayed, 9526 not displayed on these slices
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+sagittal montage: 367 voxels displayed, 9493 not displayed on these slices
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+sagittal montage: 360 voxels displayed, 9500 not displayed on these slices
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+axial montage: 2231 voxels displayed, 7629 not displayed on these slices
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+axial montage: 2397 voxels displayed, 7463 not displayed on these slices
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+WARNING: CONTOUR PLOTS DO NOT SEEM TO HAVE ADJUSTABLE TRANSPARENCY IN R2014B+ MATLAB
+
+o2 = 
+
+  fmridisplay with properties:
+
+            overlay: '/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img'
+              SPACE: [1&times;1 struct]
+    activation_maps: {[1&times;1 struct]}
+            montage: {1&times;5 cell}
+            surface: {}
+          orthviews: {}
+            history: {}
+    history_descrip: []
+    additional_info: ''
+
+</pre><img vspace="5" hspace="5" src="visualize_neuroimaging_data_05.png" alt=""> <pre class="codeoutput">Grouping contiguous voxels:  57 regions
+Warning: Unknown input string option:montagetype 
+axial montage: 3527 voxels displayed, 6333 not displayed on these slices
+Warning: Unknown input string option:montagetype 
+sagittal montage: 701 voxels displayed, 9159 not displayed on these slices
+axial montage: 3527 voxels displayed, 6333 not displayed on these slices
+sagittal montage: 701 voxels displayed, 9159 not displayed on these slices
+</pre><img vspace="5" hspace="5" src="visualize_neuroimaging_data_06.png" alt=""> <img vspace="5" hspace="5" src="visualize_neuroimaging_data_07.png" alt=""> <h2 id="4">For greater control over the slices displayed, use montage</h2><p>---------------------------------------------- 'slice_range' allows you to select the x y z coordinates give it a range of values, and determine the 'spacing' between them</p><pre class="codeinput">figure;o2 = fmridisplay;
+o2 = montage(o2, <span class="string">'axial'</span>, <span class="string">'slice_range'</span>, [-10 10], <span class="string">'onerow'</span>, <span class="string">'spacing'</span>, 5);
+o2 = montage(o2, <span class="string">'coronal'</span>, <span class="string">'slice_range'</span>, [-6 0], <span class="string">'onerow'</span>,<span class="string">'spacing'</span>, 3);
+o2 = montage(o2, <span class="string">'saggital'</span>, <span class="string">'slice_range'</span>, [-10 10], <span class="string">'spacing'</span>, 5);
+o2=addblobs(o2,region(nps));
+snapnow
+close <span class="string">all</span>
+
+<span class="comment">% ----------------------------------------------</span>
+</pre><pre class="codeoutput">Load underlay. Define axes. Ready. 
+Load underlay. Define axes. Ready. 
+Load underlay. Define axes. Ready. 
+Grouping contiguous voxels:  57 regions
+axial montage: 2318 voxels displayed, 7542 not displayed on these slices
+coronal montage: 1032 voxels displayed, 8828 not displayed on these slices
+sagittal montage: 1726 voxels displayed, 8134 not displayed on these slices
+</pre><img vspace="5" hspace="5" src="visualize_neuroimaging_data_08.png" alt=""> <img vspace="5" hspace="5" src="visualize_neuroimaging_data_09.png" alt=""> <img vspace="5" hspace="5" src="visualize_neuroimaging_data_10.png" alt=""> <img vspace="5" hspace="5" src="visualize_neuroimaging_data_11.png" alt=""> <h2 id="5">For 3D Surface Plots</h2><p>---------------------------------------------- There are multple options for producing 3D brains.</p><pre class="codeinput"><span class="comment">% See fmri_data.isosurface</span>
+
+<span class="comment">% --------</span>
+<span class="comment">% OPT1 - Plot on a 'slab' of brain like Reddan, Lindquist, Wager (2016)</span>
+<span class="comment">% Effect Size paper</span>
+<span class="comment">% --------</span>
+<span class="comment">% First set up your underlay brain image (anatomical)</span>
+ovlname = <span class="string">'keuken_2014_enhanced_for_underlay'</span>; <span class="comment">%this image is in CanlabCore</span>
+ycut_mm = -30; <span class="comment">% Where to cut brain on Y axis</span>
+coords = [0 ycut_mm 0];
+coords = [0 0 20];
+anat = fmri_data(which(<span class="string">'keuken_2014_enhanced_for_underlay.img'</span>));
+<span class="comment">% Next set up the surface plot of your data</span>
+figure;
+set(gcf, <span class="string">'Tag'</span>, <span class="string">'surface'</span>);
+f1 = gcf;
+p = isosurface(anat, <span class="string">'thresh'</span>, 140, <span class="string">'nosmooth'</span>, <span class="string">'zlim'</span>, [-Inf 20]);
+view(137, 26);
+lightRestoreSingle
+colormap <span class="string">gray</span>;
+brighten(.6);
+set(p, <span class="string">'FaceAlpha'</span>, 1);
+drawnow
+set(f1, <span class="string">'Color'</span>, <span class="string">'w'</span>);
+[mip, x, y, voldata] = pattern_surf_plot_mip(nps, <span class="string">'nosmooth'</span>);
+figure(f1)
+hold <span class="string">on</span>;
+<span class="comment">% Next rescale your surface data to match anatomical brainmap we want (kludge)</span>
+han = surf(x, y, mip .* 70 + 20);
+set(han, <span class="string">'AlphaDataMapping'</span>, <span class="string">'scaled'</span>, <span class="string">'AlphaData'</span>, abs(mip) .^ .5, <span class="string">'FaceColor'</span>, <span class="string">'interp'</span>, <span class="string">'FaceAlpha'</span>, <span class="string">'interp'</span>, <span class="string">'EdgeColor'</span>, <span class="string">'interp'</span>);
+set(han, <span class="string">'EdgeColor'</span>, <span class="string">'none'</span>);
+<span class="comment">% Set colormap for plot</span>
+def = colormap(<span class="string">'parula'</span>);
+gray = colormap(<span class="string">'gray'</span>);
+cm = [def; gray];
+colormap(cm);
+view(147, 50);
+axis <span class="string">off</span>
+<span class="comment">% Apply to brain</span>
+drawnow; snapnow
+close <span class="string">all</span>;
+
+<span class="comment">% ---------</span>
+<span class="comment">% OPT2 - Use default surf plot option in canlab_results_fmridisplay_marianne</span>
+<span class="comment">% --------</span>
+figure;o2=canlab_results_fmridisplay_marianne(region(nps),<span class="string">'montagetype'</span>,<span class="string">'full_surf'</span>,<span class="string">'noverbose'</span>);
+snapnow;
+
+<span class="comment">% --------</span>
+<span class="comment">% OPT3 - function tor_3D, or export your data to Caret</span>
+<span class="comment">% --------</span>
+
+<span class="comment">% ----------------------------------------------</span>
+</pre><pre class="codeoutput">Using default mask: /Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/brainmask.nii
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 32864076 bytes
+Loading image number:     1
+Elapsed time is 0.377344 seconds.
+Image names entered, but fullpath attribute is empty. Getting path info.
+Returning coordinates in mm and meshgrid matrices.
+
+ans = 
+
+  Light with properties:
+
+       Color: [1 1 1]
+       Style: 'infinite'
+    Position: [0.8669 0.9296 0.6200]
+     Visible: 'on'
+
+  Use GET to show all properties
+
+</pre><img vspace="5" hspace="5" src="visualize_neuroimaging_data_12.png" alt=""> <img vspace="5" hspace="5" src="visualize_neuroimaging_data_13.png" alt=""> <pre class="codeoutput">Grouping contiguous voxels:  57 regions
+</pre><pre class="codeoutput error">Undefined function 'canlab_results_fmridisplay_marianne' for input arguments of type 'region'.
+
+Error in visualize_neuroimaging_data (line 112)
+figure;o2=canlab_results_fmridisplay_marianne(region(nps),'montagetype','full_surf','noverbose');
+</pre><h2 id="6">For plotting voxel plots of ROIs use roi_contour_map</h2><p>---------------------------------------------- Convert image into clusters with region() Determine which clusters you want to plot and select them within the cluster object e.g., cl(NUMBEROFCLUSTER(S))</p><pre class="codeinput">figure;<span class="keyword">for</span> i = 1:2, cl = region(nps); <span class="keyword">end</span>
+info = roi_contour_map([cl(6), cl(5), cl(20), cl(37),cl(49)], <span class="string">'cluster'</span>, <span class="string">'use_same_range'</span>, <span class="string">'colorbar'</span>);
+snapnow
+
+<span class="comment">% Note if you get errors here, check the number of voxels in your cluster.</span>
+<span class="comment">% If less than 2, you cannot use this function.</span>
+<span class="comment">% Here is an example of how to check</span>
+<span class="keyword">for</span> i=1:57;disp(sprintf(<span class="string">'cluster %d is %d voxels'</span>,i,cl(i).numVox));<span class="keyword">end</span>
+
+<span class="comment">% Print out the clusters</span>
+table=cluster_table(cl, 0, 0,<span class="string">'writefile'</span>,<span class="string">'Name_ClusterTable'</span>);
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% HOW_DO_I_VISUALIZE_DATA
+% The help file shows you how to display neuroimaging data for publication
+% by marianne reddan, 2016
+
+%% General instructions
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+%
+% Before you start, the CANlab_Core_Tools must be added to your path with
+% subfolders. Otherwise, you will get errors.
+%
+% This example will use the neurologic pain signature (NPS): 
+% "weights_NSF_grouppred_cvpcr" %NOTE TO TOR: This is currently in masks private
+% 
+% These data were published in:
+% Wager, T. D., Atlas, L. Y., Lindquist, M. A., Roy, M., Woo, C.W., &
+% Kross, E. (2013). An fMRI-Based Neurologic Signature of Physical Pain. 
+% New England Journal of Medicine, 368:1388-97.
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%% Section 1: Load in data and quick view
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% Load in the image (any .nii or img) as an fmri_data object
+nps = fmri_data(which('weights_NSF_grouppred_cvpcr.img'));
+
+% Quickly dispaly it and eyeball its properties
+figure; plot(nps)
+snapnow
+
+close all;
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%% Plot slices with canlab_results_fmridisplay
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% You must convert the fmri_data object to a region object
+% This takes a lot of memory, and can hang if you have too little.
+figure; o2 = canlab_results_fmridisplay(region(nps),'noverbose');
+snapnow
+
+% Alternatively, display the slices you want first, then add image data
+% This function has advanced control like outlining blobs, transparency
+% overlays
+figure; o2 = canlab_results_fmridisplay([],'noverbose');
+o2=addblobs(o2,region(nps),'color',[.5 0 .5],'outline','linewidth', 2,'transvalue', .75)
+snapnow
+
+% Change the slices with 'montagetype' function
+figure; o2 = canlab_results_fmridisplay(region(nps),'montagetype','compact2','noverbose');
+snapnow
+close all;
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%% For greater control over the slices displayed, use montage
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% 'slice_range' allows you to select the x y z coordinates
+% give it a range of values, and determine the 'spacing' between them
+figure;o2 = fmridisplay;
+o2 = montage(o2, 'axial', 'slice_range', [-10 10], 'onerow', 'spacing', 5);
+o2 = montage(o2, 'coronal', 'slice_range', [-6 0], 'onerow','spacing', 3);
+o2 = montage(o2, 'saggital', 'slice_range', [-10 10], 'spacing', 5);
+o2=addblobs(o2,region(nps));
+snapnow
+close all
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%% For 3D Surface Plots
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% There are multple options for producing 3D brains.
+
+% See fmri_data.isosurface
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% OPT1 - Plot on a 'slab' of brain like Reddan, Lindquist, Wager (2016)
+% Effect Size paper
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% First set up your underlay brain image (anatomical)
+ovlname = 'keuken_2014_enhanced_for_underlay'; %this image is in CanlabCore
+ycut_mm = -30; % Where to cut brain on Y axis
+coords = [0 ycut_mm 0];
+coords = [0 0 20];
+anat = fmri_data(which('keuken_2014_enhanced_for_underlay.img'));
+% Next set up the surface plot of your data
+figure; 
+set(gcf, 'Tag', 'surface'); 
+f1 = gcf;
+p = isosurface(anat, 'thresh', 140, 'nosmooth', 'zlim', [-Inf 20]);
+view(137, 26);
+lightRestoreSingle
+colormap gray; 
+brighten(.6); 
+set(p, 'FaceAlpha', 1);
+drawnow
+set(f1, 'Color', 'w');
+[mip, x, y, voldata] = pattern_surf_plot_mip(nps, 'nosmooth');
+figure(f1)
+hold on;
+% Next rescale your surface data to match anatomical brainmap we want (kludge)
+han = surf(x, y, mip .* 70 + 20);
+set(han, 'AlphaDataMapping', 'scaled', 'AlphaData', abs(mip) .^ .5, 'FaceColor', 'interp', 'FaceAlpha', 'interp', 'EdgeColor', 'interp');
+set(han, 'EdgeColor', 'none');
+% Set colormap for plot
+def = colormap('parula');
+gray = colormap('gray');
+cm = [def; gray];
+colormap(cm);
+view(147, 50);
+axis off
+% Apply to brain
+drawnow; snapnow
+close all;
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% OPT2 - Use default surf plot option in canlab_results_fmridisplay_marianne
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+figure;o2=canlab_results_fmridisplay_marianne(region(nps),'montagetype','full_surf','noverbose');
+snapnow;
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% OPT3 - function tor_3D, or export your data to Caret
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%% For plotting voxel plots of ROIs use roi_contour_map
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% Convert image into clusters with region()
+% Determine which clusters you want to plot and select them within the cluster object e.g., cl(NUMBEROFCLUSTER(S))
+figure;for i = 1:2, cl = region(nps); end
+info = roi_contour_map([cl(6), cl(5), cl(20), cl(37),cl(49)], 'cluster', 'use_same_range', 'colorbar');
+snapnow
+
+% Note if you get errors here, check the number of voxels in your cluster.
+% If less than 2, you cannot use this function.
+% Here is an example of how to check
+for i=1:57;disp(sprintf('cluster %d is %d voxels',i,cl(i).numVox));end
+
+% Print out the clusters
+table=cluster_table(cl, 0, 0,'writefile','Name_ClusterTable');
+##### SOURCE END #####
+--></body></html>

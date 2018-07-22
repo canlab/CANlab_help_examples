@@ -1,0 +1,209 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>canlab_help_4_write_data_to_image_file_format</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-07-17"><meta name="DC.source" content="canlab_help_4_write_data_to_image_file_format.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">HOW TO WRITE FMRI_DATA TO IMAGE FILE ON DISK</a></li><li><a href="#2">1) load sample mask</a></li><li><a href="#3">grab one image from those 7</a></li><li><a href="#4">write to file</a></li><li><a href="#5">read back in and view to check its correct</a></li><li><a href="#6">2) load sample statistical image</a></li><li><a href="#7">threshold at an arbitrary threshold.  This will create a statistic_image</a></li><li><a href="#8">write to file</a></li><li><a href="#9">read back in and view to check its correct</a></li></ul></div><h2 id="1">HOW TO WRITE FMRI_DATA TO IMAGE FILE ON DISK</h2><pre class="codeinput"><span class="comment">% canlabcore fmri data objects can be easily written to standard image file</span>
+<span class="comment">% formats.  The main function for this is write()</span>
+
+<span class="comment">% this walkthrough shows how to do this for 1) a mask image, and 2) a</span>
+<span class="comment">% statistic image</span>
+</pre><h2 id="2">1) load sample mask</h2><p>You will need the Neuroimaging_Pattern_Masks repository installed to find these images.</p><pre class="codeinput">dat = load_image_set(<span class="string">'bucknerlab'</span>); <span class="comment">% loads 7 masks from Yeo et al.</span>
+</pre><pre class="codeoutput">Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Combined_multiatlas_ROI_masks/rBucknerlab_7clusters_SPMAnat_Other_combined.img
+</pre><h2 id="3">grab one image from those 7</h2><pre class="codeinput">oneimg = dat.get_wh_image(1);
+</pre><h2 id="4">write to file</h2><p>see help for write() for more options</p><pre class="codeinput">fname = <span class="string">'dummy.nii'</span>;  <span class="comment">% outname file name.  the extension (.nii, .img) determines the format.</span>
+
+write(oneimg, <span class="string">'fname'</span>, fname);
+</pre><pre class="codeoutput">Writing: 
+dummy.nii
+</pre><h2 id="5">read back in and view to check its correct</h2><pre class="codeinput">orthviews(fmri_data(fname))
+</pre><pre class="codeoutput">Using default mask: /Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/brainmask.nii
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 1409312 bytes
+Loading image number:     1
+Elapsed time is 0.016302 seconds.
+Image names entered, but fullpath attribute is empty. Getting path info.
+
+SPM12: spm_check_registration (v6245)              03:28:36 - 17/07/2018
+========================================================================
+Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
+Grouping contiguous voxels:   3 regions
+
+ans =
+
+  1&times;1 cell array
+
+    {1&times;3 region}
+
+</pre><img vspace="5" hspace="5" src="canlab_help_4_write_data_to_image_file_format_01.png" alt=""> <h2 id="6">2) load sample statistical image</h2><pre class="codeinput">dat = load_image_set(<span class="string">'kragelemotion'</span>); <span class="comment">% loads 7 masks from Kragel et al.</span>
+
+<span class="comment">% grab one image from those 7</span>
+oneimg = dat.get_wh_image(1);
+</pre><pre class="codeoutput">Loaded images:
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2015_Kragel_emotionClassificationBPLS/mean_3comp_amused_group_emotion_PLS_beta_BSz_10000it.img
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2015_Kragel_emotionClassificationBPLS/mean_3comp_angry_group_emotion_PLS_beta_BSz_10000it.img
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2015_Kragel_emotionClassificationBPLS/mean_3comp_content_group_emotion_PLS_beta_BSz_10000it.img
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2015_Kragel_emotionClassificationBPLS/mean_3comp_fearful_group_emotion_PLS_beta_BSz_10000it.img
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2015_Kragel_emotionClassificationBPLS/mean_3comp_neutral_group_emotion_PLS_beta_BSz_10000it.img
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2015_Kragel_emotionClassificationBPLS/mean_3comp_sad_group_emotion_PLS_beta_BSz_10000it.img
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2015_Kragel_emotionClassificationBPLS/mean_3comp_surprised_group_emotion_PLS_beta_BSz_10000it.img
+</pre><h2 id="7">threshold at an arbitrary threshold.  This will create a statistic_image</h2><pre class="codeinput"><span class="comment">% keep values less than -.0005 or greater than .0005</span>
+si = threshold(oneimg, [-.0005 .0005], <span class="string">'raw-outside'</span>);
+
+<span class="comment">% check that it looks fine</span>
+orthviews(si);
+</pre><pre class="codeoutput">Keeping vals outside of -0.001 to 0.001: 474 elements remain
+
+SPM12: spm_check_registration (v6245)              03:28:39 - 17/07/2018
+========================================================================
+Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
+Grouping contiguous voxels:  83 regions
+</pre><img vspace="5" hspace="5" src="canlab_help_4_write_data_to_image_file_format_02.png" alt=""> <h2 id="8">write to file</h2><pre class="codeinput">fname = <span class="string">'dummy.nii'</span>;  <span class="comment">% outname file name.  the extension (.nii, .img) determines the format.</span>
+
+write(si, <span class="string">'fname'</span>, fname, <span class="string">'thresh'</span>) <span class="comment">% will write the *thresholded* image</span>
+</pre><pre class="codeoutput">Warning: Thresholding only works with statistic_image objects.
+Writing: 
+dummy.nii
+</pre><h2 id="9">read back in and view to check its correct</h2><pre class="codeinput">orthviews(fmri_data(fname))
+</pre><pre class="codeoutput">Using default mask: /Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/brainmask.nii
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 188152 bytes
+Loading image number:     1
+Elapsed time is 0.008040 seconds.
+Image names entered, but fullpath attribute is empty. Getting path info.
+
+SPM12: spm_check_registration (v6245)              03:28:41 - 17/07/2018
+========================================================================
+Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
+Grouping contiguous voxels:  83 regions
+
+ans =
+
+  1&times;1 cell array
+
+    {1&times;83 region}
+
+</pre><img vspace="5" hspace="5" src="canlab_help_4_write_data_to_image_file_format_03.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% HOW TO WRITE FMRI_DATA TO IMAGE FILE ON DISK
+
+% canlabcore fmri data objects can be easily written to standard image file
+% formats.  The main function for this is write()
+
+% this walkthrough shows how to do this for 1) a mask image, and 2) a
+% statistic image
+
+%% 1) load sample mask
+% You will need the Neuroimaging_Pattern_Masks repository installed to find
+% these images.
+
+dat = load_image_set('bucknerlab'); % loads 7 masks from Yeo et al.
+
+%% grab one image from those 7
+
+oneimg = dat.get_wh_image(1);
+
+%% write to file
+% see help for write() for more options
+
+fname = 'dummy.nii';  % outname file name.  the extension (.nii, .img) determines the format.
+
+write(oneimg, 'fname', fname);  
+
+%% read back in and view to check its correct
+
+orthviews(fmri_data(fname))
+
+
+%% 2) load sample statistical image
+
+dat = load_image_set('kragelemotion'); % loads 7 masks from Kragel et al.
+
+% grab one image from those 7
+oneimg = dat.get_wh_image(1);
+
+%% threshold at an arbitrary threshold.  This will create a statistic_image
+
+% keep values less than -.0005 or greater than .0005
+si = threshold(oneimg, [-.0005 .0005], 'raw-outside'); 
+
+% check that it looks fine
+orthviews(si); 
+
+%% write to file
+
+fname = 'dummy.nii';  % outname file name.  the extension (.nii, .img) determines the format.
+
+write(si, 'fname', fname, 'thresh') % will write the *thresholded* image
+
+%% read back in and view to check its correct
+orthviews(fmri_data(fname))
+
+##### SOURCE END #####
+--></body></html>

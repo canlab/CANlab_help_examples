@@ -1,0 +1,666 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Make polar wedge plots for signatures</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-07-17"><meta name="DC.source" content="make_polar_wedge_plots_for_signatures.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Make polar wedge plots for signatures</h1><!--introduction--><p>This example shows how to load several signatures and plot their cosine similarities with a set of resting-state networks, to interpret the signatures in terms of networks.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">General instructions</a></li><li><a href="#2">Load the signature patterns</a></li><li><a href="#3">Plot cosine similarity with the Buckner Lab networks</a></li><li><a href="#4">Try using stripes for negative values</a></li><li><a href="#5">Polar plot style</a></li><li><a href="#6">We can also make polar and wedge plots for averages across individual subject maps.</a></li><li><a href="#7">Apply the PLS signatures from Kragel et al. 2018 to the emotion regulation dataset</a></li></ul></div><h2 id="1">General instructions</h2><p>Before you start, the CANlab_Core_Tools must be added to your path with subfolders. Otherwise, you will get errors.</p><p>Sample datasets are in the "Sample_datasets" folder in CANlab_Core_Tools.</p><p>This example will use signatures, including the NPS, PINES, and VPS. This requires the canlab_private repository, which has the signatures, for the example to run correctly. You can adapt it for any pattern you are interested in, though.</p><h2 id="2">Load the signature patterns</h2><pre class="codeinput">[npsobj, npsobjnames] = load_image_set(<span class="string">'npsplus'</span>); <span class="comment">% 1 is NPS, 4 is SIIPS, 5 is PINES, 7 is VPS</span>
+wh = [1 5 7];
+
+k = length(wh);
+</pre><pre class="codeoutput">Loaded images:
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2013_Wager_NEJM_NPS/weights_NSF_grouppred_cvpcr.img
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2017_Lopez_Sola_Fibromyalgia/NPSp_Lopez-Sola_2017_PAIN.img
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2017_Lopez_Sola_Fibromyalgia/NPSn_Lopez-Sola_2017_PAIN.img
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2017_Woo_SIIPS1/nonnoc_v11_4_137subjmap_weighted_mean.nii
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2015_Chang_PLoSBiology_PINES/Rating_Weights_LOSO_2.nii
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2015_Woo_NatureComms_Rejection/dpsp_rejection_vs_others_weights_final.nii
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2016_Krishnan_eLife_VPS/bmrk4_VPS_unthresholded.nii
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2016_Krishnan_eLife_VPS/Krishnan_2016_VPS_bmrk4_Without_Occipital_Lobe.nii
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2016_Eisenbarth_JNeuro_autonomic_patterns/ANS_Eisenbarth_JN_2016_GSR_pattern.img
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2016_Eisenbarth_JNeuro_autonomic_patterns/ANS_Eisenbarth_JN_2016_HR_pattern.img
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2017_Lopez_Sola_Fibromyalgia/FM_Multisensory_wholebrain.nii
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2017_Lopez_Sola_Fibromyalgia/FM_pain_wholebrain.nii
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2017_Ashar_care_distress/Ashar_2017_empathic_care_marker.nii
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2017_Ashar_care_distress/Ashar_2017_empathic_distress_marker.nii
+</pre><h2 id="3">Plot cosine similarity with the Buckner Lab networks</h2><p>Orange colors are positive associations Blue colors are negative associations The radius of the 'spokes' is proportional to the cosine similarity, and area of the wedges is proportional to variance in signature weights explained by the network pattern</p><pre class="codeinput">create_figure(<span class="string">'Signature wedge plots'</span>, 1, k);
+
+<span class="keyword">for</span> i = 1:length(wh)
+
+    disp(npsobjnames{wh(i)})
+    disp(<span class="string">'-----------------------------------------'</span>);
+
+    subplot(1, k, i);
+    hold <span class="string">on</span>
+
+    mysignature = get_wh_image(npsobj, wh(i));
+
+    <span class="comment">% Plot similarity</span>
+    stats = image_similarity_plot(mysignature, <span class="string">'cosine_similarity'</span>, <span class="string">'bucknerlab_wholebrain'</span>, <span class="string">'colors'</span>, {[1 .7 0] [.3 0 .7]}, <span class="string">'bicolor'</span>);
+    title(npsobjnames{wh(i)});
+
+    <span class="comment">% Same, but use older polar plot style</span>
+    <span class="comment">% stats = image_similarity_plot(mysignature, 'cosine_similarity', 'bucknerlab_wholebrain', 'plotstyle', 'polar');</span>
+
+<span class="comment">%     %</span>
+<span class="comment">%     stats = image_similarity_plot(mysignature, 'cosine_similarity', 'bucknerlab_wholebrain', 'colors', {[1 .7 0]});</span>
+<span class="comment">%     title(npsobjnames{wh(i)});</span>
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">NPS
+-----------------------------------------
+Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Combined_multiatlas_ROI_masks/rBucknerlab_7clusters_SPMAnat_Other_combined.img
+Warning: Some images have zero values in some of the 22412 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+18869 
+Warning: Some images have zero values in some of the 23618 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+18069 
+Warning: Some images have zero values in some of the 17305 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+13976 
+Warning: Some images have zero values in some of the 19937 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+13180 
+Warning: Some images have zero values in some of the 15937 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+15547 
+Warning: Some images have zero values in some of the 27447 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+24495 
+Warning: Some images have zero values in some of the 37674 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+35479 
+
+ 	Name	Cosine Similarity	
+Visual	-0.0848	
+Somatomotor	0.0777	
+dAttention	-0.1019	
+vAttention	0.2058	
+Limbic	0.0091	
+Frontoparietal	0.0073	
+Default	-0.1033	
+PINES
+-----------------------------------------
+Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Combined_multiatlas_ROI_masks/rBucknerlab_7clusters_SPMAnat_Other_combined.img
+Warning: Some images have zero values in some of the 23618 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+735 
+Warning: Some images have zero values in some of the 17305 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+701 
+Warning: Some images have zero values in some of the 19937 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1403 
+Warning: Some images have zero values in some of the 15937 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+486 
+Warning: Some images have zero values in some of the 27447 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+888 
+Warning: Some images have zero values in some of the 37674 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+246 
+
+ 	Name	Cosine Similarity	
+Visual	0.0188	
+Somatomotor	-0.0147	
+dAttention	-0.0252	
+vAttention	0.0232	
+Limbic	0.0002	
+Frontoparietal	-0.0208	
+Default	0.0036	
+VPS
+-----------------------------------------
+Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Combined_multiatlas_ROI_masks/rBucknerlab_7clusters_SPMAnat_Other_combined.img
+Warning: Some images have zero values in some of the 23618 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+735 
+Warning: Some images have zero values in some of the 17305 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+701 
+Warning: Some images have zero values in some of the 19937 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1402 
+Warning: Some images have zero values in some of the 15937 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+486 
+Warning: Some images have zero values in some of the 27447 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+888 
+Warning: Some images have zero values in some of the 37674 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+245 
+
+ 	Name	Cosine Similarity	
+Visual	-0.0197	
+Somatomotor	-0.0329	
+dAttention	0.0166	
+vAttention	-0.0265	
+Limbic	-0.0163	
+Frontoparietal	-0.0187	
+Default	0.0382	
+</pre><img vspace="5" hspace="5" src="make_polar_wedge_plots_for_signatures_01.png" alt=""> <h2 id="4">Try using stripes for negative values</h2><pre class="codeinput">create_figure(<span class="string">'Signature wedge plots 2'</span>, 1, k);
+colors = colorcube_colors(length(wh));
+
+<span class="keyword">for</span> i = 1:length(wh)
+
+    disp(npsobjnames{wh(i)})
+    disp(<span class="string">'-----------------------------------------'</span>);
+
+    subplot(1, k, i);
+    hold <span class="string">on</span>
+
+    mysignature = get_wh_image(npsobj, wh(i));
+
+    <span class="comment">% Plot similarity</span>
+    stats = image_similarity_plot(mysignature, <span class="string">'cosine_similarity'</span>, <span class="string">'bucknerlab_wholebrain'</span>, <span class="string">'colors'</span>, colors(i));
+    title(npsobjnames{wh(i)});
+
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">NPS
+-----------------------------------------
+Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Combined_multiatlas_ROI_masks/rBucknerlab_7clusters_SPMAnat_Other_combined.img
+Warning: Some images have zero values in some of the 22412 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+18869 
+Warning: Some images have zero values in some of the 23618 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+18069 
+Warning: Some images have zero values in some of the 17305 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+13976 
+Warning: Some images have zero values in some of the 19937 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+13180 
+Warning: Some images have zero values in some of the 15937 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+15547 
+Warning: Some images have zero values in some of the 27447 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+24495 
+Warning: Some images have zero values in some of the 37674 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+35479 
+
+ 	Name	Cosine Similarity	
+Visual	-0.0848	
+Somatomotor	0.0777	
+dAttention	-0.1019	
+vAttention	0.2058	
+Limbic	0.0091	
+Frontoparietal	0.0073	
+Default	-0.1033	
+PINES
+-----------------------------------------
+Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Combined_multiatlas_ROI_masks/rBucknerlab_7clusters_SPMAnat_Other_combined.img
+Warning: Some images have zero values in some of the 23618 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+735 
+Warning: Some images have zero values in some of the 17305 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+701 
+Warning: Some images have zero values in some of the 19937 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1403 
+Warning: Some images have zero values in some of the 15937 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+486 
+Warning: Some images have zero values in some of the 27447 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+888 
+Warning: Some images have zero values in some of the 37674 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+246 
+
+ 	Name	Cosine Similarity	
+Visual	0.0188	
+Somatomotor	-0.0147	
+dAttention	-0.0252	
+vAttention	0.0232	
+Limbic	0.0002	
+Frontoparietal	-0.0208	
+Default	0.0036	
+VPS
+-----------------------------------------
+Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Combined_multiatlas_ROI_masks/rBucknerlab_7clusters_SPMAnat_Other_combined.img
+Warning: Some images have zero values in some of the 23618 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+735 
+Warning: Some images have zero values in some of the 17305 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+701 
+Warning: Some images have zero values in some of the 19937 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1402 
+Warning: Some images have zero values in some of the 15937 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+486 
+Warning: Some images have zero values in some of the 27447 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+888 
+Warning: Some images have zero values in some of the 37674 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+245 
+
+ 	Name	Cosine Similarity	
+Visual	-0.0197	
+Somatomotor	-0.0329	
+dAttention	0.0166	
+vAttention	-0.0265	
+Limbic	-0.0163	
+Frontoparietal	-0.0187	
+Default	0.0382	
+</pre><img vspace="5" hspace="5" src="make_polar_wedge_plots_for_signatures_02.png" alt=""> <h2 id="5">Polar plot style</h2><pre class="codeinput">create_figure(<span class="string">'Signature polar plots'</span>, 1, k);
+colors = colorcube_colors(length(wh));
+
+<span class="keyword">for</span> i = 1:length(wh)
+
+    disp(npsobjnames{wh(i)})
+    disp(<span class="string">'-----------------------------------------'</span>);
+
+    subplot(1, k, i);
+    hold <span class="string">on</span>
+
+    mysignature = get_wh_image(npsobj, wh(i));
+
+    <span class="comment">% Plot similarity</span>
+    stats = image_similarity_plot(mysignature, <span class="string">'cosine_similarity'</span>, <span class="string">'bucknerlab_wholebrain'</span>, <span class="string">'colors'</span>, colors(i), <span class="string">'plotstyle'</span>, <span class="string">'polar'</span>);
+    title(npsobjnames{wh(i)});
+
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">NPS
+-----------------------------------------
+Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Combined_multiatlas_ROI_masks/rBucknerlab_7clusters_SPMAnat_Other_combined.img
+Warning: Some images have zero values in some of the 22412 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+18869 
+Warning: Some images have zero values in some of the 23618 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+18069 
+Warning: Some images have zero values in some of the 17305 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+13976 
+Warning: Some images have zero values in some of the 19937 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+13180 
+Warning: Some images have zero values in some of the 15937 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+15547 
+Warning: Some images have zero values in some of the 27447 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+24495 
+Warning: Some images have zero values in some of the 37674 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+35479 
+
+ 	Name	Cosine Similarity	
+Visual	-0.0848	
+Somatomotor	0.0777	
+dAttention	-0.1019	
+vAttention	0.2058	
+Limbic	0.0091	
+Frontoparietal	0.0073	
+Default	-0.1033	
+PINES
+-----------------------------------------
+Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Combined_multiatlas_ROI_masks/rBucknerlab_7clusters_SPMAnat_Other_combined.img
+Warning: Some images have zero values in some of the 23618 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+735 
+Warning: Some images have zero values in some of the 17305 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+701 
+Warning: Some images have zero values in some of the 19937 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1403 
+Warning: Some images have zero values in some of the 15937 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+486 
+Warning: Some images have zero values in some of the 27447 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+888 
+Warning: Some images have zero values in some of the 37674 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+246 
+
+ 	Name	Cosine Similarity	
+Visual	0.0188	
+Somatomotor	-0.0147	
+dAttention	-0.0252	
+vAttention	0.0232	
+Limbic	0.0002	
+Frontoparietal	-0.0208	
+Default	0.0036	
+VPS
+-----------------------------------------
+Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Combined_multiatlas_ROI_masks/rBucknerlab_7clusters_SPMAnat_Other_combined.img
+Warning: Some images have zero values in some of the 23618 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+735 
+Warning: Some images have zero values in some of the 17305 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+701 
+Warning: Some images have zero values in some of the 19937 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1402 
+Warning: Some images have zero values in some of the 15937 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+486 
+Warning: Some images have zero values in some of the 27447 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+888 
+Warning: Some images have zero values in some of the 37674 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+245 
+
+ 	Name	Cosine Similarity	
+Visual	-0.0197	
+Somatomotor	-0.0329	
+dAttention	0.0166	
+vAttention	-0.0265	
+Limbic	-0.0163	
+Frontoparietal	-0.0187	
+Default	0.0382	
+</pre><img vspace="5" hspace="5" src="make_polar_wedge_plots_for_signatures_03.png" alt=""> <h2 id="6">We can also make polar and wedge plots for averages across individual subject maps.</h2><p>This example loads a sample emotion regulation dataset, and makes several kinds of plots: Wedge and polar plots of average network similarity across subjects, with error bars, and a polar plot of the individual subjects.</p><pre class="codeinput">obj = load_image_set(<span class="string">'emotionreg'</span>);
+create_figure(<span class="string">'wedge_and_polar_emoreg'</span>, 1, 3);
+
+<span class="comment">% Yellow: positive associations. Blue: Negative associations.  Plot shows mean +- std. error for each pattern of interest</span>
+stats = image_similarity_plot(obj, <span class="string">'plotstyle'</span>, <span class="string">'wedge'</span>, <span class="string">'bucknerlab'</span>, <span class="string">'nofigure'</span>);
+
+subplot(1, 3, 2);
+
+<span class="comment">% Outside circle: positive associations. Inside circle: Negative associations.  Plot shows mean +- std. error for each pattern of interest</span>
+stats = image_similarity_plot(obj, <span class="string">'plotstyle'</span>, <span class="string">'polar'</span>, <span class="string">'average'</span>, <span class="string">'bucknerlab'</span>, <span class="string">'nofigure'</span>, <span class="string">'colors'</span>, {[1 0 0] [.7 0 0]});
+
+subplot(1, 3, 3);
+
+[stats hh hhfill] = image_similarity_plot(obj, <span class="string">'plotstyle'</span>, <span class="string">'polar'</span>, <span class="string">'bucknerlab'</span>, <span class="string">'nofigure'</span>);
+delete(hhfill{1})  <span class="comment">% Delete fill so we can see all the lines</span>
+
+drawnow, snapnow
+</pre><pre class="codeoutput">Data found.
+Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810001.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810002.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810003.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810004.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810005.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810006.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810007.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810008.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810009.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810010.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810011.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810012.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810013.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810014.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810015.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810016.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810017.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810018.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810019.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810020.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810021.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810022.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810023.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810024.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810025.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810026.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810027.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810028.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810029.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810030.img
+Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Combined_multiatlas_ROI_masks/rBucknerlab_7clusters_SPMAnat_Other_combined.img
+</pre><pre class="codeoutput error">Error using bsxfun
+Non-singleton dimensions of the two input arrays must match each other.
+
+Error in corr&gt;corrPearson (line 307)
+        coef = bsxfun(@rdivide,coef,dx'); coef = bsxfun(@rdivide,coef,dy); % coef = coef ./ dx'*dy;
+
+Error in corr (line 212)
+        coef = corrFun(rows,tail,x,y);
+
+Error in image_vector/image_similarity_plot (line 383)
+        r = corr(double(obj.dat), double(mask.dat))';
+
+Error in make_polar_wedge_plots_for_signatures (line 109)
+stats = image_similarity_plot(obj, 'plotstyle', 'wedge', 'bucknerlab', 'nofigure');
+</pre><h2 id="7">Apply the PLS signatures from Kragel et al. 2018 to the emotion regulation dataset</h2><pre class="codeinput"><span class="comment">% Load PLS signatures from Kragel et al. 2018</span>
+[obj, names] = load_image_set(<span class="string">'pain_cog_emo'</span>);
+bpls_wholebrain = get_wh_image(obj, [8 16 24]);
+names_wholebrain = names([8 16 24]);
+bpls_subregions = get_wh_image(obj, [1:6 9:14 17:22]);
+names_subregions = names([1:6 9:14 17:22]);
+
+<span class="comment">% Load test data: Emotion regulation from Wager et al. 2008</span>
+test_data_obj = load_image_set(<span class="string">'emotionreg'</span>);
+
+<span class="comment">% Make plots</span>
+<span class="comment">% Yellow: positive associations. Blue: Negative associations.  Plot shows mean +- std. error for each pattern of interest</span>
+
+create_figure(<span class="string">'Kragel Pain-Cog-Emo maps'</span>, 1, 2);
+stats = image_similarity_plot(test_data_obj, <span class="string">'average'</span>, <span class="string">'mapset'</span>, bpls_wholebrain, <span class="string">'networknames'</span>, names_wholebrain, <span class="string">'nofigure'</span>);
+subplot(1, 2, 2)
+stats = image_similarity_plot(test_data_obj, <span class="string">'average'</span>, <span class="string">'mapset'</span>, bpls_subregions, <span class="string">'networknames'</span>, names_subregions, <span class="string">'nofigure'</span>);
+
+drawnow, snapnow
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Make polar wedge plots for signatures
+% This example shows how to load several signatures and plot their cosine
+% similarities with a set of resting-state networks, to interpret the
+% signatures in terms of networks.
+%
+
+
+%% General instructions
+%
+% Before you start, the CANlab_Core_Tools must be added to your path with
+% subfolders. Otherwise, you will get errors.
+%
+% Sample datasets are in the "Sample_datasets" folder in CANlab_Core_Tools.
+%
+% This example will use signatures, including the NPS, PINES, and VPS.
+% This requires the canlab_private repository, which has the signatures, for the 
+% example to run correctly. You can adapt it for any pattern you are
+% interested in, though.
+
+%% Load the signature patterns 
+
+[npsobj, npsobjnames] = load_image_set('npsplus'); % 1 is NPS, 4 is SIIPS, 5 is PINES, 7 is VPS
+wh = [1 5 7];
+
+k = length(wh);
+
+%% Plot cosine similarity with the Buckner Lab networks
+% Orange colors are positive associations
+% Blue colors are negative associations
+% The radius of the 'spokes' is proportional to the cosine similarity, and
+% area of the wedges is proportional to variance in signature weights explained by the network pattern
+
+create_figure('Signature wedge plots', 1, k);
+
+for i = 1:length(wh)
+    
+    disp(npsobjnames{wh(i)})
+    disp('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-');
+    
+    subplot(1, k, i);
+    hold on
+    
+    mysignature = get_wh_image(npsobj, wh(i));
+    
+    % Plot similarity
+    stats = image_similarity_plot(mysignature, 'cosine_similarity', 'bucknerlab_wholebrain', 'colors', {[1 .7 0] [.3 0 .7]}, 'bicolor');
+    title(npsobjnames{wh(i)});
+    
+    % Same, but use older polar plot style
+    % stats = image_similarity_plot(mysignature, 'cosine_similarity', 'bucknerlab_wholebrain', 'plotstyle', 'polar');
+    
+%     %     
+%     stats = image_similarity_plot(mysignature, 'cosine_similarity', 'bucknerlab_wholebrain', 'colors', {[1 .7 0]});
+%     title(npsobjnames{wh(i)});
+end
+
+%% Try using stripes for negative values
+
+create_figure('Signature wedge plots 2', 1, k);
+colors = colorcube_colors(length(wh));
+
+for i = 1:length(wh)
+    
+    disp(npsobjnames{wh(i)})
+    disp('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-');
+    
+    subplot(1, k, i);
+    hold on
+    
+    mysignature = get_wh_image(npsobj, wh(i));
+    
+    % Plot similarity
+    stats = image_similarity_plot(mysignature, 'cosine_similarity', 'bucknerlab_wholebrain', 'colors', colors(i));
+    title(npsobjnames{wh(i)});
+    
+end
+
+%% Polar plot style
+
+create_figure('Signature polar plots', 1, k);
+colors = colorcube_colors(length(wh));
+
+for i = 1:length(wh)
+    
+    disp(npsobjnames{wh(i)})
+    disp('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-');
+    
+    subplot(1, k, i);
+    hold on
+    
+    mysignature = get_wh_image(npsobj, wh(i));
+    
+    % Plot similarity
+    stats = image_similarity_plot(mysignature, 'cosine_similarity', 'bucknerlab_wholebrain', 'colors', colors(i), 'plotstyle', 'polar');
+    title(npsobjnames{wh(i)});
+    
+end
+
+%% We can also make polar and wedge plots for averages across individual subject maps.
+% This example loads a sample emotion regulation dataset, and makes several
+% kinds of plots: Wedge and polar plots of average network similarity
+% across subjects, with error bars, and a polar plot of the individual
+% subjects.
+
+obj = load_image_set('emotionreg');
+create_figure('wedge_and_polar_emoreg', 1, 3);
+
+% Yellow: positive associations. Blue: Negative associations.  Plot shows mean +- std. error for each pattern of interest
+stats = image_similarity_plot(obj, 'plotstyle', 'wedge', 'bucknerlab', 'nofigure');
+
+subplot(1, 3, 2);
+
+% Outside circle: positive associations. Inside circle: Negative associations.  Plot shows mean +- std. error for each pattern of interest
+stats = image_similarity_plot(obj, 'plotstyle', 'polar', 'average', 'bucknerlab', 'nofigure', 'colors', {[1 0 0] [.7 0 0]});
+
+subplot(1, 3, 3);
+
+[stats hh hhfill] = image_similarity_plot(obj, 'plotstyle', 'polar', 'bucknerlab', 'nofigure');
+delete(hhfill{1})  % Delete fill so we can see all the lines
+
+drawnow, snapnow
+
+%% Apply the PLS signatures from Kragel et al. 2018 to the emotion regulation dataset
+
+% Load PLS signatures from Kragel et al. 2018
+[obj, names] = load_image_set('pain_cog_emo');
+bpls_wholebrain = get_wh_image(obj, [8 16 24]);
+names_wholebrain = names([8 16 24]);
+bpls_subregions = get_wh_image(obj, [1:6 9:14 17:22]);
+names_subregions = names([1:6 9:14 17:22]);
+
+% Load test data: Emotion regulation from Wager et al. 2008
+test_data_obj = load_image_set('emotionreg');
+
+% Make plots
+% Yellow: positive associations. Blue: Negative associations.  Plot shows mean +- std. error for each pattern of interest
+
+create_figure('Kragel Pain-Cog-Emo maps', 1, 2);
+stats = image_similarity_plot(test_data_obj, 'average', 'mapset', bpls_wholebrain, 'networknames', names_wholebrain, 'nofigure');
+subplot(1, 2, 2)
+stats = image_similarity_plot(test_data_obj, 'average', 'mapset', bpls_subregions, 'networknames', names_subregions, 'nofigure');
+
+drawnow, snapnow
+
+##### SOURCE END #####
+--></body></html>

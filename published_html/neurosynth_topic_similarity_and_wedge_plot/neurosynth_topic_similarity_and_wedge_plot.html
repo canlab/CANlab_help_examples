@@ -1,0 +1,732 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>neurosynth_topic_similarity_and_wedge_plot</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-07-17"><meta name="DC.source" content="neurosynth_topic_similarity_and_wedge_plot.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Run neurosynth similarity</a></li><li><a href="#3">Aggregate results for plot</a></li></ul></div><pre class="codeinput">test_dat = load_image_set(<span class="string">'npsplus'</span>);
+nps = get_wh_image(test_dat, 1);
+
+<span class="comment">% If data file is not found:</span>
+<span class="comment">% cd('/Users/tor/Google_Drive/CanlabDataRepository/Neuroimaging_Autolabeler')</span>
+<span class="comment">% g =genpath(pwd); addpath(g); savepath</span>
+</pre><pre class="codeoutput">Loaded images:
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2013_Wager_NEJM_NPS/weights_NSF_grouppred_cvpcr.img
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2017_Lopez_Sola_Fibromyalgia/NPSp_Lopez-Sola_2017_PAIN.img
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2017_Lopez_Sola_Fibromyalgia/NPSn_Lopez-Sola_2017_PAIN.img
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2017_Woo_SIIPS1/nonnoc_v11_4_137subjmap_weighted_mean.nii
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2015_Chang_PLoSBiology_PINES/Rating_Weights_LOSO_2.nii
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2015_Woo_NatureComms_Rejection/dpsp_rejection_vs_others_weights_final.nii
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2016_Krishnan_eLife_VPS/bmrk4_VPS_unthresholded.nii
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2016_Krishnan_eLife_VPS/Krishnan_2016_VPS_bmrk4_Without_Occipital_Lobe.nii
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2016_Eisenbarth_JNeuro_autonomic_patterns/ANS_Eisenbarth_JN_2016_GSR_pattern.img
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2016_Eisenbarth_JNeuro_autonomic_patterns/ANS_Eisenbarth_JN_2016_HR_pattern.img
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2017_Lopez_Sola_Fibromyalgia/FM_Multisensory_wholebrain.nii
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2017_Lopez_Sola_Fibromyalgia/FM_pain_wholebrain.nii
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2017_Ashar_care_distress/Ashar_2017_empathic_care_marker.nii
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2017_Ashar_care_distress/Ashar_2017_empathic_distress_marker.nii
+</pre><h2 id="2">Run neurosynth similarity</h2><pre class="codeinput">[image_by_feature_correlations, top_feature_tables] = neurosynth_feature_labels(nps, <span class="string">'images_are_replicates'</span>, false);
+
+<span class="comment">%     testr_low      words_low      testr_high      words_high</span>
+<span class="comment">%     _________    _____________    __________    _______________</span>
+<span class="comment">%</span>
+<span class="comment">%     -0.22531     'object'         0.27001       'pain'</span>
+<span class="comment">%      -0.2179     'recognition'    0.26484       'stimulation'</span>
+<span class="comment">%     -0.21431     'objects'        0.26199       'heat'</span>
+<span class="comment">%     -0.21123     'visual'         0.25992       'noxious'</span>
+<span class="comment">%     -0.20244     'reading'        0.25942       'painful'</span>
+<span class="comment">%     -0.20204     'perceptual'     0.24892       'sensation'</span>
+<span class="comment">%     -0.19627     'words'           0.2354       'nociceptive'</span>
+<span class="comment">%     -0.19202     'read'           0.23043       'somatosensory'</span>
+<span class="comment">%     -0.18744     'semantic'       0.22025       'temperature'</span>
+<span class="comment">%     -0.18732     'memory'         0.20817       'sensory'</span>
+</pre><pre class="codeoutput">Loaded images:
+1back_pFgA_z.nii
+2back_pFgA_z.nii
+abilities_pFgA_z.nii
+ability_pFgA_z.nii
+acoustic_pFgA_z.nii
+acquisition_pFgA_z.nii
+action_pFgA_z.nii
+actions_pFgA_z.nii
+adaptation_pFgA_z.nii
+addiction_pFgA_z.nii
+adhd_pFgA_z.nii
+adolescence_pFgA_z.nii
+adolescents_pFgA_z.nii
+adults_pFgA_z.nii
+affect_pFgA_z.nii
+affective_pFgA_z.nii
+age_pFgA_z.nii
+agerelated_pFgA_z.nii
+aging_pFgA_z.nii
+alcohol_pFgA_z.nii
+allele_pFgA_z.nii
+ambiguity_pFgA_z.nii
+ambiguous_pFgA_z.nii
+amount_pFgA_z.nii
+anger_pFgA_z.nii
+angry_pFgA_z.nii
+animal_pFgA_z.nii
+animals_pFgA_z.nii
+anticipation_pFgA_z.nii
+anticipatory_pFgA_z.nii
+antipsychotic_pFgA_z.nii
+anxiety_pFgA_z.nii
+aphasia_pFgA_z.nii
+approach_pFgA_z.nii
+arithmetic_pFgA_z.nii
+articulatory_pFgA_z.nii
+association_pFgA_z.nii
+associations_pFgA_z.nii
+associative_pFgA_z.nii
+attend_pFgA_z.nii
+attended_pFgA_z.nii
+attention_pFgA_z.nii
+attentional_pFgA_z.nii
+attribution_pFgA_z.nii
+audiovisual_pFgA_z.nii
+auditory_pFgA_z.nii
+autism_pFgA_z.nii
+autistic_pFgA_z.nii
+autobiographical_pFgA_z.nii
+automatic_pFgA_z.nii
+aversive_pFgA_z.nii
+avoidance_pFgA_z.nii
+awareness_pFgA_z.nii
+bimodal_pFgA_z.nii
+biological_pFgA_z.nii
+bipolar_pFgA_z.nii
+body_pFgA_z.nii
+bottomup_pFgA_z.nii
+calculation_pFgA_z.nii
+card_pFgA_z.nii
+cards_pFgA_z.nii
+categorical_pFgA_z.nii
+categorization_pFgA_z.nii
+category_pFgA_z.nii
+causality_pFgA_z.nii
+character_pFgA_z.nii
+child_pFgA_z.nii
+childhood_pFgA_z.nii
+children_pFgA_z.nii
+chinese_pFgA_z.nii
+choice_pFgA_z.nii
+choices_pFgA_z.nii
+classification_pFgA_z.nii
+cocaine_pFgA_z.nii
+color_pFgA_z.nii
+colors_pFgA_z.nii
+colour_pFgA_z.nii
+competition_pFgA_z.nii
+comprehension_pFgA_z.nii
+concentration_pFgA_z.nii
+concepts_pFgA_z.nii
+conceptual_pFgA_z.nii
+conditioned_pFgA_z.nii
+conditioning_pFgA_z.nii
+confidence_pFgA_z.nii
+conflict_pFgA_z.nii
+congruency_pFgA_z.nii
+congruent_pFgA_z.nii
+conscious_pFgA_z.nii
+contexts_pFgA_z.nii
+contextual_pFgA_z.nii
+control_pFgA_z.nii
+correct_pFgA_z.nii
+counting_pFgA_z.nii
+covert_pFgA_z.nii
+craving_pFgA_z.nii
+crossmodal_pFgA_z.nii
+cue_pFgA_z.nii
+cued_pFgA_z.nii
+cueing_pFgA_z.nii
+cues_pFgA_z.nii
+da_pFgA_z.nii
+decision_pFgA_z.nii
+decisionmaking_pFgA_z.nii
+decisions_pFgA_z.nii
+default_pFgA_z.nii
+delay_pFgA_z.nii
+demand_pFgA_z.nii
+demands_pFgA_z.nii
+depressed_pFgA_z.nii
+depression_pFgA_z.nii
+depressive_pFgA_z.nii
+development_pFgA_z.nii
+developmental_pFgA_z.nii
+difficulty_pFgA_z.nii
+digit_pFgA_z.nii
+digits_pFgA_z.nii
+discrimination_pFgA_z.nii
+disgust_pFgA_z.nii
+disorder_pFgA_z.nii
+distractor_pFgA_z.nii
+distractors_pFgA_z.nii
+distress_pFgA_z.nii
+dominant_pFgA_z.nii
+dopamine_pFgA_z.nii
+dopaminergic_pFgA_z.nii
+drug_pFgA_z.nii
+drugs_pFgA_z.nii
+dyslexia_pFgA_z.nii
+ear_pFgA_z.nii
+eating_pFgA_z.nii
+effort_pFgA_z.nii
+elderly_pFgA_z.nii
+emotion_pFgA_z.nii
+emotionally_pFgA_z.nii
+emotions_pFgA_z.nii
+empathic_pFgA_z.nii
+empathy_pFgA_z.nii
+encoded_pFgA_z.nii
+encoding_pFgA_z.nii
+endogenous_pFgA_z.nii
+engaged_pFgA_z.nii
+engagement_pFgA_z.nii
+english_pFgA_z.nii
+epilepsy_pFgA_z.nii
+episode_pFgA_z.nii
+episodic_pFgA_z.nii
+error_pFgA_z.nii
+errorrelated_pFgA_z.nii
+errors_pFgA_z.nii
+execution_pFgA_z.nii
+executive_pFgA_z.nii
+expectancy_pFgA_z.nii
+expectation_pFgA_z.nii
+experience_pFgA_z.nii
+experiences_pFgA_z.nii
+explicit_pFgA_z.nii
+expression_pFgA_z.nii
+expressions_pFgA_z.nii
+eye_pFgA_z.nii
+eyes_pFgA_z.nii
+face_pFgA_z.nii
+faces_pFgA_z.nii
+facial_pFgA_z.nii
+fact_pFgA_z.nii
+familiar_pFgA_z.nii
+familiarity_pFgA_z.nii
+family_pFgA_z.nii
+famous_pFgA_z.nii
+fearful_pFgA_z.nii
+feedback_pFgA_z.nii
+feelings_pFgA_z.nii
+female_pFgA_z.nii
+females_pFgA_z.nii
+finger_pFgA_z.nii
+fingers_pFgA_z.nii
+fluency_pFgA_z.nii
+food_pFgA_z.nii
+foot_pFgA_z.nii
+frequency_pFgA_z.nii
+future_pFgA_z.nii
+gain_pFgA_z.nii
+game_pFgA_z.nii
+gaze_pFgA_z.nii
+genotype_pFgA_z.nii
+german_pFgA_z.nii
+gesture_pFgA_z.nii
+gestures_pFgA_z.nii
+go_pFgA_z.nii
+goal_pFgA_z.nii
+gonogo_pFgA_z.nii
+grammatical_pFgA_z.nii
+grasping_pFgA_z.nii
+habituation_pFgA_z.nii
+hand_pFgA_z.nii
+hands_pFgA_z.nii
+happy_pFgA_z.nii
+hearing_pFgA_z.nii
+heart_pFgA_z.nii
+heat_pFgA_z.nii
+hierarchical_pFgA_z.nii
+hits_pFgA_z.nii
+houses_pFgA_z.nii
+identity_pFgA_z.nii
+illness_pFgA_z.nii
+image_pFgA_z.nii
+imagery_pFgA_z.nii
+images_pFgA_z.nii
+imagine_pFgA_z.nii
+imagined_pFgA_z.nii
+implicit_pFgA_z.nii
+improvement_pFgA_z.nii
+impulsivity_pFgA_z.nii
+incentive_pFgA_z.nii
+incongruent_pFgA_z.nii
+incorrect_pFgA_z.nii
+inhibition_pFgA_z.nii
+inhibitory_pFgA_z.nii
+integration_pFgA_z.nii
+intelligence_pFgA_z.nii
+intention_pFgA_z.nii
+intentional_pFgA_z.nii
+intentions_pFgA_z.nii
+interference_pFgA_z.nii
+interhemispheric_pFgA_z.nii
+invalid_pFgA_z.nii
+irrelevant_pFgA_z.nii
+japanese_pFgA_z.nii
+judgment_pFgA_z.nii
+judgments_pFgA_z.nii
+knowledge_pFgA_z.nii
+language_pFgA_z.nii
+languages_pFgA_z.nii
+learned_pFgA_z.nii
+learning_pFgA_z.nii
+letter_pFgA_z.nii
+letters_pFgA_z.nii
+lexical_pFgA_z.nii
+limb_pFgA_z.nii
+linguistic_pFgA_z.nii
+lip_pFgA_z.nii
+listening_pFgA_z.nii
+load_pFgA_z.nii
+locations_pFgA_z.nii
+longterm_pFgA_z.nii
+loss_pFgA_z.nii
+losses_pFgA_z.nii
+maintenance_pFgA_z.nii
+male_pFgA_z.nii
+males_pFgA_z.nii
+manipulation_pFgA_z.nii
+mask_pFgA_z.nii
+masked_pFgA_z.nii
+masking_pFgA_z.nii
+meaning_pFgA_z.nii
+memories_pFgA_z.nii
+memory_pFgA_z.nii
+mental_pFgA_z.nii
+mentalizing_pFgA_z.nii
+mirror_pFgA_z.nii
+monetary_pFgA_z.nii
+money_pFgA_z.nii
+monitoring_pFgA_z.nii
+mood_pFgA_z.nii
+moral_pFgA_z.nii
+motion_pFgA_z.nii
+motivation_pFgA_z.nii
+motor_pFgA_z.nii
+mouth_pFgA_z.nii
+movements_pFgA_z.nii
+movie_pFgA_z.nii
+multisensory_pFgA_z.nii
+muscle_pFgA_z.nii
+muscles_pFgA_z.nii
+music_pFgA_z.nii
+musical_pFgA_z.nii
+name_pFgA_z.nii
+names_pFgA_z.nii
+naming_pFgA_z.nii
+nback_pFgA_z.nii
+negative_pFgA_z.nii
+negatively_pFgA_z.nii
+neutral_pFgA_z.nii
+nociceptive_pFgA_z.nii
+nogo_pFgA_z.nii
+noise_pFgA_z.nii
+nonpainful_pFgA_z.nii
+nonverbal_pFgA_z.nii
+nonwords_pFgA_z.nii
+noun_pFgA_z.nii
+nouns_pFgA_z.nii
+novel_pFgA_z.nii
+novelty_pFgA_z.nii
+noxious_pFgA_z.nii
+number_pFgA_z.nii
+numbers_pFgA_z.nii
+numerical_pFgA_z.nii
+object_pFgA_z.nii
+objects_pFgA_z.nii
+oddball_pFgA_z.nii
+old_pFgA_z.nii
+olfactory_pFgA_z.nii
+oral_pFgA_z.nii
+order_pFgA_z.nii
+orientation_pFgA_z.nii
+orienting_pFgA_z.nii
+orthographic_pFgA_z.nii
+oscillations_pFgA_z.nii
+outcome_pFgA_z.nii
+outcomes_pFgA_z.nii
+overt_pFgA_z.nii
+pain_pFgA_z.nii
+painful_pFgA_z.nii
+painrelated_pFgA_z.nii
+pair_pFgA_z.nii
+paired_pFgA_z.nii
+pairs_pFgA_z.nii
+past_pFgA_z.nii
+perceived_pFgA_z.nii
+perception_pFgA_z.nii
+perceptual_pFgA_z.nii
+person_pFgA_z.nii
+personal_pFgA_z.nii
+personality_pFgA_z.nii
+persons_pFgA_z.nii
+perspective_pFgA_z.nii
+phasic_pFgA_z.nii
+phonetic_pFgA_z.nii
+phonological_pFgA_z.nii
+phonology_pFgA_z.nii
+photographs_pFgA_z.nii
+physical_pFgA_z.nii
+physiological_pFgA_z.nii
+picture_pFgA_z.nii
+pictures_pFgA_z.nii
+pitch_pFgA_z.nii
+placebo_pFgA_z.nii
+planning_pFgA_z.nii
+plasticity_pFgA_z.nii
+play_pFgA_z.nii
+pleasant_pFgA_z.nii
+polymorphism_pFgA_z.nii
+position_pFgA_z.nii
+positive_pFgA_z.nii
+practice_pFgA_z.nii
+preference_pFgA_z.nii
+preparation_pFgA_z.nii
+preparatory_pFgA_z.nii
+presentations_pFgA_z.nii
+pressure_pFgA_z.nii
+prime_pFgA_z.nii
+priming_pFgA_z.nii
+probabilistic_pFgA_z.nii
+probabilities_pFgA_z.nii
+probability_pFgA_z.nii
+probe_pFgA_z.nii
+probes_pFgA_z.nii
+production_pFgA_z.nii
+prosodic_pFgA_z.nii
+prosody_pFgA_z.nii
+pseudoword_pFgA_z.nii
+pseudowords_pFgA_z.nii
+psychophysical_pFgA_z.nii
+ptsd_pFgA_z.nii
+rating_pFgA_z.nii
+ratings_pFgA_z.nii
+reaching_pFgA_z.nii
+reactivity_pFgA_z.nii
+read_pFgA_z.nii
+readers_pFgA_z.nii
+reading_pFgA_z.nii
+reasoning_pFgA_z.nii
+recall_pFgA_z.nii
+recognition_pFgA_z.nii
+recollection_pFgA_z.nii
+regulation_pFgA_z.nii
+rehearsal_pFgA_z.nii
+reinforcement_pFgA_z.nii
+rejection_pFgA_z.nii
+relational_pFgA_z.nii
+remember_pFgA_z.nii
+remembered_pFgA_z.nii
+repetition_pFgA_z.nii
+repetitions_pFgA_z.nii
+response_pFgA_z.nii
+rest_pFgA_z.nii
+restingstate_pFgA_z.nii
+retention_pFgA_z.nii
+retrieval_pFgA_z.nii
+retrieved_pFgA_z.nii
+reversal_pFgA_z.nii
+reward_pFgA_z.nii
+rewards_pFgA_z.nii
+risk_pFgA_z.nii
+rotation_pFgA_z.nii
+rule_pFgA_z.nii
+rules_pFgA_z.nii
+saccade_pFgA_z.nii
+saccades_pFgA_z.nii
+saccadic_pFgA_z.nii
+sadness_pFgA_z.nii
+salience_pFgA_z.nii
+salient_pFgA_z.nii
+scenarios_pFgA_z.nii
+scene_pFgA_z.nii
+scenes_pFgA_z.nii
+schizophrenia_pFgA_z.nii
+schizophrenic_pFgA_z.nii
+search_pFgA_z.nii
+selection_pFgA_z.nii
+self_pFgA_z.nii
+selfreferential_pFgA_z.nii
+selfreported_pFgA_z.nii
+semantic_pFgA_z.nii
+semantically_pFgA_z.nii
+sensation_pFgA_z.nii
+sensations_pFgA_z.nii
+sensorimotor_pFgA_z.nii
+sensory_pFgA_z.nii
+sentence_pFgA_z.nii
+sentences_pFgA_z.nii
+sequence_pFgA_z.nii
+sequences_pFgA_z.nii
+sequential_pFgA_z.nii
+serial_pFgA_z.nii
+sex_pFgA_z.nii
+sexual_pFgA_z.nii
+shape_pFgA_z.nii
+shapes_pFgA_z.nii
+shifting_pFgA_z.nii
+shifts_pFgA_z.nii
+shock_pFgA_z.nii
+shortterm_pFgA_z.nii
+simulation_pFgA_z.nii
+skills_pFgA_z.nii
+skin_pFgA_z.nii
+sleep_pFgA_z.nii
+smoking_pFgA_z.nii
+social_pFgA_z.nii
+solving_pFgA_z.nii
+somatosensory_pFgA_z.nii
+somatotopic_pFgA_z.nii
+sound_pFgA_z.nii
+sounds_pFgA_z.nii
+space_pFgA_z.nii
+spatial_pFgA_z.nii
+spatially_pFgA_z.nii
+speakers_pFgA_z.nii
+speech_pFgA_z.nii
+spoken_pFgA_z.nii
+spontaneous_pFgA_z.nii
+stimulation_pFgA_z.nii
+stop_pFgA_z.nii
+stories_pFgA_z.nii
+story_pFgA_z.nii
+strategies_pFgA_z.nii
+strategy_pFgA_z.nii
+stress_pFgA_z.nii
+stroop_pFgA_z.nii
+subjective_pFgA_z.nii
+subsequent_pFgA_z.nii
+subtraction_pFgA_z.nii
+success_pFgA_z.nii
+suppression_pFgA_z.nii
+switch_pFgA_z.nii
+switching_pFgA_z.nii
+syllable_pFgA_z.nii
+syllables_pFgA_z.nii
+syntactic_pFgA_z.nii
+tactile_pFgA_z.nii
+tapping_pFgA_z.nii
+target_pFgA_z.nii
+targets_pFgA_z.nii
+taskirrelevant_pFgA_z.nii
+taskrelated_pFgA_z.nii
+taskrelevant_pFgA_z.nii
+taste_pFgA_z.nii
+temperature_pFgA_z.nii
+text_pFgA_z.nii
+theory_pFgA_z.nii
+thinking_pFgA_z.nii
+thought_pFgA_z.nii
+thoughts_pFgA_z.nii
+threat_pFgA_z.nii
+time_pFgA_z.nii
+tom_pFgA_z.nii
+tones_pFgA_z.nii
+tool_pFgA_z.nii
+topdown_pFgA_z.nii
+tracking_pFgA_z.nii
+trained_pFgA_z.nii
+training_pFgA_z.nii
+trait_pFgA_z.nii
+traits_pFgA_z.nii
+unattended_pFgA_z.nii
+uncertainty_pFgA_z.nii
+unfamiliar_pFgA_z.nii
+unpleasant_pFgA_z.nii
+unpleasantness_pFgA_z.nii
+valence_pFgA_z.nii
+value_pFgA_z.nii
+velocity_pFgA_z.nii
+verb_pFgA_z.nii
+verbal_pFgA_z.nii
+videos_pFgA_z.nii
+violation_pFgA_z.nii
+violations_pFgA_z.nii
+virtual_pFgA_z.nii
+vision_pFgA_z.nii
+visual_pFgA_z.nii
+visually_pFgA_z.nii
+visuomotor_pFgA_z.nii
+visuospatial_pFgA_z.nii
+vocal_pFgA_z.nii
+voice_pFgA_z.nii
+voluntary_pFgA_z.nii
+win_pFgA_z.nii
+wm_pFgA_z.nii
+women_pFgA_z.nii
+word_pFgA_z.nii
+words_pFgA_z.nii
+work_pFgA_z.nii
+working_pFgA_z.nii
+writing_pFgA_z.nii
+written_pFgA_z.nii
+Input image 1
+./Masks_private/2013_Wager_NEJM_NPS/weights_NSF_grouppred_cvpcr.img
+_____________________________________________________________________
+    testr_low      words_low      testr_high      words_high   
+    _________    _____________    __________    _______________
+
+    -0.22531     'object'          0.27001      'pain'         
+     -0.2179     'recognition'     0.26484      'stimulation'  
+    -0.21431     'objects'         0.26199      'heat'         
+    -0.21123     'visual'          0.25992      'noxious'      
+    -0.20244     'reading'         0.25942      'painful'      
+    -0.20204     'perceptual'      0.24892      'sensation'    
+    -0.19627     'words'            0.2354      'nociceptive'  
+    -0.19202     'read'            0.23043      'somatosensory'
+    -0.18744     'semantic'        0.22025      'temperature'  
+    -0.18732     'memory'          0.20817      'sensory'      
+
+</pre><h2 id="3">Aggregate results for plot</h2><pre class="codeinput">lowwords = [top_feature_tables{1}.words_low(:)]';
+disp(lowwords)
+
+highwords = [top_feature_tables{1}.words_high(:)]';
+disp(highwords)
+
+r_low = top_feature_tables{1}.testr_low;
+r_high = top_feature_tables{1}.testr_high;
+
+r_to_plot = [r_high; r_low];
+textlabels = [ highwords lowwords];
+</pre><pre class="codeoutput">  Columns 1 through 5
+
+    'object'    'recognition'    'objects'    'visual'    'reading'
+
+  Columns 6 through 10
+
+    'perceptual'    'words'    'read'    'semantic'    'memory'
+
+  Columns 1 through 6
+
+    'pain'    'stimulation'    'heat'    'noxious'    'painful'    'sensation'
+
+  Columns 7 through 10
+
+    'nociceptive'    'somatosensory'    'temperature'    'sensory'
+
+</pre><pre class="codeinput">create_figure(<span class="string">'wedge_plot'</span>);
+
+<span class="comment">%hh = tor_wedge_plot(r_to_plot, textlabels, 'outer_circle_radius', .3, 'colors', {[1 .7 0] [.4 0 .8]}, 'nofigure');</span>
+
+hh = tor_wedge_plot(r_to_plot, textlabels, <span class="string">'outer_circle_radius'</span>, .3, <span class="string">'colors'</span>, {[1 .7 0] [.4 0 .8]}, <span class="string">'bicolor'</span>, <span class="string">'nofigure'</span>);
+</pre><img vspace="5" hspace="5" src="neurosynth_topic_similarity_and_wedge_plot_01.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+test_dat = load_image_set('npsplus');
+nps = get_wh_image(test_dat, 1);
+
+% If data file is not found:
+% cd('/Users/tor/Google_Drive/CanlabDataRepository/Neuroimaging_Autolabeler')
+% g =genpath(pwd); addpath(g); savepath
+
+%% Run neurosynth similarity
+
+[image_by_feature_correlations, top_feature_tables] = neurosynth_feature_labels(nps, 'images_are_replicates', false);
+
+%     testr_low      words_low      testr_high      words_high   
+%     _________    _____________    __________    _______________
+% 
+%     -0.22531     'object'         0.27001       'pain'         
+%      -0.2179     'recognition'    0.26484       'stimulation'  
+%     -0.21431     'objects'        0.26199       'heat'         
+%     -0.21123     'visual'         0.25992       'noxious'      
+%     -0.20244     'reading'        0.25942       'painful'      
+%     -0.20204     'perceptual'     0.24892       'sensation'    
+%     -0.19627     'words'           0.2354       'nociceptive'  
+%     -0.19202     'read'           0.23043       'somatosensory'
+%     -0.18744     'semantic'       0.22025       'temperature'  
+%     -0.18732     'memory'         0.20817       'sensory'      
+
+%% Aggregate results for plot
+
+lowwords = [top_feature_tables{1}.words_low(:)]';
+disp(lowwords)
+
+highwords = [top_feature_tables{1}.words_high(:)]';
+disp(highwords)
+
+r_low = top_feature_tables{1}.testr_low;
+r_high = top_feature_tables{1}.testr_high;
+
+r_to_plot = [r_high; r_low];
+textlabels = [ highwords lowwords];
+
+
+%%
+
+create_figure('wedge_plot');
+
+%hh = tor_wedge_plot(r_to_plot, textlabels, 'outer_circle_radius', .3, 'colors', {[1 .7 0] [.4 0 .8]}, 'nofigure');
+
+hh = tor_wedge_plot(r_to_plot, textlabels, 'outer_circle_radius', .3, 'colors', {[1 .7 0] [.4 0 .8]}, 'bicolor', 'nofigure');
+
+
+##### SOURCE END #####
+--></body></html>
