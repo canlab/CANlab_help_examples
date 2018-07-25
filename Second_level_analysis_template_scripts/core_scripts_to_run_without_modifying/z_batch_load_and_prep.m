@@ -3,8 +3,6 @@
 % -------------------------------------------------------
 a_set_up_paths_always_run_first
 
-a2_set_default_options
-
 prep_1_set_conditions_contrasts_colors
 
 printhdr('BEHAVIORAL DATA - BETWEEN-PERSON DESIGN')
@@ -12,6 +10,7 @@ printhdr('BEHAVIORAL DATA - BETWEEN-PERSON DESIGN')
 try
     prep1b_prep_behavioral_data
 catch
+    printhdr('Behavioral data not included.');
     disp('prep1b_prep_behavioral_data.m did not run correctly. Either configure and test this or omit this script.');
 end
 

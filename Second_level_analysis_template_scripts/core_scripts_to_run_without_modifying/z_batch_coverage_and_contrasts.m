@@ -31,6 +31,12 @@ printhdr('UNIVARIATE CONTRAST MAPS')
 scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'c_univariate_contrast_maps'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
+%% UNIVARIATE CONTRASTS - SCALED DATA
+printhdr('UNIVARIATE CONTRAST MAPS - SCALED DATA')
+
+scriptname = which(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying', 'c_univariate_contrast_maps'));
+run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
+
 %% NETWORK AVERAGES AND LATERALIZATION FOR EACH CONTRAST
 
 printhdr('NETWORK AVERAGES AND LATERALIZATION FOR EACH CONTRAST')

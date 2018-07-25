@@ -7,6 +7,9 @@
 % Before you start, the CANlab_Core_Tools must be added to your path with
 % subfolders. Otherwise, you will get errors.
 %
+% The script canlab_toolbox_setup can help download and install the
+% toolboxes you need.
+%
 % Sample datasets are in the "Sample_datasets" folder in CANlab_Core_Tools.
 %
 % This example will use emotion regulation data in the folder: 

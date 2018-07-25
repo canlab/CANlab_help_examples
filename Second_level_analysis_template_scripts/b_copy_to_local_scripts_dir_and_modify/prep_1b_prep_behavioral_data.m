@@ -1,3 +1,57 @@
+%% About this script
+%
+% Optional: Run these load and attach behavioral data from files (e.g., from Excel)            
+%
+% This script is an example script only.  You should modify it to fit your
+% needs, which will depend on which types of behavioral/non-imaging data
+% you have and what variables you want to store and analyze. The basics are
+% desribed here:
+%
+% - Store behavioral data tables in any ad hoc format in DAT.BEHAVIOR.
+% This can be a useful reference if you want to change/add custom analyses
+% relating brain to behavior. You can create custom scripts that pull data 
+% from .BEHAVIOR and use it in analyses.
+%
+% - Store a between-person grouping variable (e.g., patient vs. control,
+% etc.) in DAT.BETWEENPERSON.group. This should be coded with values of 1
+% and -1. Also add fields (see below) for names and colors associated with
+% each group, and a description of what the 1/-1 codes mean.
+% Some analyses consider this variable and run between-group contrasts
+% and/or control for them in analyses of the entire sample (e.g.,
+% "signature response" analyses).  
+% SVM analyses can also be run that use the .group variable. See:
+% prep_3d_run_SVM_betweenperson_contrasts and 
+% c2b_SVM_betweenperson_contrasts  
+%
+% - If you have no binary group variable,  it is OK to leave the .group
+% field empty. 
+%
+% - If you have continuous variable(s) instead of a binary group variable,
+% you can enter a continuous variable in .group (for now!) -- this script
+% uses that continuous variable:  (it may cause problems with other scripts
+% that assume binary .group data, and may be changed in future versions):
+% prep_3a_run_second_level_regression_and_save
+%
+% - Instead of a single .group variable to be tested with all
+% conditions/contrasts, you can also enter different variables for each
+% condition and/or contrast.  This is useful if you want to correlate each
+% contrast with a different behavioral variable (maybe, e.g., for each contrast,
+% reaction time differences for the same contrast). 
+% If so, enter DAT.BETWEENPERSON.conditions and/or
+% DAT.BETWEENPERSON.contrasts.  These should be cell arrays with one cell
+% per condition or contrast.  Each cell contains a matlab "table" object
+% with the data and possibly subject IDs (see below).
+% 
+% - You can run this script as part of a workflow (prep_1...
+% prep_2...prep_3 etc)
+% You can also run the script AFTER you've prepped all the imaging data, just
+% to add behavioral data to the existing DAT structure.  If so, make sure
+% you RELOAD the existing DAT structure with b_reload_saved_matfiles.m
+% before you run this script.  Otherwise, if you create a new DAT
+% structure, important information saved during the data prep (prep_2...,
+% prep_3...) process will be missing, and you will need to re-run the whole
+% prep sequence.
+
 %% READ behavioral data from file. These data will be put into standard structure compatible with analyses
 
 <<<EDIT A COPY OF THIS IN YOUR LOCAL SCRIPTS DIRECTORY AND DELETE THIS LINE>>>
@@ -169,16 +223,23 @@ DAT.BETWEENPERSON.group_descrip = '-1 is first group name, 1 is 2nd';
 DAT.BETWEENPERSON.groupnames = nms;
 DAT.BETWEENPERSON.groupcolors = {[.7 .3 .5] [.3 .5 .7]};
 
-%% Save if DAT field looks complete
+%% Check DAT, print warnings, save DAT structure
 
-if isfield(DAT, 'SIG_conditions') && isfield(DAT, 'gray_white_csf')
-    % Looks complete, save
-    
-    printhdr('Save results');
-    
-    savefilename = fullfile(resultsdir, 'image_names_and_setup.mat');
-    save(savefilename, 'DAT', '-append');
-    
-else
-    printhdr('DAT FIELD DOES NOT LOOK COMPLETE. Are you sure you want to save? Skipping...');
+if ~isfield(DAT, 'conditions') 
+    printhdr('Incomplete DAT structure');
+    disp('The DAT field is incomplete. Run prep_1_set_conditions_contrasts_colors before running prep_1b...')
 end
+    
+if isfield(DAT, 'SIG_conditions') && isfield(DAT, 'gray_white_csf')
+    % Looks complete, we already have data, no warnings 
+else
+    printhdr('DAT structure ready for data prep');
+    disp('DAT field does not have info from prep_2, prep_3, or prep_4 sequences');
+    disp('prep_2/3/4 scripts should be run before generating results.');
+end
+
+printhdr('Save results');
+
+savefilename = fullfile(resultsdir, 'image_names_and_setup.mat');
+save(savefilename, 'DAT', '-append');
+

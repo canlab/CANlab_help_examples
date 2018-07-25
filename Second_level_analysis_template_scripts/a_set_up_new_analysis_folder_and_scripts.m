@@ -57,7 +57,6 @@ sourcedir = fullfile(masterscriptdir, 'b_copy_to_local_scripts_dir_and_modify', 
 % sourcedir = fullfile(masterscriptdir, 'c_copy_to_local_scripts_dir_run_without_modifying', '*');
 % [SUCCESS,MESSAGE,MESSAGEID] = copyfile(sourcedir, scriptsdir);
 
-
 checkfile = fullfile(basedir, 'study_info.json');
 if exist(checkfile, 'file')
     
@@ -89,3 +88,9 @@ edit(fullfile(scriptsdir, 'prep_1_set_conditions_contrasts_colors'))
 edit(fullfile(scriptsdir, 'prep_1b_prep_behavioral_data'))
 
 printhdr('In Editor: Opened local scripts to edit and save');
+
+% -----------------------------------------------------------------------
+% Check for toolboxes we need
+% -------------------------------------------------------------------------
+
+a2_second_level_toolbox_check_dependencies

@@ -1,0 +1,293 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>canlab_help_1_installing_tools</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-07-17"><meta name="DC.source" content="canlab_help_1_installing_tools.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">About the CANlab Core Tools repository and CANlab toolboxes</a></li><li><a href="#2">Dependencies:</a></li><li><a href="#3">Available Toolboxes:</a></li><li><a href="#4">Quick start instructions</a></li></ul></div><h2 id="1">About the CANlab Core Tools repository and CANlab toolboxes</h2><pre class="codeinput"><span class="comment">% The CANlab Core Tools repository is on https://github.com/canlab/CanlabCore</span>
+<span class="comment">% It contains core tools for MRI/fMRI/PET analysis from the Cognitive and</span>
+<span class="comment">% Affective Neuorscience Lab (Tor Wager, PI) and our collaborators. Many of</span>
+<span class="comment">% these functions are needed to run other toolboxes, e.g., the CAN lab?s</span>
+<span class="comment">% multilevel mediation and Martin Lindquist?s hemodynamic response estimation</span>
+<span class="comment">% toolboxes.</span>
+
+<span class="comment">% The tools include object-oriented tools for doing neuroimaging analysis with</span>
+<span class="comment">% simple commands and scripts that provide high-level functionality for</span>
+<span class="comment">% neuroimaging analysis. For example, there is an "fmri_data" object type</span>
+<span class="comment">% that contains neuroimaging datasets (both PET and fMRI data are ok, despite</span>
+<span class="comment">% the name). If you have created and object called my_fmri_data_obj, then</span>
+<span class="comment">% plot(my_fmri_data_obj) will generate a series of plots specific to neuroimaging</span>
+<span class="comment">% data, including an interactive brain viewer (courtesy of SPM software).</span>
+<span class="comment">% predict(my_fmri_data_obj) will perform cross-validated multivariate prediction</span>
+<span class="comment">% of outcomes based on brain data. ica(my_fmri_data_obj) will perform independent</span>
+<span class="comment">% components analysis on the data, and so forth.</span>
+</pre><h2 id="2">Dependencies:</h2><pre class="codeinput"><span class="comment">% Matlab statistics toolbox</span>
+<span class="comment">% Matlab signal processing toolbox</span>
+<span class="comment">% Statistical Parametric Mapping (SPM) software https://www.fil.ion.ucl.ac.uk/spm/</span>
+
+<span class="comment">% For full functionality, the other toolboxes below are recommended:</span>
+</pre><h2 id="3">Available Toolboxes:</h2><pre class="codeinput"><span class="comment">% CANlab Core Tools                             https://github.com/canlab/CanlabCore</span>
+<span class="comment">% CANlab Neuroimaging_Pattern_Masks repository  https://github.com/canlab/Neuroimaging_Pattern_Masks</span>
+<span class="comment">% CANlab_help_examples                          https://github.com/canlab/CANlab_help_examples</span>
+<span class="comment">% M3 Multilevel mediation toolbox               https://github.com/canlab/MediationToolbox</span>
+<span class="comment">% CANlab robust regression toolbox              https://github.com/canlab/RobustToolbox</span>
+<span class="comment">% MKDA coordinate-based meta-analysis toolbox   https://github.com/canlab/Canlab_MKDA_MetaAnalysis</span>
+
+<span class="comment">% and also:</span>
+<span class="comment">% Paradigms_Public - experimental paradigms     https://github.com/canlab/Paradigms_Public</span>
+<span class="comment">% FMRI_simulations - brain movies, effect size/power https://github.com/canlab/FMRI_simulations</span>
+<span class="comment">% CANlab_data_public - Published datasets       https://github.com/canlab/CANlab_data_public</span>
+<span class="comment">% DCC - Martin Lindquist's dynamic correlation tbx  https://github.com/canlab/Lindquist_Dynamic_Correlation</span>
+<span class="comment">% CanlabScripts - in-lab Matlab/python/bash     https://github.com/canlab/CanlabScripts</span>
+</pre><h2 id="4">Quick start instructions</h2><pre class="codeinput"><span class="comment">% Before you start, the CANlab_Core_Tools must be added to your path with</span>
+<span class="comment">% subfolders. Otherwise, you will get errors.</span>
+<span class="comment">%</span>
+<span class="comment">% The script canlab_toolbox_setup can help download and install the</span>
+<span class="comment">% toolboxes you need.</span>
+
+<span class="comment">% First, go to a folder where you want to install</span>
+<span class="comment">% toolboxes/repositories on your hard drive. Mine are in "Github" and I've</span>
+<span class="comment">% already installed CanlabCore, so let's find it and go there:</span>
+
+mypath = what(<span class="string">'CanlabCore'</span>);
+mypath = fileparts(mypath(1).path);
+disp(mypath)
+cd(mypath)
+
+<span class="comment">% Now I'm ready to run the setup script:</span>
+
+canlab_toolbox_setup
+
+<span class="comment">% This will attempt to locate toolboxes, add them to your path, and give</span>
+<span class="comment">% you the option to download them from Github if it can't find them.</span>
+</pre><pre class="codeoutput">/Users/torwager/Documents/GitHub
+
+-----------------------------------------
+Checking and/or installing CANlab tools in:
+/Users/torwager/Documents/GitHub
+-----------------------------------------
+Looking for CANlab repositories and adding to Matlab path:
+ 
+CANlab core tools - Object-oriented interactive analysis and tools used in other functions	CanlabCore
+CANlab help examples - Example scripts and html output, second-level analysis batch scripts	CANlab_help_examples
+MKDA meta-analysis toolbox - Coordinate-based meta-analysis of neuroimaging data	Canlab_MKDA_MetaAnalysis
+FMRI_simulations - Misc tools for simulating and testing power and image data	FMRI_simulations
+Private masks and signatures - Selected models shared on request	MasksPrivate
+M3 Mediation toolbox - Single and Multi-level mediation tools	MediationToolbox
+Neuroimaging_Pattern_Masks - meta-analysis masks, signatures, parcellations	Neuroimaging_Pattern_Masks
+Robust regression toolbox - Voxel-wise robust regression for neuroimaging data	RobustToolbox
+CanlabPrivate - Private repository for lab members and collaborators	CanlabPrivate
+
+-----------------------------------------
+
+-----------------------------------------
+
+Repository: CANlab core tools - Object-oriented interactive analysis and tools used in other functions
+Site:CanlabCore
+Finding repo: Running command:
+find /Users/torwager/Documents/GitHub/CanlabCore -name "fmri_data.m"
+Found and added to path with subfolders: /Users/torwager/Documents/GitHub/CanlabCore
+
+-----------------------------------------
+
+Repository: CANlab help examples - Example scripts and html output, second-level analysis batch scripts
+Site:CANlab_help_examples
+Finding repo: Running command:
+find /Users/torwager/Documents/GitHub/CANlab_help_examples -name "a2_second_level_toolbox_check_dependencies.m"
+Found and added to path with subfolders: /Users/torwager/Documents/GitHub/CANlab_help_examples
+
+-----------------------------------------
+
+Repository: MKDA meta-analysis toolbox - Coordinate-based meta-analysis of neuroimaging data
+Site:Canlab_MKDA_MetaAnalysis
+Finding repo: Running command:
+find /Users/torwager/Documents/GitHub/Canlab_MKDA_MetaAnalysis -name "i_density.m"
+Found and added to path with subfolders: /Users/torwager/Documents/GitHub/Canlab_MKDA_MetaAnalysis
+
+-----------------------------------------
+
+Repository: FMRI_simulations - Misc tools for simulating and testing power and image data
+Site:FMRI_simulations
+Finding repo: Running command:
+find /Users/torwager/Documents/GitHub/FMRI_simulations -name "power_figure3_num_comparisons.m"
+Found and added to path with subfolders: /Users/torwager/Documents/GitHub/FMRI_simulations
+
+-----------------------------------------
+
+Repository: Private masks and signatures - Selected models shared on request
+Site:MasksPrivate
+Finding repo: Running command:
+find /Users/torwager/Documents/GitHub/MasksPrivate -name "apply_nps.m"
+Found and added to path with subfolders: /Users/torwager/Documents/GitHub/MasksPrivate
+
+-----------------------------------------
+
+Repository: M3 Mediation toolbox - Single and Multi-level mediation tools
+Site:MediationToolbox
+Finding repo: Running command:
+find /Users/torwager/Documents/GitHub/MediationToolbox -name "mediation_brain.m"
+Warning: Function vecnorm has the same name as a MATLAB builtin. We suggest you
+rename the function to avoid a potential name conflict. 
+Found and added to path with subfolders: /Users/torwager/Documents/GitHub/MediationToolbox
+
+-----------------------------------------
+
+Repository: Neuroimaging_Pattern_Masks - meta-analysis masks, signatures, parcellations
+Site:Neuroimaging_Pattern_Masks
+Finding repo: Running command:
+find /Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks -name "apply_all_signatures.m"
+Found and added to path with subfolders: /Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks
+
+-----------------------------------------
+
+Repository: Robust regression toolbox - Voxel-wise robust regression for neuroimaging data
+Site:RobustToolbox
+Finding repo: Running command:
+find /Users/torwager/Documents/GitHub/RobustToolbox -name "robust_results_batch.m"
+Found and added to path with subfolders: /Users/torwager/Documents/GitHub/RobustToolbox
+
+-----------------------------------------
+
+Repository: CanlabPrivate - Private repository for lab members and collaborators
+Site:CanlabPrivate
+Finding repo: Running command:
+find /Users/torwager/Documents/GitHub/CanlabPrivate -name "power_calc.m"
+Found and added to path with subfolders: /Users/torwager/Documents/GitHub/CanlabPrivate
+
+-----------------------------------------
+
+All CANlab repositories previously installed. Saving path
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% About the CANlab Core Tools repository and CANlab toolboxes
+
+% The CANlab Core Tools repository is on https://github.com/canlab/CanlabCore
+% It contains core tools for MRI/fMRI/PET analysis from the Cognitive and 
+% Affective Neuorscience Lab (Tor Wager, PI) and our collaborators. Many of 
+% these functions are needed to run other toolboxes, e.g., the CAN lab?s 
+% multilevel mediation and Martin Lindquist?s hemodynamic response estimation 
+% toolboxes.
+
+% The tools include object-oriented tools for doing neuroimaging analysis with 
+% simple commands and scripts that provide high-level functionality for 
+% neuroimaging analysis. For example, there is an "fmri_data" object type 
+% that contains neuroimaging datasets (both PET and fMRI data are ok, despite 
+% the name). If you have created and object called my_fmri_data_obj, then
+% plot(my_fmri_data_obj) will generate a series of plots specific to neuroimaging 
+% data, including an interactive brain viewer (courtesy of SPM software). 
+% predict(my_fmri_data_obj) will perform cross-validated multivariate prediction 
+% of outcomes based on brain data. ica(my_fmri_data_obj) will perform independent 
+% components analysis on the data, and so forth.
+
+%% Dependencies:
+
+% Matlab statistics toolbox
+% Matlab signal processing toolbox
+% Statistical Parametric Mapping (SPM) software https://www.fil.ion.ucl.ac.uk/spm/
+
+% For full functionality, the other toolboxes below are recommended:
+
+%% Available Toolboxes:
+
+% CANlab Core Tools                             https://github.com/canlab/CanlabCore
+% CANlab Neuroimaging_Pattern_Masks repository  https://github.com/canlab/Neuroimaging_Pattern_Masks
+% CANlab_help_examples                          https://github.com/canlab/CANlab_help_examples
+% M3 Multilevel mediation toolbox               https://github.com/canlab/MediationToolbox
+% CANlab robust regression toolbox              https://github.com/canlab/RobustToolbox
+% MKDA coordinate-based meta-analysis toolbox   https://github.com/canlab/Canlab_MKDA_MetaAnalysis
+
+% and also:
+% Paradigms_Public - experimental paradigms     https://github.com/canlab/Paradigms_Public
+% FMRI_simulations - brain movies, effect size/power https://github.com/canlab/FMRI_simulations
+% CANlab_data_public - Published datasets       https://github.com/canlab/CANlab_data_public
+% DCC - Martin Lindquist's dynamic correlation tbx  https://github.com/canlab/Lindquist_Dynamic_Correlation
+% CanlabScripts - in-lab Matlab/python/bash     https://github.com/canlab/CanlabScripts 
+
+%% Quick start instructions
+
+% Before you start, the CANlab_Core_Tools must be added to your path with
+% subfolders. Otherwise, you will get errors.
+%
+% The script canlab_toolbox_setup can help download and install the
+% toolboxes you need.
+
+% First, go to a folder where you want to install
+% toolboxes/repositories on your hard drive. Mine are in "Github" and I've
+% already installed CanlabCore, so let's find it and go there:
+
+mypath = what('CanlabCore');
+mypath = fileparts(mypath(1).path);
+disp(mypath)
+cd(mypath)
+
+% Now I'm ready to run the setup script:
+
+canlab_toolbox_setup
+
+% This will attempt to locate toolboxes, add them to your path, and give
+% you the option to download them from Github if it can't find them.
+
+##### SOURCE END #####
+--></body></html>

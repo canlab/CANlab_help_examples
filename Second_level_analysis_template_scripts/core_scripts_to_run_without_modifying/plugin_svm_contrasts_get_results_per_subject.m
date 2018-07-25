@@ -169,6 +169,7 @@ for c = 1:kc
         % Get results for each fold
         for f = 1:length(fold_testset)
             
+            w_obj_this_fold = w_obj;             % make a copy because if some fold weights==0, it will mess up index in main w_obj
             w = stats.other_output_cv{f, 1};     % weights for this fold, cross-validated (from subjects not used in test)
             intc = stats.other_output_cv{f, 3};  % intercept for this fold
             
@@ -179,21 +180,21 @@ for c = 1:kc
             % predict.m method returns voxel weights in cv output
             % inconsistently, in two different vector spaces, so we have to
             % detect which is right.
-            if size(w, 1) == size(w_obj.removed_voxels, 1)
+            if size(w, 1) == size(w_obj_this_fold.removed_voxels, 1)
                 % w is full-length vector
-                w_obj.dat = w(~w_obj.removed_voxels);
+                w_obj_this_fold.dat = w(~w_obj_this_fold.removed_voxels);
                 
-            elseif size(w, 1) == size(w_obj.dat, 1)
+            elseif size(w, 1) == size(w_obj_this_fold.dat, 1)
                 % w is size of dat after removing empty voxels
-                w_obj.dat = w;
+                w_obj_this_fold.dat = w;
                 
             else
                 % voxels have not been removed yet so remove_empty is all 0s
-                voxels_with_valid_data = ~all(w_obj.dat' == 0 | isnan(w_obj.dat'), 1)';
+                voxels_with_valid_data = ~all(w_obj_this_fold.dat' == 0 | isnan(w_obj_this_fold.dat'), 1)';
                 
                 if size(w, 1) == sum(voxels_with_valid_data)
                     
-                    w_obj.dat(voxels_with_valid_data) = w;
+                    w_obj_this_fold.dat(voxels_with_valid_data) = w;
 
                 else
                     disp('Voxel sizes do not match!! Check code and input and debug.');
@@ -211,7 +212,9 @@ for c = 1:kc
             test_fold = get_wh_image(test_dat, test_wh); % fmri_data object with test data
             
             w_obj = replace_empty(w_obj); % may speed up computation?
-            yfit_transfer(test_wh) = apply_mask(w_obj, test_fold, 'pattern_expression') + intc;
+            
+            %yfit_transfer(test_wh) = apply_mask(w_obj_this_fold, test_fold, 'pattern_expression') + intc;
+            yfit_transfer(test_wh) = apply_mask(test_fold, w_obj_this_fold, 'pattern_expression') + intc;
             
             %yfit_transfer(test_wh) = (w' * test_fold.dat  + intc)';
             

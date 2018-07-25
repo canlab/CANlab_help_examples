@@ -33,20 +33,24 @@ for i = 1:length(DAT.conditions)
         % Unzip if needed - 
         % note, Matlab's gunzip() does not remove .gz images, so use eval( ) version.
         % note, replace spaces with '\ ' 
-        try eval(['!gunzip ' strrep(str, ' ', '\ ') '.gz']), catch, end     % gunzip([str '.gz'])
         
-        cimgs{i} = filenames(str, 'absolute');
+%         try eval(['!gunzip ' strrep(str, ' ', '\ ') '.gz']), catch, end     % gunzip([str '.gz'])
+%         cimgs{i} = filenames(str, 'absolute');
+        
+        cimgs{i} = plugin_unzip_images_if_needed(str);
         
     else
         
         str = fullfile(datadir, DAT.functional_wildcard{i});
         
-        % Unzip if needed
-        unzipstr = ['!gunzip ' strrep(str, ' ', '\ ') '.gz'];
+%         % Unzip if needed
+%         unzipstr = ['!gunzip ' strrep(str, ' ', '\ ') '.gz'];
+%         
+%         try eval(unzipstr), catch, end
+%         
+%         cimgs{i} = filenames(str, 'absolute');
         
-        try eval(unzipstr), catch, end
-        
-        cimgs{i} = filenames(str, 'absolute');
+        cimgs{i} = plugin_unzip_images_if_needed(str);
         
     end
     
@@ -93,7 +97,18 @@ for i = 1:length(DAT.conditions)
      
     if dozipimages
         % zip original files to save space (we are done using them now).
-        try eval(['!gzip ' filename_string{i}]), catch, end
+        % try eval(['!gzip ' filename_string{i}]), catch, end
+
+        cmdstr = ['gzip ' filename_string{i}];
+        [status, cmdout] = system(cmdstr);  % cmdout is list of files; don't use, just for reference
+        
+        if status == 0
+            
+            disp('Zipped images into .gz successfully.');
+        else
+            disp('Failed to zip images into .gz.');
+        end
+        
     end
     
     % QUALITY CONTROL METRICS

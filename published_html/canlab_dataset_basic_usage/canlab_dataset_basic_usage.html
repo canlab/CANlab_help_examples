@@ -1,0 +1,311 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>canlab_dataset_basic_usage</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-07-17"><meta name="DC.source" content="canlab_dataset_basic_usage.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Canlab dataset basic usage</a></li><li><a href="#2">Load the sample dataset and print a summary</a></li><li><a href="#3">Extract data two variables and make a plot</a></li><li><a href="#4">Extract data from one variable conditional on another variable, and plot</a></li></ul></div><h2 id="1">Canlab dataset basic usage</h2><p>Shows how to load a sample canlab_dataset object, extract variables, and make some plots.</p><pre class="codeinput"><span class="comment">% Instructions to include in help files as appropriate:</span>
+<span class="comment">% -----------------------------------------------------------------------</span>
+<span class="comment">%</span>
+<span class="comment">% Before you start, the CANlab_Core_Tools must be added to your path with</span>
+<span class="comment">% subfolders. Otherwise, you will get errors.</span>
+<span class="comment">%</span>
+<span class="comment">% Sample datasets are in the "Sample_datasets" folder in CANlab_Core_Tools.</span>
+<span class="comment">%</span>
+<span class="comment">% This example will use behavioral data in the file:</span>
+<span class="comment">% 'Jepma_IE2_single_trial_canlab_dataset.mat'</span>
+<span class="comment">% The dataset is a multi-level dataset with 34 subjects, 2 subject-level vars, 10 event-level vars</span>
+<span class="comment">% consisting of a time series of trial-by-trial ratings of pain, expectations, and cue values for each subject</span>
+<span class="comment">%</span>
+<span class="comment">% These data have been submitted for publication (M. Jepma, Wager et al.)</span>
+<span class="comment">% Please do not reuse without permission.</span>
+</pre><h2 id="2">Load the sample dataset and print a summary</h2><pre class="codeinput"><span class="comment">% Load sample data file (this is in Sample_datasets in Core - make sure it's on your path)</span>
+load(<span class="string">'Jepma_IE2_single_trial_canlab_dataset.mat'</span>); <span class="comment">% loads object called DAT</span>
+
+<span class="comment">% Print a summary:</span>
+print_summary(DAT);     <span class="comment">% see also list_variables(DAT)</span>
+</pre><pre class="codeoutput">
+
+ --------- DATASET VARS -------- 
+
+Experiment name:
+IE2 : Marieke Jepma
+
+34 subjects, 2 subject-level vars, 10 event-level vars
+Warning: Missing variable type for variable MeanPain. Type assumed to be
+numeric. 
+Warning: Missing variable type for variable MeanNPS. Type assumed to be numeric. 
+
+
+ --------- SUBJECT LEVEL VARS: data_obj.Subj_Level -------- 
+
+     Var_name     Description
+    __________    ___________
+
+    'MeanPain'    'MeanPain' 
+    'MeanNPS'     'MeanNPS'  
+
+Warning: Missing variable type for variable trial. Type assumed to be numeric. 
+Warning: Missing variable type for variable temp. Type assumed to be numeric. 
+Warning: Missing variable type for variable cue. Type assumed to be numeric. 
+Warning: Missing variable type for variable cue valence. Type assumed to be
+numeric. 
+Warning: Missing variable type for variable expected pain. Type assumed to be
+numeric. 
+Warning: Missing variable type for variable reported pain. Type assumed to be
+numeric. 
+Warning: Missing variable type for variable vif. Type assumed to be numeric. 
+Warning: Missing variable type for variable NPS. Type assumed to be numeric. 
+Warning: Missing variable type for variable Expected pain next trial. Type
+assumed to be numeric. 
+Warning: Missing variable type for variable Pain next trial. Type assumed to be
+numeric. 
+
+
+ --------- EVENT LEVEL VARS: data_obj.Event_Level -------- 
+
+             Var_name                                    Description                        
+    __________________________    __________________________________________________________
+
+    'trial'                       'Trial number'                                            
+    'temp'                        'Temperature: -0.5 = 48 degrees, 0.5 = 49 degrees'        
+    'cue'                         'Cue identity: 1-3 = CSlow, Cue 4-6 = CShigh, 7 = neutral'
+    'cue valence'                 'Cue valence: -.5 low +.5 high'                           
+    'expected pain'               'Expected pain'                                           
+    'reported pain'               'Reported pain'                                           
+    'vif'                         'Variance inflation factor for trial'                     
+    'NPS'                         'NPS response'                                            
+    'Expected pain next trial'    'Expected pain on next trial'                             
+    'Pain next trial'             'Reported pain on next trial'                             
+
+Warning: Missing variable type for variable MeanPain. Type assumed to be
+numeric. 
+Warning: Missing variable type for variable MeanNPS. Type assumed to be numeric. 
+Warning: Missing variable type for variable trial. Type assumed to be numeric. 
+Warning: Missing variable type for variable temp. Type assumed to be numeric. 
+Warning: Missing variable type for variable cue. Type assumed to be numeric. 
+Warning: Missing variable type for variable cue valence. Type assumed to be
+numeric. 
+Warning: Missing variable type for variable expected pain. Type assumed to be
+numeric. 
+Warning: Missing variable type for variable reported pain. Type assumed to be
+numeric. 
+Warning: Missing variable type for variable vif. Type assumed to be numeric. 
+Warning: Missing variable type for variable NPS. Type assumed to be numeric. 
+Warning: Missing variable type for variable Expected pain next trial. Type
+assumed to be numeric. 
+Warning: Missing variable type for variable Pain next trial. Type assumed to be
+numeric. 
+
+
+ --------- SUBJECT LEVEL VARS: data_obj.Subj_Level -------- 
+
+     Var_name     Min_value    Max_value    Mean_value    St_Dev     IQR      NaN_count
+    __________    _________    _________    __________    ______    ______    _________
+
+    'MeanPain'      5.8015      46.911         27.45      9.5331    12.429        0    
+    'MeanNPS'     -0.72369      87.081        32.079      20.682    27.863        0    
+
+
+
+ --------- EVENT LEVEL VARS: data_obj.Event_Level -------- 
+
+             Var_name             Min_value    Max_value    Mean_value    St_Dev       IQR      NaN_count
+    __________________________    _________    _________    __________    _______    _______    _________
+
+    'trial'                              1           70           35.4     20.231         35       48    
+    'temp'                        -0.54286      0.52857     -0.0025484    0.49995          1       48    
+    'cue'                                1            7         4.0039     2.0048          4       48    
+    'cue valence'                       -1            1              0    0.92536          2       48    
+    'expected pain'                      0       81.333         31.975      16.78     23.533       48    
+    'reported pain'                      0         67.8         27.503     13.149     18.333       48    
+    'vif'                           1.0589       2.9802         1.3221     0.2779    0.19197       48    
+    'NPS'                          -187.75       273.47         32.208     44.535     52.665       78    
+    'Expected pain next trial'           0       81.333         31.976     16.755     23.533       82    
+    'Pain next trial'                    0         67.8         27.549     13.166     18.467       82    
+
+</pre><h2 id="3">Extract data two variables and make a plot</h2><pre class="codeinput"><span class="comment">% Extract expectation and pain ratings, two continuous event-level variables from the object</span>
+[~, expect] = get_var(DAT, <span class="string">'expected pain'</span>);
+[~, pain] = get_var(DAT, <span class="string">'reported pain'</span>);
+
+<span class="comment">% Make a multi-level scatterplot</span>
+create_figure(<span class="string">'lines_expect_pain'</span>, 1, 2);
+[han, Xbin, Ybin] = line_plot_multisubject(expect, pain, <span class="string">'n_bins'</span>, 5, <span class="string">'group_avg_ref_line'</span>, <span class="string">'MarkerTypes'</span>, <span class="string">'o'</span>, <span class="string">'colors'</span>, custom_colors([1 .7 .4], [1 .7 .4], 100), <span class="string">'gcolors'</span>, {[.4 .2 0] [.8 .4 0]});
+axis <span class="string">tight</span>
+xlabel(<span class="string">'Expectations'</span>); ylabel(<span class="string">'Pain'</span>); set(gca, <span class="string">'FontSize'</span>, 24);
+</pre><pre class="codeoutput">Warning: Missing variable type for variable expected pain. Type assumed to be
+numeric. 
+Warning: Missing variable type for variable reported pain. Type assumed to be
+numeric. 
+r = 0.76, t( 33) = 12.53, p = 0.000000, num. missing:   2
+</pre><img vspace="5" hspace="5" src="canlab_dataset_basic_usage_01.png" alt=""> <h2 id="4">Extract data from one variable conditional on another variable, and plot</h2><pre class="codeinput"><span class="comment">% Now extract expectation and pain variables conditional on cue value:</span>
+[~, expect_cshigh] = get_var(DAT, <span class="string">'expected pain'</span>, <span class="string">'conditional'</span>, {<span class="string">'cue valence'</span> 1});
+[~, expect_csmed] = get_var(DAT, <span class="string">'expected pain'</span>, <span class="string">'conditional'</span>, {<span class="string">'cue valence'</span> 0});
+[~, expect_cslow] = get_var(DAT, <span class="string">'expected pain'</span>, <span class="string">'conditional'</span>, {<span class="string">'cue valence'</span> -1});
+[~, pain_cshigh] = get_var(DAT, <span class="string">'reported pain'</span>, <span class="string">'conditional'</span>, {<span class="string">'cue valence'</span> 1});
+[~, pain_csmed] = get_var(DAT, <span class="string">'reported pain'</span>, <span class="string">'conditional'</span>, {<span class="string">'cue valence'</span> 0});
+[~, pain_cslow] = get_var(DAT, <span class="string">'reported pain'</span>, <span class="string">'conditional'</span>, {<span class="string">'cue valence'</span> -1});
+
+<span class="comment">% Now make the plot, without individual subject lines</span>
+<span class="comment">% First set colors and condition names</span>
+color1 = {[.9 .4 .2] [.6 .3 0]};
+color2 = {[.5 .5 .5] [.2 .2 .2]};
+color3 = {[.4 .8 .4] [.2 .7 .2]};
+condition_names = {<span class="string">'High Cue'</span> <span class="string">'Medium Cue'</span> <span class="string">'Low Cue'</span>};
+
+<span class="comment">% Now plot:</span>
+subplot(1, 2, 2)
+[han1, Xbin, Ybin] = line_plot_multisubject(expect_cshigh, pain_cshigh, <span class="string">'n_bins'</span>, 5, <span class="string">'group_avg_ref_line'</span>, <span class="string">'MarkerTypes'</span>, <span class="string">'o'</span>, <span class="string">'colors'</span>, color1, <span class="string">'center'</span>, <span class="string">'noind'</span>, <span class="string">'nolines'</span>);
+[han2, Xbin, Ybin] = line_plot_multisubject(expect_csmed, pain_csmed, <span class="string">'n_bins'</span>, 5, <span class="string">'group_avg_ref_line'</span>, <span class="string">'MarkerTypes'</span>, <span class="string">'o'</span>, <span class="string">'colors'</span>,color2, <span class="string">'center'</span>, <span class="string">'noind'</span>, <span class="string">'nolines'</span>);
+[han3, Xbin, Ybin] = line_plot_multisubject(expect_cslow, pain_cslow, <span class="string">'n_bins'</span>, 5, <span class="string">'group_avg_ref_line'</span>, <span class="string">'MarkerTypes'</span>, <span class="string">'o'</span>, <span class="string">'colors'</span>,color3, <span class="string">'center'</span>, <span class="string">'noind'</span>, <span class="string">'nolines'</span>);
+xlabel(<span class="string">'Expectations'</span>); ylabel(<span class="string">'Pain'</span>); set(gca, <span class="string">'FontSize'</span>, 24);
+legend([han1.grpline_handle(1) han2.grpline_handle(1) han3.grpline_handle(1)], condition_names);
+drawnow, snapnow
+</pre><pre class="codeoutput">Warning: Missing variable type for variable expected pain. Type assumed to be
+numeric. 
+Warning: Missing variable type for variable expected pain. Type assumed to be
+numeric. 
+Warning: Missing variable type for variable expected pain. Type assumed to be
+numeric. 
+Warning: Missing variable type for variable reported pain. Type assumed to be
+numeric. 
+Warning: Missing variable type for variable reported pain. Type assumed to be
+numeric. 
+Warning: Missing variable type for variable reported pain. Type assumed to be
+numeric. 
+r = 0.54, t( 33) = 3.64, p = 0.000919, num. missing:   3
+r = 0.24, t( 33) = 1.43, p = 0.161345, num. missing:   3
+r = 0.59, t( 33) = 5.64, p = 0.000003, num. missing:   2
+</pre><img vspace="5" hspace="5" src="canlab_dataset_basic_usage_02.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Canlab dataset basic usage
+% Shows how to load a sample canlab_dataset object, extract variables, and
+% make some plots.
+
+% Instructions to include in help files as appropriate:
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+%
+% Before you start, the CANlab_Core_Tools must be added to your path with
+% subfolders. Otherwise, you will get errors.
+%
+% Sample datasets are in the "Sample_datasets" folder in CANlab_Core_Tools.
+%
+% This example will use behavioral data in the file: 
+% 'Jepma_IE2_single_trial_canlab_dataset.mat'
+% The dataset is a multi-level dataset with 34 subjects, 2 subject-level vars, 10 event-level vars
+% consisting of a time series of trial-by-trial ratings of pain, expectations, and cue values for each subject 
+%
+% These data have been submitted for publication (M. Jepma, Wager et al.)
+% Please do not reuse without permission.
+
+%% Load the sample dataset and print a summary
+
+% Load sample data file (this is in Sample_datasets in Core - make sure it's on your path)
+load('Jepma_IE2_single_trial_canlab_dataset.mat'); % loads object called DAT 
+
+% Print a summary:      
+print_summary(DAT);     % see also list_variables(DAT)
+
+%% Extract data two variables and make a plot
+
+% Extract expectation and pain ratings, two continuous event-level variables from the object
+[~, expect] = get_var(DAT, 'expected pain');
+[~, pain] = get_var(DAT, 'reported pain');
+
+% Make a multi-level scatterplot 
+create_figure('lines_expect_pain', 1, 2);
+[han, Xbin, Ybin] = line_plot_multisubject(expect, pain, 'n_bins', 5, 'group_avg_ref_line', 'MarkerTypes', 'o', 'colors', custom_colors([1 .7 .4], [1 .7 .4], 100), 'gcolors', {[.4 .2 0] [.8 .4 0]});
+axis tight
+xlabel('Expectations'); ylabel('Pain'); set(gca, 'FontSize', 24);
+
+%% Extract data from one variable conditional on another variable, and plot
+
+% Now extract expectation and pain variables conditional on cue value:
+[~, expect_cshigh] = get_var(DAT, 'expected pain', 'conditional', {'cue valence' 1});
+[~, expect_csmed] = get_var(DAT, 'expected pain', 'conditional', {'cue valence' 0});
+[~, expect_cslow] = get_var(DAT, 'expected pain', 'conditional', {'cue valence' -1});
+[~, pain_cshigh] = get_var(DAT, 'reported pain', 'conditional', {'cue valence' 1});
+[~, pain_csmed] = get_var(DAT, 'reported pain', 'conditional', {'cue valence' 0});
+[~, pain_cslow] = get_var(DAT, 'reported pain', 'conditional', {'cue valence' -1});
+
+% Now make the plot, without individual subject lines
+% First set colors and condition names
+color1 = {[.9 .4 .2] [.6 .3 0]};
+color2 = {[.5 .5 .5] [.2 .2 .2]};
+color3 = {[.4 .8 .4] [.2 .7 .2]};
+condition_names = {'High Cue' 'Medium Cue' 'Low Cue'};
+
+% Now plot:
+subplot(1, 2, 2)
+[han1, Xbin, Ybin] = line_plot_multisubject(expect_cshigh, pain_cshigh, 'n_bins', 5, 'group_avg_ref_line', 'MarkerTypes', 'o', 'colors', color1, 'center', 'noind', 'nolines');
+[han2, Xbin, Ybin] = line_plot_multisubject(expect_csmed, pain_csmed, 'n_bins', 5, 'group_avg_ref_line', 'MarkerTypes', 'o', 'colors',color2, 'center', 'noind', 'nolines');
+[han3, Xbin, Ybin] = line_plot_multisubject(expect_cslow, pain_cslow, 'n_bins', 5, 'group_avg_ref_line', 'MarkerTypes', 'o', 'colors',color3, 'center', 'noind', 'nolines');
+xlabel('Expectations'); ylabel('Pain'); set(gca, 'FontSize', 24);
+legend([han1.grpline_handle(1) han2.grpline_handle(1) han3.grpline_handle(1)], condition_names);
+drawnow, snapnow
+
+
+##### SOURCE END #####
+--></body></html>

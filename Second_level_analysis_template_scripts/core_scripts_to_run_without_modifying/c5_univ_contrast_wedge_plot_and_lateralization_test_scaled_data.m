@@ -32,18 +32,20 @@ end
 kc = size(DAT.contrasts, 1);
 
 for c = 1:kc
-     
-    figtitle = sprintf('Wedge_plot_17networks_%s', DAT.contrastnames{c});
+
+    figtitle = sprintf('Wedge_plot_17networks_scaleddata_%s', DAT.contrastnames{c});
     figstr = format_strings_for_legend(figtitle); 
     figstr = figstr{1};
     printhdr(figstr);
+
+    figtitle = sprintf('Wedge_plot_17networks %s', DAT.contrastnames{c});
     
     if c == 1
-    [roi_table, subj_dat] = ttest_table_and_lateralization_test(DATA_OBJ_CON{c});
+    [roi_table, subj_dat] = ttest_table_and_lateralization_test(DATA_OBJ_CONsc{c});
     
     else
         % no montage
-        [roi_table, subj_dat] = ttest_table_and_lateralization_test(DATA_OBJ_CON{c}, 'nomontage');
+        [roi_table, subj_dat] = ttest_table_and_lateralization_test(DATA_OBJ_CONsc{c}, 'nomontage');
         
     end
     

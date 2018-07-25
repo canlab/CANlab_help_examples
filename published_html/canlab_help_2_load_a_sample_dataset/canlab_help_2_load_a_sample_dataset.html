@@ -1,0 +1,289 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Load a sample dataset</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-07-17"><meta name="DC.source" content="canlab_help_2_load_a_sample_dataset.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Load a sample dataset</h1><!--introduction--><p>This example shows how to load a pre-set example fMRI dataset into an fmri_data object.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">General instructions</a></li><li><a href="#2">Section 1: The quick and easy way to load a pre-specified dataset</a></li><li><a href="#3">Section 2: Manual load.  Use filenames to find file names</a></li><li><a href="#4">Section 3: Plot the data we just loaded</a></li></ul></div><h2 id="1">General instructions</h2><p>Before you start, the CANlab_Core_Tools must be added to your path with subfolders. Otherwise, you will get errors.</p><p>The script canlab_toolbox_setup can help download and install the toolboxes you need.</p><p>Sample datasets are in the "Sample_datasets" folder in CANlab_Core_Tools.</p><p>This example will use emotion regulation data in the folder: "Wager_et_al_2008_Neuron_EmotionReg" The dataset is a series of contrast images from N = 30 participants. Each image is a contrast image for [reappraise neg vs. look neg]</p><p>These data were published in: Wager, T. D., Davidson, M. L., Hughes, B. L., Lindquist, M. A., Ochsner, K. N.. (2008). Prefrontal-subcortical pathways mediating successful emotion regulation. Neuron, 59, 1037-50.</p><p>Here are a couple of helpful functions we will use for display: (you can ignore these.)</p><pre class="codeinput">dashes = <span class="string">'----------------------------------------------'</span>;
+printhdr = @(str) fprintf(<span class="string">'%s\n%s\n%s\n'</span>, dashes, str, dashes);
+</pre><h2 id="2">Section 1: The quick and easy way to load a pre-specified dataset</h2><p>The function load_image_set has a number of pre-defined image sets that you can load with one simple command.  This is the easiest way to load sample data.  The images must be on your Matlab path for this to work.</p><pre class="codeinput">[data_obj, subject_names, image_names] = load_image_set(<span class="string">'emotionreg'</span>);
+
+<span class="comment">% data_obj is an fmri_data object containing all 30 images.</span>
+<span class="comment">% subject_names is a list of short names for each image.</span>
+<span class="comment">% image_names is a list of the full image names with their path.</span>
+</pre><pre class="codeoutput">Data found.
+Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810001.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810002.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810003.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810004.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810005.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810006.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810007.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810008.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810009.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810010.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810011.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810012.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810013.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810014.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810015.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810016.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810017.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810018.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810019.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810020.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810021.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810022.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810023.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810024.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810025.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810026.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810027.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810028.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810029.img
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810030.img
+</pre><h2 id="3">Section 2: Manual load.  Use filenames to find file names</h2><p>First, we need to list the file names in a string matrix. Then, we can load them into an fmri_data object We will use the filenames function to get the names, and the fmri_data object constructor function to load the data.</p><pre class="codeinput"><span class="comment">% First, check whether images are on your path:</span>
+<span class="comment">% We will search for one image and save the path name.</span>
+
+printhdr(<span class="string">'Check that we can find data images:'</span>)
+myfile = which(<span class="string">'con_00810001.img'</span>);
+mydir = fileparts(myfile);
+<span class="keyword">if</span> isempty(mydir), disp(<span class="string">'Uh-oh! I can''t find the data.'</span>), <span class="keyword">else</span> disp(<span class="string">'Data found.'</span>), <span class="keyword">end</span>
+
+<span class="comment">% Now we can list all the file names.</span>
+
+printhdr(<span class="string">'Find files and get their names:'</span>)
+image_names = filenames(fullfile(mydir, <span class="string">'con_008100*img'</span>), <span class="string">'absolute'</span>);
+disp(<span class="string">'Done.'</span>);
+
+<span class="comment">% Now load them into an fmri_data object.</span>
+
+printhdr(<span class="string">'Loading the image data into the object:'</span>)
+data_obj = fmri_data(image_names);
+
+<span class="comment">% This is the gateway to doing many other things, which are explained in</span>
+<span class="comment">% other help files.  But just to get us started, let's run through a few</span>
+<span class="comment">% basic things we can do. We'll mainly just look at some standard plots of</span>
+<span class="comment">% the data.</span>
+</pre><pre class="codeoutput">----------------------------------------------
+Check that we can find data images:
+----------------------------------------------
+Data found.
+----------------------------------------------
+Find files and get their names:
+----------------------------------------------
+Done.
+----------------------------------------------
+Loading the image data into the object:
+----------------------------------------------
+Using default mask: /Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/brainmask.nii
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 5975040 bytes
+Loading image number:    30
+Elapsed time is 0.158653 seconds.
+fmri_data.create: Converting 1203 NaNs to 0s.Image names entered, but fullpath attribute is empty. Getting path info.
+</pre><h2 id="4">Section 3: Plot the data we just loaded</h2><p>Operations that we can perform on fmri_data objects are called methods. You can see a list of methods by typing methods(data_obj). Here, we'll call the plot method to visualize the data.</p><pre class="codeinput">plot(data_obj)
+snapnow
+</pre><pre class="codeoutput">Retained 8 components for mahalanobis distance
+Expected 50% of points within 50% normal ellipsoid, found 46.67%
+Expected 1.50 outside 95% ellipsoid, found   1
+
+Potential outliers based on mahalanobis distance:
+Bonferroni corrected: 0 images		Cases  
+Uncorrected: 1 images		Cases 27 
+
+Outliers:
+Cases after p-value correction: 
+Cases, uncorrected:27 
+
+SPM12: spm_check_registration (v6245)              03:27:50 - 17/07/2018
+========================================================================
+Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
+ (&lt;a href="matlab:spm_check_registration('/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;all&lt;/a&gt;)  &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
+        &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
+
+ans =
+
+  30&times;1 logical array
+
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   1
+   0
+   0
+   0
+
+</pre><img vspace="5" hspace="5" src="canlab_help_2_load_a_sample_dataset_01.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_2_load_a_sample_dataset_02.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Load a sample dataset
+% This example shows how to load a pre-set example fMRI dataset into
+% an fmri_data object.
+
+%% General instructions
+%
+% Before you start, the CANlab_Core_Tools must be added to your path with
+% subfolders. Otherwise, you will get errors.
+%
+% The script canlab_toolbox_setup can help download and install the
+% toolboxes you need.
+%
+% Sample datasets are in the "Sample_datasets" folder in CANlab_Core_Tools.
+%
+% This example will use emotion regulation data in the folder: 
+% "Wager_et_al_2008_Neuron_EmotionReg"
+% The dataset is a series of contrast images from N = 30 participants.
+% Each image is a contrast image for [reappraise neg vs. look neg]
+% 
+% These data were published in:
+% Wager, T. D., Davidson, M. L., Hughes, B. L., Lindquist, M. A., 
+% Ochsner, K. N.. (2008). Prefrontal-subcortical pathways mediating 
+% successful emotion regulation. Neuron, 59, 1037-50.
+%
+%
+% Here are a couple of helpful functions we will use for display:
+% (you can ignore these.)
+dashes = 'REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH';
+printhdr = @(str) fprintf('%s\n%s\n%s\n', dashes, str, dashes);
+
+%% Section 1: The quick and easy way to load a pre-specified dataset
+%
+% The function load_image_set has a number of pre-defined image sets that
+% you can load with one simple command.  This is the easiest way to load
+% sample data.  The images must be on your Matlab path for this to work.
+
+[data_obj, subject_names, image_names] = load_image_set('emotionreg');
+
+% data_obj is an fmri_data object containing all 30 images.
+% subject_names is a list of short names for each image.
+% image_names is a list of the full image names with their path.
+
+%% Section 2: Manual load.  Use filenames to find file names 
+%
+% First, we need to list the file names in a string matrix.
+% Then, we can load them into an fmri_data object
+% We will use the filenames function to get the names, and the fmri_data
+% object constructor function to load the data.
+
+% First, check whether images are on your path:
+% We will search for one image and save the path name.
+
+printhdr('Check that we can find data images:')
+myfile = which('con_00810001.img');
+mydir = fileparts(myfile);
+if isempty(mydir), disp('Uh-oh! I can''t find the data.'), else disp('Data found.'), end
+
+% Now we can list all the file names.
+
+printhdr('Find files and get their names:')
+image_names = filenames(fullfile(mydir, 'con_008100*img'), 'absolute');
+disp('Done.');
+
+% Now load them into an fmri_data object.
+
+printhdr('Loading the image data into the object:')
+data_obj = fmri_data(image_names);
+
+% This is the gateway to doing many other things, which are explained in
+% other help files.  But just to get us started, let's run through a few
+% basic things we can do. We'll mainly just look at some standard plots of
+% the data.
+
+%% Section 3: Plot the data we just loaded
+%
+% Operations that we can perform on fmri_data objects are called methods.
+% You can see a list of methods by typing methods(data_obj).
+% Here, we'll call the plot method to visualize the data.
+
+plot(data_obj)
+snapnow
+
+##### SOURCE END #####
+--></body></html>
