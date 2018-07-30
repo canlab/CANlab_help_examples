@@ -32,7 +32,7 @@ maskdat = fmri_data(mask, 'noverbose');
 
 % This is an underlay brain:
 
-o2 = canlab_results_fmridisplay([], 'compact2', 'noverbose');
+o2 = canlab_results_fmridisplay([], 'noverbose');
 drawnow, snapnow;
 
 % This is a basic gray-matter mask we will use for analysis:
@@ -42,20 +42,24 @@ drawnow, snapnow;
 
 o2 = addblobs(o2, region(maskdat));
 
+% Add a title to montage 1, the axial slice montage:
+o2 = title_montage(o2, 1, 'Mask image: Gray matter with border');
+
 drawnow, snapnow;
 
 %% Visualize summary of brain coverage
 % ---------------------------------------------------------------
-% BLOCK 3: Check that we have valid data in all voxels for all subjects
-
-% Create a mean image across the 30 contrast images, and store in "m"  object.  
-m = mean(image_obj);
-
-orthviews(m)
+% BLOCK 3: Check that we have valid data in most voxels for most subjects
 
 % Show summary of coverage - how many images have non-zero, non-NaN values in each voxel
 
-orthviews(desc.coverage_obj, 'continuous');
+o2 = removeblobs(o2);
+o2 = montage(region(desc.coverage_obj), o2, 'trans', 'transvalue', .3);
+
+o2 = title_montage(o2, 1, 'Coverage in images');
+
+% OR:
+% orthviews(desc.coverage_obj, 'continuous');
 
 %% BLOCK 4
 % ---------------------------------------------------------------
@@ -133,7 +137,14 @@ out = regress(image_obj);
  t = threshold(out.t, .05, 'fdr');
  
 % ...and display
-orthviews(t)
+
+o2 = montage(t, 'trans');
+o2 = title_montage(o2, 2, 'Behavioral predictor: Reappraisal success');
+o2 = title_montage(o2, 4, 'Intercept: Group average activation');
+snapnow
+
+% Or:
+% orthviews(t)
 
 % This is a multiple regression, and there are two output t images, one for
 % each regressor.  We've only entered one regressor, why two images?  The program always
@@ -152,55 +163,63 @@ orthviews(t)
 
 % re-threshold at p < .005 uncorrected
 t = threshold(out.t, .005, 'unc');
-orthviews(t)
+
+o2 = montage(t, 'trans');
+o2 = title_montage(o2, 2, 'Behavioral predictor: Reappraisal success');
+o2 = title_montage(o2, 4, 'Intercept: Group average activation');
+snapnow
+
+
 %% BLOCK 7
 % Display the results on slices
-
-o2 = removeblobs(o2);
 
 % multi_threshold lets us see the blobs with significant voxels at the
 % highest (most stringent) threshold, and voxels that are touching
 % (contiguous) down to the lowest threshold, in different colors.
-o2 = multi_threshold(out.t, 'o2', o2, 'thresh', [.005 .01 .05], 'sizethresh', [1 1 1]);
 
-%% BLOCK 8: Add a new montage and re-display
+o2 = multi_threshold(out.t, 'thresh', [.005 .01 .05], 'sizethresh', [5 1 1]);
 
-o2 = removeblobs(o2);
-o2 = montage(o2, 'coronal', 'slice_range', [-20 20], 'onerow');
-o2 = addblobs(o2, region(out.t));
+o2 = title_montage(o2, 2, 'Behavioral predictor: Reappraisal success');
+o2 = title_montage(o2, 4, 'Intercept: Group average activation');
+snapnow
 
-
-%% BLOCK 9: Look for signal in ventricles, white matter, outside of brain
+%% BLOCK 8: Look for signal in ventricles, white matter, outside of brain
 %
 % We want to diagnose potential problems due to outliers, etc...
 
 % Strategy 1:  Apply a very liberal threshold.
 t = threshold(out.t, .05, 'unc');
 
-o2 = removeblobs(o2);
+figure;
+o2 = canlab_results_fmridisplay;
 o2 = addblobs(o2, region(t));
+
+o2 = title_montage(o2, 5, 'Liberal threshold: .05 uncorrected');
+
 
 % Strategy 2: Extract mean signal from WM and ventricles
 m = extract_gray_white_csf(image_obj);
-create_figure('gray'); 
-barplot_colored(m);
-set(gca, 'XTickLabel', {'Gray' 'White' 'CSF'}, 'XTick', [1:3]);
+
+barplot_columns(m, 'title', 'Gray white CSF per subject', 'names', {'Gray' 'White' 'CSF'}, 'XTick', [1:3], 'colors', {[1 0 0] [0 .7 0] [0 0 1]});
+
 ylabel('Contrast values');
 
 
 % global_gray_white_csf = extract_gray_white_csf(image_obj);
 % corr([global_gray_white_csf diag(H) success])
 
-%% BLOCK 10: Compare results to meta-analysis for positive controls
+%% BLOCK 9: Compare results to meta-analysis for positive controls
 
 % Map from neurosynth.org 
 metaimg = which('emotion regulation_pAgF_z_FDR_0.01_8_14_2015.nii')
-r = region(metaimg)
+r = region(metaimg);
+
 o2 = removeblobs(o2);
-o2 = addblobs(o2, r, 'maxcolor', [1 0 0], 'mincolor', [0 0 1]);
+o2 = addblobs(o2, r, 'maxcolor', [1 0 0], 'mincolor', [.7 .2 .5]);
 
+o2 = title_montage(o2, 5, 'Neurosynth mask: Emotion regulation');
 
-%% BLOCK 11: Apply gray-matter mask and show FDR-thresholded results
+%% BLOCK 10: Apply gray-matter mask and show FDR-thresholded results
 
 % This can increase power by focusing on areas we think there are plausible
 % effects. First is the success effect (regressor) and second is the
@@ -210,10 +229,17 @@ o2 = addblobs(o2, r, 'maxcolor', [1 0 0], 'mincolor', [0 0 1]);
 
 t = apply_mask(out.t, maskdat);
 t = threshold(t, .05, 'fdr');
-o2 = removeblobs(o2);
-o2 = addblobs(o2, region(t));
 
-%% BLOCK 12: Refine analysis by removing outlier and ranking predictor values
+% Select the reappraisal success effect only and show it
+t1 = select_one_image(t, 1);
+
+o2 = removeblobs(o2);
+o2 = addblobs(o2, region(t1));
+
+o2 = title_montage(o2, 5, 'Behavioral predictor, gray-matter masked, q < .05 FDR');
+
+
+%% BLOCK 11: Refine analysis by removing outlier and ranking predictor values
 
 % exclude high-leverage subject 16
 datno16 = image_obj;
@@ -234,50 +260,66 @@ t = apply_mask(out.t, maskdat);
 t = threshold(t, .005, 'unc');
 %orthviews(t)
 
-% Select the reappraisal success effect only and show it
+o2 = multi_threshold(t, 'thresh', [.005 .01 .05], 'sizethresh', [1 1 1]);
+
+o2 = title_montage(o2, 2, 'Behavioral predictor: Reappraisal success');
+o2 = title_montage(o2, 4, 'Intercept: Group average activation');
+snapnow
+
+
+% Select the reappraisal success effect only and write it to disk
+
 t1 = select_one_image(t, 1);
-o2 = removeblobs(o2);
-o2 = multi_threshold(t1, 'o2', o2, 'thresh', [.005 .01 .05], 'sizethresh', [1 1 1]);
+t1.fullpath = fullfile(pwd, 'Reapp_Success_005_outlier_removed.nii');
+write(t1)
 
-% Select the intercept (group average contrast) effect only and show it
-t2 = select_one_image(t, 2);
-o2 = removeblobs(o2);
-o2 = multi_threshold(t2, 'o2', o2, 'thresh', [.005 .01 .05], 'sizethresh', [1 1 1]);
-
-%% Block 13: Extract and plot data from (biased) regions of interest
+%% Block 12: Extract and plot data from (biased) regions of interest
 % Let's visualize the correlation scatterplots in the areas we've
 % discovered as related to Success
 
 % Select the Success regressor map
 r = region(t1);
 
+% Autolabel regions and print a table
+r = table(r);
+
+% Make a montage showing each significant region
+montage(r, 'colormap', 'regioncenters');
+
+%% Block 13: Extract and plot data from (biased) regions of interest
+% Let's visualize the correlation scatterplots in the areas we've
+% discovered as related to Success
+
 % Extract data from all regions
+% r(i).dat has the averages for each subject across voxels for region i
 r = extract_data(r, datno16);
 
 % Select only regions with 3+ voxels
 wh = cat(1, r.numVox) < 3;
 r(wh) = [];
 
+% Set up the scatterplots
+nrows = floor(sqrt(length(r)));
+ncols = ceil(length(r) ./ nrows);
+create_figure('scatterplot_region', nrows, ncols);
+
 % Make a loop and plot each region
 for i = 1:length(r)
-    % Show the region
-    o2 = removeblobs(o2);
-    o2 = addblobs(o2, r(i), 'splitcolor', {[0 0 1] [0 1 1] [1 .5 0] [1 1 0]});
-    orthviews(r(i));
     
-    % Plot the scatterplot
-    create_figure('scatterplot_region');
-    
+    subplot(nrows, ncols, i);
+
     % Use this line for non-robust correlations:
     %plot_correlation_samefig(r(i).dat, datno16.X);
     
     % Use this line for robust correlations:
     plot_correlation_samefig(r(i).dat, datno16.X, [], 'k', 0, 1);
   
+    set(gca, 'FontSize', 12);
     xlabel('Reappraise - Look Neg brain response');
     ylabel('Reappraisal success');
     
-    input('Press a key to continue');
+    % input('Press a key to continue');
+    
 end
 
 
@@ -285,7 +327,7 @@ end
 % Let's visualize the correlation scatterplots in some meta-analysis
 % derived ROIs
 
-% Select the Success regressor map
+% Select the Neurosynth meta-analysis map
 r = region(metaimg);
 
 % Extract data from all regions
@@ -295,32 +337,43 @@ r = extract_data(r, datno16);
 wh = cat(1, r.numVox) < 20;
 r(wh) = [];
 
+r = table(r);
+
+% Make a montage showing each significant region
+montage(r, 'colormap', 'regioncenters');
+
+% Set up the scatterplots
+nrows = floor(sqrt(length(r)));
+ncols = ceil(length(r) ./ nrows);
+create_figure('scatterplot_region', nrows, ncols);
+
 % Make a loop and plot each region
 for i = 1:length(r)
-    % Show the region
-    o2 = removeblobs(o2);
-    o2 = addblobs(o2, r(i), 'splitcolor', {[0 0 1] [0 1 1] [1 .5 0] [1 1 0]});
-    orthviews(r(i));
     
-    % Plot the scatterplot
-    create_figure('scatterplot_region');
-    
+    subplot(nrows, ncols, i);
+
     % Use this line for non-robust correlations:
     %plot_correlation_samefig(r(i).dat, datno16.X);
     
     % Use this line for robust correlations:
-    plot_correlation_samefig(datno16.X, r(i).dat, [], 'k', 0, 1);
+    plot_correlation_samefig(r(i).dat, datno16.X, [], 'k', 0, 1);
   
-    ylabel('Reappraise - Look Neg brain response');
-    xlabel('Reappraisal success');
-    
-    input('Press a key to continue');
+    set(gca, 'FontSize', 12);
+    xlabel('Brain');
+    ylabel('Success');
+    title(' ');
+   
 end
 
 %% Block 15: Multivariate prediction from unbiased ROI averages
 
-contrast_dat = cat(2, r.dat);  % these will be the predictors
-y = datno16.X;                 % this is the outcome to be explained
 
-STATS = xval_regression_multisubject('lasso', {y}, {contrast_dat}, 'holdout_method', 'loo', 'pca', 'ndims', 'variable');
+datno16.Y = datno16.X;  % .Y is the outcome to be explained
+
+% 5-fold cross validated prediction, stratified on outcome
+
+[cverr, stats, optout] = predict(datno16, 'algorithm_name', 'cv_lassopcrmatlab', 'nfolds', 5);
+
+% Though many areas show some significant effects, these are not strong
+% enough to obtain a meaningful out-of-sample prediction of Success
 

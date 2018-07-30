@@ -22,16 +22,16 @@
 %
 % As a summary, here is a complete set of commands to load the data and run
 % the entire analysis:
-
-    img_obj = load_image_set('emotionreg');         % Load a dataset
-    t = ttest(img_obj);                             % Do a group t-test
-    t = threshold(t, .05, 'fdr', 'k', 10);          % Threshold with FDR q < .05 and extent threshold of 10 contiguous voxels
-    r = region(t);                                  % Turn t-map into a region object with one element per contig region
- 
-    % Show regions and print a table with labeled regions:
-    montage(r);
-    table(r);                                       % Print a table of results using new region names
- 
+% 
+%     img_obj = load_image_set('emotionreg');         % Load a dataset
+%     t = ttest(img_obj);                             % Do a group t-test
+%     t = threshold(t, .05, 'fdr', 'k', 10);          % Threshold with FDR q < .05 and extent threshold of 10 contiguous voxels
+%     r = region(t);                                  % Turn t-map into a region object with one element per contig region
+%  
+%     % Show regions and print a table with labeled regions:
+%     montage(r);
+%     table(r);                                       % Print a table of results using new region names
+%  
 % Now, let's walk through it step by step.
 
 %% Load sample data
@@ -99,7 +99,7 @@ r = region(t);
 
 % Print the table:
 
-table(r);
+r = table(r);
 
 % You can get help and options for any object method, like "table". But
 % because the method names are simple and often overlap with other Matlab functions 
@@ -107,6 +107,65 @@ table(r);
 % the object type as well, as follows:
 
 help region.table
+
+% The method region.table ("table" method for "region" object) attempts to
+% autolabel the regions with a combined atlas composed of several published
+% atlases. The region object r that is returned has fields called 'title'
+% and 'shorttitle' that now have names of atlas regions attached to them.
+
+%% Show a montage focused on each region in the table
+
+% Now, let's make another montage of each region, showing a slice with the
+% region center and labeling each region. This will help us visually
+% inspect the clusters in the table:
+
+o2 = montage(r, 'regioncenters', 'colormap');
+
+snapnow
+
+%% More options for visualizing the results map
+
+% o2 is another type of object, an 'fmridisplay' type object. This object
+% holds handles for multiple slices and surfaces, so you can add and remove
+% blobs easily. Let's first create a montage:
+
+o2 = montage(r);
+snapnow
+
+% Maybe we don't like the solid color. Let's remove those blobs and re-plot
+% them in a colormap with different colors:
+
+o2 = removeblobs(o2);
+
+o2 = montage(r, o2, 'colormap', 'mincolor', [0 0 1], 'maxcolor', [.8 .5 .7]);
+
+snapnow
+
+% We've passed o2 back into region.montage so that it can use the existing
+% slices and display setup. 
+
+% All of the lower-level functions that these commands run are designed to
+% be modular, too. region.montage runs canlab_results_fmridisplay.m, which sets up
+% various configurations of slices. That function uses fmridisplay.montage
+% to attach slice montages at different orientations and locations to the
+% figure and the registry in o2, the fmridisplay object. And
+% fmridisplay.addblobs adds the blobs, with various options for color,
+% transparency, and scaling of colors.  We can use any of the many options
+% in addblobs.  Let's try making the blobs transparent instead:
+
+o2 = removeblobs(o2);
+
+o2 = montage(r, o2, 'colormap', 'trans', 'mincolor', [0 0 1], 'maxcolor', [.8 .5 .7]);
+
+snapnow
+
+% Finally, let's create a montage with a complete set of slices and surfaces, for a
+% fairly comprehensive view of the results map. We do this with the 'full'
+% option to region.montage (there are many other options).
+
+o2 = montage(r, 'colormap', 'full');
+
+
 
 %% Write the t-map to disk
 

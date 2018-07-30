@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Perform a voxel-wise t-test</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-07-17"><meta name="DC.source" content="canlab_help_3_voxelwise_t_test_walkthrough.m"><style type="text/css">
+      --><title>Perform a voxel-wise t-test</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-07-30"><meta name="DC.source" content="canlab_help_3_voxelwise_t_test_walkthrough.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,89 +66,96 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Perform a voxel-wise t-test</h1><!--introduction--><p>Edited/commented by Bogdan Petre on 9/14/2016, Tor Wager July 2018</p><p>In this example we perform a second level analysis on first level statistical parametric maps. Specifically we use a t-test to obtain an ordinary least squares estimate for the group level parameter.</p><p>Incidentally, we use the emotion regulation data provided with CANlab_Core_Tools. This dataset consists of first level analyses, where those analyses produced parameter estimates for a within subject task contrast (reappraise neg vs. look neg). There are 30 such maps, one for each subject</p><p>These data were published in: Wager, T. D., Davidson, M. L., Hughes, B. L., Lindquist, M. A., Ochsner, K. N.. (2008). Prefrontal-subcortical pathways mediating successful emotion regulation. Neuron, 59, 1037-50.</p><p>By the end of this example we will have regenerated the results of figure 2A of this paper.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Executive summary of the whole analysis</a></li><li><a href="#2">Load sample data</a></li><li><a href="#3">Do a t-test</a></li><li><a href="#4">Visualize the results</a></li><li><a href="#5">Print a table of results</a></li><li><a href="#6">Write the t-map to disk</a></li></ul></div><h2 id="1">Executive summary of the whole analysis</h2><p>As a summary, here is a complete set of commands to load the data and run the entire analysis:</p><pre class="codeinput">    img_obj = load_image_set(<span class="string">'emotionreg'</span>);         <span class="comment">% Load a dataset</span>
+  </style></head><body><div class="content"><h1>Perform a voxel-wise t-test</h1><!--introduction--><p>Edited/commented by Bogdan Petre on 9/14/2016, Tor Wager July 2018</p><p>In this example we perform a second level analysis on first level statistical parametric maps. Specifically we use a t-test to obtain an ordinary least squares estimate for the group level parameter.</p><p>The example uses the emotion regulation data provided with CANlab_Core_Tools. This dataset consists of a set of contrast images for 30 subjects from a first level analysis. The contrast is [reappraise neg vs. look neg], reappraisal of negative images vs. looking at matched negative images.</p><p>These data were published in: Wager, T. D., Davidson, M. L., Hughes, B. L., Lindquist, M. A., Ochsner, K. N.. (2008). Prefrontal-subcortical pathways mediating successful emotion regulation. Neuron, 59, 1037-50.</p><p>By the end of this example we will have regenerated the results of figure 2A of this paper.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Executive summary of the whole analysis</a></li><li><a href="#2">Load sample data</a></li><li><a href="#3">Do a t-test</a></li><li><a href="#4">Visualize the results</a></li><li><a href="#5">Print a table of results</a></li><li><a href="#6">Write the t-map to disk</a></li></ul></div><h2 id="1">Executive summary of the whole analysis</h2><p>As a summary, here is a complete set of commands to load the data and run the entire analysis:</p><pre class="codeinput">    img_obj = load_image_set(<span class="string">'emotionreg'</span>);         <span class="comment">% Load a dataset</span>
     t = ttest(img_obj);                             <span class="comment">% Do a group t-test</span>
     t = threshold(t, .05, <span class="string">'fdr'</span>, <span class="string">'k'</span>, 10);          <span class="comment">% Threshold with FDR q &lt; .05 and extent threshold of 10 contiguous voxels</span>
-    r = region(t);                                  <span class="comment">% Turn t-map into a region object with one element per contig region</span>
 
     <span class="comment">% Show regions and print a table with labeled regions:</span>
-    montage(r);  drawnow, snapnow;                  <span class="comment">% Show results on a slice display</span>
+    montage(t);  drawnow, snapnow;                  <span class="comment">% Show results on a slice display</span>
+    r = region(t);                                  <span class="comment">% Turn t-map into a region object with one element per contig region</span>
     table(r);                                       <span class="comment">% Print a table of results using new region names</span>
 
 <span class="comment">% Now, let's walk through it step by step.</span>
-</pre><pre class="codeoutput">Data found.
-Loaded images:
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810001.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810002.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810003.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810004.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810005.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810006.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810007.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810008.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810009.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810010.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810011.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810012.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810013.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810014.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810015.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810016.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810017.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810018.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810019.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810020.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810021.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810022.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810023.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810024.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810025.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810026.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810027.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810028.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810029.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810030.img
+</pre><pre class="codeoutput">Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
 One-sample t-test
 Calculating t-statistics and p-values
 Image   1 FDR q &lt; 0.050 threshold is 0.002549
 
 Image   1
+  9 contig. clusters, sizes  10 to 1472
 Positive effect: 2460 voxels, min p-value: 0.00000000
 Negative effect:  32 voxels, min p-value: 0.00022793
+Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
 Grouping contiguous voxels:   9 regions
-</pre><img vspace="5" hspace="5" src="canlab_help_3_voxelwise_t_test_walkthrough_01.png" alt=""> <pre class="codeoutput">
+sagittal montage: 127 voxels displayed, 2365 not displayed on these slices
+axial montage: 1272 voxels displayed, 1220 not displayed on these slices
+</pre><img vspace="5" hspace="5" src="canlab_help_3_voxelwise_t_test_walkthrough_01.png" alt=""> <pre class="codeoutput">Grouping contiguous voxels:   9 regions
+
 ____________________________________________________________________________________________________________________________________________
 Positive Effects
-       Region         Volume             XYZ            maxZ     Perc_covered_by_label    Ref_region_perc    Atlas_regions_covered
-    ____________    __________    _________________    ______    _____________________    _______________    _____________________
+       Region         Volume             XYZ            maxZ     modal_label_descriptions    Perc_covered_by_label    Atlas_regions_covered    region_index
+    ____________    __________    _________________    ______    ________________________    _____________________    _____________________    ____________
 
-    'Ctx_TE1a_R'          9864     55      0    -27    4.6702             30                    69                     5          
-    'Ctx_TE1a_L'         31664    -55     21      9    4.9536              9                    61                    19          
-    'Ctx_10v_L'           3752     -3     58    -32    4.5842              7                     7                     1          
-    'Ctx_8BL_R'     1.4038e+05     31     28     36    7.2547              4                    95                    48          
-    'No label'             912    -45     52    -23    4.4372              0                     0                     0          
-    'Ctx_PGs_R'          57152     55    -58     23    5.9923              7                    86                    15          
-    'Ctx_9a_L'            4336    -24     52     27    3.8657             35                    34                     4          
+    'Ctx_TE1a_R'          9864     55      0    -27    3.9997     'Cortex_Default_ModeA'              30                        5                   1      
+    'Ctx_PGs_R'          57152     55    -58     23    4.7899     'Cortex_Default_ModeA'               7                       15                   6      
+    'Ctx_TE1a_L'         31664    -55     21      9    4.1824     'Cortex_Default_ModeB'               9                       19                   2      
+    'Ctx_8BL_R'     1.4038e+05     31     28     36    7.0345     'Cortex_Default_ModeB'               4                       48                   4      
+    'Ctx_9a_L'            4336    -24     52     27     3.443     'Cortex_Default_ModeB'              35                        4                   7      
+    'Ctx_10v_L'           3752     -3     58    -32     3.943     'Cortex_Limbic'                      7                        1                   3      
+    'No label'             912    -45     52    -23    3.8446     'X_No_label'                         0                        0                   5      
 
 
 Negative Effects
-        Region        Volume          XYZ            maxZ      Perc_covered_by_label    Ref_region_perc    Atlas_regions_covered
-    ______________    ______    ________________    _______    _____________________    _______________    _____________________
+        Region        Volume          XYZ            maxZ       modal_label_descriptions     Perc_covered_by_label    Atlas_regions_covered    region_index
+    ______________    ______    ________________    _______    __________________________    _____________________    _____________________    ____________
 
-    'Bstem_Pons_L'     2016     -3    -24    -50    -4.2063             22                     9                     4          
-    'Ctx_ProS_R'       2832     28    -48      9    -3.7265             12                    21                     1          
+    'Bstem_Pons_L'     2016     -3    -24    -50    -3.6859    'Brainstem'                            22                        4                   8      
+    'Ctx_ProS_R'       2832     28    -48      9    -3.3405    'Cortex_Visual_Peripheral'             12                        1                   9      
 
 
 ____________________________________________________________________________________________________________________________________________
 Regions labeled by reference atlas CANlab_2018_combined
                                                        
 Volume: Volume of contiguous region in cubic mm.
+MaxZ: Signed max over Z-score for each voxel.
 Atlas_regions_covered: Number of reference atlas regions covered at least 5% by the region. This relates to whether the region covers 
 multiple reference atlas regions                                                                                                      
 Region: Best reference atlas label, defined as reference region with highest number of in-region voxels.
 Perc_covered_by_label: Percentage of the region covered by the label.
 Ref_region_perc: Percentage of the label region within the target region.
 modal_atlas_index: Index number of label region in reference atlas
+ 
 For example, if a region is labeled 'TE1a' and Perc_covered_by_label = 8, Ref_region_perc = 38, and Atlas_regions_covered = 17, this means 
 that 8% of the region's voxels are labeled TE1a, which is the highest percentage among reference label regions. 38% of the region TE1a is  
 covered by the region. However, the region covers at least 5% of 17 distinct labeled reference regions.                                    
@@ -195,38 +202,37 @@ ________________________________________________________________________________
 <span class="comment">% indepth demosntration may be provided by load_a_sample_dataset.m</span>
 
 [image_obj, networknames, imagenames] = load_image_set(<span class="string">'emotionreg'</span>);
-</pre><pre class="codeoutput">Data found.
-Loaded images:
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810001.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810002.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810003.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810004.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810005.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810006.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810007.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810008.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810009.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810010.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810011.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810012.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810013.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810014.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810015.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810016.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810017.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810018.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810019.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810020.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810021.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810022.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810023.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810024.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810025.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810026.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810027.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810028.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810029.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810030.img
+</pre><pre class="codeoutput">Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
 </pre><h2 id="3">Do a t-test</h2><pre class="codeinput"><span class="comment">% Voxel-wise tests estimate parameters for each voxel independently. The</span>
 <span class="comment">% fmri_data/ttest function performs this just like the native matlab</span>
 <span class="comment">% ttest() function, and similarly returns a p-value and t-stat. Unlike the</span>
@@ -270,7 +276,7 @@ create_figure(<span class="string">'montage'</span>);
 montage(t)
 drawnow, snapnow;
 </pre><pre class="codeoutput">
-SPM12: spm_check_registration (v6245)              03:28:15 - 17/07/2018
+SPM12: spm_check_registration (v6245)              01:43:16 - 30/07/2018
 ========================================================================
 Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
 
@@ -283,10 +289,11 @@ ans =
 </pre><img vspace="5" hspace="5" src="canlab_help_3_voxelwise_t_test_walkthrough_02.png" alt=""> <pre class="codeoutput">Image   1 FDR q &lt; 0.050 threshold is 0.002549
 
 Image   1
+ 27 contig. clusters, sizes   1 to 1472
 Positive effect: 2502 voxels, min p-value: 0.00000000
 Negative effect:  37 voxels, min p-value: 0.00022793
 
-SPM12: spm_check_registration (v6245)              03:28:17 - 17/07/2018
+SPM12: spm_check_registration (v6245)              01:43:18 - 30/07/2018
 ========================================================================
 Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
 
@@ -299,10 +306,11 @@ ans =
 </pre><img vspace="5" hspace="5" src="canlab_help_3_voxelwise_t_test_walkthrough_03.png" alt=""> <pre class="codeoutput">Image   1 FDR q &lt; 0.050 threshold is 0.002549
 
 Image   1
+  9 contig. clusters, sizes  10 to 1472
 Positive effect: 2460 voxels, min p-value: 0.00000000
 Negative effect:  32 voxels, min p-value: 0.00022793
 
-SPM12: spm_check_registration (v6245)              03:28:19 - 17/07/2018
+SPM12: spm_check_registration (v6245)              01:43:20 - 30/07/2018
 ========================================================================
 Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
 
@@ -356,36 +364,38 @@ help <span class="string">region.table</span>
 
 ____________________________________________________________________________________________________________________________________________
 Positive Effects
-       Region         Volume             XYZ            maxZ     Perc_covered_by_label    Ref_region_perc    Atlas_regions_covered
-    ____________    __________    _________________    ______    _____________________    _______________    _____________________
+       Region         Volume             XYZ            maxZ     modal_label_descriptions    Perc_covered_by_label    Atlas_regions_covered    region_index
+    ____________    __________    _________________    ______    ________________________    _____________________    _____________________    ____________
 
-    'Ctx_TE1a_R'          9864     55      0    -27    4.6702             30                    69                     5          
-    'Ctx_TE1a_L'         31664    -55     21      9    4.9536              9                    61                    19          
-    'Ctx_10v_L'           3752     -3     58    -32    4.5842              7                     7                     1          
-    'Ctx_8BL_R'     1.4038e+05     31     28     36    7.2547              4                    95                    48          
-    'No label'             912    -45     52    -23    4.4372              0                     0                     0          
-    'Ctx_PGs_R'          57152     55    -58     23    5.9923              7                    86                    15          
-    'Ctx_9a_L'            4336    -24     52     27    3.8657             35                    34                     4          
+    'Ctx_TE1a_R'          9864     55      0    -27    3.9997     'Cortex_Default_ModeA'              30                        5                   1      
+    'Ctx_PGs_R'          57152     55    -58     23    4.7899     'Cortex_Default_ModeA'               7                       15                   6      
+    'Ctx_TE1a_L'         31664    -55     21      9    4.1824     'Cortex_Default_ModeB'               9                       19                   2      
+    'Ctx_8BL_R'     1.4038e+05     31     28     36    7.0345     'Cortex_Default_ModeB'               4                       48                   4      
+    'Ctx_9a_L'            4336    -24     52     27     3.443     'Cortex_Default_ModeB'              35                        4                   7      
+    'Ctx_10v_L'           3752     -3     58    -32     3.943     'Cortex_Limbic'                      7                        1                   3      
+    'No label'             912    -45     52    -23    3.8446     'X_No_label'                         0                        0                   5      
 
 
 Negative Effects
-        Region        Volume          XYZ            maxZ      Perc_covered_by_label    Ref_region_perc    Atlas_regions_covered
-    ______________    ______    ________________    _______    _____________________    _______________    _____________________
+        Region        Volume          XYZ            maxZ       modal_label_descriptions     Perc_covered_by_label    Atlas_regions_covered    region_index
+    ______________    ______    ________________    _______    __________________________    _____________________    _____________________    ____________
 
-    'Bstem_Pons_L'     2016     -3    -24    -50    -4.2063             22                     9                     4          
-    'Ctx_ProS_R'       2832     28    -48      9    -3.7265             12                    21                     1          
+    'Bstem_Pons_L'     2016     -3    -24    -50    -3.6859    'Brainstem'                            22                        4                   8      
+    'Ctx_ProS_R'       2832     28    -48      9    -3.3405    'Cortex_Visual_Peripheral'             12                        1                   9      
 
 
 ____________________________________________________________________________________________________________________________________________
 Regions labeled by reference atlas CANlab_2018_combined
                                                        
 Volume: Volume of contiguous region in cubic mm.
+MaxZ: Signed max over Z-score for each voxel.
 Atlas_regions_covered: Number of reference atlas regions covered at least 5% by the region. This relates to whether the region covers 
 multiple reference atlas regions                                                                                                      
 Region: Best reference atlas label, defined as reference region with highest number of in-region voxels.
 Perc_covered_by_label: Percentage of the region covered by the label.
 Ref_region_perc: Percentage of the label region within the target region.
 modal_atlas_index: Index number of label region in reference atlas
+ 
 For example, if a region is labeled 'TE1a' and Perc_covered_by_label = 8, Ref_region_perc = 38, and Atlas_regions_covered = 17, this means 
 that 8% of the region's voxels are labeled TE1a, which is the highest percentage among reference label regions. 38% of the region TE1a is  
 covered by the region. However, the region covers at least 5% of 17 distinct labeled reference regions.                                    
@@ -478,7 +488,7 @@ ________________________________________________________________________________
   :Examples:
   -------------------------------------------------------------------------
   ::
-  Example 1: 
+  Example 1:
   % Complete group analysis of a standard dataset
   % Do analysis and prep results region object:
  
@@ -488,8 +498,8 @@ ________________________________________________________________________________
     r = region(t);                                  % Turn t-map into a region object with one element per contig region
  
     Label regions and print a table:
-    [r, region_table, table_legend_text] =
-    autolabel_regions_using_atlas(r);               % Label regions. Can be skipped because 'table' below attempts to do this automatically
+    [r, region_table, table_legend_text] = autolabel_regions_using_atlas(r);  
+                                                    % Label regions. Can be skipped because 'table' below attempts to do this automatically
     table(r);                                       % Print a table of results using new region names
  
 
@@ -516,7 +526,7 @@ Writing thresholded statistic image.
 Writing: 
 /Users/torwager/Documents/GitHub/example_t_image.nii
 
-SPM12: spm_check_registration (v6245)              03:28:32 - 17/07/2018
+SPM12: spm_check_registration (v6245)              01:43:32 - 30/07/2018
 ========================================================================
 Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
 Displaying image   1, 2492 voxels: example_t_image.nii
@@ -537,11 +547,10 @@ ans =
 % statistical parametric maps. Specifically we use a t-test to obtain an
 % ordinary least squares estimate for the group level parameter. 
 %
-% Incidentally, we use the emotion regulation data provided with
-% CANlab_Core_Tools. This dataset consists of first level analyses, where
-% those analyses produced parameter estimates for a within subject task
-% contrast (reappraise neg vs. look neg). There are 30 such maps, one for
-% each subject
+% The example uses the emotion regulation data provided with
+% CANlab_Core_Tools. This dataset consists of a set of contrast images for 
+% 30 subjects from a first level analysis. The contrast is [reappraise neg vs. look neg],
+% reappraisal of negative images vs. looking at matched negative images. 
 %
 % These data were published in:
 % Wager, T. D., Davidson, M. L., Hughes, B. L., Lindquist, M. A., 
@@ -559,10 +568,10 @@ ans =
     img_obj = load_image_set('emotionreg');         % Load a dataset
     t = ttest(img_obj);                             % Do a group t-test
     t = threshold(t, .05, 'fdr', 'k', 10);          % Threshold with FDR q < .05 and extent threshold of 10 contiguous voxels
-    r = region(t);                                  % Turn t-map into a region object with one element per contig region
  
     % Show regions and print a table with labeled regions:
-    montage(r);  drawnow, snapnow;                  % Show results on a slice display
+    montage(t);  drawnow, snapnow;                  % Show results on a slice display
+    r = region(t);                                  % Turn t-map into a region object with one element per contig region
     table(r);                                       % Print a table of results using new region names
  
 % Now, let's walk through it step by step.

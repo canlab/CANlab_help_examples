@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>canlab_help_5_regression_walkthrough</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-07-17"><meta name="DC.source" content="canlab_help_5_regression_walkthrough.m"><style type="text/css">
+      --><title>canlab_help_5_regression_walkthrough</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-07-30"><meta name="DC.source" content="canlab_help_5_regression_walkthrough.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Load sample data</a></li><li><a href="#2">Visualize the mask</a></li><li><a href="#3">Visualize summary of brain coverage</a></li><li><a href="#4">BLOCK 4</a></li><li><a href="#5">BLOCK 5</a></li><li><a href="#6">BLOCK 6</a></li><li><a href="#7">BLOCK 7</a></li><li><a href="#8">BLOCK 8: Add a new montage and re-display</a></li><li><a href="#9">BLOCK 9: Look for signal in ventricles, white matter, outside of brain</a></li><li><a href="#10">BLOCK 10: Compare results to meta-analysis for positive controls</a></li><li><a href="#11">BLOCK 11: Apply gray-matter mask and show FDR-thresholded results</a></li><li><a href="#12">BLOCK 12: Refine analysis by removing outlier and ranking predictor values</a></li><li><a href="#13">Block 13: Extract and plot data from (biased) regions of interest</a></li><li><a href="#14">Block 14: Extract and plot data from unbiased regions of interest</a></li><li><a href="#15">Block 15: Multivariate prediction from unbiased ROI averages</a></li></ul></div><h2 id="1">Load sample data</h2><p>BLOCK 1 ---------------------------------------------------------------</p><pre class="codeinput"><span class="comment">% Load sample data using load_image_set(), which produces an fmri_data</span>
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Load sample data</a></li><li><a href="#2">Visualize the mask</a></li><li><a href="#3">Visualize summary of brain coverage</a></li><li><a href="#4">BLOCK 4</a></li><li><a href="#5">BLOCK 5</a></li><li><a href="#6">BLOCK 6</a></li><li><a href="#7">BLOCK 7</a></li><li><a href="#8">BLOCK 8: Look for signal in ventricles, white matter, outside of brain</a></li><li><a href="#9">BLOCK 9: Compare results to meta-analysis for positive controls</a></li><li><a href="#10">BLOCK 10: Apply gray-matter mask and show FDR-thresholded results</a></li><li><a href="#11">BLOCK 11: Refine analysis by removing outlier and ranking predictor values</a></li><li><a href="#12">Block 12: Extract and plot data from (biased) regions of interest</a></li><li><a href="#13">Block 13: Extract and plot data from (biased) regions of interest</a></li><li><a href="#14">Block 14: Extract and plot data from unbiased regions of interest</a></li><li><a href="#15">Block 15: Multivariate prediction from unbiased ROI averages</a></li></ul></div><h2 id="1">Load sample data</h2><p>BLOCK 1 ---------------------------------------------------------------</p><pre class="codeinput"><span class="comment">% Load sample data using load_image_set(), which produces an fmri_data</span>
 <span class="comment">% object. Data loading exceeds the scope of this tutorial, but a more</span>
 <span class="comment">% indepth demosntration may be provided by canlab_help_2_load_a_sample_dataset.m</span>
 
@@ -89,38 +89,37 @@ success = beh.data(:, 2);           <span class="comment">% Reappraisal success<
 mask = which(<span class="string">'gray_matter_mask.img'</span>)
 
 maskdat = fmri_data(mask, <span class="string">'noverbose'</span>);
-</pre><pre class="codeoutput">Data found.
-Loaded images:
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810001.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810002.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810003.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810004.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810005.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810006.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810007.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810008.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810009.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810010.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810011.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810012.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810013.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810014.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810015.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810016.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810017.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810018.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810019.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810020.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810021.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810022.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810023.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810024.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810025.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810026.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810027.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810028.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810029.img
-/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/con_00810030.img
+</pre><pre class="codeoutput">Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
  
 Summary of dataset
 ______________________________________________________
@@ -162,7 +161,7 @@ mask =
 
 </pre><h2 id="2">Visualize the mask</h2><p>--------------------------------------------------------------- BLOCK 2: Check mask</p><pre class="codeinput"><span class="comment">% This is an underlay brain:</span>
 
-o2 = canlab_results_fmridisplay([], <span class="string">'compact2'</span>, <span class="string">'noverbose'</span>);
+o2 = canlab_results_fmridisplay([], <span class="string">'noverbose'</span>);
 drawnow, snapnow;
 
 <span class="comment">% This is a basic gray-matter mask we will use for analysis:</span>
@@ -172,35 +171,26 @@ drawnow, snapnow;
 
 o2 = addblobs(o2, region(maskdat));
 
+<span class="comment">% Add a title to montage 1, the axial slice montage:</span>
+o2 = title_montage(o2, 1, <span class="string">'Mask image: Gray matter with border'</span>);
+
 drawnow, snapnow;
 </pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_01.png" alt=""> <pre class="codeoutput">Grouping contiguous voxels:  46 regions
-axial montage: 42172 voxels displayed, 169167 not displayed on these slices
-sagittal montage: 8208 voxels displayed, 203131 not displayed on these slices
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_02.png" alt=""> <h2 id="3">Visualize summary of brain coverage</h2><p>--------------------------------------------------------------- BLOCK 3: Check that we have valid data in all voxels for all subjects</p><pre class="codeinput"><span class="comment">% Create a mean image across the 30 contrast images, and store in "m"  object.</span>
-m = mean(image_obj);
+sagittal montage: 4184 voxels displayed, 207155 not displayed on these slices
+sagittal montage: 4184 voxels displayed, 207155 not displayed on these slices
+sagittal montage: 3961 voxels displayed, 207378 not displayed on these slices
+axial montage: 29707 voxels displayed, 181632 not displayed on these slices
+axial montage: 32072 voxels displayed, 179267 not displayed on these slices
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_02.png" alt=""> <h2 id="3">Visualize summary of brain coverage</h2><p>--------------------------------------------------------------- BLOCK 3: Check that we have valid data in most voxels for most subjects</p><pre class="codeinput"><span class="comment">% Show summary of coverage - how many images have non-zero, non-NaN values in each voxel</span>
 
-orthviews(m)
+o2 = removeblobs(o2);
+o2 = montage(region(desc.coverage_obj), o2, <span class="string">'trans'</span>, <span class="string">'transvalue'</span>, .3);
 
-<span class="comment">% Show summary of coverage - how many images have non-zero, non-NaN values in each voxel</span>
+o2 = title_montage(o2, 1, <span class="string">'Coverage in images'</span>);
 
-orthviews(desc.coverage_obj, <span class="string">'continuous'</span>);
-</pre><pre class="codeoutput">
-SPM12: spm_check_registration (v6245)              03:28:52 - 17/07/2018
-========================================================================
-Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
-Grouping contiguous voxels:   1 regions
-
-ans =
-
-  1&times;1 cell array
-
-    {1&times;1 region}
-
-
-SPM12: spm_check_registration (v6245)              03:28:54 - 17/07/2018
-========================================================================
-Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
-Grouping contiguous voxels:   1 regions
+<span class="comment">% OR:</span>
+<span class="comment">% orthviews(desc.coverage_obj, 'continuous');</span>
+</pre><pre class="codeoutput">Grouping contiguous voxels:   1 regions
 </pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_03.png" alt=""> <h2 id="4">BLOCK 4</h2><p>--------------------------------------------------------------- Check histograms of individual subjects for global shifts in contrast values</p><pre class="codeinput"><span class="comment">% The 'histogram' object method will allow you to examine a series of</span>
 <span class="comment">% images in one panel each.  See help fmri_data.histogram for more options,</span>
 <span class="comment">% including breakdown by tissue type.</span>
@@ -254,7 +244,14 @@ out = regress(image_obj);
  t = threshold(out.t, .05, <span class="string">'fdr'</span>);
 
 <span class="comment">% ...and display</span>
-orthviews(t)
+
+o2 = montage(t, <span class="string">'trans'</span>);
+o2 = title_montage(o2, 2, <span class="string">'Behavioral predictor: Reappraisal success'</span>);
+o2 = title_montage(o2, 4, <span class="string">'Intercept: Group average activation'</span>);
+snapnow
+
+<span class="comment">% Or:</span>
+<span class="comment">% orthviews(t)</span>
 
 <span class="comment">% This is a multiple regression, and there are two output t images, one for</span>
 <span class="comment">% each regressor.  We've only entered one regressor, why two images?  The program always</span>
@@ -273,7 +270,11 @@ orthviews(t)
 
 <span class="comment">% re-threshold at p &lt; .005 uncorrected</span>
 t = threshold(out.t, .005, <span class="string">'unc'</span>);
-orthviews(t)
+
+o2 = montage(t, <span class="string">'trans'</span>);
+o2 = title_montage(o2, 2, <span class="string">'Behavioral predictor: Reappraisal success'</span>);
+o2 = title_montage(o2, 4, <span class="string">'Intercept: Group average activation'</span>);
+snapnow
 </pre><pre class="codeoutput">Analysis: 
 ----------------------------------
 Design matrix warnings:
@@ -286,109 +287,111 @@ Running regression: 49792 voxels. Design:  30 obs,   2 regressors, intercept is 
 
 Predicting exogenous variable(s) in dat.X using brain data as predictors, mass univariate
 Running in OLS Mode
-Model run in 0 minutes and 0.06 seconds
+Model run in 0 minutes and 0.04 seconds
 
 Image   1
+ 24 contig. clusters, sizes   1 to  51
 Positive effect: 203 voxels, min p-value: 0.00001192
 Negative effect:   0 voxels, min p-value: 0.00170529
 
 Image   2
+ 24 contig. clusters, sizes   1 to  51
 Positive effect: 1969 voxels, min p-value: 0.00000000
 Negative effect:  11 voxels, min p-value: 0.00024068
 
-SPM12: spm_check_registration (v6245)              03:29:04 - 17/07/2018
+SPM12: spm_check_registration (v6245)              01:44:04 - 30/07/2018
 ========================================================================
 Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
  (&lt;a href="matlab:spm_check_registration('/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;all&lt;/a&gt;)  &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
 Image   1 FDR q &lt; 0.050 threshold is 0.000000
 
 Image   1
+  0 contig. clusters, sizes  to 
 Positive effect:   0 voxels, min p-value: 0.00001192
 Negative effect:   0 voxels, min p-value: 0.00170529
 Image   2 FDR q &lt; 0.050 threshold is 0.003193
 
 Image   2
+  0 contig. clusters, sizes  to 
 Positive effect: 3133 voxels, min p-value: 0.00000000
 Negative effect:  51 voxels, min p-value: 0.00024068
-
-SPM12: spm_check_registration (v6245)              03:29:06 - 17/07/2018
-========================================================================
-Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
- (&lt;a href="matlab:spm_check_registration('/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;all&lt;/a&gt;)  &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
-
-ans =
-
-  1&times;2 cell array
-
-    {1&times;1 struct}    {1&times;28 struct}
-
-
+Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
+Grouping contiguous voxels:   0 regions
+Grouping contiguous voxels:  28 regions
+sagittal montage: 162 voxels displayed, 3022 not displayed on these slices
+axial montage: 1617 voxels displayed, 1567 not displayed on these slices
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_06.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_07.png" alt=""> <pre class="codeoutput">
 Image   1
+ 67 contig. clusters, sizes   1 to 255
 Positive effect: 1159 voxels, min p-value: 0.00001192
 Negative effect:  10 voxels, min p-value: 0.00170529
 
 Image   2
+ 67 contig. clusters, sizes   1 to 255
 Positive effect: 3673 voxels, min p-value: 0.00000000
 Negative effect:  75 voxels, min p-value: 0.00024068
-
-SPM12: spm_check_registration (v6245)              03:29:08 - 17/07/2018
-========================================================================
-Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
- (&lt;a href="matlab:spm_check_registration('/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;all&lt;/a&gt;)  &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
-
-ans =
-
-  1&times;2 cell array
-
-    {1&times;67 struct}    {1&times;33 struct}
-
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_06.png" alt=""> <h2 id="7">BLOCK 7</h2><p>Display the results on slices</p><pre class="codeinput">o2 = removeblobs(o2);
-
-<span class="comment">% multi_threshold lets us see the blobs with significant voxels at the</span>
+Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
+Grouping contiguous voxels:  67 regions
+sagittal montage: 119 voxels displayed, 1050 not displayed on these slices
+axial montage: 439 voxels displayed, 730 not displayed on these slices
+Grouping contiguous voxels:  33 regions
+sagittal montage: 191 voxels displayed, 3557 not displayed on these slices
+axial montage: 1921 voxels displayed, 1827 not displayed on these slices
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_08.png" alt=""> <h2 id="7">BLOCK 7</h2><p>Display the results on slices</p><pre class="codeinput"><span class="comment">% multi_threshold lets us see the blobs with significant voxels at the</span>
 <span class="comment">% highest (most stringent) threshold, and voxels that are touching</span>
 <span class="comment">% (contiguous) down to the lowest threshold, in different colors.</span>
-o2 = multi_threshold(out.t, <span class="string">'o2'</span>, o2, <span class="string">'thresh'</span>, [.005 .01 .05], <span class="string">'sizethresh'</span>, [1 1 1]);
-</pre><pre class="codeoutput">Warning: Mask has multiple images, will use first only.
+
+o2 = multi_threshold(out.t, <span class="string">'thresh'</span>, [.005 .01 .05], <span class="string">'sizethresh'</span>, [5 1 1]);
+
+o2 = title_montage(o2, 2, <span class="string">'Behavioral predictor: Reappraisal success'</span>);
+o2 = title_montage(o2, 4, <span class="string">'Intercept: Group average activation'</span>);
+snapnow
+</pre><pre class="codeoutput">
+Multi-threshold
+_____________________________________________
+Retaining clusters contiguous with a significant cluster at p &lt; 0.00500000 and k &gt;=   5
+
+Image   1 of   2
+_____________________________________________
+Threshold p &lt; 0.00500000 and k &gt;=   5	1093 significant voxels defining blobs
+Threshold p &lt; 0.01000000 and k &gt;=   1	2167 significant voxels contiguous with a significant blob at a higher threshold
+Threshold p &lt; 0.05000000 and k &gt;=   1	9039 significant voxels contiguous with a significant blob at a higher threshold
+
+Image   2 of   2
+_____________________________________________
+Threshold p &lt; 0.00500000 and k &gt;=   5	3714 significant voxels defining blobs
+Threshold p &lt; 0.01000000 and k &gt;=   1	4838 significant voxels contiguous with a significant blob at a higher threshold
+Threshold p &lt; 0.05000000 and k &gt;=   1	8710 significant voxels contiguous with a significant blob at a higher threshold
+
+
 Warning: Mask has multiple images, will use first only.
 Warning: Mask has multiple images, will use first only.
+Warning: Mask has multiple images, will use first only.
+Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
 
 Montage 1 of 2
 _____________________________________
-axial montage: 3859 voxels displayed, 5208 not displayed on these slices
-sagittal montage: 916 voxels displayed, 8151 not displayed on these slices
-axial montage: 902 voxels displayed, 1431 not displayed on these slices
-sagittal montage: 243 voxels displayed, 2090 not displayed on these slices
-axial montage: 439 voxels displayed, 730 not displayed on these slices
-sagittal montage: 119 voxels displayed, 1050 not displayed on these slices
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_07.png" alt=""> <pre class="codeoutput">
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_09.png" alt=""> <pre class="codeoutput">
 Montage 2 of 2
 _____________________________________
-axial montage: 4614 voxels displayed, 4539 not displayed on these slices
-sagittal montage: 463 voxels displayed, 8690 not displayed on these slices
-axial montage: 2516 voxels displayed, 2393 not displayed on these slices
-sagittal montage: 248 voxels displayed, 4661 not displayed on these slices
-axial montage: 1921 voxels displayed, 1827 not displayed on these slices
-sagittal montage: 191 voxels displayed, 3557 not displayed on these slices
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_08.png" alt=""> <h2 id="8">BLOCK 8: Add a new montage and re-display</h2><pre class="codeinput">o2 = removeblobs(o2);
-o2 = montage(o2, <span class="string">'coronal'</span>, <span class="string">'slice_range'</span>, [-20 20], <span class="string">'onerow'</span>);
-o2 = addblobs(o2, region(out.t));
-</pre><pre class="codeoutput">Load underlay. Define axes. Ready. 
-Warning: Mask has multiple images, will use first only.
-Grouping contiguous voxels:  24 regions
-axial montage:  72 voxels displayed, 131 not displayed on these slices
-sagittal montage:  17 voxels displayed, 186 not displayed on these slices
-coronal montage:  68 voxels displayed, 135 not displayed on these slices
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_09.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_10.png" alt=""> <h2 id="9">BLOCK 9: Look for signal in ventricles, white matter, outside of brain</h2><p>We want to diagnose potential problems due to outliers, etc...</p><pre class="codeinput"><span class="comment">% Strategy 1:  Apply a very liberal threshold.</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_10.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_11.png" alt=""> <h2 id="8">BLOCK 8: Look for signal in ventricles, white matter, outside of brain</h2><p>We want to diagnose potential problems due to outliers, etc...</p><pre class="codeinput"><span class="comment">% Strategy 1:  Apply a very liberal threshold.</span>
 t = threshold(out.t, .05, <span class="string">'unc'</span>);
 
-o2 = removeblobs(o2);
+figure;
+o2 = canlab_results_fmridisplay;
 o2 = addblobs(o2, region(t));
+
+o2 = title_montage(o2, 5, <span class="string">'Liberal threshold: .05 uncorrected'</span>);
+
 
 <span class="comment">% Strategy 2: Extract mean signal from WM and ventricles</span>
 m = extract_gray_white_csf(image_obj);
-create_figure(<span class="string">'gray'</span>);
-barplot_colored(m);
-set(gca, <span class="string">'XTickLabel'</span>, {<span class="string">'Gray'</span> <span class="string">'White'</span> <span class="string">'CSF'</span>}, <span class="string">'XTick'</span>, [1:3]);
+
+barplot_columns(m, <span class="string">'title'</span>, <span class="string">'Gray white CSF per subject'</span>, <span class="string">'names'</span>, {<span class="string">'Gray'</span> <span class="string">'White'</span> <span class="string">'CSF'</span>}, <span class="string">'XTick'</span>, [1:3], <span class="string">'colors'</span>, {[1 0 0] [0 .7 0] [0 0 1]});
+
 ylabel(<span class="string">'Contrast values'</span>);
 
 
@@ -396,68 +399,57 @@ ylabel(<span class="string">'Contrast values'</span>);
 <span class="comment">% corr([global_gray_white_csf diag(H) success])</span>
 </pre><pre class="codeoutput">
 Image   1
+ 62 contig. clusters, sizes   1 to 8922
 Positive effect: 9098 voxels, min p-value: 0.00001192
 Negative effect: 188 voxels, min p-value: 0.00170529
 
 Image   2
+ 62 contig. clusters, sizes   1 to 8922
 Positive effect: 8577 voxels, min p-value: 0.00000000
 Negative effect: 955 voxels, min p-value: 0.00024068
+Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
 Warning: Mask has multiple images, will use first only.
 Grouping contiguous voxels:  62 regions
-axial montage: 3956 voxels displayed, 5330 not displayed on these slices
-sagittal montage: 931 voxels displayed, 8355 not displayed on these slices
-coronal montage: 1672 voxels displayed, 7614 not displayed on these slices
+sagittal montage: 397 voxels displayed, 8889 not displayed on these slices
+sagittal montage: 487 voxels displayed, 8799 not displayed on these slices
+sagittal montage: 486 voxels displayed, 8800 not displayed on these slices
+axial montage: 2768 voxels displayed, 6518 not displayed on these slices
+axial montage: 2918 voxels displayed, 6368 not displayed on these slices
 Extracting from gray_matter_mask_sparse.img.
 Extracting from canonical_white_matter.img.
 Extracting from canonical_ventricles.img.
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_11.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_12.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_13.png" alt=""> <h2 id="10">BLOCK 10: Compare results to meta-analysis for positive controls</h2><pre class="codeinput"><span class="comment">% Map from neurosynth.org</span>
+Col   1: Gray	Col   2: White	Col   3: CSF	
+---------------------------------------------
+Tests of column means against zero
+---------------------------------------------
+     Name      Mean_Value    Std_Error       T          P       Cohens_d
+    _______    __________    _________    _______    _______    ________
+
+    'Gray'       0.21392      0.17152      1.2472     0.2223     0.22771
+    'White'     0.056209      0.10298     0.54584    0.58935    0.099657
+    'CSF'       -0.24914      0.18332     -1.3591     0.1846    -0.24813
+
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_12.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_13.png" alt=""> <h2 id="9">BLOCK 9: Compare results to meta-analysis for positive controls</h2><pre class="codeinput"><span class="comment">% Map from neurosynth.org</span>
 metaimg = which(<span class="string">'emotion regulation_pAgF_z_FDR_0.01_8_14_2015.nii'</span>)
-r = region(metaimg)
+r = region(metaimg);
+
 o2 = removeblobs(o2);
-o2 = addblobs(o2, r, <span class="string">'maxcolor'</span>, [1 0 0], <span class="string">'mincolor'</span>, [0 0 1]);
+o2 = addblobs(o2, r, <span class="string">'maxcolor'</span>, [1 0 0], <span class="string">'mincolor'</span>, [.7 .2 .5]);
+
+o2 = title_montage(o2, 5, <span class="string">'Neurosynth mask: Emotion regulation'</span>);
 </pre><pre class="codeoutput">
 metaimg =
 
     '/Users/torwager/Documents/GitHub/MediationToolbox/Mediation_walkthrough/emotion regulation_pAgF_z_FDR_0.01_8_14_2015.nii'
 
 Grouping contiguous voxels: 151 regions
-
-r = 
-
-  1&times;151 region array with properties:
-
-    title
-    shorttitle
-    descrip1
-    descrip2
-    XYZ
-    XYZmm
-    val
-    val_descrip
-    Z
-    Z_descrip
-    threshold
-    voxSize
-    M
-    dim
-    numVox
-    numpeaks
-    center
-    mm_center
-    timeseries
-    contrastdata
-    dat
-    all_data
-    source_images
-    custom_info1
-    custom_info1_descrip
-    custom_info2
-    custom_info2_descrip
-
-axial montage: 1579 voxels displayed, 4462 not displayed on these slices
-sagittal montage: 451 voxels displayed, 5590 not displayed on these slices
-coronal montage: 907 voxels displayed, 5134 not displayed on these slices
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_14.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_15.png" alt=""> <h2 id="11">BLOCK 11: Apply gray-matter mask and show FDR-thresholded results</h2><pre class="codeinput"><span class="comment">% This can increase power by focusing on areas we think there are plausible</span>
+sagittal montage: 186 voxels displayed, 5855 not displayed on these slices
+sagittal montage: 139 voxels displayed, 5902 not displayed on these slices
+sagittal montage: 204 voxels displayed, 5837 not displayed on these slices
+axial montage: 1118 voxels displayed, 4923 not displayed on these slices
+axial montage: 1009 voxels displayed, 5032 not displayed on these slices
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_14.png" alt=""> <h2 id="10">BLOCK 10: Apply gray-matter mask and show FDR-thresholded results</h2><pre class="codeinput"><span class="comment">% This can increase power by focusing on areas we think there are plausible</span>
 <span class="comment">% effects. First is the success effect (regressor) and second is the</span>
 <span class="comment">% intercept (group average contrast) map.</span>
 
@@ -465,21 +457,28 @@ coronal montage: 907 voxels displayed, 5134 not displayed on these slices
 
 t = apply_mask(out.t, maskdat);
 t = threshold(t, .05, <span class="string">'fdr'</span>);
+
+<span class="comment">% Select the reappraisal success effect only and show it</span>
+t1 = select_one_image(t, 1);
+
 o2 = removeblobs(o2);
-o2 = addblobs(o2, region(t));
+o2 = addblobs(o2, region(t1));
+
+o2 = title_montage(o2, 5, <span class="string">'Behavioral predictor, gray-matter masked, q &lt; .05 FDR'</span>);
 </pre><pre class="codeoutput">Image   1 FDR q &lt; 0.050 threshold is 0.000000
 
 Image   1
+  0 contig. clusters, sizes  to 
 Positive effect:   0 voxels, min p-value: 0.00002897
 Negative effect:   0 voxels, min p-value: 0.00847960
 Image   2 FDR q &lt; 0.050 threshold is 0.002407
 
 Image   2
+  0 contig. clusters, sizes  to 
 Positive effect: 2370 voxels, min p-value: 0.00000000
 Negative effect:  28 voxels, min p-value: 0.00041628
-Warning: Mask has multiple images, will use first only.
 Grouping contiguous voxels:   0 regions
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_16.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_17.png" alt=""> <h2 id="12">BLOCK 12: Refine analysis by removing outlier and ranking predictor values</h2><pre class="codeinput"><span class="comment">% exclude high-leverage subject 16</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_15.png" alt=""> <h2 id="11">BLOCK 11: Refine analysis by removing outlier and ranking predictor values</h2><pre class="codeinput"><span class="comment">% exclude high-leverage subject 16</span>
 datno16 = image_obj;
 datno16.dat(:, 16) = [];
 
@@ -498,15 +497,18 @@ t = apply_mask(out.t, maskdat);
 t = threshold(t, .005, <span class="string">'unc'</span>);
 <span class="comment">%orthviews(t)</span>
 
-<span class="comment">% Select the reappraisal success effect only and show it</span>
-t1 = select_one_image(t, 1);
-o2 = removeblobs(o2);
-o2 = multi_threshold(t1, <span class="string">'o2'</span>, o2, <span class="string">'thresh'</span>, [.005 .01 .05], <span class="string">'sizethresh'</span>, [1 1 1]);
+o2 = multi_threshold(t, <span class="string">'thresh'</span>, [.005 .01 .05], <span class="string">'sizethresh'</span>, [1 1 1]);
 
-<span class="comment">% Select the intercept (group average contrast) effect only and show it</span>
-t2 = select_one_image(t, 2);
-o2 = removeblobs(o2);
-o2 = multi_threshold(t2, <span class="string">'o2'</span>, o2, <span class="string">'thresh'</span>, [.005 .01 .05], <span class="string">'sizethresh'</span>, [1 1 1]);
+o2 = title_montage(o2, 2, <span class="string">'Behavioral predictor: Reappraisal success'</span>);
+o2 = title_montage(o2, 4, <span class="string">'Intercept: Group average activation'</span>);
+snapnow
+
+
+<span class="comment">% Select the reappraisal success effect only and write it to disk</span>
+
+t1 = select_one_image(t, 1);
+t1.fullpath = fullfile(pwd, <span class="string">'Reapp_Success_005_outlier_removed.nii'</span>);
+write(t1)
 </pre><pre class="codeoutput">Analysis: 
 ----------------------------------
 Design matrix warnings:
@@ -521,68 +523,165 @@ Running in OLS Mode
 Model run in 0 minutes and 0.04 seconds
 
 Image   1
+  2 contig. clusters, sizes   1 to   5
 Positive effect:   1 voxels, min p-value: 0.00078094
 Negative effect:   5 voxels, min p-value: 0.00054371
 
 Image   2
+  2 contig. clusters, sizes   1 to   5
 Positive effect: 3604 voxels, min p-value: 0.00000000
 Negative effect:   5 voxels, min p-value: 0.00048983
 
-SPM12: spm_check_registration (v6245)              03:29:34 - 17/07/2018
+SPM12: spm_check_registration (v6245)              01:44:52 - 30/07/2018
 ========================================================================
 Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
  (&lt;a href="matlab:spm_check_registration('/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;all&lt;/a&gt;)  &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
 
 Image   1
+ 12 contig. clusters, sizes   1 to  15
 Positive effect:  40 voxels, min p-value: 0.00117099
 Negative effect:   3 voxels, min p-value: 0.00268126
 
 Image   2
+ 12 contig. clusters, sizes   1 to  15
 Positive effect: 4940 voxels, min p-value: 0.00000000
 Negative effect:  32 voxels, min p-value: 0.00082040
 
-Montage 1 of 1
+Multi-threshold
+_____________________________________________
+Retaining clusters contiguous with a significant cluster at p &lt; 0.00500000 and k &gt;=   1
+
+Image   1 of   2
+_____________________________________________
+Threshold p &lt; 0.00500000 and k &gt;=   1	 43 significant voxels defining blobs
+Threshold p &lt; 0.01000000 and k &gt;=   1	141 significant voxels contiguous with a significant blob at a higher threshold
+Threshold p &lt; 0.05000000 and k &gt;=   1	801 significant voxels contiguous with a significant blob at a higher threshold
+
+Image   2 of   2
+_____________________________________________
+Threshold p &lt; 0.00500000 and k &gt;=   1	4972 significant voxels defining blobs
+Threshold p &lt; 0.01000000 and k &gt;=   1	6056 significant voxels contiguous with a significant blob at a higher threshold
+Threshold p &lt; 0.05000000 and k &gt;=   1	10008 significant voxels contiguous with a significant blob at a higher threshold
+
+
+Warning: Mask has multiple images, will use first only.
+Warning: Mask has multiple images, will use first only.
+Warning: Mask has multiple images, will use first only.
+Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
+
+Montage 1 of 2
 _____________________________________
-axial montage: 291 voxels displayed, 510 not displayed on these slices
-sagittal montage: 113 voxels displayed, 688 not displayed on these slices
-coronal montage: 205 voxels displayed, 596 not displayed on these slices
-axial montage:  46 voxels displayed,  95 not displayed on these slices
-sagittal montage:  22 voxels displayed, 119 not displayed on these slices
-coronal montage:  51 voxels displayed,  90 not displayed on these slices
-axial montage:  14 voxels displayed,  29 not displayed on these slices
-sagittal montage:   6 voxels displayed,  37 not displayed on these slices
-coronal montage:  17 voxels displayed,  26 not displayed on these slices
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_18.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_19.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_20.png" alt=""> <pre class="codeoutput">
-Montage 1 of 1
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_16.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_17.png" alt=""> <pre class="codeoutput">
+Montage 2 of 2
 _____________________________________
-axial montage: 5053 voxels displayed, 4955 not displayed on these slices
-sagittal montage: 646 voxels displayed, 9362 not displayed on these slices
-coronal montage: 1766 voxels displayed, 8242 not displayed on these slices
-axial montage: 3199 voxels displayed, 2857 not displayed on these slices
-sagittal montage: 375 voxels displayed, 5681 not displayed on these slices
-coronal montage: 1047 voxels displayed, 5009 not displayed on these slices
-axial montage: 2612 voxels displayed, 2360 not displayed on these slices
-sagittal montage: 304 voxels displayed, 4668 not displayed on these slices
-coronal montage: 850 voxels displayed, 4122 not displayed on these slices
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_21.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_22.png" alt=""> <h2 id="13">Block 13: Extract and plot data from (biased) regions of interest</h2><p>Let's visualize the correlation scatterplots in the areas we've discovered as related to Success</p><pre class="codeinput"><span class="comment">% Select the Success regressor map</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_18.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_19.png" alt=""> <pre class="codeoutput">Writing: 
+/Users/torwager/Documents/GitHub/Reapp_Success_005_outlier_removed.nii
+</pre><h2 id="12">Block 12: Extract and plot data from (biased) regions of interest</h2><p>Let's visualize the correlation scatterplots in the areas we've discovered as related to Success</p><pre class="codeinput"><span class="comment">% Select the Success regressor map</span>
 r = region(t1);
 
-<span class="comment">% Extract data from all regions</span>
+<span class="comment">% Autolabel regions and print a table</span>
+r = table(r);
+
+<span class="comment">% Make a montage showing each significant region</span>
+montage(r, <span class="string">'colormap'</span>, <span class="string">'regioncenters'</span>);
+</pre><pre class="codeoutput">Grouping contiguous voxels:  12 regions
+
+____________________________________________________________________________________________________________________________________________
+Positive Effects
+        Region        Volume           XYZ            maxZ      modal_label_descriptions      Perc_covered_by_label    Atlas_regions_covered    region_index
+    ______________    ______    _________________    ______    ___________________________    _____________________    _____________________    ____________
+
+    'V_Striatum_L'     3120      -7     21     -9    3.0688    'Basal_ganglia'                         22                        6                    5     
+    'Cau_L'             288     -21      7     23    2.9042    'Basal_ganglia'                         61                        0                    7     
+    'Ctx_RSC_R'         736       3    -41      5    2.9848    'Cortex_Default_ModeA'                  34                        1                    6     
+    'Ctx_SFL_L'         512     -14     28     63    2.8084    'Cortex_Default_ModeB'                  66                        1                    9     
+    'Ctx_PHA3_L'       1296     -31    -31    -18    3.1243    'Cortex_Default_ModeC'                  28                        3                    3     
+    'Ctx_TE1m_L'        640     -69    -31    -23    3.2459    'Cortex_Fronto_ParietalB'               24                        0                    4     
+    'Ctx_TE2a_R'        640      52    -21    -32    2.9725    'Cortex_Limbic'                         57                        1                    2     
+    'Ctx_6d_R'          704      38     -7     68    2.9676    'Cortex_SomatomotorA'                   51                        1                   10     
+    'Ctx_6ma_R'        2048      14      3     63    3.2022    'Cortex_Ventral_AttentionA'             18                        2                    8     
+    'Ctx_6ma_R'         512      24      0     68     2.851    'Cortex_Ventral_AttentionA'             81                        1                   11     
+    'No label'          384     -28    -17    -41    2.8133    'X_No_label'                             0                        0                    1     
+
+
+Negative Effects
+      Region       Volume          XYZ            maxZ       modal_label_descriptions     Perc_covered_by_label    Atlas_regions_covered    region_index
+    ___________    ______    ________________    _______    __________________________    _____________________    _____________________    ____________
+
+    'Ctx_STV_R'     768      52    -48     18    -3.0021    'Cortex_Temporal_Parietal'             61                        1                   12     
+
+
+____________________________________________________________________________________________________________________________________________
+Regions labeled by reference atlas CANlab_2018_combined
+                                                       
+Volume: Volume of contiguous region in cubic mm.
+MaxZ: Signed max over Z-score for each voxel.
+Atlas_regions_covered: Number of reference atlas regions covered at least 5% by the region. This relates to whether the region covers 
+multiple reference atlas regions                                                                                                      
+Region: Best reference atlas label, defined as reference region with highest number of in-region voxels.
+Perc_covered_by_label: Percentage of the region covered by the label.
+Ref_region_perc: Percentage of the label region within the target region.
+modal_atlas_index: Index number of label region in reference atlas
+ 
+For example, if a region is labeled 'TE1a' and Perc_covered_by_label = 8, Ref_region_perc = 38, and Atlas_regions_covered = 17, this means 
+that 8% of the region's voxels are labeled TE1a, which is the highest percentage among reference label regions. 38% of the region TE1a is  
+covered by the region. However, the region covers at least 5% of 17 distinct labeled reference regions.                                    
+                                                                                                                                           
+References for atlases:
+                       
+Beliveau, Vincent, Claus Svarer, Vibe G. Frokjaer, Gitte M. Knudsen, Douglas N. Greve, and Patrick M. Fisher. 2015. &#8220;Functional 
+Connectivity of the Dorsal and Median Raphe Nuclei at Rest.&#8221; NeuroImage 116 (August): 187&#8211;95.                                   
+B&auml;r, Karl-J&uuml;rgen, Feliberto de la Cruz, Andy Schumann, Stefanie Koehler, Heinrich Sauer, Hugo Critchley, and Gerd Wagner. 2016. ?Functional 
+Connectivity and Network Analysis of Midbrain and Brainstem Nuclei.? NeuroImage 134 (July):53?63.                                           
+Diedrichsen, J&ouml;rn, Joshua H. Balsters, Jonathan Flavell, Emma Cussans, and Narender Ramnani. 2009. A Probabilistic MR Atlas of the Human 
+Cerebellum. NeuroImage 46 (1): 39?46.                                                                                                    
+Fairhurst, Merle, Katja Wiech, Paul Dunckley, and Irene Tracey. 2007. ?Anticipatory Brainstem Activity Predicts Neural Processing of Pain 
+in Humans.? Pain 128 (1-2):101?10.                                                                                                        
+Fan 2016 Cerebral Cortex; doi:10.1093/cercor/bhw157
+Glasser, Matthew F., Timothy S. Coalson, Emma C. Robinson, Carl D. Hacker, John Harwell, Essa Yacoub, Kamil Ugurbil, et al. 2016. A 
+Multi-Modal Parcellation of Human Cerebral Cortex. Nature 536 (7615): 171?78.                                                       
+Keren, Noam I., Carl T. Lozar, Kelly C. Harris, Paul S. Morgan, and Mark A. Eckert. 2009. &#8220;In Vivo Mapping of the Human Locus Coeruleus.&#8221; 
+NeuroImage 47 (4): 1261&#8211;67.                                                                                                               
+Keuken, M. C., P-L Bazin, L. Crown, J. Hootsmans, A. Laufer, C. M&uuml;ller-Axt, R. Sier, et al. 2014. &#8220;Quantifying Inter-Individual Anatomical 
+Variability in the Subcortex Using 7 T Structural MRI.&#8221; NeuroImage 94 (July): 40&#8211;46.                                                       
+Krauth A, Blanc R, Poveda A, Jeanmonod D, Morel A, Sz&eacute;kely G. (2010) A mean three-dimensional atlas of the human thalamus: generation from 
+multiple histological data. Neuroimage. 2010 Feb 1;49(3):2053-62. Jakab A, Blanc R, Ber&eacute;nyi EL, Sz&eacute;kely G. (2012) Generation of            
+Individualized Thalamus Target Maps by Using Statistical Shape Models and Thalamocortical Tractography. AJNR Am J Neuroradiol. 33:         
+2110-2116, doi: 10.3174/ajnr.A3140                                                                                                         
+Nash, Paul G., Vaughan G. Macefield, Iven J. Klineberg, Greg M. Murray, and Luke A. Henderson. 2009. ?Differential Activation of the Human 
+Trigeminal Nuclear Complex by Noxious and Non-Noxious Orofacial Stimulation.? Human Brain Mapping 30 (11):3772?82.                         
+Pauli 2018 Bioarxiv: CIT168 from Human Connectome Project data
+Pauli, Wolfgang M., Amanda N. Nili, and J. Michael Tyszka. 2018. ?A High-Resolution Probabilistic in Vivo Atlas of Human Subcortical Brain 
+Nuclei.? Scientific Data 5 (April): 180063.                                                                                                
+Pauli, Wolfgang M., Randall C. O?Reilly, Tal Yarkoni, and Tor D. Wager. 2016. ?Regional Specialization within the Human Striatum for 
+Diverse Psychological Functions.? Proceedings of the National Academy of Sciences of the United States of America 113 (7): 1907?12.  
+Sclocco, Roberta, Florian Beissner, Gaelle Desbordes, Jonathan R. Polimeni, Lawrence L. Wald, Norman W. Kettner, Jieun Kim, et al. 2016. 
+?Neuroimaging Brainstem Circuitry Supporting Cardiovagal Response to Pain: A Combined Heart Rate Variability/ultrahigh-Field (7 T)       
+Functional Magnetic Resonance Imaging Study.? Philosophical Transactions. Series A, Mathematical, Physical, and Engineering Sciences 374 
+(2067). rsta.royalsocietypublishing.org. https://doi.org/10.1098/rsta.2015.0189.                                                         
+Shen, X., F. Tokoglu, X. Papademetris, and R. T. Constable. 2013. &#8220;Groupwise Whole-Brain Parcellation from Resting-State fMRI Data for 
+Network Node Identification.&#8221; NeuroImage 82 (November): 403&#8211;15.                                                                        
+Zambreanu, L., R. G. Wise, J. C. W. Brooks, G. D. Iannetti, and I. Tracey. 2005. ?A Role for the Brainstem in Central Sensitisation in 
+Humans. Evidence from Functional Magnetic Resonance Imaging.? Pain 114 (3):397?407.                                                    
+____________________________________________________________________________________________________________________________________________
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_20.png" alt=""> <h2 id="13">Block 13: Extract and plot data from (biased) regions of interest</h2><p>Let's visualize the correlation scatterplots in the areas we've discovered as related to Success</p><pre class="codeinput"><span class="comment">% Extract data from all regions</span>
+<span class="comment">% r(i).dat has the averages for each subject across voxels for region i</span>
 r = extract_data(r, datno16);
 
 <span class="comment">% Select only regions with 3+ voxels</span>
 wh = cat(1, r.numVox) &lt; 3;
 r(wh) = [];
 
+<span class="comment">% Set up the scatterplots</span>
+nrows = floor(sqrt(length(r)));
+ncols = ceil(length(r) ./ nrows);
+create_figure(<span class="string">'scatterplot_region'</span>, nrows, ncols);
+
 <span class="comment">% Make a loop and plot each region</span>
 <span class="keyword">for</span> i = 1:length(r)
-    <span class="comment">% Show the region</span>
-    o2 = removeblobs(o2);
-    o2 = addblobs(o2, r(i), <span class="string">'splitcolor'</span>, {[0 0 1] [0 1 1] [1 .5 0] [1 1 0]});
-    orthviews(r(i));
 
-    <span class="comment">% Plot the scatterplot</span>
-    create_figure(<span class="string">'scatterplot_region'</span>);
+    subplot(nrows, ncols, i);
 
     <span class="comment">% Use this line for non-robust correlations:</span>
     <span class="comment">%plot_correlation_samefig(r(i).dat, datno16.X);</span>
@@ -590,25 +689,14 @@ r(wh) = [];
     <span class="comment">% Use this line for robust correlations:</span>
     plot_correlation_samefig(r(i).dat, datno16.X, [], <span class="string">'k'</span>, 0, 1);
 
+    set(gca, <span class="string">'FontSize'</span>, 12);
     xlabel(<span class="string">'Reappraise - Look Neg brain response'</span>);
     ylabel(<span class="string">'Reappraisal success'</span>);
 
-    input(<span class="string">'Press a key to continue'</span>);
+    <span class="comment">% input('Press a key to continue');</span>
+
 <span class="keyword">end</span>
-</pre><pre class="codeoutput">Grouping contiguous voxels:  12 regions
-axial montage:   4 voxels displayed,   0 not displayed on these slices
-sagittal montage:   0 voxels displayed,   4 not displayed on these slices
-coronal montage:   0 voxels displayed,   4 not displayed on these slices
-
-SPM12: spm_check_registration (v6245)              03:29:47 - 17/07/2018
-========================================================================
-Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
-</pre><pre class="codeoutput error">Error using input
-Cannot call INPUT from EVALC.
-
-Error in canlab_help_5_regression_walkthrough (line 280)
-    input('Press a key to continue');
-</pre><h2 id="14">Block 14: Extract and plot data from unbiased regions of interest</h2><p>Let's visualize the correlation scatterplots in some meta-analysis derived ROIs</p><pre class="codeinput"><span class="comment">% Select the Success regressor map</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_21.png" alt=""> <h2 id="14">Block 14: Extract and plot data from unbiased regions of interest</h2><p>Let's visualize the correlation scatterplots in some meta-analysis derived ROIs</p><pre class="codeinput"><span class="comment">% Select the Neurosynth meta-analysis map</span>
 r = region(metaimg);
 
 <span class="comment">% Extract data from all regions</span>
@@ -618,31 +706,146 @@ r = extract_data(r, datno16);
 wh = cat(1, r.numVox) &lt; 20;
 r(wh) = [];
 
+r = table(r);
+
+<span class="comment">% Make a montage showing each significant region</span>
+montage(r, <span class="string">'colormap'</span>, <span class="string">'regioncenters'</span>);
+
+<span class="comment">% Set up the scatterplots</span>
+nrows = floor(sqrt(length(r)));
+ncols = ceil(length(r) ./ nrows);
+create_figure(<span class="string">'scatterplot_region'</span>, nrows, ncols);
+
 <span class="comment">% Make a loop and plot each region</span>
 <span class="keyword">for</span> i = 1:length(r)
-    <span class="comment">% Show the region</span>
-    o2 = removeblobs(o2);
-    o2 = addblobs(o2, r(i), <span class="string">'splitcolor'</span>, {[0 0 1] [0 1 1] [1 .5 0] [1 1 0]});
-    orthviews(r(i));
 
-    <span class="comment">% Plot the scatterplot</span>
-    create_figure(<span class="string">'scatterplot_region'</span>);
+    subplot(nrows, ncols, i);
 
     <span class="comment">% Use this line for non-robust correlations:</span>
     <span class="comment">%plot_correlation_samefig(r(i).dat, datno16.X);</span>
 
     <span class="comment">% Use this line for robust correlations:</span>
-    plot_correlation_samefig(datno16.X, r(i).dat, [], <span class="string">'k'</span>, 0, 1);
+    plot_correlation_samefig(r(i).dat, datno16.X, [], <span class="string">'k'</span>, 0, 1);
 
-    ylabel(<span class="string">'Reappraise - Look Neg brain response'</span>);
-    xlabel(<span class="string">'Reappraisal success'</span>);
+    set(gca, <span class="string">'FontSize'</span>, 12);
+    xlabel(<span class="string">'Brain'</span>);
+    ylabel(<span class="string">'Success'</span>);
+    title(<span class="string">' '</span>);
 
-    input(<span class="string">'Press a key to continue'</span>);
 <span class="keyword">end</span>
-</pre><h2 id="15">Block 15: Multivariate prediction from unbiased ROI averages</h2><pre class="codeinput">contrast_dat = cat(2, r.dat);  <span class="comment">% these will be the predictors</span>
-y = datno16.X;                 <span class="comment">% this is the outcome to be explained</span>
+</pre><pre class="codeoutput">Grouping contiguous voxels: 151 regions
 
-STATS = xval_regression_multisubject(<span class="string">'lasso'</span>, {y}, {contrast_dat}, <span class="string">'holdout_method'</span>, <span class="string">'loo'</span>, <span class="string">'pca'</span>, <span class="string">'ndims'</span>, <span class="string">'variable'</span>);
+____________________________________________________________________________________________________________________________________________
+Positive Effects
+        Region        Volume           XYZ            maxZ      modal_label_descriptions      Perc_covered_by_label    Atlas_regions_covered    region_index
+    ______________    ______    _________________    ______    ___________________________    _____________________    _____________________    ____________
+
+    'Amygdala_LB_'     4624     -22     -4    -16    7.0345    'Amygdala'                              24                       11                    1     
+    'Amygdala_LB_'     3664      24     -4    -16    7.0345    'Amygdala'                              36                        8                    2     
+    'Caudate_Ca_L'      208     -14      6     10    5.4136    'Basal_ganglia'                         73                        0                   14     
+    'Bstem_SC_L'        560      -4    -28     -4    7.0345    'Brainstem'                             44                        4                    9     
+    'Ctx_10v_R'        1192      -2     52     -8    7.0345    'Cortex_Default_ModeA'                  32                        3                    6     
+    'Ctx_9m_R'          160       0     62     18    4.7765    'Cortex_Default_ModeA'                  65                        0                   16     
+    'Ctx_d23ab_L'       408      -2    -52     28    6.0507    'Cortex_Default_ModeA'                  35                        2                   20     
+    'Ctx_9m_R'          296       4     56     32    6.0507    'Cortex_Default_ModeA'                  84                        0                   26     
+    'Ctx_STSdp_L'       632     -58    -36     -2    7.0345    'Cortex_Default_ModeB'                  43                        2                    8     
+    'Ctx_44_R'         1096      52     22     24    7.0345    'Cortex_Default_ModeB'                  39                        3                   17     
+    'Ctx_PGi_L'        1048     -52    -58     28    7.0345    'Cortex_Default_ModeB'                  50                        1                   18     
+    'Ctx_8Av_L'        1400     -40     12     46    7.0345    'Cortex_Default_ModeB'                  23                        2                   29     
+    'Ctx_FFC_L'         272     -42    -48    -18    6.6878    'Cortex_Dorsal_AttentionA'              76                        1                    3     
+    'Ctx_TPOJ2_L'       640     -52    -66      8    6.0507    'Cortex_Dorsal_AttentionA'              55                        2                   13     
+    'Ctx_PFop_L'        272     -62    -28     32    6.6878    'Cortex_Dorsal_AttentionB'              50                        1                   24     
+    'Ctx_IFJa_L'        528     -44     14     30    7.0345    'Cortex_Fronto_ParietalA'               52                        2                   22     
+    'Ctx_a47r_L'        360     -42     46    -10    7.0345    'Cortex_Fronto_ParietalB'               62                        0                    7     
+    'Ctx_8BM_R'        6872       0     18     44    7.0345    'Cortex_Fronto_ParietalB'               21                       13                   19     
+    'Ctx_PFm_R'         984      52    -50     42    7.0345    'Cortex_Fronto_ParietalB'               79                        1                   27     
+    'Ctx_8Av_R'         544      38     24     40    5.4136    'Cortex_Fronto_ParietalB'               38                        1                   28     
+    'Ctx_PFm_L'         344     -50    -52     42    6.0507    'Cortex_Fronto_ParietalB'               58                        0                   30     
+    'Ctx_PSL_R'         392      58    -44     28    6.0507    'Cortex_Temporal_Parietal'              63                        1                   21     
+    'Ctx_MI_L'        10992     -42     22     -2    7.0345    'Cortex_Ventral_AttentionA'             14                       12                    5     
+    'Ctx_6r_R'          456      48      6     30    7.0345    'Cortex_Ventral_AttentionA'             46                        1                   23     
+    'Ctx_AVI_R'        4624      38     20     -4    7.0345    'Cortex_Ventral_AttentionB'             22                        8                    4     
+    'Ctx_IFSa_R'        528      52     30      8    6.0507    'Cortex_Ventral_AttentionB'             38                        2                   12     
+    'Ctx_9_46d_L'       168     -32     50     14    5.4136    'Cortex_Ventral_AttentionB'             62                        0                   15     
+    'Ctx_46_R'          232      34     40     30    5.4136    'Cortex_Ventral_AttentionB'             72                        1                   25     
+    'Thal_LGN'          280     -22    -26     -6    5.4136    'Diencephalon'                          37                        2                   10     
+    'Thal_MD'          1696      -2    -14      4    7.0345    'Diencephalon'                          57                        3                   11     
+
+
+Negative Effects
+No regions to display
+
+____________________________________________________________________________________________________________________________________________
+Regions labeled by reference atlas CANlab_2018_combined
+                                                       
+Volume: Volume of contiguous region in cubic mm.
+MaxZ: Signed max over Input mask image values for each voxel.
+Atlas_regions_covered: Number of reference atlas regions covered at least 5% by the region. This relates to whether the region covers 
+multiple reference atlas regions                                                                                                      
+Region: Best reference atlas label, defined as reference region with highest number of in-region voxels.
+Perc_covered_by_label: Percentage of the region covered by the label.
+Ref_region_perc: Percentage of the label region within the target region.
+modal_atlas_index: Index number of label region in reference atlas
+ 
+For example, if a region is labeled 'TE1a' and Perc_covered_by_label = 8, Ref_region_perc = 38, and Atlas_regions_covered = 17, this means 
+that 8% of the region's voxels are labeled TE1a, which is the highest percentage among reference label regions. 38% of the region TE1a is  
+covered by the region. However, the region covers at least 5% of 17 distinct labeled reference regions.                                    
+                                                                                                                                           
+References for atlases:
+                       
+Beliveau, Vincent, Claus Svarer, Vibe G. Frokjaer, Gitte M. Knudsen, Douglas N. Greve, and Patrick M. Fisher. 2015. &#8220;Functional 
+Connectivity of the Dorsal and Median Raphe Nuclei at Rest.&#8221; NeuroImage 116 (August): 187&#8211;95.                                   
+B&auml;r, Karl-J&uuml;rgen, Feliberto de la Cruz, Andy Schumann, Stefanie Koehler, Heinrich Sauer, Hugo Critchley, and Gerd Wagner. 2016. ?Functional 
+Connectivity and Network Analysis of Midbrain and Brainstem Nuclei.? NeuroImage 134 (July):53?63.                                           
+Diedrichsen, J&ouml;rn, Joshua H. Balsters, Jonathan Flavell, Emma Cussans, and Narender Ramnani. 2009. A Probabilistic MR Atlas of the Human 
+Cerebellum. NeuroImage 46 (1): 39?46.                                                                                                    
+Fairhurst, Merle, Katja Wiech, Paul Dunckley, and Irene Tracey. 2007. ?Anticipatory Brainstem Activity Predicts Neural Processing of Pain 
+in Humans.? Pain 128 (1-2):101?10.                                                                                                        
+Fan 2016 Cerebral Cortex; doi:10.1093/cercor/bhw157
+Glasser, Matthew F., Timothy S. Coalson, Emma C. Robinson, Carl D. Hacker, John Harwell, Essa Yacoub, Kamil Ugurbil, et al. 2016. A 
+Multi-Modal Parcellation of Human Cerebral Cortex. Nature 536 (7615): 171?78.                                                       
+Keren, Noam I., Carl T. Lozar, Kelly C. Harris, Paul S. Morgan, and Mark A. Eckert. 2009. &#8220;In Vivo Mapping of the Human Locus Coeruleus.&#8221; 
+NeuroImage 47 (4): 1261&#8211;67.                                                                                                               
+Keuken, M. C., P-L Bazin, L. Crown, J. Hootsmans, A. Laufer, C. M&uuml;ller-Axt, R. Sier, et al. 2014. &#8220;Quantifying Inter-Individual Anatomical 
+Variability in the Subcortex Using 7 T Structural MRI.&#8221; NeuroImage 94 (July): 40&#8211;46.                                                       
+Krauth A, Blanc R, Poveda A, Jeanmonod D, Morel A, Sz&eacute;kely G. (2010) A mean three-dimensional atlas of the human thalamus: generation from 
+multiple histological data. Neuroimage. 2010 Feb 1;49(3):2053-62. Jakab A, Blanc R, Ber&eacute;nyi EL, Sz&eacute;kely G. (2012) Generation of            
+Individualized Thalamus Target Maps by Using Statistical Shape Models and Thalamocortical Tractography. AJNR Am J Neuroradiol. 33:         
+2110-2116, doi: 10.3174/ajnr.A3140                                                                                                         
+Nash, Paul G., Vaughan G. Macefield, Iven J. Klineberg, Greg M. Murray, and Luke A. Henderson. 2009. ?Differential Activation of the Human 
+Trigeminal Nuclear Complex by Noxious and Non-Noxious Orofacial Stimulation.? Human Brain Mapping 30 (11):3772?82.                         
+Pauli 2018 Bioarxiv: CIT168 from Human Connectome Project data
+Pauli, Wolfgang M., Amanda N. Nili, and J. Michael Tyszka. 2018. ?A High-Resolution Probabilistic in Vivo Atlas of Human Subcortical Brain 
+Nuclei.? Scientific Data 5 (April): 180063.                                                                                                
+Pauli, Wolfgang M., Randall C. O?Reilly, Tal Yarkoni, and Tor D. Wager. 2016. ?Regional Specialization within the Human Striatum for 
+Diverse Psychological Functions.? Proceedings of the National Academy of Sciences of the United States of America 113 (7): 1907?12.  
+Sclocco, Roberta, Florian Beissner, Gaelle Desbordes, Jonathan R. Polimeni, Lawrence L. Wald, Norman W. Kettner, Jieun Kim, et al. 2016. 
+?Neuroimaging Brainstem Circuitry Supporting Cardiovagal Response to Pain: A Combined Heart Rate Variability/ultrahigh-Field (7 T)       
+Functional Magnetic Resonance Imaging Study.? Philosophical Transactions. Series A, Mathematical, Physical, and Engineering Sciences 374 
+(2067). rsta.royalsocietypublishing.org. https://doi.org/10.1098/rsta.2015.0189.                                                         
+Shen, X., F. Tokoglu, X. Papademetris, and R. T. Constable. 2013. &#8220;Groupwise Whole-Brain Parcellation from Resting-State fMRI Data for 
+Network Node Identification.&#8221; NeuroImage 82 (November): 403&#8211;15.                                                                        
+Zambreanu, L., R. G. Wise, J. C. W. Brooks, G. D. Iannetti, and I. Tracey. 2005. ?A Role for the Brainstem in Central Sensitisation in 
+Humans. Evidence from Functional Magnetic Resonance Imaging.? Pain 114 (3):397?407.                                                    
+____________________________________________________________________________________________________________________________________________
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_22.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_23.png" alt=""> <h2 id="15">Block 15: Multivariate prediction from unbiased ROI averages</h2><pre class="codeinput">datno16.Y = datno16.X;  <span class="comment">% .Y is the outcome to be explained</span>
+
+<span class="comment">% 5-fold cross validated prediction, stratified on outcome</span>
+
+[cverr, stats, optout] = predict(datno16, <span class="string">'algorithm_name'</span>, <span class="string">'cv_lassopcrmatlab'</span>, <span class="string">'nfolds'</span>, 5);
+
+<span class="comment">% Though many areas show some significant effects, these are not strong</span>
+<span class="comment">% enough to obtain a meaningful out-of-sample prediction of Success</span>
+</pre><pre class="codeoutput">Cross-validated prediction with algorithm cv_lassopcrmatlab,   5 folds
+Regression mode (Gaussian) 
+Completed fit for all data in:   0 hours   0 min  0 secs 
+Regression mode (Gaussian) Fold 1/5 done in:   0 hours   0 min  0 sec
+Regression mode (Gaussian) Fold 2/5 done in:   0 hours   0 min  0 sec
+Regression mode (Gaussian) Fold 3/5 done in:   0 hours   0 min  0 sec
+Regression mode (Gaussian) Fold 4/5 done in:   0 hours   0 min  0 sec
+Regression mode (Gaussian) Fold 5/5 done in:   0 hours   0 min  0 sec
+
+Total Elapsed Time =   0 hours   0 min  1 sec
 </pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Load sample data
@@ -679,7 +882,7 @@ maskdat = fmri_data(mask, 'noverbose');
 
 % This is an underlay brain:
 
-o2 = canlab_results_fmridisplay([], 'compact2', 'noverbose');
+o2 = canlab_results_fmridisplay([], 'noverbose');
 drawnow, snapnow;
 
 % This is a basic gray-matter mask we will use for analysis:
@@ -689,20 +892,24 @@ drawnow, snapnow;
 
 o2 = addblobs(o2, region(maskdat));
 
+% Add a title to montage 1, the axial slice montage:
+o2 = title_montage(o2, 1, 'Mask image: Gray matter with border');
+
 drawnow, snapnow;
 
 %% Visualize summary of brain coverage
 % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
-% BLOCK 3: Check that we have valid data in all voxels for all subjects
-
-% Create a mean image across the 30 contrast images, and store in "m"  object.  
-m = mean(image_obj);
-
-orthviews(m)
+% BLOCK 3: Check that we have valid data in most voxels for most subjects
 
 % Show summary of coverage - how many images have non-zero, non-NaN values in each voxel
 
-orthviews(desc.coverage_obj, 'continuous');
+o2 = removeblobs(o2);
+o2 = montage(region(desc.coverage_obj), o2, 'trans', 'transvalue', .3);
+
+o2 = title_montage(o2, 1, 'Coverage in images');
+
+% OR:
+% orthviews(desc.coverage_obj, 'continuous');
 
 %% BLOCK 4
 % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
@@ -780,7 +987,14 @@ out = regress(image_obj);
  t = threshold(out.t, .05, 'fdr');
  
 % ...and display
-orthviews(t)
+
+o2 = montage(t, 'trans');
+o2 = title_montage(o2, 2, 'Behavioral predictor: Reappraisal success');
+o2 = title_montage(o2, 4, 'Intercept: Group average activation');
+snapnow
+
+% Or:
+% orthviews(t)
 
 % This is a multiple regression, and there are two output t images, one for
 % each regressor.  We've only entered one regressor, why two images?  The program always
@@ -799,55 +1013,63 @@ orthviews(t)
 
 % re-threshold at p < .005 uncorrected
 t = threshold(out.t, .005, 'unc');
-orthviews(t)
+
+o2 = montage(t, 'trans');
+o2 = title_montage(o2, 2, 'Behavioral predictor: Reappraisal success');
+o2 = title_montage(o2, 4, 'Intercept: Group average activation');
+snapnow
+
+
 %% BLOCK 7
 % Display the results on slices
-
-o2 = removeblobs(o2);
 
 % multi_threshold lets us see the blobs with significant voxels at the
 % highest (most stringent) threshold, and voxels that are touching
 % (contiguous) down to the lowest threshold, in different colors.
-o2 = multi_threshold(out.t, 'o2', o2, 'thresh', [.005 .01 .05], 'sizethresh', [1 1 1]);
 
-%% BLOCK 8: Add a new montage and re-display
+o2 = multi_threshold(out.t, 'thresh', [.005 .01 .05], 'sizethresh', [5 1 1]);
 
-o2 = removeblobs(o2);
-o2 = montage(o2, 'coronal', 'slice_range', [-20 20], 'onerow');
-o2 = addblobs(o2, region(out.t));
+o2 = title_montage(o2, 2, 'Behavioral predictor: Reappraisal success');
+o2 = title_montage(o2, 4, 'Intercept: Group average activation');
+snapnow
 
-
-%% BLOCK 9: Look for signal in ventricles, white matter, outside of brain
+%% BLOCK 8: Look for signal in ventricles, white matter, outside of brain
 %
 % We want to diagnose potential problems due to outliers, etc...
 
 % Strategy 1:  Apply a very liberal threshold.
 t = threshold(out.t, .05, 'unc');
 
-o2 = removeblobs(o2);
+figure;
+o2 = canlab_results_fmridisplay;
 o2 = addblobs(o2, region(t));
+
+o2 = title_montage(o2, 5, 'Liberal threshold: .05 uncorrected');
+
 
 % Strategy 2: Extract mean signal from WM and ventricles
 m = extract_gray_white_csf(image_obj);
-create_figure('gray'); 
-barplot_colored(m);
-set(gca, 'XTickLabel', {'Gray' 'White' 'CSF'}, 'XTick', [1:3]);
+
+barplot_columns(m, 'title', 'Gray white CSF per subject', 'names', {'Gray' 'White' 'CSF'}, 'XTick', [1:3], 'colors', {[1 0 0] [0 .7 0] [0 0 1]});
+
 ylabel('Contrast values');
 
 
 % global_gray_white_csf = extract_gray_white_csf(image_obj);
 % corr([global_gray_white_csf diag(H) success])
 
-%% BLOCK 10: Compare results to meta-analysis for positive controls
+%% BLOCK 9: Compare results to meta-analysis for positive controls
 
 % Map from neurosynth.org 
 metaimg = which('emotion regulation_pAgF_z_FDR_0.01_8_14_2015.nii')
-r = region(metaimg)
+r = region(metaimg);
+
 o2 = removeblobs(o2);
-o2 = addblobs(o2, r, 'maxcolor', [1 0 0], 'mincolor', [0 0 1]);
+o2 = addblobs(o2, r, 'maxcolor', [1 0 0], 'mincolor', [.7 .2 .5]);
 
+o2 = title_montage(o2, 5, 'Neurosynth mask: Emotion regulation');
 
-%% BLOCK 11: Apply gray-matter mask and show FDR-thresholded results
+%% BLOCK 10: Apply gray-matter mask and show FDR-thresholded results
 
 % This can increase power by focusing on areas we think there are plausible
 % effects. First is the success effect (regressor) and second is the
@@ -857,10 +1079,17 @@ o2 = addblobs(o2, r, 'maxcolor', [1 0 0], 'mincolor', [0 0 1]);
 
 t = apply_mask(out.t, maskdat);
 t = threshold(t, .05, 'fdr');
-o2 = removeblobs(o2);
-o2 = addblobs(o2, region(t));
 
-%% BLOCK 12: Refine analysis by removing outlier and ranking predictor values
+% Select the reappraisal success effect only and show it
+t1 = select_one_image(t, 1);
+
+o2 = removeblobs(o2);
+o2 = addblobs(o2, region(t1));
+
+o2 = title_montage(o2, 5, 'Behavioral predictor, gray-matter masked, q < .05 FDR');
+
+
+%% BLOCK 11: Refine analysis by removing outlier and ranking predictor values
 
 % exclude high-leverage subject 16
 datno16 = image_obj;
@@ -881,50 +1110,66 @@ t = apply_mask(out.t, maskdat);
 t = threshold(t, .005, 'unc');
 %orthviews(t)
 
-% Select the reappraisal success effect only and show it
+o2 = multi_threshold(t, 'thresh', [.005 .01 .05], 'sizethresh', [1 1 1]);
+
+o2 = title_montage(o2, 2, 'Behavioral predictor: Reappraisal success');
+o2 = title_montage(o2, 4, 'Intercept: Group average activation');
+snapnow
+
+
+% Select the reappraisal success effect only and write it to disk
+
 t1 = select_one_image(t, 1);
-o2 = removeblobs(o2);
-o2 = multi_threshold(t1, 'o2', o2, 'thresh', [.005 .01 .05], 'sizethresh', [1 1 1]);
+t1.fullpath = fullfile(pwd, 'Reapp_Success_005_outlier_removed.nii');
+write(t1)
 
-% Select the intercept (group average contrast) effect only and show it
-t2 = select_one_image(t, 2);
-o2 = removeblobs(o2);
-o2 = multi_threshold(t2, 'o2', o2, 'thresh', [.005 .01 .05], 'sizethresh', [1 1 1]);
-
-%% Block 13: Extract and plot data from (biased) regions of interest
+%% Block 12: Extract and plot data from (biased) regions of interest
 % Let's visualize the correlation scatterplots in the areas we've
 % discovered as related to Success
 
 % Select the Success regressor map
 r = region(t1);
 
+% Autolabel regions and print a table
+r = table(r);
+
+% Make a montage showing each significant region
+montage(r, 'colormap', 'regioncenters');
+
+%% Block 13: Extract and plot data from (biased) regions of interest
+% Let's visualize the correlation scatterplots in the areas we've
+% discovered as related to Success
+
 % Extract data from all regions
+% r(i).dat has the averages for each subject across voxels for region i
 r = extract_data(r, datno16);
 
 % Select only regions with 3+ voxels
 wh = cat(1, r.numVox) < 3;
 r(wh) = [];
 
+% Set up the scatterplots
+nrows = floor(sqrt(length(r)));
+ncols = ceil(length(r) ./ nrows);
+create_figure('scatterplot_region', nrows, ncols);
+
 % Make a loop and plot each region
 for i = 1:length(r)
-    % Show the region
-    o2 = removeblobs(o2);
-    o2 = addblobs(o2, r(i), 'splitcolor', {[0 0 1] [0 1 1] [1 .5 0] [1 1 0]});
-    orthviews(r(i));
     
-    % Plot the scatterplot
-    create_figure('scatterplot_region');
-    
+    subplot(nrows, ncols, i);
+
     % Use this line for non-robust correlations:
     %plot_correlation_samefig(r(i).dat, datno16.X);
     
     % Use this line for robust correlations:
     plot_correlation_samefig(r(i).dat, datno16.X, [], 'k', 0, 1);
   
+    set(gca, 'FontSize', 12);
     xlabel('Reappraise - Look Neg brain response');
     ylabel('Reappraisal success');
     
-    input('Press a key to continue');
+    % input('Press a key to continue');
+    
 end
 
 
@@ -932,7 +1177,7 @@ end
 % Let's visualize the correlation scatterplots in some meta-analysis
 % derived ROIs
 
-% Select the Success regressor map
+% Select the Neurosynth meta-analysis map
 r = region(metaimg);
 
 % Extract data from all regions
@@ -942,34 +1187,45 @@ r = extract_data(r, datno16);
 wh = cat(1, r.numVox) < 20;
 r(wh) = [];
 
+r = table(r);
+
+% Make a montage showing each significant region
+montage(r, 'colormap', 'regioncenters');
+
+% Set up the scatterplots
+nrows = floor(sqrt(length(r)));
+ncols = ceil(length(r) ./ nrows);
+create_figure('scatterplot_region', nrows, ncols);
+
 % Make a loop and plot each region
 for i = 1:length(r)
-    % Show the region
-    o2 = removeblobs(o2);
-    o2 = addblobs(o2, r(i), 'splitcolor', {[0 0 1] [0 1 1] [1 .5 0] [1 1 0]});
-    orthviews(r(i));
     
-    % Plot the scatterplot
-    create_figure('scatterplot_region');
-    
+    subplot(nrows, ncols, i);
+
     % Use this line for non-robust correlations:
     %plot_correlation_samefig(r(i).dat, datno16.X);
     
     % Use this line for robust correlations:
-    plot_correlation_samefig(datno16.X, r(i).dat, [], 'k', 0, 1);
+    plot_correlation_samefig(r(i).dat, datno16.X, [], 'k', 0, 1);
   
-    ylabel('Reappraise - Look Neg brain response');
-    xlabel('Reappraisal success');
-    
-    input('Press a key to continue');
+    set(gca, 'FontSize', 12);
+    xlabel('Brain');
+    ylabel('Success');
+    title(' ');
+   
 end
 
 %% Block 15: Multivariate prediction from unbiased ROI averages
 
-contrast_dat = cat(2, r.dat);  % these will be the predictors
-y = datno16.X;                 % this is the outcome to be explained
 
-STATS = xval_regression_multisubject('lasso', {y}, {contrast_dat}, 'holdout_method', 'loo', 'pca', 'ndims', 'variable');
+datno16.Y = datno16.X;  % .Y is the outcome to be explained
+
+% 5-fold cross validated prediction, stratified on outcome
+
+[cverr, stats, optout] = predict(datno16, 'algorithm_name', 'cv_lassopcrmatlab', 'nfolds', 5);
+
+% Though many areas show some significant effects, these are not strong
+% enough to obtain a meaningful out-of-sample prediction of Success
 
 
 ##### SOURCE END #####
