@@ -1,0 +1,165 @@
+PAIN
+-------------------------------------
+Analysis description: Second Level of Multilevel Model  
+GLS analysis
+
+Observations:  26, Predictors:   1
+Outcome names: Intercept	modality_specific	modality_independent	
+Weighting option: weighted
+Inference option: t-test
+
+Other Options:
+	Plots: No
+	Robust: no
+	Save: No
+	Output file: glmfit_general_output.txt
+	R & B - type Empirical Bayes reweighting.
+Total time: 0.05 s
+
+________________________________________
+
+Second Level of Multilevel Model 
+	Outcome variables:
+	Intercept	modality_specific	modality_independent	
+Adj. mean	0.00	0.49	0.07	
+
+2nd-level B01
+	Intercept	modality_specific	modality_independent	
+Coeff	0.00	0.49	0.07	
+STE	0.00	0.08	0.04	
+t	0.20	5.99	1.63	
+Z	0.20	4.65	1.57	
+p	0.84198	0.00000	0.11566	
+
+________________________________________
+
+ans = 
+
+  <a href="matlab:helpPopup matlab.ui.Figure" style="font-weight:bold">Figure</a> (pie charts) with properties:
+
+      Number: 1
+        Name: 'pie charts'
+       Color: [1 1 1]
+    Position: [560 528 560 420]
+       Units: 'pixels'
+
+  Show <a href="matlab:if exist('ans', 'var'), matlab.graphics.internal.getForDisplay('ans', ans, 'matlab.ui.Figure'), else, matlab.graphics.internal.getForDisplay('ans'), end">all properties</a>
+
+Variance estimates:
+var(y) = var(model) + var(resid)
+154.384 = 12.942 + 141.442
+
+ 	Var	% of Total	% of Model	
+b1	12.3618	8.0072	95.5163	
+b2	0.5803	0.3759	4.4837	
+shared	0.0000	0.0000	0.0000	
+TASTE
+-------------------------------------
+Analysis description: Second Level of Multilevel Model  
+GLS analysis
+
+Observations:  26, Predictors:   1
+Outcome names: Intercept	modality_specific	modality_independent	
+Weighting option: weighted
+Inference option: t-test
+
+Other Options:
+	Plots: No
+	Robust: no
+	Save: No
+	Output file: glmfit_general_output.txt
+	R & B - type Empirical Bayes reweighting.
+Total time: 0.01 s
+
+________________________________________
+
+Second Level of Multilevel Model 
+	Outcome variables:
+	Intercept	modality_specific	modality_independent	
+Adj. mean	0.00	0.10	0.03	
+
+2nd-level B01
+	Intercept	modality_specific	modality_independent	
+Coeff	0.00	0.10	0.03	
+STE	0.00	0.05	0.03	
+t	2.08	2.27	1.13	
+Z	1.95	2.13	1.10	
+p	0.05093	0.03327	0.26932	
+
+________________________________________
+
+ans = 
+
+  <a href="matlab:helpPopup matlab.ui.Figure" style="font-weight:bold">Figure</a> (pie charts) with properties:
+
+      Number: 1
+        Name: 'pie charts'
+       Color: [1 1 1]
+    Position: [560 528 560 420]
+       Units: 'pixels'
+
+  Show <a href="matlab:if exist('ans', 'var'), matlab.graphics.internal.getForDisplay('ans', ans, 'matlab.ui.Figure'), else, matlab.graphics.internal.getForDisplay('ans'), end">all properties</a>
+
+Variance estimates:
+var(y) = var(model) + var(resid)
+94.676 = 0.499 + 94.177
+
+ 	Var	% of Total	% of Model	
+b1	0.3703	0.3911	74.2054	
+b2	0.1287	0.1360	25.7946	
+shared	-0.0000	-0.0000	-0.0000	
+VISION
+-------------------------------------
+Analysis description: Second Level of Multilevel Model  
+GLS analysis
+
+Observations:  26, Predictors:   1
+Outcome names: Intercept	modality_specific	modality_independent	
+Weighting option: weighted
+Inference option: t-test
+
+Other Options:
+	Plots: No
+	Robust: no
+	Save: No
+	Output file: glmfit_general_output.txt
+	R & B - type Empirical Bayes reweighting.
+Total time: 0.01 s
+
+________________________________________
+
+Second Level of Multilevel Model 
+	Outcome variables:
+	Intercept	modality_specific	modality_independent	
+Adj. mean	0.00	0.23	-0.00	
+
+2nd-level B01
+	Intercept	modality_specific	modality_independent	
+Coeff	0.00	0.23	-0.00	
+STE	0.00	0.04	0.04	
+t	0.60	5.27	-0.12	
+Z	0.59	4.20	-0.12	
+p	0.55667	0.00003	0.90688	
+
+________________________________________
+
+ans = 
+
+  <a href="matlab:helpPopup matlab.ui.Figure" style="font-weight:bold">Figure</a> (pie charts) with properties:
+
+      Number: 1
+        Name: 'pie charts'
+       Color: [1 1 1]
+    Position: [560 528 560 420]
+       Units: 'pixels'
+
+  Show <a href="matlab:if exist('ans', 'var'), matlab.graphics.internal.getForDisplay('ans', ans, 'matlab.ui.Figure'), else, matlab.graphics.internal.getForDisplay('ans'), end">all properties</a>
+
+Variance estimates:
+var(y) = var(model) + var(resid)
+185.749 = 2.831 + 182.918
+
+ 	Var	% of Total	% of Model	
+b1	2.8292	1.5231	99.9399	
+b2	0.0017	0.0009	0.0601	
+shared	-0.0000	-0.0000	-0.0000	

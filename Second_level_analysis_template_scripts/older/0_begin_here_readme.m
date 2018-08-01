@@ -2,6 +2,8 @@
 % 
 % <https://www.github.com/Canlab> 
 % <https://github.com/canlab/CANlab_help_examples> 
+%
+% NOTE: This is now in Github Pages at canlab.github.io
 
 %% WHAT THESE TEMPLATE SCRIPTS ARE AND WHAT THEY DO
 % This is a set of scripts that is designed to facilitate second-level analysis

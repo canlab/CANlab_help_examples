@@ -3,6 +3,9 @@
 % <https://www.github.com/Canlab> 
 % <https://github.com/canlab/CANlab_help_examples> 
 
+% NOTE: these instructions are now on canlab.github.io 
+% so these will become dated.
+
 %% WHAT THESE TEMPLATE SCRIPTS ARE AND WHAT THEY DO
 % This is a set of scripts that is designed to facilitate second-level analysis
 % across beta (COPE), or contrast images from a group of participants.
