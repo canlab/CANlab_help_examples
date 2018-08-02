@@ -1,4 +1,4 @@
-% To use: Create variable called figtitle or figstr with figure name, 
+% To use: Create variable called figtitle with figure name, 
 % and set 'Tag' property of figure to the value of figtitle/figstr.
 % Then run this. Used in canlan_second_level scripts
 

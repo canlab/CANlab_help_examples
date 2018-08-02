@@ -55,6 +55,7 @@ for c = 1:kc
     set(ff, 'Tag', figtitle);
     
     plugin_save_figure;  % and drawnow, snapnow
+    close
     
 end
 
