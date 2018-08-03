@@ -23,17 +23,17 @@
 %
 % As a summary, here is a complete set of commands to load the data and run
 % the entire analysis:
-
-    img_obj = load_image_set('emotionreg');         % Load a dataset
-    t = ttest(img_obj);                             % Do a group t-test
-    t = threshold(t, .05, 'fdr', 'k', 10);          % Threshold with FDR q < .05 and extent threshold of 10 contiguous voxels
- 
-    % Show regions and print a table with labeled regions:
-    montage(t);  drawnow, snapnow;                  % Show results on a slice display
-    r = region(t);                                  % Turn t-map into a region object with one element per contig region
-    table(r);                                       % Print a table of results using new region names
- 
-% Now, let's walk through it step by step.
+% 
+%     img_obj = load_image_set('emotionreg');         % Load a dataset
+%     t = ttest(img_obj);                             % Do a group t-test
+%     t = threshold(t, .05, 'fdr', 'k', 10);          % Threshold with FDR q < .05 and extent threshold of 10 contiguous voxels
+%  
+%     % Show regions and print a table with labeled regions:
+%     montage(t);  drawnow, snapnow;                  % Show results on a slice display
+%     r = region(t);                                  % Turn t-map into a region object with one element per contig region
+%     table(r);                                       % Print a table of results using new region names
+%  
+% Now, let's walk through it step by step, with a few minor additions.
 
 %% Load sample data
 
@@ -86,7 +86,7 @@ drawnow, snapnow;
 % relatively large amount of memory, depending on the resolution of the 
 % anatomical underlay image you use. We recommend around 8GB of free memory. 
 %
-create_figure('montage'); 
+create_figure('montage'); axis off
 montage(t)
 drawnow, snapnow; 
 
@@ -106,12 +106,22 @@ r = region(t);
 
 table(r);
 
+%% More on getting help
+
+% Help info is available on https://canlab.github.io/
+% and in the CANlab help examples repository: https://github.com/canlab/CANlab_help_examples
+% This contains a series of walkthroughs, including this one.
+
+% You can get help for the main object types by typing this in Matlab:
+% doc fmri_data (or doc any other object types)
+
+% Also, more detailed help is available for each function using the "help" command.
 % You can get help and options for any object method, like "table". But
 % because the method names are simple and often overlap with other Matlab functions 
 % and toolboxes (this is OK for objects!), you will often want to specify
 % the object type as well, as follows:
 
-help region.table
+% help region.table
 
 %% Write the t-map to disk
 

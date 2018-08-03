@@ -122,9 +122,10 @@ for i = 1:k
     end
 
     figtitle = sprintf('%s_05_unc_regions', DAT.contrastnames{i});
-    set(gcf, 'Tag', figtitle);
+    region_fig_han = gcf;
+    set(region_fig_han, 'Tag', figtitle);
     plugin_save_figure;
-    close 
+    close(region_fig_han) 
     
 end
 

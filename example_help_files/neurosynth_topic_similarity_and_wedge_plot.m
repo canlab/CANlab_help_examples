@@ -1,5 +1,9 @@
-test_dat = load_image_set('npsplus');
-nps = get_wh_image(test_dat, 1);
+% test_dat = load_image_set('npsplus', 'noverbose');
+%  image_obj = get_wh_image(test_dat, 1);
+
+test_dat = load_image_set('emotionreg', 'noverbose');
+ image_obj = mean(test_dat);
+
 
 % If data file is not found:
 % cd('/Users/tor/Google_Drive/CanlabDataRepository/Neuroimaging_Autolabeler')
@@ -7,8 +11,9 @@ nps = get_wh_image(test_dat, 1);
 
 %% Run neurosynth similarity
 
-[image_by_feature_correlations, top_feature_tables] = neurosynth_feature_labels(nps, 'images_are_replicates', false);
+[image_by_feature_correlations, top_feature_tables] = neurosynth_feature_labels( image_obj, 'images_are_replicates', false, 'noverbose');
 
+% Example for NPS: 
 %     testr_low      words_low      testr_high      words_high   
 %     _________    _____________    __________    _______________
 % 

@@ -109,7 +109,7 @@ close all;
 % ---------
 % OPT2 - Use default surf plot option in canlab_results_fmridisplay_marianne
 % --------
-figure;o2=canlab_results_fmridisplay_marianne(region(nps),'montagetype','full_surf','noverbose');
+o2 = canlab_results_fmridisplay(region(nps),'full','noverbose', 'nooutline');
 snapnow;
 
 % --------
@@ -121,14 +121,35 @@ snapnow;
 % ----------------------------------------------
 % Convert image into clusters with region()
 % Determine which clusters you want to plot and select them within the cluster object e.g., cl(NUMBEROFCLUSTER(S))
-figure;for i = 1:2, cl = region(nps); end
-info = roi_contour_map([cl(6), cl(5), cl(20), cl(37),cl(49)], 'cluster', 'use_same_range', 'colorbar');
+cl = region(nps);
+
+% threshold based on extent of 8 vox or greater
+num_vox_per_cluster = cat(1, cl.numVox);
+cl(num_vox_per_cluster < 8) = [];
+
+% Print a table, and return clusters with names attached in the cl structure
+% This will separate positive and negative-valued voxels in each region
+
+[clpos, clneg] = table(cl);
+new_cl_with_labels = [clpos clneg];
+
+% threshold based on extent of 50 vox or greater - just to have a set to
+% display nicely: 
+num_vox_per_cluster = cat(1, new_cl_with_labels.numVox);
+new_cl_with_labels(num_vox_per_cluster < 50) = [];
+
+
+% Montage of the clusters, showing each
+montage(new_cl_with_labels, 'colormap', 'regioncenters');
+snapnow
+
+% Now plot 
+info = roi_contour_map(new_cl_with_labels(1:5:end), 'cluster', 'use_same_range', 'colorbar');
 snapnow
 
 % Note if you get errors here, check the number of voxels in your cluster.
 % If less than 2, you cannot use this function.
 % Here is an example of how to check
-for i=1:57;disp(sprintf('cluster %d is %d voxels',i,cl(i).numVox));end
+% for i=1:length(cl);disp(sprintf('cluster %d is %d voxels',i,cl(i).numVox));end
 
-% Print out the clusters
-table=cluster_table(cl, 0, 0,'writefile','Name_ClusterTable');
+

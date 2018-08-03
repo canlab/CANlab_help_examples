@@ -1,0 +1,1498 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>mediation_example_script_1</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-08-02"><meta name="DC.source" content="mediation_example_script_1.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Step 1: Make a new analysis directory to save results, and go there</a></li><li><a href="#3">Step 2: Load image data and behavioral variables</a></li><li><a href="#4">Step 4: Load and display mask</a></li><li><a href="#5">Step 7 : Run mediation</a></li><li><a href="#6">Step 8: Get and save results figures, tables, and report</a></li></ul></div><pre class="codeinput">close <span class="string">all</span>
+clear <span class="string">all</span>
+
+<span class="comment">% This script is explained in detail in the powerpoint titled</span>
+<span class="comment">% Mediation_sample_data_walkthrough</span>
+
+<span class="comment">% mediation_example_script1 and 2 do the same analysis.</span>
+<span class="comment">% ...script1 is very terse, and includes the essential commands only.</span>
+<span class="comment">% ...script2 is longer and includes more checking that files are available, etc.</span>
+</pre><pre class="codeoutput">Warning: The file
+'/Applications/MATLAB_R2018a.app/toolbox/matlab/codetools/private/evalmxdom.m'
+could not be cleared because it contains MATLAB code that is currently
+executing. 
+Warning: The file
+'/Applications/MATLAB_R2018a.app/toolbox/matlab/codetools/publish.p' could not
+be cleared because it contains MATLAB code that is currently executing. 
+Warning: The file
+'/Users/torwager/Documents/GitHub/CANlab_help_examples/publish_help_files/publish_canlab_help_set1.m'
+could not be cleared because it contains MATLAB code that is currently
+executing. 
+Warning: The file
+'/Users/torwager/Documents/GitHub/CANlab_help_examples/publish_help_files/canlab_help_publish.m'
+could not be cleared because it contains MATLAB code that is currently
+executing. 
+Warning: The file
+'/Users/torwager/Documents/GitHub/MediationToolbox/Mediation_walkthrough/mediation_example_script_1.m'
+could not be cleared because it contains MATLAB code that is currently
+executing. 
+Warning: The file
+'/Applications/MATLAB_R2018a.app/toolbox/matlab/codetools/private/evalmxdom.m'
+could not be cleared because it contains MATLAB code that is currently
+executing. 
+Warning: The file
+'/Applications/MATLAB_R2018a.app/toolbox/matlab/codetools/publish.p' could not
+be cleared because it contains MATLAB code that is currently executing. 
+Warning: The file
+'/Users/torwager/Documents/GitHub/CANlab_help_examples/publish_help_files/publish_canlab_help_set1.m'
+could not be cleared because it contains MATLAB code that is currently
+executing. 
+Warning: The file
+'/Users/torwager/Documents/GitHub/CANlab_help_examples/publish_help_files/canlab_help_publish.m'
+could not be cleared because it contains MATLAB code that is currently
+executing. 
+Warning: The file
+'/Users/torwager/Documents/GitHub/MediationToolbox/Mediation_walkthrough/mediation_example_script_1.m'
+could not be cleared because it contains MATLAB code that is currently
+executing. 
+Warning: The file
+'/Applications/MATLAB_R2018a.app/toolbox/matlab/codetools/private/evalmxdom.m'
+could not be cleared because it contains MATLAB code that is currently
+executing. 
+Warning: The file
+'/Applications/MATLAB_R2018a.app/toolbox/matlab/codetools/publish.p' could not
+be cleared because it contains MATLAB code that is currently executing. 
+Warning: The file
+'/Users/torwager/Documents/GitHub/CANlab_help_examples/publish_help_files/publish_canlab_help_set1.m'
+could not be cleared because it contains MATLAB code that is currently
+executing. 
+Warning: The file
+'/Users/torwager/Documents/GitHub/CANlab_help_examples/publish_help_files/canlab_help_publish.m'
+could not be cleared because it contains MATLAB code that is currently
+executing. 
+Warning: The file
+'/Users/torwager/Documents/GitHub/MediationToolbox/Mediation_walkthrough/mediation_example_script_1.m'
+could not be cleared because it contains MATLAB code that is currently
+executing. 
+</pre><h2 id="2">Step 1: Make a new analysis directory to save results, and go there</h2><p>--------------------------------- Make a new analysis directory to save results, and go there</p><pre class="codeinput">andir = <span class="string">'Test_mediation'</span>;
+mkdir(andir)
+cd(andir)
+</pre><h2 id="3">Step 2: Load image data and behavioral variables</h2><p>---------------------------------</p><pre class="codeinput">dinf = what(<span class="string">'Wager_et_al_2008_Neuron_EmotionReg'</span>);
+
+<span class="comment">%imgs = filenames(fullfile(dinf.path,'con_*img'), 'char', 'absolute');</span>
+imgs = fullfile(dinf.path, <span class="string">'Wager_2008_emo_reg_vs_look_neg_contrast_images.nii.gz'</span>);
+
+
+behav_dat = importdata(fullfile(dinf.path,<span class="string">'Wager_2008_emotionreg_behavioral_data.txt'</span>))
+</pre><pre class="codeoutput">
+behav_dat = 
+
+  struct with fields:
+
+          data: [30&times;2 double]
+      textdata: {'X_RVLPFC'  'Y_Reappraisal_Success'}
+    colheaders: {'X_RVLPFC'  'Y_Reappraisal_Success'}
+
+</pre><h2 id="4">Step 4: Load and display mask</h2><p>---------------------------------</p><pre class="codeinput">mask = which(<span class="string">'gray_matter_mask.img'</span>)
+canlab_results_fmridisplay(mask, <span class="string">'compact2'</span>);
+</pre><pre class="codeoutput">
+mask =
+
+    '/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/gray_matter_mask.img'
+
+Using default mask: /Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/brainmask.nii
+Direct calls to spm_defauts are deprecated.
+Please use spm('Defaults',modality) or spm_get_defaults instead.
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 1409312 bytes
+Loading image number:     1
+Elapsed time is 0.036621 seconds.
+Image names entered, but fullpath attribute is empty. Getting path info.
+Grouping contiguous voxels:  46 regions
+Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
+axial montage: 42172 voxels displayed, 169167 not displayed on these slices
+sagittal montage: 8208 voxels displayed, 203131 not displayed on these slices
+axial montage: 42172 voxels displayed, 169167 not displayed on these slices
+sagittal montage: 8208 voxels displayed, 203131 not displayed on these slices
+</pre><img vspace="5" hspace="5" src="mediation_example_script_1_01.png" alt=""> <h2 id="5">Step 7 : Run mediation</h2><p>Run mediation without bootstrapping (fast) Test that things are working ---------------------------------</p><pre class="codeinput">x=behav_dat.data(:,1);
+y=behav_dat.data(:,2);
+names = {<span class="string">'X:RVLPFC'</span> <span class="string">'Y:Reappraisal_Success'</span> <span class="string">'M:BrainMediator'</span>};
+
+results = mediation_brain(x,y,imgs,<span class="string">'names'</span>,names,<span class="string">'mask'</span>, mask);
+
+<span class="comment">% "Legacy" version: reslice mask to same space first:</span>
+<span class="comment">% scn_map_image(mask,deblank(imgs(1,:)), 'write', 'resliced_mask.img');</span>
+<span class="comment">% results = mediation_brain(x,y,imgs,'names',names,'mask', 'resliced_mask.img');</span>
+
+<span class="comment">% OR</span>
+<span class="comment">% ---------------------------------</span>
+<span class="comment">% Uncomment the lines below to run with bootstrapping</span>
+
+<span class="comment">% Make yourself a cup of tea while the results are compiled as this is going to take a while</span>
+<span class="comment">% pre-compiled results are also available in</span>
+<span class="comment">% 'mediation_Example_Data_Wager2008_Msearch_R_XisRIFGstim_norobust'</span>
+
+<span class="comment">% results = mediation_brain(x,y,imgs,'names',names,'mask', mask,'boot','pvals',5, 'bootsamples', 10000);</span>
+</pre><pre class="codeoutput">Mask: /Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/gray_matter_mask.img
+Rank data: No
+
+Statistics.
+
+===============================================
+
+Slice   1 : 493 voxels in-mask
+Testing 493 valid columns of 493 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.21	-0.16	0.14	0.11	-0.03	
+STE	0.15	0.07	0.06	0.06	0.03	
+t (~N)	1.40	-2.12	2.30	1.71	-1.09	
+Z	1.37	-2.03	2.18	1.66	-1.07	
+p	0.1720	0.0427	0.0291	0.0974	0.2859	
+
+________________________________________
+Total time:    493Done in   2 s
+
+===============================================
+
+Slice   2 : 715 voxels in-mask
+Testing 715 valid columns of 715 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.27	-0.16	0.15	0.11	-0.04	
+STE	0.15	0.08	0.06	0.06	0.03	
+t (~N)	1.82	-2.08	2.39	1.71	-1.28	
+Z	1.75	-1.98	2.26	1.66	-1.26	
+p	0.0799	0.0472	0.0240	0.0974	0.2095	
+
+________________________________________
+Total time:    715Done in   1 s
+
+===============================================
+
+Slice   3 : 807 voxels in-mask
+Testing 807 valid columns of 807 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.17	-0.12	0.13	0.11	-0.02	
+STE	0.14	0.08	0.06	0.06	0.03	
+t (~N)	1.22	-1.47	2.03	1.71	-0.83	
+Z	1.19	-1.43	1.95	1.66	-0.82	
+p	0.2321	0.1540	0.0517	0.0974	0.4133	
+
+________________________________________
+Total time:    807Done in   1 s
+
+===============================================
+
+Slice   4 : 931 voxels in-mask
+Testing 931 valid columns of 931 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.10	-0.01	0.11	0.11	-0.00	
+STE	0.27	0.04	0.07	0.06	0.01	
+t (~N)	0.37	-0.32	1.70	1.71	-0.10	
+Z	0.36	-0.31	1.65	1.66	-0.10	
+p	0.7165	0.7549	0.0997	0.0974	0.9179	
+
+________________________________________
+Total time:    931Done in   1 s
+
+===============================================
+
+Slice   5 : 1076 voxels in-mask
+Testing 1076 valid columns of 1076 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.40	0.01	0.11	0.11	0.00	
+STE	0.36	0.03	0.07	0.06	0.02	
+t (~N)	1.13	0.27	1.59	1.71	0.20	
+Z	1.11	0.26	1.54	1.66	0.19	
+p	0.2671	0.7920	0.1228	0.0974	0.8457	
+
+________________________________________
+Total time:   1076Done in   1 s
+
+===============================================
+
+Slice   6 : 1248 voxels in-mask
+Testing 1248 valid columns of 1248 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.66	0.01	0.10	0.11	0.01	
+STE	0.34	0.04	0.07	0.06	0.03	
+t (~N)	1.93	0.23	1.50	1.71	0.20	
+Z	1.85	0.23	1.46	1.66	0.20	
+p	0.0639	0.8212	0.1438	0.0974	0.8419	
+
+________________________________________
+Total time:   1248Done in   1 s
+
+===============================================
+
+Slice   7 : 1383 voxels in-mask
+Testing 1383 valid columns of 1383 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	1.43	0.03	0.07	0.11	0.04	
+STE	0.49	0.02	0.07	0.06	0.04	
+t (~N)	2.91	1.16	0.95	1.71	1.02	
+Z	2.70	1.13	0.94	1.66	1.00	
+p	0.0069	0.2577	0.3486	0.0974	0.3152	
+
+________________________________________
+Total time:   1383Done in   1 s
+
+===============================================
+
+Slice   8 : 1547 voxels in-mask
+Testing 1546 valid columns of 1547 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.90	0.02	0.09	0.11	0.02	
+STE	0.34	0.04	0.07	0.06	0.04	
+t (~N)	2.63	0.66	1.23	1.71	0.60	
+Z	2.47	0.65	1.20	1.66	0.59	
+p	0.0137	0.5177	0.2299	0.0974	0.5558	
+
+________________________________________
+Total time:   1547Done in   1 s
+
+===============================================
+
+Slice   9 : 1614 voxels in-mask
+Testing 1613 valid columns of 1614 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.58	0.02	0.10	0.11	0.01	
+STE	0.27	0.04	0.07	0.06	0.03	
+t (~N)	2.12	0.38	1.42	1.71	0.34	
+Z	2.03	0.38	1.39	1.66	0.34	
+p	0.0425	0.7066	0.1656	0.0974	0.7367	
+
+________________________________________
+Total time:   1614Done in   1 s
+
+===============================================
+
+Slice  10 : 1589 voxels in-mask
+Testing 1588 valid columns of 1589 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.71	0.03	0.09	0.11	0.02	
+STE	0.28	0.04	0.07	0.06	0.03	
+t (~N)	2.55	0.58	1.27	1.71	0.53	
+Z	2.41	0.58	1.24	1.66	0.53	
+p	0.0162	0.5635	0.2145	0.0974	0.5986	
+
+________________________________________
+Total time:   1589Done in   1 s
+
+===============================================
+
+Slice  11 : 1515 voxels in-mask
+Testing 1515 valid columns of 1515 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.35	-0.04	0.12	0.11	-0.01	
+STE	0.14	0.09	0.07	0.06	0.03	
+t (~N)	2.43	-0.47	1.73	1.71	-0.43	
+Z	2.30	-0.46	1.67	1.66	-0.42	
+p	0.0213	0.6426	0.0946	0.0974	0.6725	
+
+________________________________________
+Total time:   1515Done in   1 s
+
+===============================================
+
+Slice  12 : 1461 voxels in-mask
+Testing 1461 valid columns of 1461 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.27	-0.01	0.11	0.11	-0.00	
+STE	0.13	0.09	0.07	0.06	0.03	
+t (~N)	2.01	-0.08	1.60	1.71	-0.07	
+Z	1.93	-0.08	1.55	1.66	-0.07	
+p	0.0535	0.9356	0.1205	0.0974	0.9424	
+
+________________________________________
+Total time:   1461Done in   1 s
+
+===============================================
+
+Slice  13 : 1451 voxels in-mask
+Testing 1451 valid columns of 1451 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.16	0.02	0.11	0.11	0.00	
+STE	0.14	0.09	0.07	0.06	0.02	
+t (~N)	1.17	0.20	1.60	1.71	0.15	
+Z	1.14	0.20	1.55	1.66	0.15	
+p	0.2524	0.8397	0.1209	0.0974	0.8789	
+
+________________________________________
+Total time:   1451Done in   1 s
+
+===============================================
+
+Slice  14 : 1434 voxels in-mask
+Testing 1434 valid columns of 1434 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	1.04	0.04	0.07	0.11	0.04	
+STE	0.48	0.02	0.07	0.06	0.03	
+t (~N)	2.18	1.47	1.06	1.71	1.14	
+Z	2.08	1.43	1.04	1.66	1.12	
+p	0.0379	0.1527	0.2992	0.0974	0.2646	
+
+________________________________________
+Total time:   1434Done in   1 s
+
+===============================================
+
+Slice  15 : 1337 voxels in-mask
+Testing 1337 valid columns of 1337 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.25	0.03	0.10	0.11	0.01	
+STE	0.14	0.08	0.07	0.06	0.03	
+t (~N)	1.74	0.41	1.48	1.71	0.35	
+Z	1.68	0.40	1.43	1.66	0.34	
+p	0.0926	0.6860	0.1513	0.0974	0.7312	
+
+________________________________________
+Total time:   1337Done in   1 s
+
+===============================================
+
+Slice  16 : 1250 voxels in-mask
+Testing 1250 valid columns of 1250 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.18	0.04	0.10	0.11	0.01	
+STE	0.14	0.09	0.07	0.06	0.02	
+t (~N)	1.32	0.39	1.54	1.71	0.30	
+Z	1.29	0.38	1.50	1.66	0.30	
+p	0.1974	0.7010	0.1341	0.0974	0.7656	
+
+________________________________________
+Total time:   1250Done in   1 s
+
+===============================================
+
+Slice  17 : 1165 voxels in-mask
+Testing 1165 valid columns of 1165 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.69	0.01	0.10	0.11	0.01	
+STE	0.34	0.04	0.07	0.06	0.03	
+t (~N)	2.02	0.29	1.47	1.71	0.26	
+Z	1.94	0.29	1.43	1.66	0.26	
+p	0.0525	0.7736	0.1527	0.0974	0.7981	
+
+________________________________________
+Total time:   1165Done in   1 s
+
+===============================================
+
+Slice  18 : 1073 voxels in-mask
+Testing 1073 valid columns of 1073 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.36	0.15	0.06	0.11	0.05	
+STE	0.17	0.07	0.06	0.06	0.04	
+t (~N)	2.14	2.22	0.87	1.71	1.46	
+Z	2.04	2.11	0.85	1.66	1.42	
+p	0.0410	0.0351	0.3943	0.0974	0.1545	
+
+________________________________________
+Total time:   1073Done in   1 s
+
+===============================================
+
+Slice  19 : 1097 voxels in-mask
+Testing 1097 valid columns of 1097 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.38	0.13	0.06	0.11	0.05	
+STE	0.19	0.06	0.06	0.06	0.04	
+t (~N)	2.03	2.06	0.95	1.71	1.37	
+Z	1.94	1.97	0.94	1.66	1.33	
+p	0.0520	0.0488	0.3489	0.0974	0.1830	
+
+________________________________________
+Total time:   1097Done in   1 s
+
+===============================================
+
+Slice  20 : 1122 voxels in-mask
+Testing 1122 valid columns of 1122 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.32	0.13	0.07	0.11	0.04	
+STE	0.18	0.06	0.06	0.06	0.03	
+t (~N)	1.73	2.02	1.09	1.71	1.23	
+Z	1.67	1.94	1.07	1.66	1.20	
+p	0.0951	0.0526	0.2856	0.0974	0.2292	
+
+________________________________________
+Total time:   1122Done in   1 s
+
+===============================================
+
+Slice  21 : 1091 voxels in-mask
+Testing 1091 valid columns of 1091 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.53	0.11	0.05	0.11	0.06	
+STE	0.21	0.05	0.07	0.06	0.04	
+t (~N)	2.50	2.09	0.75	1.71	1.53	
+Z	2.36	2.00	0.74	1.66	1.49	
+p	0.0185	0.0456	0.4610	0.0974	0.1366	
+
+________________________________________
+Total time:   1091Done in   1 s
+
+===============================================
+
+Slice  22 : 1060 voxels in-mask
+Testing 1060 valid columns of 1060 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.49	0.08	0.07	0.11	0.04	
+STE	0.25	0.05	0.07	0.06	0.03	
+t (~N)	2.00	1.74	1.04	1.71	1.23	
+Z	1.92	1.68	1.02	1.66	1.20	
+p	0.0544	0.0936	0.3057	0.0974	0.2297	
+
+________________________________________
+Total time:   1060Done in   1 s
+
+===============================================
+
+Slice  23 : 981 voxels in-mask
+Testing 981 valid columns of 981 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.28	0.03	0.10	0.11	0.01	
+STE	0.30	0.04	0.07	0.06	0.02	
+t (~N)	0.95	0.61	1.56	1.71	0.39	
+Z	0.93	0.61	1.51	1.66	0.38	
+p	0.3517	0.5438	0.1302	0.0974	0.7026	
+
+________________________________________
+Total time:    981Done in   1 s
+
+===============================================
+
+Slice  24 : 929 voxels in-mask
+Testing 929 valid columns of 929 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.38	0.04	0.09	0.11	0.02	
+STE	0.32	0.04	0.07	0.06	0.02	
+t (~N)	1.20	1.06	1.44	1.71	0.67	
+Z	1.17	1.04	1.40	1.66	0.67	
+p	0.2411	0.2970	0.1609	0.0974	0.5059	
+
+________________________________________
+Total time:    929Done in   1 s
+
+===============================================
+
+Slice  25 : 828 voxels in-mask
+Testing 828 valid columns of 828 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.50	0.07	0.08	0.11	0.03	
+STE	0.24	0.05	0.07	0.06	0.03	
+t (~N)	2.06	1.37	1.13	1.71	1.05	
+Z	1.97	1.33	1.10	1.66	1.03	
+p	0.0489	0.1828	0.2696	0.0974	0.3007	
+
+________________________________________
+Total time:    828Done in   1 s
+
+===============================================
+
+Slice  26 : 661 voxels in-mask
+Testing 661 valid columns of 661 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.57	0.06	0.08	0.11	0.03	
+STE	0.19	0.06	0.07	0.06	0.04	
+t (~N)	2.92	0.92	1.05	1.71	0.84	
+Z	2.71	0.91	1.03	1.66	0.82	
+p	0.0067	0.3648	0.3028	0.0974	0.4106	
+
+________________________________________
+Total time:    661Done in   1 s
+
+===============================================
+
+Slice  27 : 521 voxels in-mask
+Testing 521 valid columns of 521 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.41	0.08	0.08	0.11	0.03	
+STE	0.21	0.06	0.07	0.06	0.03	
+t (~N)	1.98	1.42	1.13	1.71	1.07	
+Z	1.90	1.39	1.11	1.66	1.05	
+p	0.0570	0.1659	0.2664	0.0974	0.2940	
+
+________________________________________
+Total time:    521Done in   1 s
+
+===============================================
+
+Slice  28 : 392 voxels in-mask
+Testing 392 valid columns of 392 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.16	0.07	0.10	0.11	0.01	
+STE	0.15	0.08	0.07	0.06	0.02	
+t (~N)	1.05	0.80	1.51	1.71	0.51	
+Z	1.03	0.79	1.47	1.66	0.50	
+p	0.3039	0.4306	0.1412	0.0974	0.6167	
+
+________________________________________
+Total time:    392Done in   0 s
+
+===============================================
+
+Slice  29 : 258 voxels in-mask
+Testing 258 valid columns of 258 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.50	0.10	0.06	0.11	0.05	
+STE	0.17	0.07	0.07	0.06	0.04	
+t (~N)	2.93	1.41	0.84	1.71	1.22	
+Z	2.72	1.38	0.83	1.66	1.19	
+p	0.0065	0.1685	0.4082	0.0974	0.2337	
+
+________________________________________
+Total time:    258Done in   0 s
+
+===============================================
+
+Slice  30 :  52 voxels in-mask
+Testing 52 valid columns of 52 total in matrix - current:      1 
+The mediation output below (and in the figures) is shown for
+the first valid voxel in the brain. 
+It is intended to give you an idea of what the 
+variables and output look like so you can check      1Mediation analysis
+
+Observations:  30, Replications:   1
+Predictor (X): X:RVLPFC, Outcome (Y): Y:Reappraisal_Success: Mediator (M): M:BrainMediator
+
+Covariates: No
+
+Single-level analysis.
+Options:
+	Plots: Yes
+	Bootstrap: No
+	Robust: No
+	Logistic(Y): No
+ Done.
+Error in mediation_path_diagram
+Mediation scatterplots:
+Replications:   1
+Covariates controlled for in all regressions:   0 predictors
+Additional mediators controlled for in outcome predictions:   1 predictors
+
+________________________________________
+
+Single-level model
+	a	b	c'	c	ab	
+Coeff	0.10	0.32	0.08	0.11	0.03	
+STE	0.04	0.27	0.07	0.06	0.03	
+t (~N)	2.24	1.20	1.12	1.71	0.98	
+Z	2.13	1.17	1.10	1.66	0.97	
+p	0.0329	0.2404	0.2714	0.0974	0.3336	
+
+________________________________________
+Total time:     52Do</pre><h2 id="6">Step 8: Get and save results figures, tables, and report</h2><p>---------------------------------</p><pre class="codeinput"><span class="comment">% change to the mediation analysis directory, if you haven't done, yet.</span>
+<span class="comment">% compute result images and figures</span>
+
+<span class="comment">% Get results and publish an HTML report:</span>
+<span class="comment">% (This is commented out because this script is published, and we can't</span>
+<span class="comment">% have nested publish commands)</span>
+
+<span class="comment">% publish_mediation_report;</span>
+
+<span class="comment">% ---------------------------------------------------------------------</span>
+<span class="comment">% Get and save results (older format but quite complete):</span>
+
+mediation_brain_results_all_script;
+
+
+<span class="comment">% see mediation_brain_results for more options.</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+close all
+clear all
+
+% This script is explained in detail in the powerpoint titled
+% Mediation_sample_data_walkthrough
+
+% mediation_example_script1 and 2 do the same analysis.
+% ...script1 is very terse, and includes the essential commands only.
+% ...script2 is longer and includes more checking that files are available, etc.
+
+%% Step 1: Make a new analysis directory to save results, and go there
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% Make a new analysis directory to save results, and go there
+andir = 'Test_mediation';
+mkdir(andir)
+cd(andir)
+
+%% Step 2: Load image data and behavioral variables
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+dinf = what('Wager_et_al_2008_Neuron_EmotionReg');
+
+%imgs = filenames(fullfile(dinf.path,'con_*img'), 'char', 'absolute');
+imgs = fullfile(dinf.path, 'Wager_2008_emo_reg_vs_look_neg_contrast_images.nii.gz');
+
+
+behav_dat = importdata(fullfile(dinf.path,'Wager_2008_emotionreg_behavioral_data.txt'))
+
+%% Step 4: Load and display mask
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+mask = which('gray_matter_mask.img')
+canlab_results_fmridisplay(mask, 'compact2');
+
+%% Step 7 : Run mediation
+% Run mediation without bootstrapping (fast)
+% Test that things are working
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+x=behav_dat.data(:,1);
+y=behav_dat.data(:,2);
+names = {'X:RVLPFC' 'Y:Reappraisal_Success' 'M:BrainMediator'};
+
+results = mediation_brain(x,y,imgs,'names',names,'mask', mask);
+
+% "Legacy" version: reslice mask to same space first:
+% scn_map_image(mask,deblank(imgs(1,:)), 'write', 'resliced_mask.img');
+% results = mediation_brain(x,y,imgs,'names',names,'mask', 'resliced_mask.img'); 
+
+% OR
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% Uncomment the lines below to run with bootstrapping
+
+% Make yourself a cup of tea while the results are compiled as this is going to take a while
+% pre-compiled results are also available in
+% 'mediation_Example_Data_Wager2008_Msearch_R_XisRIFGstim_norobust'
+
+% results = mediation_brain(x,y,imgs,'names',names,'mask', mask,'boot','pvals',5, 'bootsamples', 10000);
+
+%% Step 8: Get and save results figures, tables, and report
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+% change to the mediation analysis directory, if you haven't done, yet.
+% compute result images and figures
+
+% Get results and publish an HTML report:
+% (This is commented out because this script is published, and we can't
+% have nested publish commands)
+
+% publish_mediation_report;
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% Get and save results (older format but quite complete):
+
+mediation_brain_results_all_script;
+
+
+% see mediation_brain_results for more options.
+
+
+##### SOURCE END #####
+--></body></html>
