@@ -1,8 +1,9 @@
 % To use: Create variable called figtitle with figure name, 
 % and set 'Tag' property of figure to the value of figtitle/figstr.
-% Then run this. Used in canlan_second_level scripts
+% Then run this. Used in canlab_second_level scripts
 
-% Try to find figure by tag 
+% Try to find figure by tag - works for any figure, not just o2 fmridisplay
+% objects. 
 fighan = findobj('Type', 'figure', 'Tag', figtitle);
 
 % Take last one if multiple

@@ -47,7 +47,7 @@ for i = 1:k
     disp(' ')
     printhdr(figstr);
 
-    contrast_t_fdr{i} = ttest(DATA_OBJ_CON{i}, .05, 'fdr');
+    contrast_t_fdr{i} = ttest( DATA_OBJ_CONsc{i}, .05, 'fdr');
     
     if apply_mask_before_fdr
         contrast_t_fdr{i} = apply_mask(contrast_t_fdr{i}, mask);

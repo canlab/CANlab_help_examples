@@ -35,7 +35,7 @@ run(scriptname); % Run from master script, not local script. This script should 
 %% UNIVARIATE CONTRASTS - SCALED DATA
 printhdr('UNIVARIATE CONTRAST MAPS - SCALED DATA')
 
-scriptname = which(fullfile(masterscriptdir, 'c_univariate_contrast_maps'));
+scriptname = which(fullfile(masterscriptdir, 'c_univariate_contrast_maps_scaleddata'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
 %% NETWORK AVERAGES AND LATERALIZATION FOR EACH CONTRAST
@@ -44,4 +44,13 @@ printhdr('NETWORK AVERAGES AND LATERALIZATION FOR EACH CONTRAST')
 
 scriptname = which(fullfile(masterscriptdir, 'c4_univ_contrast_wedge_plot_and_lateralization_test'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
+
+%% NETWORK AVERAGES AND LATERALIZATION FOR EACH CONTRAST
+
+printhdr('NETWORK AVERAGES AND LATERALIZATION - SCALED DATA')
+
+scriptname = which(fullfile(masterscriptdir, 'c5_univ_contrast_wedge_plot_and_lateralization_test_scaled_data'));
+run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
+
+
 

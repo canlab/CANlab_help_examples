@@ -1,0 +1,586 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>canlab_help_3b_atlases_and_labeling</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-08-04"><meta name="DC.source" content="canlab_help_3b_atlases_and_labeling.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1></h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">load an atlas</a></li><li><a href="#2">visualize the atlas regions</a></li><li><a href="#3">select regions of interest</a></li><li><a href="#4">load a dataset to extract data from for an ROI analysis</a></li><li><a href="#5">extract data from each atlas region</a></li><li><a href="#6">Do a group ROI analysis and make a "violin plot" (or barplot) for each region</a></li></ul></div><h2 id="1">load an atlas</h2><p>'atlas' objects are a class of objects specially designed for brain atlases. Here is more information on this class (also try &gt;&gt; doc atlas)</p><pre class="codeinput">help <span class="string">atlas</span>
+
+<span class="comment">% The function load_atlas in the CANlab toolbox loads a number of named</span>
+<span class="comment">% atlases included with the toolbox.  Here is a list of named atlases:</span>
+
+help <span class="string">load_atlas</span>
+
+<span class="comment">% Now load the "CANlab combined 2018" atlas:</span>
+atlas_obj = load_atlas(<span class="string">'canlab2018_2mm'</span>);
+</pre><pre class="codeoutput">  atlas: Subclass of image_vector designed for brain atlases and parcellations
+ 
+  'atlas' is a data class containing information about brain atlases and parcellations
+  stored in a structure-like object.  It inherits the properties and
+  methods of fmri_data and image_vector objects.
+ 
+  'atlas' objects are a class of objects specially designed for brain
+  atlases. They have properties (fields) for probabilistic maps and a data
+  field (.dat) that contains integer codes for thresholded/maximum
+  probability labels. There is also a "labels" property with the text
+  labels for each region, and additional description and label fields for
+  additional annotation. These can hold, e.g., hierarchical labels at different 
+  levels of spatial resolution. A "reference" property holds information
+  about associated publications.
+ 
+  Atlas objects have specialized methods for selecting regions by name or
+  number (including groups of regions with similar names). Because it is a 
+  subclass of the image_vector object, it inherits all of its  methods as 
+  well (montage, surface, apply_mask, write, descriptives, flip,
+  image_similarity_plot, image_math, etc.
+ 
+  The function load_atlas in the CANlab toolbox loads a number of named
+  atlases included with the toolbox.  Type &gt;&gt; help load_atlas for a list of
+  named atlases.
+  
+  Creating an atlas object requires either images with probability maps (a 4-d image) 
+  Or an integer-valued image with one integer per atlas region. 
+  For full functionality, the atlas also requires both probability maps and 
+  text labels, one per region, in a cell array. But some functionality will
+  work without these.
+ 
+  Basic usage for creating a new atlas image:
+  obj = atlas(image_names, ['mask',maskinput], [other optional inputs]) 
+ 
+  maskinput     :   Name of mask image to use.  Default: 'brainmask.nii', a
+                    brain mask that is distributed with SPM software
+                    Alternative in CANlab tools: which('gray_matter_mask.img')
+  'noverbose'   :   Suppress verbose output
+  'sample2mask' :   Sample images to mask space. Default: Sample mask to
+                    image space, use native image space
+ 
+ 
+  Creating class instances
+  -----------------------------------------------------------------------
+  You can create an empty object by using:
+  obj = atlas
+  - obj is the object.
+  - It will be created with a standard brain mask, brainmask.nii
+  - This image should be placed on your Matlab path
+  - The space information is stored in obj.volInfo
+  - Data is stored in obj.dat, in a [voxels x images] matrix
+  - You can replace or append data to the obj.dat field.
+ 
+  You can create an atlas object with extacted image data.
+  - Let "imgs" be a string array or cell array of image names
+  - This command creates an object with your (4-D) image data:
+  - fmri_dat = atlas(imgs);
+  - Only values in the standard brain mask, brainmask.nii, will be included.
+  - This saves memory by reducing the number of voxels saved dramatically.
+ 
+  You can specify any mask you'd like to extract data from.
+  - Let "maskimagename" be a string array with a mask image name.
+  - this command creates the object with data saved in the mask:
+  - fmri_dat = atlas(imgs, maskimagename);
+  - The mask information is saved in fmri_dat.mask
+ 
+  e.g., this extracts data from images within the standard brain mask:
+  dat = atlas(imgs, which('brainmask.nii'));
+ 
+  Properties and methods
+  -----------------------------------------------------------------------
+  Properties are data fields associated with an object.
+  Try typing the name of an object (class instance) you create to see its
+  properties, and a link to its methods (things you can run specifically
+  with this object type). For example: After creating an atlas object 
+  called fmri_dat, as above, type fmri_dat to see its properties.
+ 
+  There are many other methods that you can apply to atlas objects to
+  do different things.
+  - Try typing methods(atlas) for a list.
+  - You always pass in an atlas object as the first argument.
+  - Methods include utilities for many functions - e.g.,:
+  - resample_space(fmri_dat) resamples the voxels
+  - write(fmri_dat) writes an image file to disk (careful not to overwrite by accident!)
+  - regress runs multiple regression
+  - predict runs cross-validated machine learning/prediction algorithms
+ 
+  Specialized methods unique to atlas objects include:
+  atlas                               Construct a new atlas object given Analyze/Nifti image(s)
+  
+  Utilities for manipulating atlases:
+  merge_atlases                       Add all or some regions from an atlas object to another atlas object (with/without replacing existing labeled voxels)
+  probability_maps_to_region_index    Use dat.probability_maps to rebuild integer vector of index labels (dat.dat)
+  remove_atlas_region                 Removes region(s) from atlas, by names or index values 
+  reorder_atlas_regions               Reorder a set of regions in an atlas object
+  select_atlas_subset                 Select a subset of regions in an atlas by name or integer code, with or without collapsing regions together
+  split_atlas_by_hemisphere           Divide regions that are bilateral into separate left- and right-hemisphere regions
+  split_atlas_into_contiguous_regions Divide regions with multiple contiguous blobs into separate labeled regions for each blob
+  threshold                           Threshold atlas object based on values in obj.probability_maps property
+  
+  % Extracting information and converting to other object types:
+  atlas2region                        Convert an atlas object to a region object 
+  check_properties                    Check properties and enforce some variable types 
+  get_region_volumes                  Get the volume (and raw voxel count) of each region in an atlas object
+  num_regions                         Count number of regions in atlas object, even with incomplete data 
+  
+  Manipulating labels for atlas regions:
+  atlas_add_L_R_to_labels             Removes some strings indicating lateralization from atlas labels and adds new _L and _R suffixes for lateralized regions
+  atlas_similarity                    Annotate regions in an atlas object with labels from another atlas object
+  
+  Visualization:
+  isosurface                          Create a series of surfaces in different colors, one for each region
+  montage                             Display an atlas object on a standard slice montage 
+ 
+  Attaching additional data
+  -----------------------------------------------------------------------
+  The atlas object has a number of fields for appending specific types of data.
+ 
+  - You can replace data in the atlas.dat field. However, should always contain one column vector of integers. 
+  - Attach custom descriptions in several fields to document your object.
+  - The "history" field stores a cell array of strings with the processing
+  history of the object. Some methods add to this history automatically.
+ 
+ 
+  Examples:
+  -----------------------------------------------------------------------
+  parcellation_file = 'CIT168toMNI152_prob_atlas_bilat_1mm.nii';  %'prob_atlas_bilateral.nii';
+  labels = {'Put' 'Cau' 'NAC' 'BST_SLEA' 'GPe' 'GPi' 'SNc' 'RN' 'SNr' 'PBP' 'VTA' 'VeP' 'Haben' 'Hythal' 'Mamm_Nuc' 'STN'};
+  dat = atlas(which(parcellation_file), 'labels', labels, ...
+                'space_description', 'MNI152 space', ...
+                'references', 'Pauli 2018 Bioarxiv: CIT168 from Human Connectome Project data', 'noverbose');
+  % Display:
+  orthviews(dat);
+  figure; montage(dat);
+ 
+  % Convert to region object and display:
+  r = atlas2region(dat);
+  orthviews(r)
+  montage(r);
+
+    Reference page in Doc Center
+       doc atlas
+
+
+  Load one of a collection of atlases by keyword
+ 
+  atlas_obj = load_atlas(varargin)
+ 
+  List of keywords/atlases available:
+  -------------------------------------------------------------------------
+  'canlab2018'                    'Combined atlas from other published atlases, whole brain. 
+  'canlab2018_2mm'                'Combined atlas resampled at 2 mm resolution'
+  'thalamus'                      'Thalamus_combined_atlas_object.mat'
+  'thalamus_detail', 'morel'      'Morel_thalamus_atlas_object.mat'
+  'cortex', 'glasser'             'Glasser2016HCP_atlas_object.mat'
+  'basal_ganglia', 'bg'           'Basal_ganglia_combined_atlas_object.mat'
+  'striatum', 'pauli_bg'          'Pauli2016_striatum_atlas_object.mat'
+  'brainstem'                     'brainstem_combined_atlas_object.mat'
+  'subcortical_rl', 'cit168'      'CIT168_MNI_subcortical_atlas_object.mat'
+  'brainnetome'                   'Brainnetome_atlas_object.mat'
+  'keuken'                        'Keuken_7T_atlas_object.mat'
+  'buckner'                       'buckner_networks_atlas_object.mat'
+  'cerebellum', 'suit'            'SUIT_Cerebellum_MNI_atlas_object.mat'
+  'shen'                          'Shen_atlas_object.mat'
+  'schaefer400'                   'Schaefer2018Cortex_atlas_regions.mat'
+  'yeo17networks'                 'Schaefer2018Cortex_17networks_atlas_object.mat'
+  
+ 
+ 
+  Examples:
+  -------------------------------------------------------------------------
+  atlas_obj = load_atlas('thalamus');
+  atlas_obj = load_atlas('Thalamus_atlas_combined_Morel.mat');
+ 
+ 
+
+Loading atlas: CANlab_combined_atlas_object_2018_2mm.mat
+</pre><h2 id="2">visualize the atlas regions</h2><pre class="codeinput">orthviews(atlas_obj);
+
+o2 = montage(atlas_obj);
+</pre><pre class="codeoutput">
+SPM12: spm_check_registration (v6245)              23:43:40 - 04/08/2018
+========================================================================
+Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
+Grouping voxels with unique mask values, assuming integer-valued mask: 489 regions
+</pre><img vspace="5" hspace="5" src="canlab_help_3b_atlases_and_labeling_01.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_3b_atlases_and_labeling_02.png" alt=""> <h2 id="3">select regions of interest</h2><pre class="codeinput"><span class="comment">% Select all regions with "Thal" in the label:</span>
+thal = select_atlas_subset(atlas_obj, {<span class="string">'Thal'</span>})
+
+<span class="comment">% Print the labels:</span>
+thal.labels
+
+<span class="comment">% Select a few thalamus/epithalamus regions of interest:</span>
+thal = select_atlas_subset(atlas_obj, {<span class="string">'Thal_Intra'</span>, <span class="string">'Thal_VL'</span>, <span class="string">'Thal_MD'</span>, <span class="string">'Thal_LGN'</span>, <span class="string">'Thal_MGN'</span>, <span class="string">'Thal_Hb'</span>});
+thal.labels
+
+<span class="comment">% Select all the regions with "Thal" in the label, and collapse them into a single region:</span>
+whole_thal = select_atlas_subset(atlas_obj, {<span class="string">'Thal'</span>}, <span class="string">'flatten'</span>);
+</pre><pre class="codeoutput">
+thal = 
+
+  atlas with properties:
+
+               atlas_name: 'CANlab_2018_combined'
+         probability_maps: [352328&times;17 double]
+                   labels: {1&times;17 cell}
+       label_descriptions: {17&times;1 cell}
+                 labels_2: {1&times;489 cell}
+                 labels_3: {1&times;489 cell}
+                 labels_4: {''}
+                 labels_5: {''}
+               references: [33&times;485 char]
+        space_description: 'MNI152 space'
+    property_descriptions: {1&times;8 cell}
+          additional_info: [0&times;0 struct]
+                      dat: [352328&times;1 int32]
+              dat_descrip: []
+                  volInfo: [1&times;1 struct]
+           removed_voxels: [352328&times;1 logical]
+           removed_images: 0
+              image_names: 'HCP-MMP1_on_MNI152_ICBM2009a_nlin.nii'
+                 fullpath: '/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Atlases_and_parcellations/2018_Wager_combined_atlas/CANlab_2018_combined_atlas_2mm.nii'
+              files_exist: 1
+                  history: {1&times;5 cell}
+
+
+ans =
+
+  1&times;17 cell array
+
+  Columns 1 through 4
+
+    {'Thal_Pulv'}    {'Thal_LGN'}    {'Thal_MGN'}    {'Thal_VPL'}
+
+  Columns 5 through 8
+
+    {'Thal_VPM'}    {'Thal_Intralam'}    {'Thal_Midline'}    {'Thal_LD'}
+
+  Columns 9 through 13
+
+    {'Thal_VL'}    {'Thal_LP'}    {'Thal_VA'}    {'Thal_VM'}    {'Thal_MD'}
+
+  Columns 14 through 17
+
+    {'Thal_AM'}    {'Thal_AV'}    {'Thal_Hb'}    {'Thal_Hythal'}
+
+
+ans =
+
+  1&times;6 cell array
+
+  Columns 1 through 4
+
+    {'Thal_LGN'}    {'Thal_MGN'}    {'Thal_Intralam'}    {'Thal_VL'}
+
+  Columns 5 through 6
+
+    {'Thal_MD'}    {'Thal_Hb'}
+
+</pre><h2 id="4">load a dataset to extract data from for an ROI analysis</h2><p>The dataset contains data from 33 participants, with brain responses to six levels of heat (non-painful and painful).</p><p>Aspects of this data appear in these papers: Wager, T.D., Atlas, L.T., Lindquist, M.A., Roy, M., Choong-Wan, W., Kross, E. (2013). An fMRI-Based Neurologic Signature of Physical Pain. The New England Journal of Medicine. 368:1388-1397 (Study 2)</p><p>Woo, C. -W., Roy, M., Buhle, J. T. &amp; Wager, T. D. (2015). Distinct brain systems mediate the effects of nociceptive input and self-regulation on pain. PLOS Biology. 13(1): e1002036. doi:10.1371/journal.pbio.1002036</p><p>Lindquist, Martin A., Anjali Krishnan, Marina L&oacute;pez-Sol&agrave;, Marieke Jepma, Choong-Wan Woo, Leonie Koban, Mathieu Roy, et al. 2015. ?Group-Regularized Individual Prediction: Theory and Application to Pain.? NeuroImage. <a href="http://www.sciencedirect.com/science/article/pii/S1053811915009982">http://www.sciencedirect.com/science/article/pii/S1053811915009982</a>.</p><p>This dataset is shared on figshare.com, under this link: https://figshare.com/s/ca23e5974a310c44ca93</p><p>Here is a direct link to the dataset file with the fmri_data object: https://ndownloader.figshare.com/files/12708989</p><p>The key variable is image_obj This is an fmri_data object from the CANlab Core Tools repository for neuroimaging data analysis. See https://canlab.github.io/</p><p>image_obj.dat contains brain data for each image (average across trials) image_obj.Y contains pain ratings (one average rating per image)</p><p>image_obj.additional_info.subject_id contains integers coding for which Load the data file, downloading from figshare if needed</p><p>Alternative sample datasets: -------------------------------------------- This dataset will take time to download from figshare if you haven't yet downloaded it. An alternative is to use the dataset included with the CANlab Core toolbox (though the results are less interesting for this example). image_obj = load_image_set('emotionreg');</p><p>A second example is a CANlab pain dataset shared on Neurovault. Try this to load it: [files_on_disk, url_on_neurovault, mycollection, myimages] = retrieve_neurovault_collection(504); image_obj = fmri_data(files_on_disk);</p><pre class="codeinput">fmri_data_file = which(<span class="string">'bmrk3_6levels_pain_dataset.mat'</span>);
+
+<span class="keyword">if</span> isempty(fmri_data_file)
+
+    <span class="comment">% attempt to download</span>
+    disp(<span class="string">'Did not find data locally...downloading data file from figshare.com'</span>)
+
+    fmri_data_file = websave(<span class="string">'bmrk3_6levels_pain_dataset.mat'</span>, <span class="string">'https://ndownloader.figshare.com/files/12708989'</span>);
+
+<span class="keyword">end</span>
+
+load(fmri_data_file);
+
+descriptives(image_obj);
+</pre><pre class="codeoutput">Did not find data locally...downloading data file from figshare.com
+ 
+Source: BMRK3 dataset from CANlab, PI Tor Wager
+Data: .dat contains 6 images per participant, activation estimates during heat on L arm from level 1(44.3 degrees C) to level 6(49.3), in 1 degree increments.
+ 
+
+____________________________________________________________________________________________________________________________________________
+ Wager, T.D., Atlas, L.T., Lindquist, M.A., Roy, M., Choong-Wan, W., Kross, E. (2013). An fMRI-Based Neurologic Signature of Physical Pain. 
+The New England Journal of Medicine. 368:1388-1397 (Study 2)                                                                                
+                                                                                                                                            
+ Woo, C. -W., Roy, M., Buhle, J. T. &amp; Wager, T. D. (2015). Distinct brain systems mediate the effects of nociceptive input and 
+self-regulation on pain. PLOS Biology. 13(1): e1002036. doi:10.1371/journal.pbio.1002036                                       
+                                                                                                                               
+Lindquist, Martin A., Anjali Krishnan, Marina L&oacute;pez-Sol&agrave;, Marieke Jepma, Choong-Wan Woo, Leonie Koban, Mathieu Roy, et al. 2015. 
+&#8220;Group-Regularized Individual Prediction: Theory and Application to Pain.&#8221; NeuroImage.                                           
+http://www.sciencedirect.com/science/article/pii/S1053811915009982.                                                              
+                                                                                                                                 
+____________________________________________________________________________________________________________________________________________
+ 
+Summary of dataset
+______________________________________________________
+Images: 198	Nonempty: 198	Complete: 198
+Voxels: 223707	Nonempty: 223707	Complete: 223707
+Unique data values: 35583281
+ 
+Min: -11.529	Max: 7.862	Mean: -0.004	Std: 0.227
+ 
+    Percentiles      Values  
+    ___________    __________
+
+        0.1            -1.529
+        0.5          -0.88055
+          1          -0.67632
+          5          -0.31891
+         25         -0.087519
+         50        0.00034864
+         75          0.087461
+         95           0.29757
+         99           0.60449
+       99.5           0.77676
+       99.9            1.3177
+
+ 
+</pre><h2 id="5">extract data from each atlas region</h2><p>- "r" is a region-class object. see &gt;&gt; help region - r(i).dat contains averages over voxels within region i. for n images, it contains an n x 1 vector with average data. - r(i).data contains an images x voxels matrix of all data within region i.</p><pre class="codeinput">r = extract_roi_averages(image_obj, thal);
+
+<span class="comment">% r = extract_roi_averages(data_obj, whole_thal);</span>
+</pre><pre class="codeoutput">fmri_data.extract_roi_averages: Defining mask object. Resampling mask. 
+Grouping voxels with unique mask values, assuming integer-valued mask:   6 regions
+Averaging data. Averaging over unique mask values, assuming integer-valued mask:   6 regions
+Done.
+</pre><h2 id="6">Do a group ROI analysis and make a "violin plot" (or barplot) for each region</h2><pre class="codeinput">roi_averages = cat(2, r.dat);
+
+create_figure(<span class="string">'Thalamus regions'</span>, 1, 2);
+
+barplot_columns(roi_averages, <span class="string">'nofig'</span>, <span class="string">'colors'</span>, scn_standard_colors(length(r)), <span class="string">'names'</span>, thal.labels, <span class="string">'noind'</span>);
+xlabel(<span class="string">'Region'</span>)
+ylabel(<span class="string">'ROI activity'</span>)
+
+subplot(1, 2, 2)
+
+barplot_columns(roi_averages, <span class="string">'nofig'</span>, <span class="string">'colors'</span>, scn_standard_colors(length(r)), <span class="string">'names'</span>, thal.labels, <span class="string">'noind'</span>, <span class="string">'noviolin'</span>);
+xlabel(<span class="string">'Region'</span>)
+ylabel(<span class="string">'ROI activity'</span>)
+
+<span class="comment">% The sensory/nociceptive regions of the thalamus (VL and intralaminar) respond to painful</span>
+<span class="comment">% stimuli, but not the regions (LGN, MGN) visual/auditory pathways. The</span>
+<span class="comment">% habenula also responds.</span>
+</pre><pre class="codeoutput">Col   1: Thal_LGN	Col   2: Thal_MGN	Col   3: Thal_Intralam	Col   4: Thal_VL	Col   5: Thal_MD	Col   6: Thal_Hb	
+---------------------------------------------
+Tests of column means against zero
+---------------------------------------------
+         Name          Mean_Value    Std_Error      T           P         Cohens_d
+    _______________    __________    _________    ______    __________    ________
+
+    'Thal_LGN'         -0.012699      0.004484    -2.832     0.0051061    -0.20126
+    'Thal_MGN'          0.010652     0.0057635    1.8481      0.066087     0.13134
+    'Thal_Intralam'      0.03687       0.00871    4.2331    3.5331e-05     0.30083
+    'Thal_VL'           0.041771     0.0066064    6.3229    1.6843e-09     0.44935
+    'Thal_MD'           0.041843      0.012939    3.2338     0.0014324     0.22982
+    'Thal_Hb'           0.027095       0.01771    1.5299       0.12764     0.10873
+
+Col   1: Thal_LGN	Col   2: Thal_MGN	Col   3: Thal_Intralam	Col   4: Thal_VL	Col   5: Thal_MD	Col   6: Thal_Hb	
+---------------------------------------------
+Tests of column means against zero
+---------------------------------------------
+         Name          Mean_Value    Std_Error      T           P         Cohens_d
+    _______________    __________    _________    ______    __________    ________
+
+    'Thal_LGN'         -0.012699      0.004484    -2.832     0.0051061    -0.20126
+    'Thal_MGN'          0.010652     0.0057635    1.8481      0.066087     0.13134
+    'Thal_Intralam'      0.03687       0.00871    4.2331    3.5331e-05     0.30083
+    'Thal_VL'           0.041771     0.0066064    6.3229    1.6843e-09     0.44935
+    'Thal_MD'           0.041843      0.012939    3.2338     0.0014324     0.22982
+    'Thal_Hb'           0.027095       0.01771    1.5299       0.12764     0.10873
+
+</pre><img vspace="5" hspace="5" src="canlab_help_3b_atlases_and_labeling_03.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+
+%% load an atlas
+% 'atlas' objects are a class of objects specially designed for brain
+% atlases. Here is more information on this class (also try >> doc atlas)
+
+help atlas
+
+% The function load_atlas in the CANlab toolbox loads a number of named
+% atlases included with the toolbox.  Here is a list of named atlases:
+
+help load_atlas
+
+% Now load the "CANlab combined 2018" atlas:
+atlas_obj = load_atlas('canlab2018_2mm');
+
+
+%% visualize the atlas regions
+
+orthviews(atlas_obj);
+
+o2 = montage(atlas_obj);
+
+%% select regions of interest
+
+% Select all regions with "Thal" in the label:
+thal = select_atlas_subset(atlas_obj, {'Thal'})
+
+% Print the labels:
+thal.labels
+
+% Select a few thalamus/epithalamus regions of interest:
+thal = select_atlas_subset(atlas_obj, {'Thal_Intra', 'Thal_VL', 'Thal_MD', 'Thal_LGN', 'Thal_MGN', 'Thal_Hb'});
+thal.labels
+
+% Select all the regions with "Thal" in the label, and collapse them into a single region:
+whole_thal = select_atlas_subset(atlas_obj, {'Thal'}, 'flatten');
+
+%% load a dataset to extract data from for an ROI analysis
+% The dataset contains data from 33 participants, with brain responses to six levels
+% of heat (non-painful and painful).  
+% 
+% Aspects of this data appear in these papers:
+% Wager, T.D., Atlas, L.T., Lindquist, M.A., Roy, M., Choong-Wan, W., Kross, E. (2013). 
+% An fMRI-Based Neurologic Signature of Physical Pain. The New England Journal of Medicine. 368:1388-1397
+% (Study 2)
+%
+% Woo, C. -W., Roy, M., Buhle, J. T. & Wager, T. D. (2015). Distinct brain systems 
+% mediate the effects of nociceptive input and self-regulation on pain. PLOS Biology. 13(1): 
+% e1002036. doi:10.1371/journal.pbio.1002036
+%
+% Lindquist, Martin A., Anjali Krishnan, Marina López-Solà, Marieke Jepma, Choong-Wan Woo, 
+% Leonie Koban, Mathieu Roy, et al. 2015. ?Group-Regularized Individual Prediction: 
+% Theory and Application to Pain.? NeuroImage. 
+% http://www.sciencedirect.com/science/article/pii/S1053811915009982.
+%
+% This dataset is shared on figshare.com, under this link:
+% https://figshare.com/s/ca23e5974a310c44ca93
+%
+% Here is a direct link to the dataset file with the fmri_data object:
+% https://ndownloader.figshare.com/files/12708989
+%
+% The key variable is image_obj
+% This is an fmri_data object from the CANlab Core Tools repository for neuroimaging data analysis.
+% See https://canlab.github.io/
+%
+% image_obj.dat contains brain data for each image (average across trials)
+% image_obj.Y contains pain ratings (one average rating per image)
+%
+% image_obj.additional_info.subject_id contains integers coding for which
+% Load the data file, downloading from figshare if needed
+%
+% Alternative sample datasets:
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% This dataset will take time to download from figshare if you haven't yet
+% downloaded it. An alternative is to use the dataset included with the
+% CANlab Core toolbox (though the results are less interesting for this
+% example).
+% image_obj = load_image_set('emotionreg');
+%
+% A second example is a CANlab pain dataset shared on Neurovault. Try this
+% to load it:
+% [files_on_disk, url_on_neurovault, mycollection, myimages] = retrieve_neurovault_collection(504);
+% image_obj = fmri_data(files_on_disk);
+
+
+fmri_data_file = which('bmrk3_6levels_pain_dataset.mat');
+
+if isempty(fmri_data_file)
+    
+    % attempt to download
+    disp('Did not find data locally...downloading data file from figshare.com')
+    
+    fmri_data_file = websave('bmrk3_6levels_pain_dataset.mat', 'https://ndownloader.figshare.com/files/12708989');
+    
+end
+
+load(fmri_data_file);
+
+descriptives(image_obj);
+
+
+%% extract data from each atlas region
+% - "r" is a region-class object. see >> help region
+% - r(i).dat contains averages over voxels within region i. for n images, it contains an n x 1 vector with average data.
+% - r(i).data contains an images x voxels matrix of all data within region i.
+
+r = extract_roi_averages(image_obj, thal);
+
+% r = extract_roi_averages(data_obj, whole_thal);
+
+
+%% Do a group ROI analysis and make a "violin plot" (or barplot) for each region
+
+roi_averages = cat(2, r.dat);
+
+create_figure('Thalamus regions', 1, 2);
+
+barplot_columns(roi_averages, 'nofig', 'colors', scn_standard_colors(length(r)), 'names', thal.labels, 'noind');
+xlabel('Region')
+ylabel('ROI activity')
+
+subplot(1, 2, 2)
+
+barplot_columns(roi_averages, 'nofig', 'colors', scn_standard_colors(length(r)), 'names', thal.labels, 'noind', 'noviolin');
+xlabel('Region')
+ylabel('ROI activity')
+
+% The sensory/nociceptive regions of the thalamus (VL and intralaminar) respond to painful
+% stimuli, but not the regions (LGN, MGN) visual/auditory pathways. The
+% habenula also responds.
+
+
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>

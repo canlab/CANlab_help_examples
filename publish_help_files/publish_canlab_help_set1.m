@@ -10,8 +10,15 @@ canlab_help_publish('canlab_help_2_load_a_sample_dataset')
 % -------------------------------------------------------------------------
 
 canlab_help_publish('canlab_help_3_voxelwise_t_test_walkthrough')
+canlab_help_publish('canlab_help_3b_atlases_and_labeling')
 canlab_help_publish('canlab_help_4_write_data_to_image_file_format')
 canlab_help_publish('canlab_help_5_regression_walkthrough')
+
+% -------------------------------------------------------------------------
+% Multivariate prediction of outcomes
+% -------------------------------------------------------------------------
+
+canlab_help_publish('canlab_help_7_multivariate_prediction_basics')
 
 
 % -------------------------------------------------------------------------
