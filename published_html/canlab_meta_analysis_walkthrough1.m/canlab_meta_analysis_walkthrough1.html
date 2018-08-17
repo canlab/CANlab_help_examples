@@ -66,23 +66,23 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Multi-level kernel density (MKDA) meta-analysis example: Agency database</h1><!--introduction--><p>The starting point for coordinate-based meta-analysis (CBMA) is a text file with the information entered from published studies. In this example, the information is contained in the file "Agency_meta_analysis_database.txt" It is in the Neuroimaging_Pattern_Masks repository on Github.</p><p>This file should be on your Matlab path: Neuroimaging_Pattern_Masks/CANlab_Meta_analysis_maps/2011_Agency_Meta_analysis/Agency_meta_analysis_database.txt</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Section 1: Locate the coordinate database file</a></li><li><a href="#2">Section 2: Read in and set up the coordinate database</a></li><li><a href="#3">Check and clean up any variables that need recoding</a></li><li><a href="#4">Select a subset of contrasts</a></li><li><a href="#5">Convolve with spheres and set up the study indicator dataset</a></li></ul></div><h2 id="1">Section 1: Locate the coordinate database file</h2><p>When you set up your own database, several rules apply. Formatting the spreadsheet so it loads correctly can sometimes be the hardest part of running a meta-analysis.</p><p>See https://canlabweb.colorado.edu/wiki/doku.php/help/meta/meta_analysis_mkda</p><p>And https://canlabweb.colorado.edu/wiki/doku.php/help/meta/database</p><p>Here are some rules for setting up the file:   1     The variable "dbname" in the workspace should specify the name of your coordinate database file   2     The database must be a text file, tab delimited   3     The 1st row of the database must contain the number of columns as its 1st and only entry   4     The 2nd row of database must contain variable names (text, no spaces or special characters)   5     The 3rd - nth rows of the database contains data   6     Talairach coordinates are indicated by T88 in CoordSys variable   7     coordinate fields should be called x, y, and z   8     Do NOT use Z, or any other field name in clusters structure</p><p>The second row of your database should contain names for each variable you have coded.  Some variables should be named with special keywords, because they are used in the meta-analysis code. Other variables can be named anything, as long as there are <b>no spaces or special characters</b> in the name (e.g., !@#$%^&amp;*(){}[] ~`\/|&lt;&gt;,.?/;:"''+=). Anything that you could not name a variable in Matlab will also not work here. Here are the variable names with special meaning. They are case-sensitive:</p><p>Subjects          : Sample size of the study to which the coordinate belongs FixedRandom       : Study used fixed or random effects.                     Values should be Fixed or Random.                     Fixed effects coordinates will be automatically                     downweighted SubjectiveWeights : A coordinate or contrast weighting vector based on FixedRandom                     and whatever else you want to weight by; e.g., study reporting threshold                     The default is to use FixedRandom only if available x, y, z           : X, Y, and Z coordinates study             : name of study Contrast          : unique indices (e.g., 1:k) for each independent                     contrast. This is a required variable!                     All rows belonging to the same contrast should                     (almost) always have the same values for every                     variable other than x, y, and z. CoordSys          : Values should be MNI or T88, for MNI space or Talairach space                     Talairach coordinates will be converted to MNI using                     Matthew Brett's transform</p><pre class="codeinput">dbfilename = <span class="string">'Agency_meta_analysis_database.txt'</span>;
+  </style></head><body><div class="content"><h1>Multi-level kernel density (MKDA) meta-analysis example: Agency database</h1><!--introduction--><p>The starting point for coordinate-based meta-analysis (CBMA) is a text file with the information entered from published studies. In this example, the information is contained in the file "Agency_meta_analysis_database.txt" It is in the Neuroimaging_Pattern_Masks repository on Github.</p><p>This file should be on your Matlab path: Neuroimaging_Pattern_Masks/CANlab_Meta_analysis_maps/2011_Agency_Meta_analysis/Agency_meta_analysis_database.txt</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Section 1: Locate the coordinate database file</a></li><li><a href="#2">Section 2: Read in and set up the coordinate database</a></li><li><a href="#3">Check and clean up any variables that need recoding</a></li><li><a href="#4">Select a subset of contrasts</a></li><li><a href="#5">Set up and run the analysis</a></li><li><a href="#6">Reload masked activation map and display slice montage</a></li><li><a href="#7">Print transparent blobs and activation points on slice montage</a></li><li><a href="#8">Print table of regions with region labels</a></li><li><a href="#9">Surface rendering</a></li><li><a href="#10">Extract and plot study proportion data for significant regions</a></li><li><a href="#11">Other plots and tables</a></li></ul></div><h2 id="1">Section 1: Locate the coordinate database file</h2><p>Also, create a new analysis folder for this analysis</p><pre class="codeinput">dbfilename = <span class="string">'Agency_meta_analysis_database.txt'</span>;
 dbname = which(dbfilename);
 
 <span class="keyword">if</span> isempty(dbname), error(<span class="string">'Cannot locate the file %s\nMake sure it is on your Matlab path.'</span>, dbfilename); <span class="keyword">end</span>
-</pre><h2 id="2">Section 2: Read in and set up the coordinate database</h2><p>-------------------------------------------------------------------------</p><pre class="codeinput"><span class="comment">% First, create a new directory for the analysis and go there:</span>
+
+<span class="comment">% Create a new directory for the analysis and go there:</span>
 analysisdir = fullfile(pwd, <span class="string">'Agency_meta_analysis_example'</span>);
 mkdir(analysisdir)
 cd(analysisdir)
-
-<span class="comment">% Read in the database and save it in a structure variable called "DB"</span>
+</pre><h2 id="2">Section 2: Read in and set up the coordinate database</h2><p>When you set up your own database, several rules apply. Formatting the spreadsheet so it loads correctly can sometimes be the hardest part of running a meta-analysis.</p><p>See https://canlabweb.colorado.edu/wiki/doku.php/help/meta/meta_analysis_mkda</p><p>And https://canlabweb.colorado.edu/wiki/doku.php/help/meta/database</p><p>Here are some rules for setting up the file:   1     The variable "dbname" in the workspace should specify the name of your coordinate database file   2     The database must be a text file, tab delimited   3     The 1st row of the database must contain the number of columns as its 1st and only entry   4     The 2nd row of database must contain variable names (text, no spaces or special characters)   5     The 3rd - nth rows of the database contains data   6     Talairach coordinates are indicated by T88 in CoordSys variable   7     coordinate fields should be called x, y, and z   8     Do NOT use Z, or any other field name in clusters structure</p><p>The second row of your database should contain names for each variable you have coded.  Some variables should be named with special keywords, because they are used in the meta-analysis code. Other variables can be named anything, as long as there are <b>no spaces or special characters</b> in the name (e.g., !@#$%^&amp;*(){}[] ~`\/|&lt;&gt;,.?/;:"''+=). Anything that you could not name a variable in Matlab will also not work here. Here are the variable names with special meaning. They are case-sensitive:</p><p><b>Subjects</b>          : Sample size of the study to which the coordinate belongs</p><p><b>FixedRandom</b>       : Study used fixed or random effects.                     Values should be Fixed or Random.                     Fixed effects coordinates will be automatically                     downweighted</p><p><b>SubjectiveWeights</b> : A coordinate or contrast weighting vector based on FixedRandom                     and whatever else you want to weight by; e.g., study reporting threshold                     The default is to use FixedRandom only if available</p><p><b>x</b>, <b>y</b>, <b>z</b>           : X, Y, and Z coordinates</p><p><b>study</b>             : name of study</p><p><b>Contrast</b>          : unique indices (e.g., 1:k) for each independent                     contrast. This is a required variable!                     All rows belonging to the same contrast should                     (almost) always have the same values for every                     variable other than x, y, and z.</p><p><b>CoordSys</b>          : Values should be MNI or T88, for MNI space or Talairach space                     Talairach coordinates will be converted to MNI using                     Matthew Brett's transform</p><pre class="codeinput"><span class="comment">% Read in the database and save it in a structure variable called "DB"</span>
 clear <span class="string">DB</span>
 read_database;
 
-<span class="comment">% Create SubjectiveWeights</span>
-<span class="comment">% DB.SubjectiveWeights = zeros(size(DB.x));</span>
-<span class="comment">% DB.SubjectiveWeights(strcmp(DB.FixedRandom, 'Random')) = 1;</span>
-<span class="comment">% DB.SubjectiveWeights(strcmp(DB.FixedRandom, 'Fixed')) = 0.75;</span>
+<span class="comment">% Optional: Create SubjectiveWeights</span>
+<span class="comment">% We will skip this step, but you can use the SubjectiveWeights field to</span>
+<span class="comment">% assign weights to coordinates. Weights should be between zero and 1</span>
+
 
 <span class="comment">% Prepare the database by checking fields and separating contrasts,</span>
 <span class="comment">% specifying a 10 mm radius for integrating coordinates:</span>
@@ -91,8 +91,7 @@ DB = Meta_Setup(DB, 10);
 <span class="comment">% Meta_Setup automatically saves a file called SETUP.mat in your folder as well.</span>
 drawnow, snapnow
 close
-</pre><pre class="codeoutput">Warning: Directory already exists. 
-Converting T88 coordinates to MNI (M. Brett transform):  12 Transformed
+</pre><pre class="codeoutput">Converting T88 coordinates to MNI (M. Brett transform):  12 Transformed
 Converting MNI coordinates to T88 for XYZtal array:  34 Transformed
 Radius is 10 mm.
 Setup. Cannot find Subjects field.  Copying from N.
@@ -103,11 +102,11 @@ DB struct output of Meta_Setup saved in SETUP.mat
 Use info in this file to run next step
 </pre><img vspace="5" hspace="5" src="canlab_meta_analysis_walkthrough1_01.png" alt=""> <h2 id="3">Check and clean up any variables that need recoding</h2><p>This is a good time to examine the DB structure to check whether the variables you entered look as intended (numeric or text), and clean up any variables that need recoding. Sometimes, if text characters are entered in the spreadsheet in a column of numbers, the entire column will be read in as text. Other times, variable entries with the same intended category/level will have different names, e.g., yes vs. Yes (all entries are case-sensitive).  You can either fix these in the spreadsheet (best) or re-code them here.</p><p>There is no re-coding needed for this dataset, but here is an example: e.g., wh = strcmp(DB.Increased_craving, 'yes'); DB.Increased_craving(wh) = {'Yes'};</p><pre class="codeinput"><span class="comment">% If you do re-code, do this afterwards:</span>
 <span class="comment">% save SETUP -append DB</span>
-</pre><h2 id="4">Select a subset of contrasts</h2><p>The function Meta_Select_Contrasts allows you to select a subset of the database (DB variable) based on a combination of selected levels on multiple variables.  We will skip that for this example, but if you do select variables, it is a good idea to create a subfolder for the analysis with selected coordinates, and save the DB variable in SETUP.mat in that folder, along with  other results you may generate.</p><h2 id="5">Convolve with spheres and set up the study indicator dataset</h2><p>------------------------------------------------------------------------- This step prepares the dataset for meta-analysis and runs the entire analysis.  It then generates results maps.</p><p>It will generate new files for the analysis, so it is a good idea to create and go to a subfolder that will contain files for this analysis. Many meta-analysis projects involve several analyses, in several sub-folders.</p><pre class="codeinput">modeldir = fullfile(analysisdir, <span class="string">'MKDA_all_contrasts'</span>);
+</pre><h2 id="4">Select a subset of contrasts</h2><p>The function Meta_Select_Contrasts allows you to select a subset of the database (DB variable) based on a combination of selected levels on multiple variables.  We will skip that for this example, but if you do select variables, it is a good idea to create a subfolder for the analysis with selected coordinates, and save the DB variable in SETUP.mat in that folder, along with  other results you may generate.</p><h2 id="5">Set up and run the analysis</h2><p>This step prepares the dataset for meta-analysis and runs the entire analysis.  It then generates results maps.</p><p>It will generate new files for the analysis, so it is a good idea to create and go to a subfolder that will contain files for this analysis. Many meta-analysis projects involve several analyses, in several sub-folders.</p><pre class="codeinput">modeldir = fullfile(analysisdir, <span class="string">'MKDA_all_contrasts'</span>);
 mkdir(modeldir)
 cd(modeldir)
 
-Meta_Activation_FWE(<span class="string">'all'</span>, DB, 100, <span class="string">'nocontrasts'</span>, <span class="string">'noverbose'</span>);
+Meta_Activation_FWE(<span class="string">'all'</span>, DB, 500, <span class="string">'nocontrasts'</span>, <span class="string">'noverbose'</span>);
 
 <span class="comment">% Note: For a "final" analysis, 10,000 iterations are recommended</span>
 <span class="comment">%       Because we typically care about inferences at the "tails" of the</span>
@@ -116,6 +115,7 @@ Meta_Activation_FWE(<span class="string">'all'</span>, DB, 100, <span class="str
 <span class="comment">% Note: You can also use Meta_Activation_FWE to do each piece separately:</span>
 <span class="comment">%</span>
 <span class="comment">% Meta_Activation_FWE('setup')          % sets up the analysis</span>
+<span class="comment">%                                       Convolve with spheres and set up the study indicator dataset</span>
 <span class="comment">% Meta_Activation_FWE('mc', 10000)      % Adds 10,000 Monte Carlo iterations</span>
 <span class="comment">%</span>
 <span class="comment">% A file is saved every 10 iterations, so if there are existing saved iterations</span>
@@ -123,27 +123,25 @@ Meta_Activation_FWE(<span class="string">'all'</span>, DB, 100, <span class="str
 <span class="comment">%</span>
 <span class="comment">% Meta_Activation_FWE('results')        % generates results maps</span>
 
-drawnow
-snapnow
-</pre><pre class="codeoutput">Warning: Directory already exists. 
-MC iterations found: 500.  Appending new: 100 iterations
-Elapsed time is 6.652534 seconds.
+drawnow, snapnow
+</pre><pre class="codeoutput">No MC iterations found yet.  Creating maxprop, uncor_prop, maxcsize
+Elapsed time is 39.192333 seconds.
 
-p &lt;= .05 Corrected: Thresh = 0.1865, 1228 voxels
+p &lt;= .05 Corrected: Thresh = 0.1860, 1229 voxels
 
 Writing image: Activation_FWE_height.img
 
-Thresh = 0.1112, size threshold = 506: 4838 sig. voxels.
+Thresh = 0.1113, size threshold = 482: 4838 sig. voxels.
 Cluster sizes range from 1875 to 2963
 
 Writing image: Activation_FWE_extent_stringent.img
 
-Thresh = 0.0645, size threshold = 2456: 4484 sig. voxels.
+Thresh = 0.0645, size threshold = 2512: 4484 sig. voxels.
 Cluster sizes range from 4484 to 4484
 
 Writing image: Activation_FWE_extent_medium.img
 
-Thresh = 0.0540, size threshold = 3727: 5559 sig. voxels.
+Thresh = 0.0541, size threshold = 3795: 5559 sig. voxels.
 Cluster sizes range from 5559 to 5559
 
 Writing image: Activation_FWE_extent_lenient.img
@@ -156,12 +154,12 @@ Showing positive or negative: both
 Overlay is: /Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/SPM8_colin27T1_seg.img
 No mask specified in iimg_multi_threshold
 Entered p-value image? : No
-Height thresholds:0.1865 0.1112 0.0645 0.0540 
-Extent thresholds:   1 506 2456 3727 
+Height thresholds:0.1860 0.1113 0.0645 0.0541 
+Extent thresholds:   1 482 2512 3795 
 Show only contiguous with seed regions: No
  
 
-SPM12: spm_check_registration (v6245)              18:49:52 - 16/08/2018
+SPM12: spm_check_registration (v6245)              23:19:15 - 16/08/2018
 ========================================================================
 Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/SPM8_colin27T1_seg.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/SPM8_colin27T1_seg.img,1&lt;/a&gt;
 Saving clusters as cl variable in Activation_clusters.mat
@@ -171,9 +169,9 @@ Getting local maxima within 10 mm for subcluster reporting
 Z field contains: Unknown statistic (shown in maxstat).
  
 index	x	y	z	corr	voxels	volume_mm3	maxstat	
-  1	 52	-52	 30	NaN	913	-7304	0.37	
+  1	 52	-52	 30	NaN	914	-7312	0.37	
 -&gt;	 52	-52	 16	NaN	257	0.31902		
--&gt;	 50	-58	 32	NaN	302	0.36035		
+-&gt;	 50	-58	 32	NaN	303	0.36035		
 -&gt;	 54	-50	 38	NaN	163	0.37312		
 -&gt;	 56	-40	 38	NaN	120	0.29687		
 -&gt;	 52	-56	 42	NaN	 71	0.35867		
@@ -215,7 +213,282 @@ ans =
 
     {1&times;5 struct}    {1&times;2 struct}    {1&times;8 struct}    {1&times;7 struct}
 
-</pre><img vspace="5" hspace="5" src="canlab_meta_analysis_walkthrough1_02.png" alt=""> <img vspace="5" hspace="5" src="canlab_meta_analysis_walkthrough1_03.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+</pre><img vspace="5" hspace="5" src="canlab_meta_analysis_walkthrough1_02.png" alt=""> <img vspace="5" hspace="5" src="canlab_meta_analysis_walkthrough1_03.png" alt=""> <h2 id="6">Reload masked activation map and display slice montage</h2><p>The code below uses the CANlab object-oriented tools, in CANlab_Core_Tools repository. There are many more options for visualization and data analysis</p><pre class="codeinput"><span class="comment">% load saved results mask (union of all thresholds)</span>
+img = fmri_data(<span class="string">'Activation_FWE_all.img'</span>, <span class="string">'noverbose'</span>);  <span class="comment">% Create an fmri_data-class object</span>
+
+create_figure(<span class="string">'slice montage'</span>); axis <span class="string">off</span>
+o2 = montage(img);                                       <span class="comment">% Display montage, and return an fmridisplay object called o2</span>
+
+drawnow, snapnow
+</pre><pre class="codeoutput">Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
+Grouping contiguous voxels:   2 regions
+sagittal montage:   0 voxels displayed, 7434 not displayed on these slices
+sagittal montage:   0 voxels displayed, 7434 not displayed on these slices
+sagittal montage:   0 voxels displayed, 7434 not displayed on these slices
+axial montage: 1135 voxels displayed, 6299 not displayed on these slices
+axial montage: 1176 voxels displayed, 6258 not displayed on these slices
+</pre><img vspace="5" hspace="5" src="canlab_meta_analysis_walkthrough1_04.png" alt=""> <h2 id="7">Print transparent blobs and activation points on slice montage</h2><pre class="codeinput">o2 = removeblobs(o2);
+o2 = addblobs(o2, r, <span class="string">'trans'</span>, <span class="string">'transvalue'</span>, .4);
+o2 = addpoints(o2, DB.xyz, <span class="string">'MarkerFaceColor'</span>, [.5 0 0], <span class="string">'Marker'</span>, <span class="string">'o'</span>, <span class="string">'MarkerSize'</span>, 4);
+
+drawnow, snapnow
+</pre><pre class="codeoutput">sagittal montage:   0 voxels displayed, 7454 not displayed on these slices
+sagittal montage:   0 voxels displayed, 7454 not displayed on these slices
+sagittal montage:   0 voxels displayed, 7454 not displayed on these slices
+axial montage: 1135 voxels displayed, 6319 not displayed on these slices
+axial montage: 1182 voxels displayed, 6272 not displayed on these slices
+Plotting points within 8.00 mm of slices
+Plotting points within 8.00 mm of slices
+Plotting points within 8.00 mm of slices
+Plotting points within 6.00 mm of slices
+Plotting points within 6.00 mm of slices
+</pre><img vspace="5" hspace="5" src="canlab_meta_analysis_walkthrough1_05.png" alt=""> <h2 id="8">Print table of regions with region labels</h2><pre class="codeinput">r = region(img);            <span class="comment">% Create a region-class object</span>
+
+[rpos, rneg] = table(r);    <span class="comment">% Print table, returning regions separated by those with positive or negative data values</span>
+                            <span class="comment">% Attach names</span>
+
+r = [rpos rneg];            <span class="comment">% re-concatenate for convenience later</span>
+</pre><pre class="codeoutput">Grouping contiguous voxels:   2 regions
+
+____________________________________________________________________________________________________________________________________________
+Positive Effects
+          Region          Volume           XYZ            maxZ      modal_label_descriptions     Perc_covered_by_label    Atlas_regions_covered    region_index
+    __________________    ______    _________________    _______    _________________________    _____________________    _____________________    ____________
+
+    'Multiple regions'    44472      52    -50     30    0.37312    'Cortex_Fronto_ParietalB'             14                       12                   1      
+    'Ctx_PFm_L'           15000     -48    -52     38    0.34904    'Cortex_Fronto_ParietalB'             17                        5                   2      
+
+
+Negative Effects
+No regions to display
+
+____________________________________________________________________________________________________________________________________________
+Regions labeled by reference atlas CANlab_2018_combined
+                                                       
+Volume: Volume of contiguous region in cubic mm.
+MaxZ: Signed max over Input mask image values for each voxel.
+Atlas_regions_covered: Number of reference atlas regions covered at least 25% by the region. This relates to whether the region covers 
+multiple reference atlas regions                                                                                                       
+Region: Best reference atlas label, defined as reference region with highest number of in-region voxels. Regions covering &gt;25% of &gt;5 
+regions labeled as "Multiple regions"                                                                                                
+Perc_covered_by_label: Percentage of the region covered by the label.
+Ref_region_perc: Percentage of the label region within the target region.
+modal_atlas_index: Index number of label region in reference atlas
+all_regions_covered: All regions covered &gt;5% in descending order of importance
+ 
+For example, if a region is labeled 'TE1a' and Perc_covered_by_label = 8, Ref_region_perc = 38, and Atlas_regions_covered = 17, this means 
+that 8% of the region's voxels are labeled TE1a, which is the highest percentage among reference label regions. 38% of the region TE1a is  
+covered by the region. However, the region covers at least 25% of 17 distinct labeled reference regions.                                   
+                                                                                                                                           
+References for atlases:
+                       
+Beliveau, Vincent, Claus Svarer, Vibe G. Frokjaer, Gitte M. Knudsen, Douglas N. Greve, and Patrick M. Fisher. 2015. &#8220;Functional 
+Connectivity of the Dorsal and Median Raphe Nuclei at Rest.&#8221; NeuroImage 116 (August): 187&#8211;95.                                   
+B&auml;r, Karl-J&uuml;rgen, Feliberto de la Cruz, Andy Schumann, Stefanie Koehler, Heinrich Sauer, Hugo Critchley, and Gerd Wagner. 2016. ?Functional 
+Connectivity and Network Analysis of Midbrain and Brainstem Nuclei.? NeuroImage 134 (July):53?63.                                           
+Diedrichsen, J&ouml;rn, Joshua H. Balsters, Jonathan Flavell, Emma Cussans, and Narender Ramnani. 2009. A Probabilistic MR Atlas of the Human 
+Cerebellum. NeuroImage 46 (1): 39?46.                                                                                                    
+Fairhurst, Merle, Katja Wiech, Paul Dunckley, and Irene Tracey. 2007. ?Anticipatory Brainstem Activity Predicts Neural Processing of Pain 
+in Humans.? Pain 128 (1-2):101?10.                                                                                                        
+Fan 2016 Cerebral Cortex; doi:10.1093/cercor/bhw157
+Glasser, Matthew F., Timothy S. Coalson, Emma C. Robinson, Carl D. Hacker, John Harwell, Essa Yacoub, Kamil Ugurbil, et al. 2016. A 
+Multi-Modal Parcellation of Human Cerebral Cortex. Nature 536 (7615): 171?78.                                                       
+Keren, Noam I., Carl T. Lozar, Kelly C. Harris, Paul S. Morgan, and Mark A. Eckert. 2009. &#8220;In Vivo Mapping of the Human Locus Coeruleus.&#8221; 
+NeuroImage 47 (4): 1261&#8211;67.                                                                                                               
+Keuken, M. C., P-L Bazin, L. Crown, J. Hootsmans, A. Laufer, C. M&uuml;ller-Axt, R. Sier, et al. 2014. &#8220;Quantifying Inter-Individual Anatomical 
+Variability in the Subcortex Using 7 T Structural MRI.&#8221; NeuroImage 94 (July): 40&#8211;46.                                                       
+Krauth A, Blanc R, Poveda A, Jeanmonod D, Morel A, Sz&eacute;kely G. (2010) A mean three-dimensional atlas of the human thalamus: generation from 
+multiple histological data. Neuroimage. 2010 Feb 1;49(3):2053-62. Jakab A, Blanc R, Ber&eacute;nyi EL, Sz&eacute;kely G. (2012) Generation of            
+Individualized Thalamus Target Maps by Using Statistical Shape Models and Thalamocortical Tractography. AJNR Am J Neuroradiol. 33:         
+2110-2116, doi: 10.3174/ajnr.A3140                                                                                                         
+Nash, Paul G., Vaughan G. Macefield, Iven J. Klineberg, Greg M. Murray, and Luke A. Henderson. 2009. ?Differential Activation of the Human 
+Trigeminal Nuclear Complex by Noxious and Non-Noxious Orofacial Stimulation.? Human Brain Mapping 30 (11):3772?82.                         
+Pauli 2018 Bioarxiv: CIT168 from Human Connectome Project data
+Pauli, Wolfgang M., Amanda N. Nili, and J. Michael Tyszka. 2018. ?A High-Resolution Probabilistic in Vivo Atlas of Human Subcortical Brain 
+Nuclei.? Scientific Data 5 (April): 180063.                                                                                                
+Pauli, Wolfgang M., Randall C. O?Reilly, Tal Yarkoni, and Tor D. Wager. 2016. ?Regional Specialization within the Human Striatum for 
+Diverse Psychological Functions.? Proceedings of the National Academy of Sciences of the United States of America 113 (7): 1907?12.  
+Sclocco, Roberta, Florian Beissner, Gaelle Desbordes, Jonathan R. Polimeni, Lawrence L. Wald, Norman W. Kettner, Jieun Kim, et al. 2016. 
+?Neuroimaging Brainstem Circuitry Supporting Cardiovagal Response to Pain: A Combined Heart Rate Variability/ultrahigh-Field (7 T)       
+Functional Magnetic Resonance Imaging Study.? Philosophical Transactions. Series A, Mathematical, Physical, and Engineering Sciences 374 
+(2067). rsta.royalsocietypublishing.org. https://doi.org/10.1098/rsta.2015.0189.                                                         
+Shen, X., F. Tokoglu, X. Papademetris, and R. T. Constable. 2013. &#8220;Groupwise Whole-Brain Parcellation from Resting-State fMRI Data for 
+Network Node Identification.&#8221; NeuroImage 82 (November): 403&#8211;15.                                                                        
+Zambreanu, L., R. G. Wise, J. C. W. Brooks, G. D. Iannetti, and I. Tracey. 2005. ?A Role for the Brainstem in Central Sensitisation in 
+Humans. Evidence from Functional Magnetic Resonance Imaging.? Pain 114 (3):397?407.                                                    
+                                                                                                     
+Note: Region object r(i).title contains full list of reference atlas regions covered by each cluster.
+____________________________________________________________________________________________________________________________________________
+</pre><h2 id="9">Surface rendering</h2><pre class="codeinput"><span class="comment">% Create a cutaway surface with blobs</span>
+surface(img, <span class="string">'cutaway'</span>, <span class="string">'ycut_mm'</span>, -30);
+
+drawnow, snapnow
+
+<span class="comment">% Plot points as spheres on a canonical surface:</span>
+
+plot_points_on_surface2(DB.xyz, {[.5 0 0]});
+
+drawnow, snapnow
+</pre><pre class="codeoutput">Grouping contiguous voxels:   2 regions
+
+ans = 
+
+  Light with properties:
+
+       Color: [1 1 1]
+       Style: 'infinite'
+    Position: [1.4142 -8.6596e-17 0]
+     Visible: 'on'
+
+  Use GET to show all properties
+
+Loading structural image: /Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/SPM8_colin27T1_seg.img
+Loading image SPM8_colin27T1_seg
+    loaded 50 slices
+    loaded 100 slices
+    loaded 150 slices
+Loading structural image: /Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/SPM8_colin27T1_seg.img
+Loading image SPM8_colin27T1_seg
+    loaded 50 slices
+    loaded 100 slices
+    loaded 150 slices
+
+ans = 
+
+  Light with properties:
+
+       Color: [1 1 1]
+       Style: 'infinite'
+    Position: [1.0186 0.9498 0.2456]
+     Visible: 'on'
+
+  Use GET to show all properties
+
+Using custom color maps.
+Found surface patch handles - plotting on existing surfaces.
+cluster_surf
+___________________________________________
+	  1 cluster structures entered
+  Colors are:
+ 1  0  0
+ Building XYZ coord list
+
+ans =
+
+  single
+
+   20.0077
+
+ Getting heat-mapped colors
+ Building color change function call
+ Using existing surface image
+ Running color change.
+ eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],4,'ovlcolor',[0 1 1],'colorscale',actcolors{1},'alphascale',alphascale{1});
+Main color vertices: 864 vertices.  selecting:   0
+ eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],4,'ovlcolor',[0 1 1],'colorscale',actcolors{1},'alphascale',alphascale{1});
+Main color vertices: 1600 vertices.  selecting:   0
+ eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],4,'ovlcolor',[0 1 1],'colorscale',actcolors{1},'alphascale',alphascale{1});
+Main color vertices: 1182 vertices.  selecting:  36
+7434 coords.  selecting:  eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],4,'ovlcolor',[0 1 1],'colorscale',actcolors{1},'alphascale',alphascale{1});
+Main color vertices: 7690 vertices.  selecting: 4172
+7434 coords.  selecting:  eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],4,'ovlcolor',[0 1 1],'colorscale',actcolors{1},'alphascale',alphascale{1});
+Main color vertices: 1302 vertices.  selecting:   0
+ eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],4,'ovlcolor',[0 1 1],'colorscale',actcolors{1},'alphascale',alphascale{1});
+Main color vertices: 221348 vertices.  selecting: 55710
+7434 coords.  selecting: 1875
+Running   2 sets of coordinates: 002 eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],4,'ovlcolor',[0 1 1],'colorscale',actcolors{1},'alphascale',alphascale{1});
+Main color vertices: 8690 vertices.  selecting: 2069
+7434 coords.  selecting:  eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],4,'ovlcolor',[0 1 1],'colorscale',actcolors{1},'alphascale',alphascale{1});
+Main color vertices: 7442 vertices.  selecting: 1034
+7434 coords.  selecting:  eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],4,'ovlcolor',[0 1 1],'colorscale',actcolors{1},'alphascale',alphascale{1});
+Main color vertices: 2036 vertices.  selecting: 193
+7434 coords.  selecting:  eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],4,'ovlcolor',[0 1 1],'colorscale',actcolors{1},'alphascale',alphascale{1});
+Main color vertices: 792 vertices.  selecting:  51
+7434 coords.  selecting:  eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],4,'ovlcolor',[0 1 1],'colorscale',actcolors{1},'alphascale',alphascale{1});
+Main color vertices: 508 vertices.  selecting:   0
+ eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],4,'ovlcolor',[0 1 1],'colorscale',actcolors{1},'alphascale',alphascale{1});
+Main color vertices: 2734 vertices.  selecting: 312
+7434 coords.  selecting:  eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],4,'ovlcolor',[0 1 1],'colorscale',actcolors{1},'alphascale',alphascale{1});
+Main color vertices: 193476 vertices.  selecting: 76839
+7434 coords.  selecting: 7084
+Running   8 sets of coordinates: 008 eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],4,'ovlcolor',[0 1 1],'colorscale',actcolors{1},'alphascale',alphascale{1});
+Main color vertices: 13386 vertices.  selecting: 8021
+7434 coords.  selecting: 471
+Running   1 sets of coordinates: 001 eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],4,'ovlcolor',[0 1 1],'colorscale',actcolors{1},'alphascale',alphascale{1});
+Main color vertices: 72554 vertices.  selecting: 10019
+7434 coords.  selecting: 1875
+Running   2 sets of coordinates: 002 eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],4,'ovlcolor',[0 1 1],'colorscale',actcolors{1},'alphascale',alphascale{1});
+Main color vertices: 16841 vertices.  selecting: 4322
+7434 coords.  selecting: Finished!
+___________________________________________
+</pre><img vspace="5" hspace="5" src="canlab_meta_analysis_walkthrough1_06.png" alt=""> <pre class="codeoutput">Using single color for all point classes because you input a single color
+Not plotting text codes.
+Plotting all peaks; no averaging.
+</pre><img vspace="5" hspace="5" src="canlab_meta_analysis_walkthrough1_07.png" alt=""> <h2 id="10">Extract and plot study proportion data for significant regions</h2><p>First, we will load the MC_Info.mat file, which contains lots of information about the analysis.  The variable of main interest in this</p><pre class="codeinput"><span class="comment">% file is MC_Setup, which contains the contrast indicator maps.</span>
+<span class="comment">% This is stored in MC_Setup.unweighted_study_data</span>
+
+load <span class="string">MC_Info</span>
+
+<span class="comment">% MC_Setup =</span>
+<span class="comment">%     unweighted_study_data: [231202&times;18 double]             % Voxels x contrast indicator maps (1/0)</span>
+<span class="comment">%                   volInfo: [1&times;1 struct]                   % Info for mapping back into brain space</span>
+<span class="comment">%                         n: [2 3 2 2 1 2 1 2 4 2 2 3 3 2 2 8 2 1] % Coordinates per study</span>
+<span class="comment">%                       wts: [18&times;1 double]                  % Contrast weights</span>
+<span class="comment">%                         r: 5                              % Radius in voxels</span>
+<span class="comment">%                        cl: {1&times;18 cell}                    % contiguous blobs for each contrast, for Monte Carlo</span>
+
+indicator_maps = MC_Setup.unweighted_study_data;
+
+<span class="comment">% Extract indicator for contrasts that activate within 10 mm (5 vox) of</span>
+<span class="comment">% significant voxels region object r</span>
+[studybyroi,studybyset] = Meta_cluster_tools(<span class="string">'getdata'</span>, r, indicator_maps, MC_Setup.volInfo);
+
+<span class="comment">% studybyroi: contrasts x regions, values 1/0 for whether each contrast activates the region</span>
+<span class="comment">% studybyset: contrasts x 1, values 1/0 for whether each contrast activates any region in the set</span>
+
+create_figure(<span class="string">'Activation_proportions'</span>)
+
+[n, k] = size(studybyroi);
+prop_by_condition = sum(studybyroi) ./ n;                        <span class="comment">% Proportion of contrasts activating each ROI</span>
+se = ( (prop_by_condition .* (1-prop_by_condition) ) ./ n ).^.5; <span class="comment">% Standard Error based on binomial distribution</span>
+
+han = bar(prop_by_condition);
+ehan = errorbar(prop_by_condition, se);
+
+set(han, <span class="string">'EdgeColor'</span>, [0 0 .5], <span class="string">'FaceColor'</span>, [.3 .3 .6]);
+set(ehan, <span class="string">'Color'</span>, [0 0 .5], <span class="string">'LineStyle'</span>, <span class="string">'none'</span>, <span class="string">'LineWidth'</span>, 3);
+set(gca, <span class="string">'XTick'</span>, 1:k, <span class="string">'XLim'</span>, [.5 k+.5], <span class="string">'XTickLabel'</span>, {r.shorttitle});
+ylabel(<span class="string">'Proportion of studies activating'</span>);
+</pre><pre class="codeoutput">
+ans = 
+
+  Figure (Activation_proportions) with properties:
+
+      Number: 6
+        Name: 'Activation_proportions'
+       Color: [1 1 1]
+    Position: [560 528 560 420]
+       Units: 'pixels'
+
+  Use GET to show all properties
+
+</pre><img vspace="5" hspace="5" src="canlab_meta_analysis_walkthrough1_08.png" alt=""> <h2 id="11">Other plots and tables</h2><pre class="codeinput"><span class="comment">% Print a table of regions, separating local maxima</span>
+<span class="comment">% There are other options for other types of tables, separating by</span>
+<span class="comment">% subpeaks, lateralization, and other things.  We will leave that for later</span>
+<span class="comment">% walkthroughs.</span>
+
+<span class="comment">%tic</span>
+<span class="comment">%cl = Meta_cluster_tools('make_table', r, MC_Setup, true, false);</span>
+<span class="comment">%toc</span>
+
+<span class="comment">% Another desirable thing to do is to plot and analyze activation</span>
+<span class="comment">% proportions in region as a function of study conditions (e.g., type of</span>
+<span class="comment">% study).</span>
+<span class="comment">% We won't do this here, but to plot a bar plot of ROI counts for different</span>
+<span class="comment">% conditions, try:</span>
+<span class="comment">% [prop_by_condition,se,num_by_condition,n] = Meta_cluster_tools('count_by_condition',dat,Xi,w,doplot,[xnames],[seriesnames], [colors])</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Multi-level kernel density (MKDA) meta-analysis example: Agency database
 % The starting point for coordinate-based meta-analysis (CBMA) is a text file 
@@ -227,6 +500,19 @@ ans =
 % Neuroimaging_Pattern_Masks/CANlab_Meta_analysis_maps/2011_Agency_Meta_analysis/Agency_meta_analysis_database.txt
 
 %% Section 1: Locate the coordinate database file
+% Also, create a new analysis folder for this analysis
+
+dbfilename = 'Agency_meta_analysis_database.txt';
+dbname = which(dbfilename);
+
+if isempty(dbname), error('Cannot locate the file %s\nMake sure it is on your Matlab path.', dbfilename); end
+
+% Create a new directory for the analysis and go there:
+analysisdir = fullfile(pwd, 'Agency_meta_analysis_example');
+mkdir(analysisdir)
+cd(analysisdir)
+
+%% Section 2: Read in and set up the coordinate database
 % When you set up your own database, several rules apply. Formatting the spreadsheet
 % so it loads correctly can sometimes be the hardest part of running a
 % meta-analysis.
@@ -254,46 +540,39 @@ ans =
 % here. 
 % Here are the variable names with special meaning. They are case-sensitive:
 %
-% Subjects          : Sample size of the study to which the coordinate belongs
-% FixedRandom       : Study used fixed or random effects. 
+% *Subjects*          : Sample size of the study to which the coordinate belongs
+%
+% *FixedRandom*       : Study used fixed or random effects. 
 %                     Values should be Fixed or Random.
 %                     Fixed effects coordinates will be automatically
 %                     downweighted
-% SubjectiveWeights : A coordinate or contrast weighting vector based on FixedRandom 
+%
+% *SubjectiveWeights* : A coordinate or contrast weighting vector based on FixedRandom 
 %                     and whatever else you want to weight by; e.g., study reporting threshold
 %                     The default is to use FixedRandom only if available
-% x, y, z           : X, Y, and Z coordinates
-% study             : name of study
-% Contrast          : unique indices (e.g., 1:k) for each independent
+%
+% *x*, *y*, *z*           : X, Y, and Z coordinates
+%
+% *study*             : name of study
+%
+% *Contrast*          : unique indices (e.g., 1:k) for each independent
 %                     contrast. This is a required variable!
 %                     All rows belonging to the same contrast should
 %                     (almost) always have the same values for every
 %                     variable other than x, y, and z.
-% CoordSys          : Values should be MNI or T88, for MNI space or Talairach space
+%
+% *CoordSys*          : Values should be MNI or T88, for MNI space or Talairach space
 %                     Talairach coordinates will be converted to MNI using
 %                     Matthew Brett's transform
-
-dbfilename = 'Agency_meta_analysis_database.txt';
-dbname = which(dbfilename);
-
-if isempty(dbname), error('Cannot locate the file %s\nMake sure it is on your Matlab path.', dbfilename); end
-
-%% Section 2: Read in and set up the coordinate database
-% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
-
-% First, create a new directory for the analysis and go there:
-analysisdir = fullfile(pwd, 'Agency_meta_analysis_example');
-mkdir(analysisdir)
-cd(analysisdir)
 
 % Read in the database and save it in a structure variable called "DB"
 clear DB
 read_database;
 
-% Create SubjectiveWeights
-% DB.SubjectiveWeights = zeros(size(DB.x));
-% DB.SubjectiveWeights(strcmp(DB.FixedRandom, 'Random')) = 1;
-% DB.SubjectiveWeights(strcmp(DB.FixedRandom, 'Fixed')) = 0.75;
+% Optional: Create SubjectiveWeights
+% We will skip this step, but you can use the SubjectiveWeights field to
+% assign weights to coordinates. Weights should be between zero and 1
+
 
 % Prepare the database by checking fields and separating contrasts,
 % specifying a 10 mm radius for integrating coordinates:
@@ -330,8 +609,7 @@ close
 % analysis with selected coordinates, and save the DB variable in SETUP.mat
 % in that folder, along with  other results you may generate.
 
-%% Convolve with spheres and set up the study indicator dataset
-% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+%% Set up and run the analysis
 % This step prepares the dataset for meta-analysis and runs the entire
 % analysis.  It then generates results maps.
 %
@@ -344,7 +622,7 @@ modeldir = fullfile(analysisdir, 'MKDA_all_contrasts');
 mkdir(modeldir)
 cd(modeldir)
 
-Meta_Activation_FWE('all', DB, 100, 'nocontrasts', 'noverbose');
+Meta_Activation_FWE('all', DB, 500, 'nocontrasts', 'noverbose');
 
 % Note: For a "final" analysis, 10,000 iterations are recommended
 %       Because we typically care about inferences at the "tails" of the
@@ -353,6 +631,7 @@ Meta_Activation_FWE('all', DB, 100, 'nocontrasts', 'noverbose');
 % Note: You can also use Meta_Activation_FWE to do each piece separately:
 %
 % Meta_Activation_FWE('setup')          % sets up the analysis
+%                                       Convolve with spheres and set up the study indicator dataset
 % Meta_Activation_FWE('mc', 10000)      % Adds 10,000 Monte Carlo iterations
 %
 % A file is saved every 10 iterations, so if there are existing saved iterations 
@@ -360,8 +639,111 @@ Meta_Activation_FWE('all', DB, 100, 'nocontrasts', 'noverbose');
 %
 % Meta_Activation_FWE('results')        % generates results maps
 
-drawnow
-snapnow
+drawnow, snapnow
+
+%% Reload masked activation map and display slice montage
+% The code below uses the CANlab object-oriented tools, in
+% CANlab_Core_Tools repository. There are many more options for
+% visualization and data analysis
+
+% load saved results mask (union of all thresholds)
+img = fmri_data('Activation_FWE_all.img', 'noverbose');  % Create an fmri_data-class object
+
+create_figure('slice montage'); axis off
+o2 = montage(img);                                       % Display montage, and return an fmridisplay object called o2
+
+drawnow, snapnow
+
+%% Print transparent blobs and activation points on slice montage
+
+o2 = removeblobs(o2);   
+o2 = addblobs(o2, r, 'trans', 'transvalue', .4);
+o2 = addpoints(o2, DB.xyz, 'MarkerFaceColor', [.5 0 0], 'Marker', 'o', 'MarkerSize', 4);
+
+drawnow, snapnow
+
+%% Print table of regions with region labels
+
+r = region(img);            % Create a region-class object
+
+[rpos, rneg] = table(r);    % Print table, returning regions separated by those with positive or negative data values
+                            % Attach names
+
+r = [rpos rneg];            % re-concatenate for convenience later
+
+%% Surface rendering 
+
+% Create a cutaway surface with blobs
+surface(img, 'cutaway', 'ycut_mm', -30);
+
+drawnow, snapnow
+
+% Plot points as spheres on a canonical surface:
+
+plot_points_on_surface2(DB.xyz, {[.5 0 0]});
+
+drawnow, snapnow
+
+
+%% Extract and plot study proportion data for significant regions
+% First, we will load the MC_Info.mat file, which contains lots of
+% information about the analysis.  The variable of main interest in this
+
+% file is MC_Setup, which contains the contrast indicator maps. 
+% This is stored in MC_Setup.unweighted_study_data
+
+load MC_Info
+
+% MC_Setup = 
+%     unweighted_study_data: [231202×18 double]             % Voxels x contrast indicator maps (1/0)
+%                   volInfo: [1×1 struct]                   % Info for mapping back into brain space
+%                         n: [2 3 2 2 1 2 1 2 4 2 2 3 3 2 2 8 2 1] % Coordinates per study
+%                       wts: [18×1 double]                  % Contrast weights
+%                         r: 5                              % Radius in voxels
+%                        cl: {1×18 cell}                    % contiguous blobs for each contrast, for Monte Carlo
+                       
+indicator_maps = MC_Setup.unweighted_study_data;
+
+% Extract indicator for contrasts that activate within 10 mm (5 vox) of
+% significant voxels region object r
+[studybyroi,studybyset] = Meta_cluster_tools('getdata', r, indicator_maps, MC_Setup.volInfo);
+
+% studybyroi: contrasts x regions, values 1/0 for whether each contrast activates the region
+% studybyset: contrasts x 1, values 1/0 for whether each contrast activates any region in the set
+
+create_figure('Activation_proportions')
+
+[n, k] = size(studybyroi);
+prop_by_condition = sum(studybyroi) ./ n;                        % Proportion of contrasts activating each ROI
+se = ( (prop_by_condition .* (1-prop_by_condition) ) ./ n ).^.5; % Standard Error based on binomial distribution
+
+han = bar(prop_by_condition);
+ehan = errorbar(prop_by_condition, se);
+
+set(han, 'EdgeColor', [0 0 .5], 'FaceColor', [.3 .3 .6]);
+set(ehan, 'Color', [0 0 .5], 'LineStyle', 'none', 'LineWidth', 3);
+set(gca, 'XTick', 1:k, 'XLim', [.5 k+.5], 'XTickLabel', {r.shorttitle});
+ylabel('Proportion of studies activating');
+
+%% Other plots and tables
+
+% Print a table of regions, separating local maxima
+% There are other options for other types of tables, separating by
+% subpeaks, lateralization, and other things.  We will leave that for later
+% walkthroughs.
+
+%tic 
+%cl = Meta_cluster_tools('make_table', r, MC_Setup, true, false);
+%toc
+
+% Another desirable thing to do is to plot and analyze activation
+% proportions in region as a function of study conditions (e.g., type of
+% study).  
+% We won't do this here, but to plot a bar plot of ROI counts for different
+% conditions, try:
+% [prop_by_condition,se,num_by_condition,n] = Meta_cluster_tools('count_by_condition',dat,Xi,w,doplot,[xnames],[seriesnames], [colors])
+
+
 
 
 ##### SOURCE END #####

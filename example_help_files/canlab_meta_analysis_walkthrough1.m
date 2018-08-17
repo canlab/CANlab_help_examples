@@ -8,6 +8,19 @@
 % Neuroimaging_Pattern_Masks/CANlab_Meta_analysis_maps/2011_Agency_Meta_analysis/Agency_meta_analysis_database.txt
 
 %% Section 1: Locate the coordinate database file
+% Also, create a new analysis folder for this analysis
+
+dbfilename = 'Agency_meta_analysis_database.txt';
+dbname = which(dbfilename);
+
+if isempty(dbname), error('Cannot locate the file %s\nMake sure it is on your Matlab path.', dbfilename); end
+
+% Create a new directory for the analysis and go there:
+analysisdir = fullfile(pwd, 'Agency_meta_analysis_example');
+mkdir(analysisdir)
+cd(analysisdir)
+
+%% Section 2: Read in and set up the coordinate database
 % When you set up your own database, several rules apply. Formatting the spreadsheet
 % so it loads correctly can sometimes be the hardest part of running a
 % meta-analysis.
@@ -35,46 +48,39 @@
 % here. 
 % Here are the variable names with special meaning. They are case-sensitive:
 %
-% Subjects          : Sample size of the study to which the coordinate belongs
-% FixedRandom       : Study used fixed or random effects. 
+% *Subjects*          : Sample size of the study to which the coordinate belongs
+%
+% *FixedRandom*       : Study used fixed or random effects. 
 %                     Values should be Fixed or Random.
 %                     Fixed effects coordinates will be automatically
 %                     downweighted
-% SubjectiveWeights : A coordinate or contrast weighting vector based on FixedRandom 
+%
+% *SubjectiveWeights* : A coordinate or contrast weighting vector based on FixedRandom 
 %                     and whatever else you want to weight by; e.g., study reporting threshold
 %                     The default is to use FixedRandom only if available
-% x, y, z           : X, Y, and Z coordinates
-% study             : name of study
-% Contrast          : unique indices (e.g., 1:k) for each independent
+%
+% *x*, *y*, *z*           : X, Y, and Z coordinates
+%
+% *study*             : name of study
+%
+% *Contrast*          : unique indices (e.g., 1:k) for each independent
 %                     contrast. This is a required variable!
 %                     All rows belonging to the same contrast should
 %                     (almost) always have the same values for every
 %                     variable other than x, y, and z.
-% CoordSys          : Values should be MNI or T88, for MNI space or Talairach space
+%
+% *CoordSys*          : Values should be MNI or T88, for MNI space or Talairach space
 %                     Talairach coordinates will be converted to MNI using
 %                     Matthew Brett's transform
-
-dbfilename = 'Agency_meta_analysis_database.txt';
-dbname = which(dbfilename);
-
-if isempty(dbname), error('Cannot locate the file %s\nMake sure it is on your Matlab path.', dbfilename); end
-
-%% Section 2: Read in and set up the coordinate database
-% -------------------------------------------------------------------------
-
-% First, create a new directory for the analysis and go there:
-analysisdir = fullfile(pwd, 'Agency_meta_analysis_example');
-mkdir(analysisdir)
-cd(analysisdir)
 
 % Read in the database and save it in a structure variable called "DB"
 clear DB
 read_database;
 
-% Create SubjectiveWeights
-% DB.SubjectiveWeights = zeros(size(DB.x));
-% DB.SubjectiveWeights(strcmp(DB.FixedRandom, 'Random')) = 1;
-% DB.SubjectiveWeights(strcmp(DB.FixedRandom, 'Fixed')) = 0.75;
+% Optional: Create SubjectiveWeights
+% We will skip this step, but you can use the SubjectiveWeights field to
+% assign weights to coordinates. Weights should be between zero and 1
+
 
 % Prepare the database by checking fields and separating contrasts,
 % specifying a 10 mm radius for integrating coordinates:
@@ -111,8 +117,7 @@ close
 % analysis with selected coordinates, and save the DB variable in SETUP.mat
 % in that folder, along with  other results you may generate.
 
-%% Convolve with spheres and set up the study indicator dataset
-% -------------------------------------------------------------------------
+%% Set up and run the analysis
 % This step prepares the dataset for meta-analysis and runs the entire
 % analysis.  It then generates results maps.
 %
@@ -125,7 +130,7 @@ modeldir = fullfile(analysisdir, 'MKDA_all_contrasts');
 mkdir(modeldir)
 cd(modeldir)
 
-Meta_Activation_FWE('all', DB, 100, 'nocontrasts', 'noverbose');
+Meta_Activation_FWE('all', DB, 500, 'nocontrasts', 'noverbose');
 
 % Note: For a "final" analysis, 10,000 iterations are recommended
 %       Because we typically care about inferences at the "tails" of the
@@ -134,6 +139,7 @@ Meta_Activation_FWE('all', DB, 100, 'nocontrasts', 'noverbose');
 % Note: You can also use Meta_Activation_FWE to do each piece separately:
 %
 % Meta_Activation_FWE('setup')          % sets up the analysis
+%                                       Convolve with spheres and set up the study indicator dataset
 % Meta_Activation_FWE('mc', 10000)      % Adds 10,000 Monte Carlo iterations
 %
 % A file is saved every 10 iterations, so if there are existing saved iterations 
@@ -141,6 +147,109 @@ Meta_Activation_FWE('all', DB, 100, 'nocontrasts', 'noverbose');
 %
 % Meta_Activation_FWE('results')        % generates results maps
 
-drawnow
-snapnow
+drawnow, snapnow
+
+%% Reload masked activation map and display slice montage
+% The code below uses the CANlab object-oriented tools, in
+% CANlab_Core_Tools repository. There are many more options for
+% visualization and data analysis
+
+% load saved results mask (union of all thresholds)
+img = fmri_data('Activation_FWE_all.img', 'noverbose');  % Create an fmri_data-class object
+
+create_figure('slice montage'); axis off
+o2 = montage(img);                                       % Display montage, and return an fmridisplay object called o2
+
+drawnow, snapnow
+
+%% Print transparent blobs and activation points on slice montage
+
+o2 = removeblobs(o2);   
+o2 = addblobs(o2, r, 'trans', 'transvalue', .4);
+o2 = addpoints(o2, DB.xyz, 'MarkerFaceColor', [.5 0 0], 'Marker', 'o', 'MarkerSize', 4);
+
+drawnow, snapnow
+
+%% Print table of regions with region labels
+
+r = region(img);            % Create a region-class object
+
+[rpos, rneg] = table(r);    % Print table, returning regions separated by those with positive or negative data values
+                            % Attach names
+
+r = [rpos rneg];            % re-concatenate for convenience later
+
+%% Surface rendering 
+
+% Create a cutaway surface with blobs
+surface(img, 'cutaway', 'ycut_mm', -30);
+
+drawnow, snapnow
+
+% Plot points as spheres on a canonical surface:
+
+plot_points_on_surface2(DB.xyz, {[.5 0 0]});
+
+drawnow, snapnow
+
+
+%% Extract and plot study proportion data for significant regions
+% First, we will load the MC_Info.mat file, which contains lots of
+% information about the analysis.  The variable of main interest in this
+
+% file is MC_Setup, which contains the contrast indicator maps. 
+% This is stored in MC_Setup.unweighted_study_data
+
+load MC_Info
+
+% MC_Setup = 
+%     unweighted_study_data: [231202×18 double]             % Voxels x contrast indicator maps (1/0)
+%                   volInfo: [1×1 struct]                   % Info for mapping back into brain space
+%                         n: [2 3 2 2 1 2 1 2 4 2 2 3 3 2 2 8 2 1] % Coordinates per study
+%                       wts: [18×1 double]                  % Contrast weights
+%                         r: 5                              % Radius in voxels
+%                        cl: {1×18 cell}                    % contiguous blobs for each contrast, for Monte Carlo
+                       
+indicator_maps = MC_Setup.unweighted_study_data;
+
+% Extract indicator for contrasts that activate within 10 mm (5 vox) of
+% significant voxels region object r
+[studybyroi,studybyset] = Meta_cluster_tools('getdata', r, indicator_maps, MC_Setup.volInfo);
+
+% studybyroi: contrasts x regions, values 1/0 for whether each contrast activates the region
+% studybyset: contrasts x 1, values 1/0 for whether each contrast activates any region in the set
+
+create_figure('Activation_proportions')
+
+[n, k] = size(studybyroi);
+prop_by_condition = sum(studybyroi) ./ n;                        % Proportion of contrasts activating each ROI
+se = ( (prop_by_condition .* (1-prop_by_condition) ) ./ n ).^.5; % Standard Error based on binomial distribution
+
+han = bar(prop_by_condition);
+ehan = errorbar(prop_by_condition, se);
+
+set(han, 'EdgeColor', [0 0 .5], 'FaceColor', [.3 .3 .6]);
+set(ehan, 'Color', [0 0 .5], 'LineStyle', 'none', 'LineWidth', 3);
+set(gca, 'XTick', 1:k, 'XLim', [.5 k+.5], 'XTickLabel', {r.shorttitle});
+ylabel('Proportion of studies activating');
+
+%% Other plots and tables
+
+% Print a table of regions, separating local maxima
+% There are other options for other types of tables, separating by
+% subpeaks, lateralization, and other things.  We will leave that for later
+% walkthroughs.
+
+%tic 
+%cl = Meta_cluster_tools('make_table', r, MC_Setup, true, false);
+%toc
+
+% Another desirable thing to do is to plot and analyze activation
+% proportions in region as a function of study conditions (e.g., type of
+% study).  
+% We won't do this here, but to plot a bar plot of ROI counts for different
+% conditions, try:
+% [prop_by_condition,se,num_by_condition,n] = Meta_cluster_tools('count_by_condition',dat,Xi,w,doplot,[xnames],[seriesnames], [colors])
+
+
 
