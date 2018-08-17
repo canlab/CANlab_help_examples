@@ -86,8 +86,11 @@ mainrepodir = fileparts(fileparts(toolboxdir));
 % CANlab Second-level analysis scripts
 % -----------------------------------------------------------------------
 
-checkfile = which(['Second_level_analysis_template_scripts' filesep '0_begin_here_readme']);
-toolboxdir = fileparts(checkfile);
+% checkfile = which(['Second_level_analysis_template_scripts' filesep '0_begin_here_readme']);
+% toolboxdir = fileparts(checkfile);
+
+checkfile = what(['Second_level_analysis_template_scripts' filesep 'core_scripts_to_run_without_modifying']);
+if ~isempty(checkfile), toolboxdir = fileparts(checkfile.path); else, toolboxdir = []; end
 
 if ~exist(toolboxdir, 'dir')  % Try to find and add it
     toolboxdir = fullfile(mainrepodir, 'CANlab_help_examples', 'Second_level_analysis_template_scripts');

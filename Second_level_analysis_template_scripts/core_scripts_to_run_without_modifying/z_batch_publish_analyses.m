@@ -36,13 +36,40 @@ end
 % Add the study-specific scripts to the top of the path.
 % Load saved data.
 
+% As the paths in a_set_up_paths_always_run_first.m can change, we can
+% re-duplicate the functionality of a_set_up_paths_always_run_first here
+% without actually needing to hard-code the basedir, because we are already
+% assuming we are in the basedir. So we will check for the file
+% a_set_up_paths_always_run_first, but then run its elements.
+
 scriptname = fullfile(pwd, 'scripts', 'a_set_up_paths_always_run_first.m');
 
 if ~exist(scriptname, 'file')
     error('Run from base directory (basedir) of 2nd-level analysis folder.');
+    
 else
-    run(scriptname)
+    % run stuff in a_set_up_paths_always_run_first
+    % run(scriptname)
+    
+    basedir = pwd;
+    datadir = fullfile(basedir, 'data');
+    resultsdir = fullfile(basedir, 'results');
+    scriptsdir = fullfile(basedir, 'scripts');
+    figsavedir = fullfile(resultsdir, 'figures');
+    
+    addpath(scriptsdir)
+    
+    if ~exist(resultsdir, 'dir'), mkdir(resultsdir); end
+    if ~exist(figsavedir, 'dir'), mkdir(figsavedir); end
+    
+    % Display helper functions: Called by later scripts
+    
+    dashes = '----------------------------------------------';
+    printstr = @(dashes) disp(dashes);
+    printhdr = @(str) fprintf('%s\n%s\n%s\n', dashes, str, dashes);
+    
 end
+
 
 printhdr('Running analyses:');
 disp(analyses_to_run)

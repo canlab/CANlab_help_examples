@@ -1,0 +1,368 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Multi-level kernel density (MKDA) meta-analysis example: Agency database</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-08-16"><meta name="DC.source" content="canlab_meta_analysis_walkthrough1.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Multi-level kernel density (MKDA) meta-analysis example: Agency database</h1><!--introduction--><p>The starting point for coordinate-based meta-analysis (CBMA) is a text file with the information entered from published studies. In this example, the information is contained in the file "Agency_meta_analysis_database.txt" It is in the Neuroimaging_Pattern_Masks repository on Github.</p><p>This file should be on your Matlab path: Neuroimaging_Pattern_Masks/CANlab_Meta_analysis_maps/2011_Agency_Meta_analysis/Agency_meta_analysis_database.txt</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Section 1: Locate the coordinate database file</a></li><li><a href="#2">Section 2: Read in and set up the coordinate database</a></li><li><a href="#3">Check and clean up any variables that need recoding</a></li><li><a href="#4">Select a subset of contrasts</a></li><li><a href="#5">Convolve with spheres and set up the study indicator dataset</a></li></ul></div><h2 id="1">Section 1: Locate the coordinate database file</h2><p>When you set up your own database, several rules apply. Formatting the spreadsheet so it loads correctly can sometimes be the hardest part of running a meta-analysis.</p><p>See https://canlabweb.colorado.edu/wiki/doku.php/help/meta/meta_analysis_mkda</p><p>And https://canlabweb.colorado.edu/wiki/doku.php/help/meta/database</p><p>Here are some rules for setting up the file:   1     The variable "dbname" in the workspace should specify the name of your coordinate database file   2     The database must be a text file, tab delimited   3     The 1st row of the database must contain the number of columns as its 1st and only entry   4     The 2nd row of database must contain variable names (text, no spaces or special characters)   5     The 3rd - nth rows of the database contains data   6     Talairach coordinates are indicated by T88 in CoordSys variable   7     coordinate fields should be called x, y, and z   8     Do NOT use Z, or any other field name in clusters structure</p><p>The second row of your database should contain names for each variable you have coded.  Some variables should be named with special keywords, because they are used in the meta-analysis code. Other variables can be named anything, as long as there are <b>no spaces or special characters</b> in the name (e.g., !@#$%^&amp;*(){}[] ~`\/|&lt;&gt;,.?/;:"''+=). Anything that you could not name a variable in Matlab will also not work here. Here are the variable names with special meaning. They are case-sensitive:</p><p>Subjects          : Sample size of the study to which the coordinate belongs FixedRandom       : Study used fixed or random effects.                     Values should be Fixed or Random.                     Fixed effects coordinates will be automatically                     downweighted SubjectiveWeights : A coordinate or contrast weighting vector based on FixedRandom                     and whatever else you want to weight by; e.g., study reporting threshold                     The default is to use FixedRandom only if available x, y, z           : X, Y, and Z coordinates study             : name of study Contrast          : unique indices (e.g., 1:k) for each independent                     contrast. This is a required variable!                     All rows belonging to the same contrast should                     (almost) always have the same values for every                     variable other than x, y, and z. CoordSys          : Values should be MNI or T88, for MNI space or Talairach space                     Talairach coordinates will be converted to MNI using                     Matthew Brett's transform</p><pre class="codeinput">dbfilename = <span class="string">'Agency_meta_analysis_database.txt'</span>;
+dbname = which(dbfilename);
+
+<span class="keyword">if</span> isempty(dbname), error(<span class="string">'Cannot locate the file %s\nMake sure it is on your Matlab path.'</span>, dbfilename); <span class="keyword">end</span>
+</pre><h2 id="2">Section 2: Read in and set up the coordinate database</h2><p>-------------------------------------------------------------------------</p><pre class="codeinput"><span class="comment">% First, create a new directory for the analysis and go there:</span>
+analysisdir = fullfile(pwd, <span class="string">'Agency_meta_analysis_example'</span>);
+mkdir(analysisdir)
+cd(analysisdir)
+
+<span class="comment">% Read in the database and save it in a structure variable called "DB"</span>
+clear <span class="string">DB</span>
+read_database;
+
+<span class="comment">% Create SubjectiveWeights</span>
+<span class="comment">% DB.SubjectiveWeights = zeros(size(DB.x));</span>
+<span class="comment">% DB.SubjectiveWeights(strcmp(DB.FixedRandom, 'Random')) = 1;</span>
+<span class="comment">% DB.SubjectiveWeights(strcmp(DB.FixedRandom, 'Fixed')) = 0.75;</span>
+
+<span class="comment">% Prepare the database by checking fields and separating contrasts,</span>
+<span class="comment">% specifying a 10 mm radius for integrating coordinates:</span>
+DB = Meta_Setup(DB, 10);
+
+<span class="comment">% Meta_Setup automatically saves a file called SETUP.mat in your folder as well.</span>
+drawnow, snapnow
+close
+</pre><pre class="codeoutput">Warning: Directory already exists. 
+Converting T88 coordinates to MNI (M. Brett transform):  12 Transformed
+Converting MNI coordinates to T88 for XYZtal array:  34 Transformed
+Radius is 10 mm.
+Setup. Cannot find Subjects field.  Copying from N.
+No xyz field in DB.  Creating from x, y, z.
+DB structure saved in SETUP.mat
+Contrast image writing is OFF.  Use Meta_Activation_FWE for analysis.
+DB struct output of Meta_Setup saved in SETUP.mat
+Use info in this file to run next step
+</pre><img vspace="5" hspace="5" src="canlab_meta_analysis_walkthrough1_01.png" alt=""> <h2 id="3">Check and clean up any variables that need recoding</h2><p>This is a good time to examine the DB structure to check whether the variables you entered look as intended (numeric or text), and clean up any variables that need recoding. Sometimes, if text characters are entered in the spreadsheet in a column of numbers, the entire column will be read in as text. Other times, variable entries with the same intended category/level will have different names, e.g., yes vs. Yes (all entries are case-sensitive).  You can either fix these in the spreadsheet (best) or re-code them here.</p><p>There is no re-coding needed for this dataset, but here is an example: e.g., wh = strcmp(DB.Increased_craving, 'yes'); DB.Increased_craving(wh) = {'Yes'};</p><pre class="codeinput"><span class="comment">% If you do re-code, do this afterwards:</span>
+<span class="comment">% save SETUP -append DB</span>
+</pre><h2 id="4">Select a subset of contrasts</h2><p>The function Meta_Select_Contrasts allows you to select a subset of the database (DB variable) based on a combination of selected levels on multiple variables.  We will skip that for this example, but if you do select variables, it is a good idea to create a subfolder for the analysis with selected coordinates, and save the DB variable in SETUP.mat in that folder, along with  other results you may generate.</p><h2 id="5">Convolve with spheres and set up the study indicator dataset</h2><p>------------------------------------------------------------------------- This step prepares the dataset for meta-analysis and runs the entire analysis.  It then generates results maps.</p><p>It will generate new files for the analysis, so it is a good idea to create and go to a subfolder that will contain files for this analysis. Many meta-analysis projects involve several analyses, in several sub-folders.</p><pre class="codeinput">modeldir = fullfile(analysisdir, <span class="string">'MKDA_all_contrasts'</span>);
+mkdir(modeldir)
+cd(modeldir)
+
+Meta_Activation_FWE(<span class="string">'all'</span>, DB, 100, <span class="string">'nocontrasts'</span>, <span class="string">'noverbose'</span>);
+
+<span class="comment">% Note: For a "final" analysis, 10,000 iterations are recommended</span>
+<span class="comment">%       Because we typically care about inferences at the "tails" of the</span>
+<span class="comment">%       sampling distribution (i.e., voxels with low P-values)</span>
+<span class="comment">%</span>
+<span class="comment">% Note: You can also use Meta_Activation_FWE to do each piece separately:</span>
+<span class="comment">%</span>
+<span class="comment">% Meta_Activation_FWE('setup')          % sets up the analysis</span>
+<span class="comment">% Meta_Activation_FWE('mc', 10000)      % Adds 10,000 Monte Carlo iterations</span>
+<span class="comment">%</span>
+<span class="comment">% A file is saved every 10 iterations, so if there are existing saved iterations</span>
+<span class="comment">% this will find them and add more.</span>
+<span class="comment">%</span>
+<span class="comment">% Meta_Activation_FWE('results')        % generates results maps</span>
+
+drawnow
+snapnow
+</pre><pre class="codeoutput">Warning: Directory already exists. 
+MC iterations found: 500.  Appending new: 100 iterations
+Elapsed time is 6.652534 seconds.
+
+p &lt;= .05 Corrected: Thresh = 0.1865, 1228 voxels
+
+Writing image: Activation_FWE_height.img
+
+Thresh = 0.1112, size threshold = 506: 4838 sig. voxels.
+Cluster sizes range from 1875 to 2963
+
+Writing image: Activation_FWE_extent_stringent.img
+
+Thresh = 0.0645, size threshold = 2456: 4484 sig. voxels.
+Cluster sizes range from 4484 to 4484
+
+Writing image: Activation_FWE_extent_medium.img
+
+Thresh = 0.0540, size threshold = 3727: 5559 sig. voxels.
+Cluster sizes range from 5559 to 5559
+
+Writing image: Activation_FWE_extent_lenient.img
+Writing image: Activation_FWE_extent.img
+Writing image: Activation_FWE_all.img
+
+iimg_multi_threshold viewer
+=====================================================
+Showing positive or negative: both
+Overlay is: /Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/SPM8_colin27T1_seg.img
+No mask specified in iimg_multi_threshold
+Entered p-value image? : No
+Height thresholds:0.1865 0.1112 0.0645 0.0540 
+Extent thresholds:   1 506 2456 3727 
+Show only contiguous with seed regions: No
+ 
+
+SPM12: spm_check_registration (v6245)              18:49:52 - 16/08/2018
+========================================================================
+Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/SPM8_colin27T1_seg.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/SPM8_colin27T1_seg.img,1&lt;/a&gt;
+Saving clusters as cl variable in Activation_clusters.mat
+Height
+Getting local maxima within 10 mm for subcluster reporting
+ 
+Z field contains: Unknown statistic (shown in maxstat).
+ 
+index	x	y	z	corr	voxels	volume_mm3	maxstat	
+  1	 52	-52	 30	NaN	913	-7304	0.37	
+-&gt;	 52	-52	 16	NaN	257	0.31902		
+-&gt;	 50	-58	 32	NaN	302	0.36035		
+-&gt;	 54	-50	 38	NaN	163	0.37312		
+-&gt;	 56	-40	 38	NaN	120	0.29687		
+-&gt;	 52	-56	 42	NaN	 71	0.35867		
+  2	-52	-52	 20	NaN	 10	-80	0.23	
+  3	 54	-42	 24	NaN	  1	 -8	0.24	
+  4	-58	-52	 30	NaN	 21	-168	0.22	
+  5	-46	-50	 46	NaN	283	-2264	0.35	
+-&gt;	-44	-52	 42	NaN	144	0.33780		
+-&gt;	-46	-46	 48	NaN	 95	0.34903		
+-&gt;	-44	-52	 52	NaN	 44	0.29317		
+
+Additional regions at Extent: Stringent and size &gt;=  10
+ 
+Z field contains: Unknown statistic (shown in maxstat).
+ 
+index	x	y	z	corr	voxels	volume_mm3	maxstat	
+  1	-50	-50	 36	NaN	1561	-12488	0.18	
+
+Additional regions at Extent: Medium and size &gt;=  10
+ 
+Z field contains: Unknown statistic (shown in maxstat).
+ 
+index	x	y	z	corr	voxels	volume_mm3	maxstat	
+  1	 48	-62	 32	NaN	1485	-11880	0.11	
+  2	 42	-50	 34	NaN	 14	-112	0.11	
+  3	 62	-34	 40	NaN	 16	-128	0.11	
+
+Additional regions at Extent: Lenient and size &gt;=  10
+ 
+Z field contains: Unknown statistic (shown in maxstat).
+ 
+index	x	y	z	corr	voxels	volume_mm3	maxstat	
+  1	 54	-32	 30	NaN	1068	-8544	0.06	
+
+
+ans =
+
+  1&times;4 cell array
+
+    {1&times;5 struct}    {1&times;2 struct}    {1&times;8 struct}    {1&times;7 struct}
+
+</pre><img vspace="5" hspace="5" src="canlab_meta_analysis_walkthrough1_02.png" alt=""> <img vspace="5" hspace="5" src="canlab_meta_analysis_walkthrough1_03.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Multi-level kernel density (MKDA) meta-analysis example: Agency database
+% The starting point for coordinate-based meta-analysis (CBMA) is a text file 
+% with the information entered from published studies. In this example, the 
+% information is contained in the file "Agency_meta_analysis_database.txt"
+% It is in the Neuroimaging_Pattern_Masks repository on Github. 
+% 
+% This file should be on your Matlab path:
+% Neuroimaging_Pattern_Masks/CANlab_Meta_analysis_maps/2011_Agency_Meta_analysis/Agency_meta_analysis_database.txt
+
+%% Section 1: Locate the coordinate database file
+% When you set up your own database, several rules apply. Formatting the spreadsheet
+% so it loads correctly can sometimes be the hardest part of running a
+% meta-analysis.
+%
+% See https://canlabweb.colorado.edu/wiki/doku.php/help/meta/meta_analysis_mkda
+% 
+% And https://canlabweb.colorado.edu/wiki/doku.php/help/meta/database
+%
+% Here are some rules for setting up the file:
+%   1     The variable "dbname" in the workspace should specify the name of your coordinate database file
+%   2     The database must be a text file, tab delimited
+%   3     The 1st row of the database must contain the number of columns as its 1st and only entry
+%   4     The 2nd row of database must contain variable names (text, no spaces or special characters)
+%   5     The 3rd - nth rows of the database contains data
+%   6     Talairach coordinates are indicated by T88 in CoordSys variable
+%   7     coordinate fields should be called x, y, and z
+%   8     Do NOT use Z, or any other field name in clusters structure
+% 
+% The second row of your database should contain names for each variable
+% you have coded.  Some variables should be named with special keywords,
+% because they are used in the meta-analysis code. Other variables can be named 
+% anything, as long as there are *no spaces or special characters* in the
+% name (e.g., !@#$%^&*(){}[] ~`\/|<>,.?/;:"''+=). 
+% Anything that you could not name a variable in Matlab will also not work
+% here. 
+% Here are the variable names with special meaning. They are case-sensitive:
+%
+% Subjects          : Sample size of the study to which the coordinate belongs
+% FixedRandom       : Study used fixed or random effects. 
+%                     Values should be Fixed or Random.
+%                     Fixed effects coordinates will be automatically
+%                     downweighted
+% SubjectiveWeights : A coordinate or contrast weighting vector based on FixedRandom 
+%                     and whatever else you want to weight by; e.g., study reporting threshold
+%                     The default is to use FixedRandom only if available
+% x, y, z           : X, Y, and Z coordinates
+% study             : name of study
+% Contrast          : unique indices (e.g., 1:k) for each independent
+%                     contrast. This is a required variable!
+%                     All rows belonging to the same contrast should
+%                     (almost) always have the same values for every
+%                     variable other than x, y, and z.
+% CoordSys          : Values should be MNI or T88, for MNI space or Talairach space
+%                     Talairach coordinates will be converted to MNI using
+%                     Matthew Brett's transform
+
+dbfilename = 'Agency_meta_analysis_database.txt';
+dbname = which(dbfilename);
+
+if isempty(dbname), error('Cannot locate the file %s\nMake sure it is on your Matlab path.', dbfilename); end
+
+%% Section 2: Read in and set up the coordinate database
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+% First, create a new directory for the analysis and go there:
+analysisdir = fullfile(pwd, 'Agency_meta_analysis_example');
+mkdir(analysisdir)
+cd(analysisdir)
+
+% Read in the database and save it in a structure variable called "DB"
+clear DB
+read_database;
+
+% Create SubjectiveWeights
+% DB.SubjectiveWeights = zeros(size(DB.x));
+% DB.SubjectiveWeights(strcmp(DB.FixedRandom, 'Random')) = 1;
+% DB.SubjectiveWeights(strcmp(DB.FixedRandom, 'Fixed')) = 0.75;
+
+% Prepare the database by checking fields and separating contrasts,
+% specifying a 10 mm radius for integrating coordinates:
+DB = Meta_Setup(DB, 10);
+
+% Meta_Setup automatically saves a file called SETUP.mat in your folder as well.
+drawnow, snapnow
+close
+
+%% Check and clean up any variables that need recoding
+% This is a good time to examine the DB structure to check whether the variables
+% you entered look as intended (numeric or text), and clean up any
+% variables that need recoding.  
+% Sometimes, if text characters are entered
+% in the spreadsheet in a column of numbers, the entire column will be read
+% in as text.  
+% Other times, variable entries with the same intended category/level will
+% have different names, e.g., yes vs. Yes (all entries are
+% case-sensitive).  You can either fix these in the spreadsheet (best) or
+% re-code them here.
+%
+% There is no re-coding needed for this dataset, but here is an example:
+% e.g., 
+% wh = strcmp(DB.Increased_craving, 'yes'); DB.Increased_craving(wh) = {'Yes'};
+
+% If you do re-code, do this afterwards:
+% save SETUP -append DB
+
+%% Select a subset of contrasts
+% The function Meta_Select_Contrasts allows you to select a subset of the
+% database (DB variable) based on a combination of selected levels on
+% multiple variables.  We will skip that for this example, but if you do
+% select variables, it is a good idea to create a subfolder for the
+% analysis with selected coordinates, and save the DB variable in SETUP.mat
+% in that folder, along with  other results you may generate.
+
+%% Convolve with spheres and set up the study indicator dataset
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% This step prepares the dataset for meta-analysis and runs the entire
+% analysis.  It then generates results maps.
+%
+% It will generate new files for the analysis, so it is a good idea to
+% create and go to a subfolder that will contain files for this analysis.
+% Many meta-analysis projects involve several analyses, in several
+% sub-folders.
+
+modeldir = fullfile(analysisdir, 'MKDA_all_contrasts');
+mkdir(modeldir)
+cd(modeldir)
+
+Meta_Activation_FWE('all', DB, 100, 'nocontrasts', 'noverbose');
+
+% Note: For a "final" analysis, 10,000 iterations are recommended
+%       Because we typically care about inferences at the "tails" of the
+%       sampling distribution (i.e., voxels with low P-values)
+%
+% Note: You can also use Meta_Activation_FWE to do each piece separately:
+%
+% Meta_Activation_FWE('setup')          % sets up the analysis
+% Meta_Activation_FWE('mc', 10000)      % Adds 10,000 Monte Carlo iterations
+%
+% A file is saved every 10 iterations, so if there are existing saved iterations 
+% this will find them and add more.
+%
+% Meta_Activation_FWE('results')        % generates results maps
+
+drawnow
+snapnow
+
+
+##### SOURCE END #####
+--></body></html>
