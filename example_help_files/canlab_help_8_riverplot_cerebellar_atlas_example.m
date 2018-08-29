@@ -64,8 +64,14 @@ for i = 1:n
     
 end
 
+drawnow, snapnow
+
 % Get regions (for slice montage)
 r = atlas2region(cblm);
+
+% Show them on a montage
+montage(r, 'regioncenters');
+
 
 %% Create a river plot for the overall relationship, and plot the matrix
 % The ribbon thicknesses in the riverplot are proportional to the cosine
