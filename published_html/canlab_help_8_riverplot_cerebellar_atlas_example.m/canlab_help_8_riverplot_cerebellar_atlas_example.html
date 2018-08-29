@@ -1,0 +1,1655 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>canlab_help_8_riverplot_cerebellar_atlas_example</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-08-28"><meta name="DC.source" content="canlab_help_8_riverplot_cerebellar_atlas_example.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Example: Mapping images to an atlas and visualizing them with a river plot</a></li><li><a href="#2">View the atlas to see what it looks like</a></li><li><a href="#3">Create a river plot for the overall relationship, and plot the matrix</a></li><li><a href="#4">Visualize the matrix and identify the top network for each region</a></li><li><a href="#5">Create a river plot and slice montage for each network</a></li></ul></div><h2 id="1">Example: Mapping images to an atlas and visualizing them with a river plot</h2><p>Often, we would like to map a results image (e.g., t-map or functional connectivity map) to an atlas to help localize where the activity is. The table() method is one way to do this, as it auto-labels regions using an atlas.  Here, we will explore another way of doing this, using river plots.</p><p>The riverplot method creates a ribbon plot showing similarities between one set of spatial maps (e.g., here, a single results map) and another (here, the regions that comprise a standard cerebellar brain atlas).</p><p>We'll load the cerebellar atlas, load a set of functional connectivity maps from the Buckner Lab 1,000-person functional connectivity dataset, and visualize the relationships between them.</p><p>In addition to serving as an example of how to use the code, the results are informative for localizing which anatomical parts of the cerebellum are mapped to particular resting-state networks.</p><p>Tor Wager, Aug 2018</p><pre class="codeinput"><span class="comment">% First, we'll load the images and define some names and colors</span>
+<span class="comment">% -------------------------------------------------------------------</span>
+
+<span class="comment">% Load the cerebellar atlas (requires the Neuroimaging_Pattern_Masks repository)</span>
+cblm = load_atlas(<span class="string">'cerebellum'</span>);
+
+[fc, fc_names] = load_image_set(<span class="string">'bucknerlab_wholebrain'</span>);
+
+<span class="comment">% Add labels to image_names (used in riverplot.m method)</span>
+<span class="comment">% -------------------------------------------------------------------</span>
+
+fc.image_names = fc_names';
+cblm.image_names = cblm.labels;
+
+<span class="comment">% Define Colors</span>
+<span class="comment">% -------------------------------------------------------------------</span>
+
+n = length(fc_names);
+fc_colors = seaborn_colors(n);                          <span class="comment">% for initial montage</span>
+fc_color = {[.5 0 1]};                                  <span class="comment">% for riverplot</span>
+cblm_colors = colorcube_colors(num_regions(cblm));      <span class="comment">% for riverplot</span>
+
+<span class="comment">% Some display helper functions</span>
+dashes = <span class="string">'----------------------------------------------'</span>;
+printhdr = @(str) fprintf(<span class="string">'%s\n%s\n%s\n'</span>, dashes, str, dashes);
+</pre><pre class="codeoutput">Loading atlas: /Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2009_Diedrichsen_SUIT_Cerebellum-MNIsegment-MRICroN/SUIT_Cerebellum_MNI_atlas_object.mat
+Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Combined_multiatlas_ROI_masks/rBucknerlab_7clusters_SPMAnat_Other_combined.img
+</pre><h2 id="2">View the atlas to see what it looks like</h2><p>------------------------------------------------------------------- montage(cblm) will also work here. This plot is a little nicer because it will show both the atlas and the networks side by side</p><pre class="codeinput">o2 = canlab_results_fmridisplay([], <span class="string">'multirow'</span>, 2);
+
+o2 = montage(cblm, o2, <span class="string">'wh_montages'</span>, 1:2);
+title_montage(o2, 2, <span class="string">'Cerebellar atlas'</span>);
+
+title_montage(o2, 4, <span class="string">'Functional Networks'</span>);
+
+<span class="keyword">for</span> i = 1:n
+
+    myfc = get_wh_image(fc, i);
+    o2 = addblobs(o2, region(myfc), <span class="string">'wh_montages'</span>, 3:4, <span class="string">'color'</span>, fc_colors{i});
+
+<span class="keyword">end</span>
+
+<span class="comment">% Get regions (for slice montage)</span>
+r = atlas2region(cblm);
+</pre><pre class="codeoutput">Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
+Grouping contiguous voxels:  12 regions
+sagittal montage: 684 voxels displayed, 21728 not displayed on these slices
+axial montage: 5724 voxels displayed, 16688 not displayed on these slices
+Grouping contiguous voxels:   3 regions
+sagittal montage: 742 voxels displayed, 22876 not displayed on these slices
+axial montage: 3587 voxels displayed, 20031 not displayed on these slices
+Grouping contiguous voxels:  28 regions
+sagittal montage: 183 voxels displayed, 17122 not displayed on these slices
+axial montage: 2470 voxels displayed, 14835 not displayed on these slices
+Grouping contiguous voxels:  18 regions
+sagittal montage: 727 voxels displayed, 19210 not displayed on these slices
+axial montage: 4035 voxels displayed, 15902 not displayed on these slices
+Grouping contiguous voxels:  32 regions
+sagittal montage: 524 voxels displayed, 15413 not displayed on these slices
+axial montage: 2806 voxels displayed, 13131 not displayed on these slices
+Grouping contiguous voxels:  28 regions
+sagittal montage: 578 voxels displayed, 26869 not displayed on these slices
+axial montage: 5536 voxels displayed, 21911 not displayed on these slices
+Grouping contiguous voxels:  16 regions
+sagittal montage: 1758 voxels displayed, 35916 not displayed on these slices
+axial montage: 7915 voxels displayed, 29759 not displayed on these slices
+</pre><img vspace="5" hspace="5" src="canlab_help_8_riverplot_cerebellar_atlas_example_01.png" alt=""> <h2 id="3">Create a river plot for the overall relationship, and plot the matrix</h2><p>The ribbon thicknesses in the riverplot are proportional to the cosine similarity between the network map and the region.</p><pre class="codeinput">create_figure(<span class="string">'riverplot'</span>);
+
+[layer1, layer2, ribbons, sim_matrix] = riverplot(fc, <span class="string">'layer2'</span>, cblm, <span class="string">'colors1'</span>, fc_colors, <span class="string">'colors2'</span>, cblm_colors);
+
+drawnow, snapnow
+</pre><pre class="codeoutput">Image names entered, but fullpath attribute is empty. Getting path info.
+Warning: Some images have zero values in some of the 979 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+963 387 979 942 693 979 954 
+Warning: Some images have zero values in some of the 1100 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1095 396 1100 1066 780 1099 1094 
+Warning: Some images have zero values in some of the 1314 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1265 498 1298 1022 1209 1313 1299 
+Warning: Some images have zero values in some of the 1263 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1205 372 1252 1052 1188 1262 1263 
+Warning: Some images have zero values in some of the 2319 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2250 1938 2224 1260 2293 1647 2314 
+Warning: Some images have zero values in some of the 616 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+557 549 596 352 611 448 616 
+Warning: Some images have zero values in some of the 2170 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2073 1743 2070 1396 2115 1593 2032 
+Warning: Some images have zero values in some of the 3441 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+3417 3441 3437 3067 3439 1606 2258 
+Warning: Some images have zero values in some of the  28 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 28  28  28  28  28   0  28 
+Warning: Some images have zero values in some of the 3351 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+3330 3351 3337 3105 3342 2356 1324 
+Warning: Some images have zero values in some of the 2861 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2861 2861 2711 2731 2824 1357 1900 
+Warning: Some images have zero values in some of the 166 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+150 166 109 149 166  90 166 
+Warning: Some images have zero values in some of the 2724 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2724 2724 2586 2702 2679 1960 1015 
+Warning: Some images have zero values in some of the 1659 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1659 1659 1133 1239 1643 996 1648 
+Warning: Some images have zero values in some of the 100 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 71 100  78  53 100  98 100 
+Warning: Some images have zero values in some of the 1588 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1587 1588 1055 1385 1559 945 1441 
+Warning: Some images have zero values in some of the 1478 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1478 1308 1191 571 1462 1398 1478 
+Warning: Some images have zero values in some of the 371 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+369 299 312 143 368 371 371 
+Warning: Some images have zero values in some of the 1455 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1455 1244 1051 765 1444 1326 1455 
+Warning: Some images have zero values in some of the 1249 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1249 890 1109 759 1107 1197 1245 
+Warning: Some images have zero values in some of the 232 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+232 113 232 152 199 232 232 
+Warning: Some images have zero values in some of the 1187 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1187 730 1011 831 1035 1175 1169 
+Warning: Some images have zero values in some of the 957 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+957 887 869 882 735 885 570 
+Warning: Some images have zero values in some of the 250 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+250 224 250 221 168 249 138 
+Warning: Some images have zero values in some of the 960 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+960 849 851 914 717 948 543 
+Warning: Some images have zero values in some of the 196 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+195 196 127 175 155 149 179 
+Warning: Some images have zero values in some of the 108 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+108 108 108 108  93 108  27 
+Warning: Some images have zero values in some of the 178 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+178 178 127 176 136 148 125 
+Warning: Some images have zero values in some of the 340 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+340 337 340 248 183 276 316 
+Warning: Some images have zero values in some of the 340 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+340 332 339 300 117 316 296 
+Warning: Some images have zero values in some of the  61 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 61  52  61  45  25  61  61 
+Warning: Some images have zero values in some of the  61 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 61  48  61  50  24  61  61 
+Warning: Some images have zero values in some of the   6 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+  6   6   6   6   0   6   6 
+Warning: Some images have zero values in some of the   6 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+  6   6   6   6   0   6   6 
+
+ 	Name	Cosine Similarity	
+Cblm I IV L	0.0256	0.1423	0.0000	0.0388	0.1167	0.0000	0.0239	
+Cblm I IV R	0.0144	0.1489	0.0000	0.0348	0.1214	0.0060	0.0121	
+Cblm V L	0.0418	0.1661	0.0273	0.0952	0.0710	0.0060	0.0180	
+Cblm V R	0.0442	0.1726	0.0228	0.0836	0.0596	0.0060	0.0000	
+Cblm VI L	0.0498	0.1103	0.0643	0.2122	0.0352	0.1355	0.0107	
+Cblm Vermis VI	0.0462	0.0458	0.0274	0.1016	0.0157	0.0658	0.0000	
+Cblm VI R	0.0575	0.1177	0.0674	0.1835	0.0508	0.1283	0.0522	
+Cblm CrusI L	0.0310	0.0000	0.0145	0.1208	0.0111	0.2272	0.1626	
+Cblm Vermis CrusI	0.0000	0.0000	0.0000	0.0000	0.0000	0.0303	0.0000	
+Cblm CrusI R	0.0274	0.0000	0.0271	0.0960	0.0232	0.1681	0.2099	
+Cblm CrusII L	0.0000	0.0000	0.0808	0.0720	0.0432	0.2097	0.1432	
+Cblm Vermis CrusII	0.0233	0.0000	0.0513	0.0251	0.0000	0.0443	0.0000	
+Cblm CrusII R	0.0000	0.0000	0.0795	0.0321	0.0472	0.1457	0.1892	
+Cblm VIIb L	0.0000	0.0000	0.1603	0.1288	0.0296	0.1307	0.0166	
+Cblm Vermis VIIb	0.0315	0.0000	0.0309	0.0428	0.0000	0.0084	0.0000	
+Cblm VIIb R	0.0067	0.0000	0.1613	0.0881	0.0386	0.1365	0.0573	
+Cblm VIIIa L	0.0000	0.0731	0.1101	0.1896	0.0295	0.0521	0.0000	
+Cblm Vermis VIIIa	0.0094	0.0483	0.0519	0.0947	0.0136	0.0000	0.0000	
+Cblm VIIIa R	0.0000	0.0824	0.1346	0.1698	0.0250	0.0619	0.0000	
+Cblm VIIIb L	0.0000	0.1120	0.0778	0.1345	0.0832	0.0391	0.0103	
+Cblm Vermis VIIIb	0.0000	0.0652	0.0000	0.0564	0.0407	0.0000	0.0000	
+Cblm VIIIb R	0.0000	0.1263	0.0896	0.1106	0.0813	0.0188	0.0193	
+Cblm IX L	0.0000	0.0491	0.0619	0.0556	0.1042	0.0480	0.0925	
+Cblm Vermis IX	0.0000	0.0290	0.0000	0.0322	0.0613	0.0060	0.0473	
+Cblm IX R	0.0000	0.0591	0.0684	0.0411	0.1076	0.0196	0.0954	
+Cblm X L	0.0067	0.0000	0.0542	0.0289	0.0420	0.0361	0.0193	
+Cblm Vermis X	0.0000	0.0000	0.0000	0.0000	0.0274	0.0000	0.0391	
+Cblm X R	0.0000	0.0000	0.0463	0.0099	0.0438	0.0291	0.0332	
+Cblm Dentate L	0.0000	0.0112	0.0000	0.0588	0.0884	0.0415	0.0221	
+Cblm Dentate R	0.0000	0.0177	0.0076	0.0413	0.1047	0.0250	0.0299	
+Cblm Interposed L	0.0000	0.0178	0.0000	0.0261	0.0407	0.0000	0.0000	
+Cblm Interposed R	0.0000	0.0202	0.0000	0.0214	0.0417	0.0000	0.0000	
+Cblm Fastigial L	0.0000	0.0000	0.0000	0.0000	0.0192	0.0000	0.0000	
+Cblm Fastigial R	0.0000	0.0000	0.0000	0.0000	0.0192	0.0000	0.0000	
+</pre><img vspace="5" hspace="5" src="canlab_help_8_riverplot_cerebellar_atlas_example_02.png" alt=""> <h2 id="4">Visualize the matrix and identify the top network for each region</h2><p>This is a bit crowded. Let's view the matrix:</p><pre class="codeinput">create_figure(<span class="string">'matrix'</span>, 1, 2);
+set(gcf, <span class="string">'Position'</span>, [182   232   670   723]);
+
+imagesc(sim_matrix)
+
+set(gca, <span class="string">'XTick'</span>, 1:n, <span class="string">'XTickLabel'</span>, fc_names, <span class="keyword">...</span>
+    <span class="string">'YTick'</span>, 1:num_regions(cblm), <span class="string">'YTickLabel'</span>, format_strings_for_legend(cblm.labels), <span class="keyword">...</span>
+    <span class="string">'XTickLabelRotation'</span>, 45, <span class="string">'Ydir'</span>, <span class="string">'reverse'</span>);
+
+colorbar
+
+<span class="comment">% Change the colormap to be more intuitive</span>
+cm = colormap_tor([1 1 1], [1 0 0]);
+colormap(cm)
+
+title(<span class="string">'Cosine similarity'</span>)
+
+subplot(1, 2, 2)
+
+sim_centered = zscore(zscore(sim_matrix)')';
+
+sim_centered(sim_centered &lt; 0) = 0;         <span class="comment">% threshold to show only top values</span>
+
+imagesc(sim_centered)
+
+set(gca, <span class="string">'XTick'</span>, 1:n, <span class="string">'XTickLabel'</span>, fc_names, <span class="keyword">...</span>
+    <span class="string">'YTick'</span>, 1:num_regions(cblm), <span class="string">'YTickLabel'</span>, format_strings_for_legend(cblm.labels), <span class="keyword">...</span>
+    <span class="string">'XTickLabelRotation'</span>, 45, <span class="string">'Ydir'</span>, <span class="string">'reverse'</span>);
+
+colorbar
+
+
+title(<span class="string">'Relative (double Z-scored) similarity'</span>)
+
+drawnow, snapnow
+
+<span class="comment">% Get best region and make a table</span>
+
+[~, wh_max] = max(sim_centered');
+
+Anatomical_Region = format_strings_for_legend(cblm.labels');
+Funct_Network = format_strings_for_legend(fc_names(wh_max))';
+
+results_table = table(Anatomical_Region, Funct_Network);
+results_table = sortrows(results_table, <span class="string">'Funct_Network'</span>);
+
+disp(results_table)
+</pre><img vspace="5" hspace="5" src="canlab_help_8_riverplot_cerebellar_atlas_example_03.png" alt=""> <pre class="codeoutput">     Anatomical_Region       Funct_Network  
+    ____________________    ________________
+
+    'Cblm CrusI R'          'Default'       
+    'Cblm CrusII R'         'Default'       
+    'Cblm Vermis X'         'Default'       
+    'Cblm Fastigial L'      'Default'       
+    'Cblm Fastigial R'      'Default'       
+    'Cblm CrusI L'          'Frontoparietal'
+    'Cblm Vermis CrusI'     'Frontoparietal'
+    'Cblm CrusII L'         'Frontoparietal'
+    'Cblm I IV L'           'Limbic'        
+    'Cblm I IV R'           'Limbic'        
+    'Cblm IX L'             'Limbic'        
+    'Cblm Vermis IX'        'Limbic'        
+    'Cblm IX R'             'Limbic'        
+    'Cblm Dentate L'        'Limbic'        
+    'Cblm Dentate R'        'Limbic'        
+    'Cblm Interposed L'     'Limbic'        
+    'Cblm Interposed R'     'Limbic'        
+    'Cblm V L'              'Somatomotor'   
+    'Cblm V R'              'Somatomotor'   
+    'Cblm VIIIb L'          'Somatomotor'   
+    'Cblm Vermis VIIIb'     'Somatomotor'   
+    'Cblm VIIIb R'          'Somatomotor'   
+    'Cblm Vermis VI'        'Visual'        
+    'Cblm VI R'             'Visual'        
+    'Cblm Vermis CrusII'    'Visual'        
+    'Cblm Vermis VIIb'      'Visual'        
+    'Cblm VIIb L'           'dAttention'    
+    'Cblm VIIb R'           'dAttention'    
+    'Cblm VIIIa R'          'dAttention'    
+    'Cblm X L'              'dAttention'    
+    'Cblm X R'              'dAttention'    
+    'Cblm VI L'             'vAttention'    
+    'Cblm VIIIa L'          'vAttention'    
+    'Cblm Vermis VIIIa'     'vAttention'    
+
+</pre><h2 id="5">Create a river plot and slice montage for each network</h2><p>The ribbon thicknesses in the riverplot are proportional to the cosine similarity between the network map and the region.</p><pre class="codeinput">create_figure(<span class="string">'riverplot'</span>);
+
+<span class="comment">% for each functional connectivity network, make a riverplot and a slice</span>
+<span class="comment">% montage showing the most similar cerebellar regions</span>
+<span class="comment">% -------------------------------------------------------------------</span>
+
+<span class="keyword">for</span> i = 1:size(fc.dat, 2)
+
+    <span class="comment">% Select a functional connectivity network to plot</span>
+    <span class="comment">% -------------------------------------------------------------------</span>
+
+    myfc = get_wh_image(fc, i);
+
+    <span class="comment">% riverplot</span>
+    <span class="comment">% -------------------------------------------------------------------</span>
+
+    [layer1, layer2, ribbons, sim_matrix] = riverplot(myfc, <span class="string">'layer2'</span>, cblm, <span class="string">'colors1'</span>, fc_color, <span class="string">'colors2'</span>, cblm_colors);
+
+    <span class="comment">% make the slice montage display</span>
+    <span class="comment">% -------------------------------------------------------------------</span>
+
+    o2 = canlab_results_fmridisplay([], <span class="string">'multirow'</span>, 1, <span class="string">'nofigure'</span>);
+
+    <span class="comment">% remove some axes that we don't need</span>
+    wh_delete = 6:11;
+    delete(o2.montage{2}.axis_handles(wh_delete));
+    o2.montage{2}.axis_handles(wh_delete) = [];
+
+    <span class="comment">% show the top regions on the slice montage</span>
+    <span class="comment">% -------------------------------------------------------------------</span>
+
+
+    thr = sort(sim_matrix, <span class="string">'descend'</span>);
+    thr = thr(7); <span class="comment">% greater than thr is top 6 regions</span>
+
+    <span class="comment">%wh = sim_matrix &gt; .02;</span>
+    wh = sim_matrix &gt; thr;
+
+    myr = r(wh);
+    mycolors = cblm_colors(wh);
+
+    <span class="keyword">for</span> j = 1:length(myr)
+        o2 = addblobs(o2, myr(j), <span class="string">'trans'</span>, <span class="string">'transvalue'</span>, .7, <span class="string">'color'</span>, mycolors{j}, <span class="string">'noverbose'</span>);
+    <span class="keyword">end</span>
+
+    drawnow, snapnow
+
+    <span class="comment">% Print summary of top regions</span>
+    <span class="comment">% -------------------------------------------------------------------</span>
+
+    printhdr(fc.image_names{i})
+    disp(char(myr.shorttitle))
+
+<span class="keyword">end</span> <span class="comment">% network loop</span>
+</pre><pre class="codeoutput">Image names entered, but fullpath attribute is empty. Getting path info.
+Warning: Some images have zero values in some of the 979 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+963 
+Warning: Some images have zero values in some of the 1100 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1095 
+Warning: Some images have zero values in some of the 1314 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1265 
+Warning: Some images have zero values in some of the 1263 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1205 
+Warning: Some images have zero values in some of the 2319 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2250 
+Warning: Some images have zero values in some of the 616 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+557 
+Warning: Some images have zero values in some of the 2170 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2073 
+Warning: Some images have zero values in some of the 3441 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+3417 
+Warning: Some images have zero values in some of the  28 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 28 
+Warning: Some images have zero values in some of the 3351 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+3330 
+Warning: Some images have zero values in some of the 2861 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2861 
+Warning: Some images have zero values in some of the 166 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+150 
+Warning: Some images have zero values in some of the 2724 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2724 
+Warning: Some images have zero values in some of the 1659 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1659 
+Warning: Some images have zero values in some of the 100 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 71 
+Warning: Some images have zero values in some of the 1588 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1587 
+Warning: Some images have zero values in some of the 1478 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1478 
+Warning: Some images have zero values in some of the 371 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+369 
+Warning: Some images have zero values in some of the 1455 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1455 
+Warning: Some images have zero values in some of the 1249 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1249 
+Warning: Some images have zero values in some of the 232 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+232 
+Warning: Some images have zero values in some of the 1187 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1187 
+Warning: Some images have zero values in some of the 957 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+957 
+Warning: Some images have zero values in some of the 250 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+250 
+Warning: Some images have zero values in some of the 960 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+960 
+Warning: Some images have zero values in some of the 196 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+195 
+Warning: Some images have zero values in some of the 108 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+108 
+Warning: Some images have zero values in some of the 178 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+178 
+Warning: Some images have zero values in some of the 340 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+340 
+Warning: Some images have zero values in some of the 340 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+340 
+Warning: Some images have zero values in some of the  61 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 61 
+Warning: Some images have zero values in some of the  61 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 61 
+Warning: Some images have zero values in some of the   6 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+  6 
+Warning: Some images have zero values in some of the   6 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+  6 
+
+ 	Name	Cosine Similarity	
+Cblm I IV L	0.0256	
+Cblm I IV R	0.0144	
+Cblm V L	0.0418	
+Cblm V R	0.0442	
+Cblm VI L	0.0498	
+Cblm Vermis VI	0.0462	
+Cblm VI R	0.0575	
+Cblm CrusI L	0.0310	
+Cblm Vermis CrusI	0.0000	
+Cblm CrusI R	0.0274	
+Cblm CrusII L	0.0000	
+Cblm Vermis CrusII	0.0233	
+Cblm CrusII R	0.0000	
+Cblm VIIb L	0.0000	
+Cblm Vermis VIIb	0.0315	
+Cblm VIIb R	0.0067	
+Cblm VIIIa L	0.0000	
+Cblm Vermis VIIIa	0.0094	
+Cblm VIIIa R	0.0000	
+Cblm VIIIb L	0.0000	
+Cblm Vermis VIIIb	0.0000	
+Cblm VIIIb R	0.0000	
+Cblm IX L	0.0000	
+Cblm Vermis IX	0.0000	
+Cblm IX R	0.0000	
+Cblm X L	0.0067	
+Cblm Vermis X	0.0000	
+Cblm X R	0.0000	
+Cblm Dentate L	0.0000	
+Cblm Dentate R	0.0000	
+Cblm Interposed L	0.0000	
+Cblm Interposed R	0.0000	
+Cblm Fastigial L	0.0000	
+Cblm Fastigial R	0.0000	
+Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
+</pre><img vspace="5" hspace="5" src="canlab_help_8_riverplot_cerebellar_atlas_example_04.png" alt=""> <pre class="codeoutput">----------------------------------------------
+Visual
+----------------------------------------------
+Cblm_V_L        
+Cblm_V_R        
+Cblm_VI_L       
+Cblm_Vermis_VI  
+Cblm_VI_R       
+Cblm_Vermis_VIIb
+Image names entered, but fullpath attribute is empty. Getting path info.
+Warning: Some images have zero values in some of the 979 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+387 
+Warning: Some images have zero values in some of the 1100 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+396 
+Warning: Some images have zero values in some of the 1314 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+498 
+Warning: Some images have zero values in some of the 1263 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+372 
+Warning: Some images have zero values in some of the 2319 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1938 
+Warning: Some images have zero values in some of the 616 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+549 
+Warning: Some images have zero values in some of the 2170 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1743 
+Warning: Some images have zero values in some of the 3441 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+3441 
+Warning: Some images have zero values in some of the  28 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 28 
+Warning: Some images have zero values in some of the 3351 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+3351 
+Warning: Some images have zero values in some of the 2861 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2861 
+Warning: Some images have zero values in some of the 166 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+166 
+Warning: Some images have zero values in some of the 2724 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2724 
+Warning: Some images have zero values in some of the 1659 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1659 
+Warning: Some images have zero values in some of the 100 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+100 
+Warning: Some images have zero values in some of the 1588 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1588 
+Warning: Some images have zero values in some of the 1478 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1308 
+Warning: Some images have zero values in some of the 371 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+299 
+Warning: Some images have zero values in some of the 1455 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1244 
+Warning: Some images have zero values in some of the 1249 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+890 
+Warning: Some images have zero values in some of the 232 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+113 
+Warning: Some images have zero values in some of the 1187 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+730 
+Warning: Some images have zero values in some of the 957 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+887 
+Warning: Some images have zero values in some of the 250 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+224 
+Warning: Some images have zero values in some of the 960 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+849 
+Warning: Some images have zero values in some of the 196 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+196 
+Warning: Some images have zero values in some of the 108 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+108 
+Warning: Some images have zero values in some of the 178 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+178 
+Warning: Some images have zero values in some of the 340 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+337 
+Warning: Some images have zero values in some of the 340 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+332 
+Warning: Some images have zero values in some of the  61 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 52 
+Warning: Some images have zero values in some of the  61 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 48 
+Warning: Some images have zero values in some of the   6 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+  6 
+Warning: Some images have zero values in some of the   6 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+  6 
+
+ 	Name	Cosine Similarity	
+Cblm I IV L	0.1423	
+Cblm I IV R	0.1489	
+Cblm V L	0.1661	
+Cblm V R	0.1726	
+Cblm VI L	0.1103	
+Cblm Vermis VI	0.0458	
+Cblm VI R	0.1177	
+Cblm CrusI L	0.0000	
+Cblm Vermis CrusI	0.0000	
+Cblm CrusI R	0.0000	
+Cblm CrusII L	0.0000	
+Cblm Vermis CrusII	0.0000	
+Cblm CrusII R	0.0000	
+Cblm VIIb L	0.0000	
+Cblm Vermis VIIb	0.0000	
+Cblm VIIb R	0.0000	
+Cblm VIIIa L	0.0731	
+Cblm Vermis VIIIa	0.0483	
+Cblm VIIIa R	0.0824	
+Cblm VIIIb L	0.1120	
+Cblm Vermis VIIIb	0.0652	
+Cblm VIIIb R	0.1263	
+Cblm IX L	0.0491	
+Cblm Vermis IX	0.0290	
+Cblm IX R	0.0591	
+Cblm X L	0.0000	
+Cblm Vermis X	0.0000	
+Cblm X R	0.0000	
+Cblm Dentate L	0.0112	
+Cblm Dentate R	0.0177	
+Cblm Interposed L	0.0178	
+Cblm Interposed R	0.0202	
+Cblm Fastigial L	0.0000	
+Cblm Fastigial R	0.0000	
+Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
+</pre><img vspace="5" hspace="5" src="canlab_help_8_riverplot_cerebellar_atlas_example_05.png" alt=""> <pre class="codeoutput">----------------------------------------------
+Somatomotor
+----------------------------------------------
+Cblm_I_IV_L 
+Cblm_I_IV_R 
+Cblm_V_L    
+Cblm_V_R    
+Cblm_VI_R   
+Cblm_VIIIb_R
+Image names entered, but fullpath attribute is empty. Getting path info.
+Warning: Some images have zero values in some of the 979 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+979 
+Warning: Some images have zero values in some of the 1100 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1100 
+Warning: Some images have zero values in some of the 1314 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1298 
+Warning: Some images have zero values in some of the 1263 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1252 
+Warning: Some images have zero values in some of the 2319 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2224 
+Warning: Some images have zero values in some of the 616 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+596 
+Warning: Some images have zero values in some of the 2170 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2070 
+Warning: Some images have zero values in some of the 3441 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+3437 
+Warning: Some images have zero values in some of the  28 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 28 
+Warning: Some images have zero values in some of the 3351 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+3337 
+Warning: Some images have zero values in some of the 2861 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2711 
+Warning: Some images have zero values in some of the 166 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+109 
+Warning: Some images have zero values in some of the 2724 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2586 
+Warning: Some images have zero values in some of the 1659 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1133 
+Warning: Some images have zero values in some of the 100 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 78 
+Warning: Some images have zero values in some of the 1588 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1055 
+Warning: Some images have zero values in some of the 1478 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1191 
+Warning: Some images have zero values in some of the 371 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+312 
+Warning: Some images have zero values in some of the 1455 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1051 
+Warning: Some images have zero values in some of the 1249 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1109 
+Warning: Some images have zero values in some of the 232 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+232 
+Warning: Some images have zero values in some of the 1187 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1011 
+Warning: Some images have zero values in some of the 957 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+869 
+Warning: Some images have zero values in some of the 250 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+250 
+Warning: Some images have zero values in some of the 960 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+851 
+Warning: Some images have zero values in some of the 196 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+127 
+Warning: Some images have zero values in some of the 108 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+108 
+Warning: Some images have zero values in some of the 178 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+127 
+Warning: Some images have zero values in some of the 340 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+340 
+Warning: Some images have zero values in some of the 340 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+339 
+Warning: Some images have zero values in some of the  61 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 61 
+Warning: Some images have zero values in some of the  61 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 61 
+Warning: Some images have zero values in some of the   6 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+  6 
+Warning: Some images have zero values in some of the   6 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+  6 
+
+ 	Name	Cosine Similarity	
+Cblm I IV L	0.0000	
+Cblm I IV R	0.0000	
+Cblm V L	0.0273	
+Cblm V R	0.0228	
+Cblm VI L	0.0643	
+Cblm Vermis VI	0.0274	
+Cblm VI R	0.0674	
+Cblm CrusI L	0.0145	
+Cblm Vermis CrusI	0.0000	
+Cblm CrusI R	0.0271	
+Cblm CrusII L	0.0808	
+Cblm Vermis CrusII	0.0513	
+Cblm CrusII R	0.0795	
+Cblm VIIb L	0.1603	
+Cblm Vermis VIIb	0.0309	
+Cblm VIIb R	0.1613	
+Cblm VIIIa L	0.1101	
+Cblm Vermis VIIIa	0.0519	
+Cblm VIIIa R	0.1346	
+Cblm VIIIb L	0.0778	
+Cblm Vermis VIIIb	0.0000	
+Cblm VIIIb R	0.0896	
+Cblm IX L	0.0619	
+Cblm Vermis IX	0.0000	
+Cblm IX R	0.0684	
+Cblm X L	0.0542	
+Cblm Vermis X	0.0000	
+Cblm X R	0.0463	
+Cblm Dentate L	0.0000	
+Cblm Dentate R	0.0076	
+Cblm Interposed L	0.0000	
+Cblm Interposed R	0.0000	
+Cblm Fastigial L	0.0000	
+Cblm Fastigial R	0.0000	
+Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
+</pre><img vspace="5" hspace="5" src="canlab_help_8_riverplot_cerebellar_atlas_example_06.png" alt=""> <pre class="codeoutput">----------------------------------------------
+dAttention
+----------------------------------------------
+Cblm_CrusII_L
+Cblm_VIIb_L  
+Cblm_VIIb_R  
+Cblm_VIIIa_L 
+Cblm_VIIIa_R 
+Cblm_VIIIb_R 
+Image names entered, but fullpath attribute is empty. Getting path info.
+Warning: Some images have zero values in some of the 979 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+942 
+Warning: Some images have zero values in some of the 1100 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1066 
+Warning: Some images have zero values in some of the 1314 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1022 
+Warning: Some images have zero values in some of the 1263 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1052 
+Warning: Some images have zero values in some of the 2319 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1260 
+Warning: Some images have zero values in some of the 616 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+352 
+Warning: Some images have zero values in some of the 2170 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1396 
+Warning: Some images have zero values in some of the 3441 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+3067 
+Warning: Some images have zero values in some of the  28 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 28 
+Warning: Some images have zero values in some of the 3351 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+3105 
+Warning: Some images have zero values in some of the 2861 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2731 
+Warning: Some images have zero values in some of the 166 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+149 
+Warning: Some images have zero values in some of the 2724 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2702 
+Warning: Some images have zero values in some of the 1659 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1239 
+Warning: Some images have zero values in some of the 100 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 53 
+Warning: Some images have zero values in some of the 1588 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1385 
+Warning: Some images have zero values in some of the 1478 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+571 
+Warning: Some images have zero values in some of the 371 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+143 
+Warning: Some images have zero values in some of the 1455 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+765 
+Warning: Some images have zero values in some of the 1249 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+759 
+Warning: Some images have zero values in some of the 232 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+152 
+Warning: Some images have zero values in some of the 1187 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+831 
+Warning: Some images have zero values in some of the 957 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+882 
+Warning: Some images have zero values in some of the 250 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+221 
+Warning: Some images have zero values in some of the 960 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+914 
+Warning: Some images have zero values in some of the 196 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+175 
+Warning: Some images have zero values in some of the 108 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+108 
+Warning: Some images have zero values in some of the 178 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+176 
+Warning: Some images have zero values in some of the 340 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+248 
+Warning: Some images have zero values in some of the 340 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+300 
+Warning: Some images have zero values in some of the  61 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 45 
+Warning: Some images have zero values in some of the  61 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 50 
+Warning: Some images have zero values in some of the   6 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+  6 
+Warning: Some images have zero values in some of the   6 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+  6 
+
+ 	Name	Cosine Similarity	
+Cblm I IV L	0.0388	
+Cblm I IV R	0.0348	
+Cblm V L	0.0952	
+Cblm V R	0.0836	
+Cblm VI L	0.2122	
+Cblm Vermis VI	0.1016	
+Cblm VI R	0.1835	
+Cblm CrusI L	0.1208	
+Cblm Vermis CrusI	0.0000	
+Cblm CrusI R	0.0960	
+Cblm CrusII L	0.0720	
+Cblm Vermis CrusII	0.0251	
+Cblm CrusII R	0.0321	
+Cblm VIIb L	0.1288	
+Cblm Vermis VIIb	0.0428	
+Cblm VIIb R	0.0881	
+Cblm VIIIa L	0.1896	
+Cblm Vermis VIIIa	0.0947	
+Cblm VIIIa R	0.1698	
+Cblm VIIIb L	0.1345	
+Cblm Vermis VIIIb	0.0564	
+Cblm VIIIb R	0.1106	
+Cblm IX L	0.0556	
+Cblm Vermis IX	0.0322	
+Cblm IX R	0.0411	
+Cblm X L	0.0289	
+Cblm Vermis X	0.0000	
+Cblm X R	0.0099	
+Cblm Dentate L	0.0588	
+Cblm Dentate R	0.0413	
+Cblm Interposed L	0.0261	
+Cblm Interposed R	0.0214	
+Cblm Fastigial L	0.0000	
+Cblm Fastigial R	0.0000	
+Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
+</pre><img vspace="5" hspace="5" src="canlab_help_8_riverplot_cerebellar_atlas_example_07.png" alt=""> <pre class="codeoutput">----------------------------------------------
+vAttention
+----------------------------------------------
+Cblm_VI_L   
+Cblm_VI_R   
+Cblm_VIIb_L 
+Cblm_VIIIa_L
+Cblm_VIIIa_R
+Cblm_VIIIb_L
+Image names entered, but fullpath attribute is empty. Getting path info.
+Warning: Some images have zero values in some of the 979 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+693 
+Warning: Some images have zero values in some of the 1100 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+780 
+Warning: Some images have zero values in some of the 1314 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1209 
+Warning: Some images have zero values in some of the 1263 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1188 
+Warning: Some images have zero values in some of the 2319 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2293 
+Warning: Some images have zero values in some of the 616 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+611 
+Warning: Some images have zero values in some of the 2170 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2115 
+Warning: Some images have zero values in some of the 3441 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+3439 
+Warning: Some images have zero values in some of the  28 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 28 
+Warning: Some images have zero values in some of the 3351 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+3342 
+Warning: Some images have zero values in some of the 2861 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2824 
+Warning: Some images have zero values in some of the 166 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+166 
+Warning: Some images have zero values in some of the 2724 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2679 
+Warning: Some images have zero values in some of the 1659 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1643 
+Warning: Some images have zero values in some of the 100 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+100 
+Warning: Some images have zero values in some of the 1588 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1559 
+Warning: Some images have zero values in some of the 1478 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1462 
+Warning: Some images have zero values in some of the 371 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+368 
+Warning: Some images have zero values in some of the 1455 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1444 
+Warning: Some images have zero values in some of the 1249 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1107 
+Warning: Some images have zero values in some of the 232 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+199 
+Warning: Some images have zero values in some of the 1187 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1035 
+Warning: Some images have zero values in some of the 957 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+735 
+Warning: Some images have zero values in some of the 250 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+168 
+Warning: Some images have zero values in some of the 960 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+717 
+Warning: Some images have zero values in some of the 196 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+155 
+Warning: Some images have zero values in some of the 108 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 93 
+Warning: Some images have zero values in some of the 178 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+136 
+Warning: Some images have zero values in some of the 340 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+183 
+Warning: Some images have zero values in some of the 340 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+117 
+Warning: Some images have zero values in some of the  61 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 25 
+Warning: Some images have zero values in some of the  61 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 24 
+
+ 	Name	Cosine Similarity	
+Cblm I IV L	0.1167	
+Cblm I IV R	0.1214	
+Cblm V L	0.0710	
+Cblm V R	0.0596	
+Cblm VI L	0.0352	
+Cblm Vermis VI	0.0157	
+Cblm VI R	0.0508	
+Cblm CrusI L	0.0111	
+Cblm Vermis CrusI	0.0000	
+Cblm CrusI R	0.0232	
+Cblm CrusII L	0.0432	
+Cblm Vermis CrusII	0.0000	
+Cblm CrusII R	0.0472	
+Cblm VIIb L	0.0296	
+Cblm Vermis VIIb	0.0000	
+Cblm VIIb R	0.0386	
+Cblm VIIIa L	0.0295	
+Cblm Vermis VIIIa	0.0136	
+Cblm VIIIa R	0.0250	
+Cblm VIIIb L	0.0832	
+Cblm Vermis VIIIb	0.0407	
+Cblm VIIIb R	0.0813	
+Cblm IX L	0.1042	
+Cblm Vermis IX	0.0613	
+Cblm IX R	0.1076	
+Cblm X L	0.0420	
+Cblm Vermis X	0.0274	
+Cblm X R	0.0438	
+Cblm Dentate L	0.0884	
+Cblm Dentate R	0.1047	
+Cblm Interposed L	0.0407	
+Cblm Interposed R	0.0417	
+Cblm Fastigial L	0.0192	
+Cblm Fastigial R	0.0192	
+Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
+</pre><img vspace="5" hspace="5" src="canlab_help_8_riverplot_cerebellar_atlas_example_08.png" alt=""> <pre class="codeoutput">----------------------------------------------
+Limbic
+----------------------------------------------
+Cblm_I_IV_L   
+Cblm_I_IV_R   
+Cblm_IX_L     
+Cblm_IX_R     
+Cblm_Dentate_L
+Cblm_Dentate_R
+Image names entered, but fullpath attribute is empty. Getting path info.
+Warning: Some images have zero values in some of the 979 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+979 
+Warning: Some images have zero values in some of the 1100 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1099 
+Warning: Some images have zero values in some of the 1314 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1313 
+Warning: Some images have zero values in some of the 1263 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1262 
+Warning: Some images have zero values in some of the 2319 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1647 
+Warning: Some images have zero values in some of the 616 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+448 
+Warning: Some images have zero values in some of the 2170 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1593 
+Warning: Some images have zero values in some of the 3441 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1606 
+Warning: Some images have zero values in some of the 3351 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2356 
+Warning: Some images have zero values in some of the 2861 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1357 
+Warning: Some images have zero values in some of the 166 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 90 
+Warning: Some images have zero values in some of the 2724 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1960 
+Warning: Some images have zero values in some of the 1659 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+996 
+Warning: Some images have zero values in some of the 100 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 98 
+Warning: Some images have zero values in some of the 1588 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+945 
+Warning: Some images have zero values in some of the 1478 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1398 
+Warning: Some images have zero values in some of the 371 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+371 
+Warning: Some images have zero values in some of the 1455 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1326 
+Warning: Some images have zero values in some of the 1249 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1197 
+Warning: Some images have zero values in some of the 232 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+232 
+Warning: Some images have zero values in some of the 1187 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1175 
+Warning: Some images have zero values in some of the 957 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+885 
+Warning: Some images have zero values in some of the 250 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+249 
+Warning: Some images have zero values in some of the 960 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+948 
+Warning: Some images have zero values in some of the 196 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+149 
+Warning: Some images have zero values in some of the 108 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+108 
+Warning: Some images have zero values in some of the 178 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+148 
+Warning: Some images have zero values in some of the 340 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+276 
+Warning: Some images have zero values in some of the 340 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+316 
+Warning: Some images have zero values in some of the  61 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 61 
+Warning: Some images have zero values in some of the  61 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 61 
+Warning: Some images have zero values in some of the   6 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+  6 
+Warning: Some images have zero values in some of the   6 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+  6 
+
+ 	Name	Cosine Similarity	
+Cblm I IV L	0.0000	
+Cblm I IV R	0.0060	
+Cblm V L	0.0060	
+Cblm V R	0.0060	
+Cblm VI L	0.1355	
+Cblm Vermis VI	0.0658	
+Cblm VI R	0.1283	
+Cblm CrusI L	0.2272	
+Cblm Vermis CrusI	0.0303	
+Cblm CrusI R	0.1681	
+Cblm CrusII L	0.2097	
+Cblm Vermis CrusII	0.0443	
+Cblm CrusII R	0.1457	
+Cblm VIIb L	0.1307	
+Cblm Vermis VIIb	0.0084	
+Cblm VIIb R	0.1365	
+Cblm VIIIa L	0.0521	
+Cblm Vermis VIIIa	0.0000	
+Cblm VIIIa R	0.0619	
+Cblm VIIIb L	0.0391	
+Cblm Vermis VIIIb	0.0000	
+Cblm VIIIb R	0.0188	
+Cblm IX L	0.0480	
+Cblm Vermis IX	0.0060	
+Cblm IX R	0.0196	
+Cblm X L	0.0361	
+Cblm Vermis X	0.0000	
+Cblm X R	0.0291	
+Cblm Dentate L	0.0415	
+Cblm Dentate R	0.0250	
+Cblm Interposed L	0.0000	
+Cblm Interposed R	0.0000	
+Cblm Fastigial L	0.0000	
+Cblm Fastigial R	0.0000	
+Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
+</pre><img vspace="5" hspace="5" src="canlab_help_8_riverplot_cerebellar_atlas_example_09.png" alt=""> <pre class="codeoutput">----------------------------------------------
+Frontoparietal
+----------------------------------------------
+Cblm_VI_L    
+Cblm_CrusI_L 
+Cblm_CrusI_R 
+Cblm_CrusII_L
+Cblm_CrusII_R
+Cblm_VIIb_R  
+Image names entered, but fullpath attribute is empty. Getting path info.
+Warning: Some images have zero values in some of the 979 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+954 
+Warning: Some images have zero values in some of the 1100 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1094 
+Warning: Some images have zero values in some of the 1314 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1299 
+Warning: Some images have zero values in some of the 1263 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1263 
+Warning: Some images have zero values in some of the 2319 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2314 
+Warning: Some images have zero values in some of the 616 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+616 
+Warning: Some images have zero values in some of the 2170 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2032 
+Warning: Some images have zero values in some of the 3441 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+2258 
+Warning: Some images have zero values in some of the  28 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 28 
+Warning: Some images have zero values in some of the 3351 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1324 
+Warning: Some images have zero values in some of the 2861 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1900 
+Warning: Some images have zero values in some of the 166 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+166 
+Warning: Some images have zero values in some of the 2724 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1015 
+Warning: Some images have zero values in some of the 1659 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1648 
+Warning: Some images have zero values in some of the 100 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+100 
+Warning: Some images have zero values in some of the 1588 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1441 
+Warning: Some images have zero values in some of the 1478 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1478 
+Warning: Some images have zero values in some of the 371 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+371 
+Warning: Some images have zero values in some of the 1455 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1455 
+Warning: Some images have zero values in some of the 1249 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1245 
+Warning: Some images have zero values in some of the 232 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+232 
+Warning: Some images have zero values in some of the 1187 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+1169 
+Warning: Some images have zero values in some of the 957 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+570 
+Warning: Some images have zero values in some of the 250 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+138 
+Warning: Some images have zero values in some of the 960 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+543 
+Warning: Some images have zero values in some of the 196 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+179 
+Warning: Some images have zero values in some of the 108 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 27 
+Warning: Some images have zero values in some of the 178 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+125 
+Warning: Some images have zero values in some of the 340 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+316 
+Warning: Some images have zero values in some of the 340 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+296 
+Warning: Some images have zero values in some of the  61 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 61 
+Warning: Some images have zero values in some of the  61 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 61 
+Warning: Some images have zero values in some of the   6 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+  6 
+Warning: Some images have zero values in some of the   6 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+  6 
+
+ 	Name	Cosine Similarity	
+Cblm I IV L	0.0239	
+Cblm I IV R	0.0121	
+Cblm V L	0.0180	
+Cblm V R	0.0000	
+Cblm VI L	0.0107	
+Cblm Vermis VI	0.0000	
+Cblm VI R	0.0522	
+Cblm CrusI L	0.1626	
+Cblm Vermis CrusI	0.0000	
+Cblm CrusI R	0.2099	
+Cblm CrusII L	0.1432	
+Cblm Vermis CrusII	0.0000	
+Cblm CrusII R	0.1892	
+Cblm VIIb L	0.0166	
+Cblm Vermis VIIb	0.0000	
+Cblm VIIb R	0.0573	
+Cblm VIIIa L	0.0000	
+Cblm Vermis VIIIa	0.0000	
+Cblm VIIIa R	0.0000	
+Cblm VIIIb L	0.0103	
+Cblm Vermis VIIIb	0.0000	
+Cblm VIIIb R	0.0193	
+Cblm IX L	0.0925	
+Cblm Vermis IX	0.0473	
+Cblm IX R	0.0954	
+Cblm X L	0.0193	
+Cblm Vermis X	0.0391	
+Cblm X R	0.0332	
+Cblm Dentate L	0.0221	
+Cblm Dentate R	0.0299	
+Cblm Interposed L	0.0000	
+Cblm Interposed R	0.0000	
+Cblm Fastigial L	0.0000	
+Cblm Fastigial R	0.0000	
+Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
+</pre><img vspace="5" hspace="5" src="canlab_help_8_riverplot_cerebellar_atlas_example_10.png" alt=""> <pre class="codeoutput">----------------------------------------------
+Default
+----------------------------------------------
+Cblm_CrusI_L 
+Cblm_CrusI_R 
+Cblm_CrusII_L
+Cblm_CrusII_R
+Cblm_IX_L    
+Cblm_IX_R    
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Example: Mapping images to an atlas and visualizing them with a river plot
+% Often, we would like to map a results image (e.g., t-map or functional connectivity map)
+% to an atlas to help localize where the activity is. The table() method is one way to do this,
+% as it auto-labels regions using an atlas.  Here, we will explore another
+% way of doing this, using river plots.
+%
+% The riverplot method creates a ribbon plot showing similarities between one
+% set of spatial maps (e.g., here, a single results map) and another (here, the regions that
+% comprise a standard cerebellar brain atlas).
+%
+% We'll load the cerebellar atlas, load a set of functional connectivity
+% maps from the Buckner Lab 1,000-person functional connectivity dataset,
+% and visualize the relationships between them.
+%
+% In addition to serving as an example of how to use the code, the results
+% are informative for localizing which anatomical parts of the cerebellum
+% are mapped to particular resting-state networks.
+%
+% Tor Wager, Aug 2018
+
+% First, we'll load the images and define some names and colors
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+% Load the cerebellar atlas (requires the Neuroimaging_Pattern_Masks repository)
+cblm = load_atlas('cerebellum');
+
+[fc, fc_names] = load_image_set('bucknerlab_wholebrain');
+
+% Add labels to image_names (used in riverplot.m method)
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+fc.image_names = fc_names';
+cblm.image_names = cblm.labels;
+
+% Define Colors
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+n = length(fc_names);
+fc_colors = seaborn_colors(n);                          % for initial montage
+fc_color = {[.5 0 1]};                                  % for riverplot
+cblm_colors = colorcube_colors(num_regions(cblm));      % for riverplot
+
+% Some display helper functions
+dashes = 'REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH';
+printhdr = @(str) fprintf('%s\n%s\n%s\n', dashes, str, dashes);
+
+
+%% View the atlas to see what it looks like
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% montage(cblm) will also work here. This plot is a little nicer because
+% it will show both the atlas and the networks side by side
+
+o2 = canlab_results_fmridisplay([], 'multirow', 2);
+
+o2 = montage(cblm, o2, 'wh_montages', 1:2);
+title_montage(o2, 2, 'Cerebellar atlas');
+
+title_montage(o2, 4, 'Functional Networks');
+
+for i = 1:n
+    
+    myfc = get_wh_image(fc, i);
+    o2 = addblobs(o2, region(myfc), 'wh_montages', 3:4, 'color', fc_colors{i});
+    
+end
+
+% Get regions (for slice montage)
+r = atlas2region(cblm);
+
+%% Create a river plot for the overall relationship, and plot the matrix
+% The ribbon thicknesses in the riverplot are proportional to the cosine
+% similarity between the network map and the region.
+
+create_figure('riverplot');
+
+[layer1, layer2, ribbons, sim_matrix] = riverplot(fc, 'layer2', cblm, 'colors1', fc_colors, 'colors2', cblm_colors);
+
+drawnow, snapnow
+
+%% Visualize the matrix and identify the top network for each region
+% This is a bit crowded. Let's view the matrix:
+
+create_figure('matrix', 1, 2);
+set(gcf, 'Position', [182   232   670   723]);
+
+imagesc(sim_matrix)
+
+set(gca, 'XTick', 1:n, 'XTickLabel', fc_names, ...
+    'YTick', 1:num_regions(cblm), 'YTickLabel', format_strings_for_legend(cblm.labels), ...
+    'XTickLabelRotation', 45, 'Ydir', 'reverse');
+
+colorbar
+
+% Change the colormap to be more intuitive
+cm = colormap_tor([1 1 1], [1 0 0]);
+colormap(cm)
+
+title('Cosine similarity')
+
+subplot(1, 2, 2)
+
+sim_centered = zscore(zscore(sim_matrix)')';
+
+sim_centered(sim_centered < 0) = 0;         % threshold to show only top values
+
+imagesc(sim_centered)
+
+set(gca, 'XTick', 1:n, 'XTickLabel', fc_names, ...
+    'YTick', 1:num_regions(cblm), 'YTickLabel', format_strings_for_legend(cblm.labels), ...
+    'XTickLabelRotation', 45, 'Ydir', 'reverse');
+
+colorbar
+
+
+title('Relative (double Z-scored) similarity')
+
+drawnow, snapnow
+
+% Get best region and make a table
+
+[~, wh_max] = max(sim_centered');
+
+Anatomical_Region = format_strings_for_legend(cblm.labels');
+Funct_Network = format_strings_for_legend(fc_names(wh_max))';
+
+results_table = table(Anatomical_Region, Funct_Network);
+results_table = sortrows(results_table, 'Funct_Network');
+
+disp(results_table)
+
+%% Create a river plot and slice montage for each network
+% The ribbon thicknesses in the riverplot are proportional to the cosine
+% similarity between the network map and the region.
+
+create_figure('riverplot');
+
+% for each functional connectivity network, make a riverplot and a slice
+% montage showing the most similar cerebellar regions
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+for i = 1:size(fc.dat, 2)
+    
+    % Select a functional connectivity network to plot
+    % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+    
+    myfc = get_wh_image(fc, i);
+    
+    % riverplot
+    % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+    
+    [layer1, layer2, ribbons, sim_matrix] = riverplot(myfc, 'layer2', cblm, 'colors1', fc_color, 'colors2', cblm_colors);
+    
+    % make the slice montage display
+    % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+    
+    o2 = canlab_results_fmridisplay([], 'multirow', 1, 'nofigure');
+    
+    % remove some axes that we don't need
+    wh_delete = 6:11;
+    delete(o2.montage{2}.axis_handles(wh_delete));
+    o2.montage{2}.axis_handles(wh_delete) = [];
+    
+    % show the top regions on the slice montage
+    % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+    
+    
+    thr = sort(sim_matrix, 'descend');
+    thr = thr(7); % greater than thr is top 6 regions
+    
+    %wh = sim_matrix > .02;
+    wh = sim_matrix > thr;
+    
+    myr = r(wh);
+    mycolors = cblm_colors(wh);
+    
+    for j = 1:length(myr)
+        o2 = addblobs(o2, myr(j), 'trans', 'transvalue', .7, 'color', mycolors{j}, 'noverbose');
+    end
+    
+    drawnow, snapnow
+    
+    % Print summary of top regions
+    % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+    
+    printhdr(fc.image_names{i})
+    disp(char(myr.shorttitle))
+    
+end % network loop
+
+
+
+
+##### SOURCE END #####
+--></body></html>
