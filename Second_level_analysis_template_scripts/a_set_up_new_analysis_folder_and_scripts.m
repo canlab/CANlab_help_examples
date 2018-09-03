@@ -12,11 +12,7 @@
 % Check for master scripts and get dir
 % -----------------------------------------------------------------------
 
-masterscriptdir = fileparts(which('Second_level_analysis_template_scripts/0_begin_here_readme'));
-
-if isempty(masterscriptdir)
-    error('Add Second_level_analysis_template_scripts folder from CANlab_help_examples repository to your path'); 
-end
+plugin_find_master_script_directory;
 
 % -----------------------------------------------------------------------
 % Make folder structure

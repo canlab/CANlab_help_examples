@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>canlab_help_1_installing_tools</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-08-02"><meta name="DC.source" content="canlab_help_1_installing_tools.m"><style type="text/css">
+      --><title>canlab_help_1_installing_tools</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-08-29"><meta name="DC.source" content="canlab_help_1_installing_tools.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -111,18 +111,53 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 <span class="comment">% toolboxes/repositories on your hard drive. Mine are in "Github" and I've</span>
 <span class="comment">% already installed CanlabCore, so let's find it and go there:</span>
 
-mypath = what(<span class="string">'CanlabCore'</span>);
-mypath = fileparts(mypath(1).path);
-disp(mypath)
-cd(mypath)
+<span class="comment">% Locate the CanlabCore Github files on your local computer:</span>
+<span class="comment">% ------------------------------------------------------------------------</span>
 
-<span class="comment">% Now I'm ready to run the setup script:</span>
+mypath = what(fullfile(<span class="string">'CanlabCore'</span>, <span class="string">'CanlabCore'</span>));
+
+<span class="comment">% Check if we've got it</span>
+<span class="keyword">if</span> isempty(mypath)
+    disp(<span class="string">'Download CanlabCore from Github, and go to that folder in Matlab'</span>)
+    disp(<span class="string">'by dragging and dropping it from Finder or Explorer into the Matlab Command Window'</span>)
+    <span class="keyword">return</span>
+<span class="keyword">end</span>
+
+mypath = mypath(1).path;
+
+<span class="comment">% Set the folder in which the repositories will be installed</span>
+<span class="comment">% ------------------------------------------------------------------------</span>
+
+<span class="comment">% This is the location (folder) in which the repositories will be installed:</span>
+base_dir_for_repositories = fileparts(fileparts(mypath));
+
+cd(base_dir_for_repositories)
+fprintf(<span class="string">'\nInstalling repositories in %s\n'</span>, base_dir_for_repositories);
+
+<span class="comment">% Find the setup file, canlab_toolbox_setup.m</span>
+<span class="comment">% ------------------------------------------------------------------------</span>
+
+<span class="comment">% This is the file</span>
+setupfile = fullfile(mypath, <span class="string">'canlab_toolbox_setup.m'</span>);
+
+<span class="comment">% Make sure we've got it</span>
+<span class="keyword">if</span> ~exist(setupfile, <span class="string">'file'</span>)
+    disp(<span class="string">'Something went wrong.  I can''t find canlab_toolbox_setup.m'</span>);
+    disp(<span class="string">'This file should be included in the CanlabCore Github repository.'</span>)
+<span class="keyword">end</span>
+
+<span class="comment">% Run the setup script:</span>
+<span class="comment">% ------------------------------------------------------------------------</span>
 
 canlab_toolbox_setup
 
 <span class="comment">% This will attempt to locate toolboxes, add them to your path, and give</span>
 <span class="comment">% you the option to download them from Github if it can't find them.</span>
-</pre><pre class="codeoutput">/Users/torwager/Documents/GitHub
+
+<span class="comment">% It looks for and installs toolboxes in the current directory,</span>
+<span class="comment">% which (thanks to the code above) is the path name in base_dir_for_repositories</span>
+</pre><pre class="codeoutput">
+Installing repositories in /Users/torwager/Documents/GitHub
 
 -----------------------------------------
 Checking and/or installing CANlab tools in:
@@ -188,8 +223,8 @@ Repository: M3 Mediation toolbox - Single and Multi-level mediation tools
 Site:MediationToolbox
 Finding repo: Running command:
 find /Users/torwager/Documents/GitHub/MediationToolbox -name "mediation_brain.m"
-Warning: Function vecnorm has the same name as a MATLAB builtin. We suggest you
-rename the function to avoid a potential name conflict. 
+Warning: Function vecnorm has the same name as a MATLAB builtin. We
+suggest you rename the function to avoid a potential name conflict. 
 Found and added to path with subfolders: /Users/torwager/Documents/GitHub/MediationToolbox
 
 -----------------------------------------
@@ -277,17 +312,52 @@ All CANlab repositories previously installed. Saving path
 % toolboxes/repositories on your hard drive. Mine are in "Github" and I've
 % already installed CanlabCore, so let's find it and go there:
 
-mypath = what('CanlabCore');
-mypath = fileparts(mypath(1).path);
-disp(mypath)
-cd(mypath)
+% Locate the CanlabCore Github files on your local computer:
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
 
-% Now I'm ready to run the setup script:
+mypath = what(fullfile('CanlabCore', 'CanlabCore'));
+
+% Check if we've got it
+if isempty(mypath)
+    disp('Download CanlabCore from Github, and go to that folder in Matlab')
+    disp('by dragging and dropping it from Finder or Explorer into the Matlab Command Window')
+    return
+end
+
+mypath = mypath(1).path;
+
+% Set the folder in which the repositories will be installed
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+
+% This is the location (folder) in which the repositories will be installed: 
+base_dir_for_repositories = fileparts(fileparts(mypath));
+
+cd(base_dir_for_repositories)
+fprintf('\nInstalling repositories in %s\n', base_dir_for_repositories);
+
+% Find the setup file, canlab_toolbox_setup.m
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+
+% This is the file
+setupfile = fullfile(mypath, 'canlab_toolbox_setup.m');
+
+% Make sure we've got it
+if ~exist(setupfile, 'file')
+    disp('Something went wrong.  I can''t find canlab_toolbox_setup.m');
+    disp('This file should be included in the CanlabCore Github repository.')
+end
+
+% Run the setup script:
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
 
 canlab_toolbox_setup
 
 % This will attempt to locate toolboxes, add them to your path, and give
 % you the option to download them from Github if it can't find them.
+
+% It looks for and installs toolboxes in the current directory, 
+% which (thanks to the code above) is the path name in base_dir_for_repositories
+
 
 ##### SOURCE END #####
 --></body></html>

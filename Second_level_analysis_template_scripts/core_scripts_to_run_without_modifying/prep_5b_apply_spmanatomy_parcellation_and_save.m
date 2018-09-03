@@ -16,8 +16,14 @@
 tic
 disp('Loading parcels');
 
-atlas_name = which('Anatomy_v22c.nii');
+atlas_base_name = 'Anatomy_v22c.nii';
 parcellation_name = 'SpmAnat';
+
+atlas_name = which([atlas_base_name '.gz']);
+
+if isempty(atlas_name)
+    atlas_name = which(atlas_base_name);
+end
 
 if ~exist(atlas_name, 'file')
     error('Add parcellation atlas to your Matlab path.');

@@ -14,8 +14,14 @@
 tic
 disp('Loading parcels');
 
-atlas_name = which('shen_2mm_268_parcellation.nii');
+atlas_base_name = 'shen_2mm_268_parcellation.nii';
 parcellation_name = 'Shen';
+
+atlas_name = which([atlas_base_name '.gz']);
+
+if isempty(atlas_name)
+    atlas_name = which(atlas_base_name);
+end
 
 if ~exist(atlas_name, 'file')
     error('Add parcellation atlas to your Matlab path.');

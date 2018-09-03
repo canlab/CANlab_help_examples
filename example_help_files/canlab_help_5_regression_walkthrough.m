@@ -480,6 +480,23 @@ image_obj.Y = image_obj.X;
 
 [cverr, stats, optout] = predict(image_obj, 'algorithm_name', 'cv_lassopcrmatlab', 'nfolds', 5);
 
+% Plot cross-validated predicted outcomes vs. actual
+
+% Critical fields in stats output structure:
+% stats.Y = actual outcomes
+% stats.yfit = cross-val predicted outcomes
+% pred_outcome_r: Correlation between .yfit and .Y
+% weight_obj: Weight map used for prediction (across all subjects).
+                 
+% Continuous outcomes:
+
+create_figure('scatterplot');
+plot(stats.yfit, stats.Y, 'o')
+axis tight
+refline
+xlabel('Predicted reappraisal success');
+ylabel('Observed reappraisal success');
+
 % Though many areas show some significant effects, these are not strong
 % enough to obtain a meaningful out-of-sample prediction of Success
 

@@ -1,9 +1,4 @@
-dirinfo = what(fullfile('Second_level_analysis_template_scripts', 'core_scripts_to_run_without_modifying'));
-masterscriptdir = dirinfo.path;
-
-if isempty(masterscriptdir)
-    error('Add Second_level_analysis_template_scripts folder from CANlab_help_examples repository to your path'); 
-end
+plugin_find_master_script_directory;
 
 %% CHECK DEPENDENCIES AND SET DEFAULT VARIABLES
 

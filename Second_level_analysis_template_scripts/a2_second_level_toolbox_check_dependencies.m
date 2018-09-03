@@ -105,7 +105,7 @@ if ~exist(toolboxdir, 'dir')
 else
     disp('Found second-level analysis scripts');
     g = genpath(toolboxdir);
-    addpath(g);
+    addpath(g, '-end'); % end to avoid pushing scripts to copy to top of path
 end
 
 % -----------------------------------------------------------------------
@@ -165,12 +165,12 @@ else
     addpath(g);
 end
 
-atlas_name = which('shen_2mm_268_parcellation.nii');
-parcellation_name = 'Shen';
-
-if ~exist(atlas_name, 'file')
-    error('Add parcellation atlas to your Matlab path.');
-end
+% atlas_name = which('shen_2mm_268_parcellation.nii');
+% parcellation_name = 'Shen';
+% 
+% if ~exist(atlas_name, 'file')
+%     error('Add parcellation atlas to your Matlab path.');
+% end
 
 
 disp(' ')

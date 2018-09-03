@@ -1,9 +1,11 @@
 
-% Edit these two before running
+% Edit these two, and possibly the 3rd, before running
 % -------------------------------------------------------
 a_set_up_paths_always_run_first
 
 prep_1_set_conditions_contrasts_colors
+
+a2_set_default_options
 
 printhdr('BEHAVIORAL DATA - BETWEEN-PERSON DESIGN')
 

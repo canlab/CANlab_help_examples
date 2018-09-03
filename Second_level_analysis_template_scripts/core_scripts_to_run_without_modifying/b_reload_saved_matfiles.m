@@ -28,10 +28,13 @@ fprintf('Loaded condition data from results%sDATA_OBJsc\n', filesep);
 
 %% Load contrast data objects if they exist
 % ------------------------------------------------------------------------
+contrasts_entered = ~isempty(DAT.contrasts);
+contrasts_estimated = false;
 
 savefilenamedata = fullfile(resultsdir, 'contrast_data_objects.mat');
 if exist(savefilenamedata, 'file')
     
+    contrasts_estimated = true;
     load(savefilenamedata, 'DATA_OBJ_CON*');
     
     % For publish output
@@ -66,26 +69,55 @@ disp(tabledat);
 
 % Contrasts
 % -------------------------------------------------------------
-Within_Ss_Contrasts = DAT.contrastnames';
-
-N_images = cellfun(Nfun, DATA_OBJ_CON)';
-
-t = cellfun(tfun, DAT.gray_white_csf_contrasts, 'UniformOutput', false)';
-T_Gray_White_CSF = cat(1, t{:});
-
-Contrast_colors = cat(1, DAT.contrastcolors{:});
-Contrast_colors = Contrast_colors(1:length(Within_Ss_Contrasts), :);
-
-Contrast_weights = DAT.contrasts;
-
-try
-    tabledat = table(Within_Ss_Contrasts, N_images, Contrast_weights, Contrast_colors, T_Gray_White_CSF);
-    disp(tabledat);
-catch
-    disp('WARNING: TABLE OF CONTRASTS WILL NOT DISPLAY. CHECK SETUP VARIABLES AND SIZES TO FIX.')
-    disp('These should have the same number of rows, or you likely have errors in your setup:');
-    whos Contrasts N_images Contrast_colors T_Gray_White_CSF
+if contrasts_entered
     
+    Within_Ss_Contrasts = DAT.contrastnames';
+
+    Contrast_colors = cat(1, DAT.contrastcolors{:});
+    Contrast_colors = Contrast_colors(1:length(Within_Ss_Contrasts), :);
+    
+    Contrast_weights = DAT.contrasts;
+    
+        
+    if contrasts_estimated
+        % Print table with values
+        
+    N_images = cellfun(Nfun, DATA_OBJ_CON)';
+    
+    t = cellfun(tfun, DAT.gray_white_csf_contrasts, 'UniformOutput', false)';
+    T_Gray_White_CSF = cat(1, t{:});
+    
+    try
+        tabledat = table(Within_Ss_Contrasts, N_images, Contrast_weights, Contrast_colors, T_Gray_White_CSF);
+        disp(tabledat);
+    catch
+        disp('WARNING: TABLE OF CONTRASTS WILL NOT DISPLAY. CHECK SETUP VARIABLES AND SIZES TO FIX.')
+        disp('These should have the same number of rows, or you likely have errors in your setup:');
+        whos Contrasts N_images Contrast_colors T_Gray_White_CSF
+        
+    end
+    
+    else
+        % Contrasts entered, not estimated
+        disp('Contrasts entered, but not estimated yet.  Run prep_3_calc_univariate_contrast_maps_and_save');
+    end
+    
+    % Print table of contrast values; previous table does not print them
+    % well if they are long.
+    try
+        disp(' ')
+        disp('Contrast weights (tab-delimited table)');
+        print_matrix(DAT.contrasts, DAT.conditions, DAT.contrastnames, '%d');
+        disp(' ')
+        
+    catch
+        disp('Could not print matrix of all contrast values.');
+    end
+    
+    
+else
+    % no contrasts
+    disp('No contrasts entered.');
 end
 
 % Between-group contrasts

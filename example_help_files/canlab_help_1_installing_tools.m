@@ -54,14 +54,49 @@
 % toolboxes/repositories on your hard drive. Mine are in "Github" and I've
 % already installed CanlabCore, so let's find it and go there:
 
-mypath = what('CanlabCore');
-mypath = fileparts(mypath(1).path);
-disp(mypath)
-cd(mypath)
+% Locate the CanlabCore Github files on your local computer:
+% ------------------------------------------------------------------------
 
-% Now I'm ready to run the setup script:
+mypath = what(fullfile('CanlabCore', 'CanlabCore'));
+
+% Check if we've got it
+if isempty(mypath)
+    disp('Download CanlabCore from Github, and go to that folder in Matlab')
+    disp('by dragging and dropping it from Finder or Explorer into the Matlab Command Window')
+    return
+end
+
+mypath = mypath(1).path;
+
+% Set the folder in which the repositories will be installed
+% ------------------------------------------------------------------------
+
+% This is the location (folder) in which the repositories will be installed: 
+base_dir_for_repositories = fileparts(fileparts(mypath));
+
+cd(base_dir_for_repositories)
+fprintf('\nInstalling repositories in %s\n', base_dir_for_repositories);
+
+% Find the setup file, canlab_toolbox_setup.m
+% ------------------------------------------------------------------------
+
+% This is the file
+setupfile = fullfile(mypath, 'canlab_toolbox_setup.m');
+
+% Make sure we've got it
+if ~exist(setupfile, 'file')
+    disp('Something went wrong.  I can''t find canlab_toolbox_setup.m');
+    disp('This file should be included in the CanlabCore Github repository.')
+end
+
+% Run the setup script:
+% ------------------------------------------------------------------------
 
 canlab_toolbox_setup
 
 % This will attempt to locate toolboxes, add them to your path, and give
 % you the option to download them from Github if it can't find them.
+
+% It looks for and installs toolboxes in the current directory, 
+% which (thanks to the code above) is the path name in base_dir_for_repositories
+
