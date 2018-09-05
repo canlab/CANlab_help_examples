@@ -117,6 +117,7 @@ for c = 1:kc
     create_figure(figtitle);
     
     ROC = roc_plot(dist_from_hyperplane{c}, logical(Y{c} > 0), 'color', DAT.contrastcolors{c}, rocpairstring);
+    title(DAT.contrastnames{c});
     
     d_paired = dfun_paired(dist_from_hyperplane{c}, Y{c});
     fprintf('Effect size, cross-val: Forced choice: d = %3.2f\n\n', d_paired);
@@ -131,9 +132,10 @@ for c = 1:kc
     o2 = removeblobs(o2);
     o2 = addblobs(o2, region(stats.weight_obj), 'trans');
         
-    axes(o2.montage{whmontage}.axis_handles(5));
-    title(DAT.contrastnames{c}, 'FontSize', 18)
-    
+%     axes(o2.montage{whmontage}.axis_handles(5));
+%     title(DAT.contrastnames{c}, 'FontSize', 18)
+    title_montage(o2, whmontage, DAT.contrastnames{c}); % For published reports
+
     printstr(DAT.contrastnames{c}); printstr(dashes);
     
     hh = figure(fig_number);  % fig_number set in slice display plugin
@@ -142,13 +144,14 @@ for c = 1:kc
     plugin_save_figure;
 
     % Remove title in case fig is re-printed in html
-    axes(o2.montage{whmontage}.axis_handles(5));
-    title(' ', 'FontSize', 18)
+%     axes(o2.montage{whmontage}.axis_handles(5));
+%     title(' ', 'FontSize', 18)
+      title_montage(o2, whmontage, 'Blank slice montage'); % For published reports
     
     o2 = removeblobs(o2);
     
-    axes(o2.montage{whmontage}.axis_handles(5));
-    title('Intentionally Blank', 'FontSize', 18); % For published reports
+%     axes(o2.montage{whmontage}.axis_handles(5));
+%     title('Intentionally Blank', 'FontSize', 18); % For published reports
     
 end  % within-person contrast
 

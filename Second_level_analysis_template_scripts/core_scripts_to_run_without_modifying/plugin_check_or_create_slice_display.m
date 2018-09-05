@@ -3,7 +3,7 @@ fmridisplay_is_ok = true;
 if ~exist('o2', 'var') || ~isa(o2, 'fmridisplay')
     fmridisplay_is_ok = false;
     
-elseif length(o2.montage) < whmontage 
+elseif length(o2.montage) < whmontage
     % wrong fmridisplay object for this plot
     fmridisplay_is_ok = false;
     
@@ -12,17 +12,19 @@ elseif ~all(ishandle(o2.montage{whmontage}.axis_handles))
     fmridisplay_is_ok = false;
     
 end
-    
+
 if ~fmridisplay_is_ok
     
     create_figure('fmridisplay'); axis off
     o2 = canlab_results_fmridisplay([], 'noverbose');
-
+    
 else % Ok, reactivate, clear blobs, and clear name
     
     o2 = removeblobs(o2);
-    axes(o2.montage{whmontage}.axis_handles(5));
-    title(' ');
+    %     axes(o2.montage{whmontage}.axis_handles(5));
+    %     title(' ');
+    title_montage(o2, whmontage, 'Blank slice montage'); % For published reports
+    
 end
 
 % Get figure number - to reactivate figure later, even if we are changing its tag
