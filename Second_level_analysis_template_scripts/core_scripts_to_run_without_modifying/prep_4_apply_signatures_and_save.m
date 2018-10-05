@@ -13,6 +13,29 @@
 % are conditions or contrasts, with variable names based on DAT.conditions
 % or DAT.contrastnames, but with spaces replaced with underscores.
 
+%% -------------------------------------------------------------------------
+
+% USER OPTIONS
+% This is a standard block of code that can be used in multiple scripts.
+% Each script will have its own options needed and default values for
+% these.
+% The code: 
+% (1) Checks whether the option variables exist
+% (2) Runs a2_set_default_options if any are missing
+% (3) Checks again and uses the default options if they are still missing
+% (e.g., not specified in an older/incomplete copy of a2_set_default_options)
+
+% Now set in a2_set_default_options
+options_needed = {'use_scaled_images'};  % Options we are looking for. Set in a2_set_default_options
+options_exist = cellfun(@exist, options_needed); 
+
+option_default_values = {true false 1000};          % defaults if we cannot find info in a2_set_default_options at all 
+
+plugin_get_options_for_analysis_script
+
+%% Set up main extraction - npsresponse and subregions
+% -------------------------------------------------------------------------
+
 k = length(DAT.conditions);
 
 % subregion names
@@ -28,9 +51,20 @@ printhdr('Extracting NPS, adding to DAT')
 % -------------------------------------------------------------------------
 for i = 1:k
     
-    [DAT.npsresponse(i), ~, ~, DAT.NPSsubregions.npspos_by_region(i), DAT.NPSsubregions.npsneg_by_region(i)] = apply_nps(DATA_OBJ{i}, 'noverbose', 'notables');
+    if use_scaled_images
+        
+        [DAT.npsresponse(i), ~, ~, DAT.NPSsubregions.npspos_by_region(i), DAT.NPSsubregions.npsneg_by_region(i)] = apply_nps(DATA_OBJsc{i}, 'noverbose', 'notables');
+        
+        [DAT.npsresponse_cosinesim(i), ~, ~, DAT.NPSsubregions.npspos_by_region_cosinesim(i), DAT.NPSsubregions.npsneg_by_region_cosinesim(i)] = apply_nps(DATA_OBJsc{i}, 'noverbose', 'notables', 'cosine_similarity');
+
+    else
+        
+        [DAT.npsresponse(i), ~, ~, DAT.NPSsubregions.npspos_by_region(i), DAT.NPSsubregions.npsneg_by_region(i)] = apply_nps(DATA_OBJ{i}, 'noverbose', 'notables');
+        
+        [DAT.npsresponse_cosinesim(i), ~, ~, DAT.NPSsubregions.npspos_by_region_cosinesim(i), DAT.NPSsubregions.npsneg_by_region_cosinesim(i)] = apply_nps(DATA_OBJ{i}, 'noverbose', 'notables', 'cosine_similarity');
+        
+    end
     
-    [DAT.npsresponse_cosinesim(i), ~, ~, DAT.NPSsubregions.npspos_by_region_cosinesim(i), DAT.NPSsubregions.npsneg_by_region_cosinesim(i)] = apply_nps(DATA_OBJ{i}, 'noverbose', 'notables', 'cosine_similarity');
 end
 
 % , ~, ~, DAT.NPSsubregions.npspos_by_region_cosinesim(i), DAT.NPSsubregions.npsneg_by_region_cosinesim(i)

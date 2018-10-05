@@ -7,16 +7,30 @@
 % Assuming that groups are concatenated into contrast image lists.
 % Requires DAT.BETWEENPERSON.group field specifying group membership for
 % each image.
+
 % --------------------------------------------------------------------
 
 % USER OPTIONS
+% This is a standard block of code that can be used in multiple scripts.
+% Each script will have its own options needed and default values for
+% these.
+% The code: 
+% (1) Checks whether the option variables exist
+% (2) Runs a2_set_default_options if any are missing
+% (3) Checks again and uses the default options if they are still missing
+% (e.g., not specified in an older/incomplete copy of a2_set_default_options)
 
 % Now set in a2_set_default_options
-if ~exist('dosavesvmstats', 'var') || ~exist('dobootstrap', 'var') || ~exist('boot_n', 'var')
-    a2_set_default_options;
-end
+options_needed = {'dorobust', 'myscaling'};  % Options we are looking for. Set in a2_set_default_options
+options_exist = cellfun(@exist, options_needed); 
 
-% Check for required DAT fields. Skip analysis and print warnings if missing.
+option_default_values = {false 'raw'};          % defaults if we cannot find info in a2_set_default_options at all 
+
+plugin_get_options_for_analysis_script
+
+
+
+%% Check for required DAT fields. Skip analysis and print warnings if missing.
 % ---------------------------------------------------------------------
 % List required fields in DAT, in cell array:
 required_fields = {'BETWEENPERSON', 'contrastnames', 'contrasts' 'contrastcolors'};

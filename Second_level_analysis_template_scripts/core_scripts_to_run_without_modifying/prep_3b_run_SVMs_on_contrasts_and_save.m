@@ -2,16 +2,25 @@
 % Specified in DAT.contrasts
 % --------------------------------------------------------------------
 
+
 % USER OPTIONS
+% This is a standard block of code that can be used in multiple scripts.
+% Each script will have its own options needed and default values for
+% these.
+% The code: 
+% (1) Checks whether the option variables exist
+% (2) Runs a2_set_default_options if any are missing
+% (3) Checks again and uses the default options if they are still missing
+% (e.g., not specified in an older/incomplete copy of a2_set_default_options)
 
 % Now set in a2_set_default_options
-if ~exist('dosavesvmstats', 'var') || ~exist('dobootstrap', 'var') || ~exist('boot_n', 'var')
-    a2_set_default_options;
-end
+options_needed = {'dosavesvmstats', 'dobootstrap', 'boot_n'};  % Options we are looking for. Set in a2_set_default_options
+options_exist = cellfun(@exist, options_needed); 
 
-% dosavesvmstats = true;  % default false
-% dobootstrap = true;    % default false
-% boot_n = 100;           % default number of boot samples is 5,000
+option_default_values = {true false 1000};          % defaults if we cannot find info in a2_set_default_options at all 
+
+plugin_get_options_for_analysis_script
+
 
 % Specified in DAT.contrasts
 % --------------------------------------------------------------------

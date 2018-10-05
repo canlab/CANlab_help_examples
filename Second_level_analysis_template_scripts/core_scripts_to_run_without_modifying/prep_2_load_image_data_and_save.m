@@ -4,19 +4,29 @@
 %  apply NPS
 % --------------------------------------------------------
 
+% USER OPTIONS
+% This is a standard block of code that can be used in multiple scripts.
+% Each script will have its own options needed and default values for
+% these.
+% The code: 
+% (1) Checks whether the option variables exist
+% (2) Runs a2_set_default_options if any are missing
+% (3) Checks again and uses the default options if they are still missing
+% (e.g., not specified in an older/incomplete copy of a2_set_default_options)
+
 % Now set in a2_set_default_options
-if ~exist('dofullplot', 'var') || ~exist('omit_histograms', 'var') || ~exist('dozipimages', 'var')
-    a2_set_default_options;
-end
+options_needed = {'dofullplot', 'omit_histograms' 'dozipimages'};  % Options we are looking for. Set in a2_set_default_options
+options_exist = cellfun(@exist, options_needed); 
 
-% dofullplot = true;
-% omit_histograms = true;
-% dozipimages = false;
+option_default_values = {true false true};          % defaults if we cannot find info in a2_set_default_options at all 
 
-clear imgs cimgs
+plugin_get_options_for_analysis_script
+
 
 %% Prep and check image names
 % -------------------------------------------------------------------
+
+clear imgs cimgs
 
 for i = 1:length(DAT.conditions)
     
@@ -99,7 +109,7 @@ for i = 1:length(DAT.conditions)
         % zip original files to save space (we are done using them now).
         % try eval(['!gzip ' filename_string{i}]), catch, end
 
-        cmdstr = ['gzip ' filename_string{i}];
+        cmdstr = ['gzip -f ' filename_string{i}];
         [status, cmdout] = system(cmdstr);  % cmdout is list of files; don't use, just for reference
         
         if status == 0
