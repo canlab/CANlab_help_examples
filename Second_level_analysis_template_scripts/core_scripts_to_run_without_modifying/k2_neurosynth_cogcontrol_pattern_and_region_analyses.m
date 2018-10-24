@@ -53,6 +53,9 @@ fprintf('Thresholded at %3.3f and k = %3.3f contiguous\n', thresh_value, thresh_
 
 r_thr = region(roimask_thresh);
 
+% Label the regions, print a table
+[rpos, rneg] = table(r_thr);
+r_thr = [rpos rneg];
 
 % If you hard-code region names for thresholded regions here, they will be
 % used in later table/plot output. 10 chars max for display in table object output.
@@ -60,7 +63,7 @@ regionnames = {}; %{'L vl/dlPFC'    'L STS'    'R vlPFC'    'L IPL'    'R IPL'  
 
 for i = 1:length(r_thr)
     
-    regionnames{i} = sprintf('R%d', i);
+    regionnames{i} = r_thr(i).shorttitle; %sprintf('R%d', i);
     
 end
 
@@ -184,29 +187,20 @@ disp(T);
 
 figtitle = sprintf('%s_ROIs', roimask_shortname);
 
-o3 = montage(r_thr, 'regioncenters', 'nozoom', 'nosymmetric');
+o3 = montage(r_thr, 'regioncenters', 'nosymmetric', 'colormap');
 
 set(gcf, 'Tag', figtitle);
 
-k = length(r_thr);
-
-for i = 1:k
-    
-    title(o3.montage{i}.axis_handles(1), regionnames{i}); 
-    
-end
+% Names now added automatically 
+% k = length(r_thr);
+% 
+% for i = 1:k
+%     
+%     title(o3.montage{i}.axis_handles(1), regionnames{i}); 
+%     
+% end
     
 plugin_save_figure;
-
-% Second figure: zoomed-in
-
-figtitle = sprintf('%s_ROIs_zoom_', roimask_shortname);
-set(gcf, 'Tag', figtitle);
-
-o3 = removeblobs(o3);
-o3 = montage(r_thr, o3, 'regioncenters', 'nosymmetric');
-plugin_save_figure;
-
 
 
 %% Extract ROI data for each thresholded region

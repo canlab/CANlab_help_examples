@@ -1,5 +1,14 @@
 % How to use these scripts:
-% To set up and prep the analysis, go to the main project directory -- this 
+% To set up and prep the analysis, you'll need a "main project directory"
+% and several subdirectories with standard names: "data", "scripts", "results"
+%
+% Image data (.nii/.img) should be in the "data" directory.
+% Create a "scripts" directory and put a copy of the script
+% "canlab_simple_set_conditions_contrasts_colors.m" in there. This
+% specifies where/how to find the images.
+% Add the "scripts" directory to your matlab path using addpath.  
+%
+% Next, go to the main project directory -- this 
 % is one level above the "data", "scripts", "results" dirs -- and run 
 % "canlab_simple_workflow". This loads all the images into objects and saves 
 % them in a standardized structure. 

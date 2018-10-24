@@ -53,6 +53,7 @@ o2 = addblobs(o2, r);
 %o2 = addblobs(o2, r, 'splitcolor', {[0 0 1] [0 1 1] [1 .5 0] [1 1 0]});
 
 figtitle = sprintf('%s_unthresholded', roimask_shortname);
+set(gcf, 'Tag', figtitle);
 plugin_save_figure;
 
 
@@ -94,6 +95,7 @@ o2 = removeblobs(o2);
 o2 = addblobs(o2, r);
 
 figtitle = sprintf('%s_thresholded', roimask_shortname);
+set(gcf, 'Tag', figtitle);
 plugin_save_figure;
 
 
@@ -151,9 +153,12 @@ rois = region(roimask_thresh);
 
 figtitle = sprintf('%s_ROIs', roimask_shortname);
 
-o3 = montage(rois, 'regioncenters', 'nosymmetric');
+o3 = montage(rois, 'regioncenters', 'nosymmetric', 'colormap');
 
 set(gcf, 'Tag', figtitle);
+
+% Names added automatically if in r.shorttitle, but in this case we have
+% named them manually:
 
 k = length(rois);
 
@@ -238,7 +243,7 @@ myfontsize = get_font_size(kc);
 myaxislabels = format_strings_for_legend(regionnames);
 mypointsize = get_point_size(kc, nregions);
 
-clear axh 
+clear axh my_contrast_data
 
 for i = 1:kc
     
