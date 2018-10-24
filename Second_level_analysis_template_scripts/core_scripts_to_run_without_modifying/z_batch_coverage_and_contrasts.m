@@ -40,7 +40,7 @@ printhdr('NETWORK AVERAGES AND LATERALIZATION FOR EACH CONTRAST')
 scriptname = which(fullfile(masterscriptdir, 'core_scripts_to_run_without_modifying', 'c4_univ_contrast_wedge_plot_and_lateralization_test'));
 run(scriptname); % Run from master script, not local script. This script should not need to be edited for individual studies.
 
-%% NETWORK AVERAGES AND LATERALIZATION FOR EACH CONTRAST
+%% NETWORK AVERAGES AND LATERALIZATION FOR CONTRASTS - SCALED DATA
 
 printhdr('NETWORK AVERAGES AND LATERALIZATION - SCALED DATA')
 
