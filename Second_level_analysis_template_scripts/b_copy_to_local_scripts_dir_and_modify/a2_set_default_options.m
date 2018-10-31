@@ -14,6 +14,9 @@ dozipimages = true;        % default true  Set to false to avoid load on data up
 % --------------------------------------------------------------------
 dorobust = true;            % robust statistics [true, false] -- default true
 myscaling = 'raw';          % 'raw' or 'scaled'
+design_matrix_type = 'custom';   % 'group' or 'custom'
+                            % Group: use DAT.BETWEENPERSON.group or DAT.BETWEENPERSON.contrasts{c}.group;
+                            % Custom: use all columns of table object DAT.BETWEENPERSON.contrasts{c};
 
 % prep_3b_run_SVMs_on_contrasts_and_save options 
 % --------------------------------------------------------------------

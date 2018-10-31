@@ -9,9 +9,28 @@ if isfield(DAT, 'gray_white_csf_contrasts') || isempty(DAT.gray_white_csf_contra
     
     clear r p
     
+    % corr performance changed from Matlab 2017b to 2018a. Could be bug in
+    % 2018a.  
+    use_alt_method = false;
+    myversion = ver('Matlab'); 
+    if datenum(myversion.Date) > datenum('01-Jan-2018')
+        use_alt_method = true;
+    end
+    
+    
     for i = 1:k
         
-        [r(i, :), p(i, :)] = corr(DAT.npscontrasts{i}, DAT.gray_white_csf_contrasts{i});
+        if use_alt_method
+            
+            [tmpr, tmpp] = corr([DAT.npscontrasts{i} DAT.gray_white_csf_contrasts{i}]);
+            r(i, :) = tmpr(1, 2:end);
+            p(i, :) = tmpp(1, 2:end);
+            
+        else
+            
+            [r(i, :), p(i, :)] = corr(DAT.npscontrasts{i}, DAT.gray_white_csf_contrasts{i});
+            
+        end
         
     end
     
