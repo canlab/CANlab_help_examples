@@ -31,83 +31,107 @@ load(savefilenamedata, 'regression_stats_results');
 
 ncontrasts = size (regression_stats_results, 2);
 
-for c=1:ncontrasts
+for c = 1:ncontrasts
+    
+    %%
     analysisname = regression_stats_results{c}.analysis_name;
     names = regression_stats_results{c}.variable_names;
     t = regression_stats_results{c}.t;
-    disp(analysisname)
+    
+    printhdr(analysisname)
+    disp('Regressors: ')
     disp(names)
     
-    %% REGRESSOR & INTERCEPT: Orthviews at 0.01 uncorrected
-    % ----------------------------------------------    
-    t = threshold(t, .01, 'unc');  % two-tailed
-    orthviews(t);
+    if isfield(regression_stats_results{c}, 'design_table')
+        disp(regression_stats_results{c}.design_table);
+    end
     
-    % Put names on figure:
-    % First image is Order effect, second is Group average (Intercept)
-    nimages = size(t.dat, 2); 
-    fprintf ('\n Displayed at 0.01 uncorr: %s\n\n', analysisname);
-    for i = 1:nimages
-        spm_orthviews_name_axis(names{i}, i);
-        title({analysisname; names{i}}, 'FontSize', 18);
+    num_effects = size(t.dat, 2); % number of image effects
+    
+    % create figure
+    o2 = canlab_results_fmridisplay([], 'multirow', num_effects);
+    
+    % REGRESSOR & INTERCEPT: Orthviews at 0.01 uncorrected
+    % ----------------------------------------------    
+    
+    for j = 1:num_effects
+        
+        fprintf ('\n Displayed at 0.01 uncorr: %s\nEffect:%s\n', analysisname, names{j});
+        
+        tj = get_wh_image(t, j);
+        tj = threshold(tj, .01, 'unc');  % two-tailed
+    
+        o2 = addblobs(o2, region(tj), 'wh_montages', (2*j)-1:2*j);
+        o2 = title_montage(o2, 2*j, [analysisname ' ' names{j}]);
+
     end
     
     figtitle = sprintf('Regression results 01_unc %s', analysisname);
+    set(gcf, 'Tag', figtitle);
     plugin_save_figure;
 
-    %% REGRESSOR & INTERCEPT: Orthviews at 0.05 FDR-corrected
-    % ----------------------------------------------
-    t = threshold(t, .05, 'fdr');
-    orthviews(t) ;
     
-    nimages = size(t.dat, 2); 
-    fprintf ('\n Displayed at 0.05 FDR: %s\n\n', analysisname);
-    for i = 1:nimages
-        spm_orthviews_name_axis(names{i}, i);
-        title({analysisname; names{i}}, 'FontSize', 18);
+    for j = 1:num_effects
+        
+        tj = get_wh_image(t, j);
+        tj = threshold(tj, .01, 'unc', 'k', 20);
+        
+        printhdr(sprintf('Regression %s 01_unc_k20 %s', names{j}, analysisname));
+        
+        wedge_plot_by_atlas(tj, 'atlases', {'buckner' 'bg' 'thalamus'});
+        
+        figtitle = sprintf('Regression wedge %s 01_unc_k20 %s', names{j}, analysisname);
+        set(gcf, 'Tag', figtitle);
+        plugin_save_figure;
+        
+        table(region(tj));
+        
+        disp(dashes)
+        disp(' ');
+        
+    end
+
+    
+    % REGRESSOR & INTERCEPT: Orthviews at 0.05 FDR-corrected
+    % ----------------------------------------------
+   
+    o2 = removeblobs(o2);
+    
+    for j = 1:num_effects
+        
+        fprintf ('\n Displayed at FDR q < 0.05: %s\nEffect:%s\n', analysisname, names{j});
+        
+        tj = get_wh_image(t, j);
+        tj = threshold(tj, .05, 'fdr');  % two-tailed
+    
+        o2 = addblobs(o2, region(tj), 'wh_montages', (2*j)-1:2*j);
+        o2 = title_montage(o2, 2*j, [analysisname ' ' names{j}]);
+
     end
     
-    figtitle = sprintf('Regression results 05_FDR %s',analysisname);
+    figtitle = sprintf('Regression results 05_FDR %s', analysisname);
+    set(gcf, 'Tag', figtitle);
     plugin_save_figure;
     
-    clear figure 
+    for j = 1:num_effects
+        
+        tj = get_wh_image(t, j);
+        tj = threshold(tj, .05, 'fdr');
+        
+        printhdr(sprintf('Regression %s 05_FDR %s', names{j}, analysisname));
+        
+        wedge_plot_by_atlas(tj, 'atlases', {'buckner' 'bg' 'thalamus'});
+        
+        figtitle = sprintf('Regression wedge %s 05_FDR %s', names{j}, analysisname);
+        set(gcf, 'Tag', figtitle);
+        plugin_save_figure;
+        
+        table(region(tj));
+        
+        disp(dashes)
+        disp(' ');
+        
+    end
     
-    % ----------------------------------------------
-    % Initialize fmridisplay slice display if needed, or clear existing display
-    % Specify which montage to add title to. This is fixed for a given slice display
-    whmontage = 5;
-    plugin_check_or_create_slice_display; % script, checks for o2 and uses whmontage
-
-    %% INTERCEPT: slice display at 0.01 uncorrected
-    % ----------------------------------------------  
-    printstr(dashes);
-    fprintf ('\n INTERCEPT at 0.01 uncorr: %s\n\n', analysisname);
-    t = threshold(t, .01, 'unc');  % two-tailed
-    t2=select_one_image(t, 2);
-    o2 = removeblobs(o2);
-    o2 = addblobs(o2, region(t2), 'splitcolor', {[0 0 1] [0 1 1] [1 .5 0] [1 1 0]});
-    
-    % to display at multiple thresholds 
-    % o2 = removeblobs(o2);
-    % o2 = multi_threshold (t2, 'o2', o2, 'thresh', [.005 .01 .05], 'sizethresh', [1 1 1]);
-        % axes(o2.montage{whmontage}.axis_handles(5));
-
-    title({analysisname; names{2}; 'unc .01'}, 'FontSize', 16);
-    figtitle = sprintf('Regression slices intercept 01_unc %s',analysisname);
-    plugin_save_figure;
-    
-    %% INTERCEPT: slice display at 0.05 FDR
-    % ----------------------------------------------  
-    printstr(dashes);
-    fprintf ('\n INTERCEPT at 0.05 FDR: %s\n\n', analysisname);
-    t = threshold(t, .05, 'fdr');
-    t2=select_one_image(t, 2);
-    o2 = removeblobs(o2);
-    o2 = addblobs(o2, region(t2), 'splitcolor', {[0 0 1] [0 1 1] [1 .5 0] [1 1 0]});
-
-    title({analysisname; names{2}; 'FDR .05'}, 'FontSize', 16);
-    figtitle = sprintf('Regression slices intercept 05_fdr %s',analysisname);
-    plugin_save_figure;
-end
-%%
+end % c contrasts
 

@@ -2,6 +2,8 @@
 % and set 'Tag' property of figure to the value of figtitle/figstr.
 % Then run this. Used in canlab_second_level scripts
 
+f_ext = '.svg';  % file extension - .svg, .png, etc.
+
 % Try to find figure by tag - works for any figure, not just o2 fmridisplay
 % objects. 
 fighan = findobj('Type', 'figure', 'Tag', figtitle);
@@ -16,13 +18,8 @@ end
 
 if ishandle(fighan)
     
-    savename = fullfile(figsavedir, [figtitle '.png']);
-    
-% if isempty(fighan) && exist('figstr', 'var')
-%     
-%     fighan = findobj('Type', 'figure', 'Tag', figstr);
-%     savename = fullfile(figsavedir, [figstr '.png']);
-    
+    savename = fullfile(figsavedir, [figtitle f_ext]);
+  
 elseif isempty(fighan)
     
     disp('Cannot find figure - Tag field was not set or figure was closed. Skipping save operation.');
@@ -33,7 +30,7 @@ end
     
 % If oK, save
 
-disp(sprintf('Saving: %s', [figtitle '.png']));
+fprintf('Saving: %s', [figtitle f_ext]);
 
 saveas(fighan, savename);
 

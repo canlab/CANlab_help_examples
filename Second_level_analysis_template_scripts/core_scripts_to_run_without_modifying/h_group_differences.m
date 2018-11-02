@@ -6,7 +6,7 @@
 % Define test conditions of interest
 % -------------------------------------------------------------------------
 
-mysignature =   {'NPS', 'NPSpos', 'NPSneg', 'SIIPS'};   % 'NPS' 'NPSpos' 'NPSneg' 'SIIPS' etc.  See load_image_set('npsplus')
+mysignature =   {'NPS', 'NPSpos', 'NPSneg', 'SIIPS' 'GSR' 'Heart'};   % 'NPS' 'NPSpos' 'NPSneg' 'SIIPS' etc.  See load_image_set('npsplus')
 scalenames =    {'raw'};                                % or scaled
 simnames =      {'dotproduct'};                         % or 'cosine_sim' 'dotproduct'
 
@@ -46,6 +46,11 @@ for s = 1:length(mysignature)
         [group, groupnames, groupcolors] = plugin_get_group_names_colors(DAT, mygroupnamefield, i);
         
         if isempty(group), continue, end % skip this condition/contrast - no groups
+        
+        if size(group, 2) > 1            % we have multiple variables
+            disp('Warning: Group has > 1 column. Using first column only.')
+            group = group(:, 1);
+        end
         
         if length(unique(group)) > 2  % this is a continuous variable
             disp('Binarizing continuous grouping variable via median split.')
@@ -99,6 +104,11 @@ for i = 1:kc  % for each contrast
     mygroupnamefield = 'contrasts';  % 'conditions' or 'contrasts'
     [group, groupnames, groupcolors] = plugin_get_group_names_colors(DAT, mygroupnamefield, i);
     if isempty(group), continue, end % skip this condition/contrast - no groups
+    
+    if size(group, 2) > 1            % we have multiple variables
+        disp('Warning: Group has > 1 column. Using first column only.')
+        group = group(:, 1);
+    end
     
     if length(unique(group)) > 2  % this is a continuous variable
         disp('Binarizing continuous grouping variable via median split.')
@@ -158,6 +168,11 @@ for i = 1:kc
     
     mygroupnamefield = 'contrasts';  % 'conditions' or 'contrasts'
     [group, groupnames, groupcolors] = plugin_get_group_names_colors(DAT, mygroupnamefield, i);
+    
+    if size(group, 2) > 1            % we have multiple variables
+        disp('Warning: Group has > 1 column. Using first column only.')
+        group = group(:, 1);
+    end
     
     if length(unique(group)) > 2  % this is a continuous variable
         disp('Binarizing continuous grouping variable via median split.')

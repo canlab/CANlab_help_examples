@@ -7,6 +7,7 @@ function z_batch_publish_analyses(varargin)
 % Enter string for which analyses to run, in any order
 %
 % 'contrasts'     : Coverage and univariate condition and contrast maps
+% 'regression'    : Second-level multiple regression analyses
 % 'signatures'    : Pre-defined brain 'signature' responses from CANlab
 % 'svm'           : Cross-validated Support Vector Machine analyses for each contrast
 % 'bucknerlab'    : Decomposition of each condition and contrast into loadings on resting-state network maps
@@ -26,7 +27,7 @@ close all
 % clear all
 
 if nargin == 0
-    analyses_to_run = {'contrasts' 'signatures' 'svm' 'bucknerlab' 'meta_analysis'};
+    analyses_to_run = {'contrasts' 'regression' 'signatures' 'svm' 'bucknerlab' 'meta_analysis'};
 else
     analyses_to_run = varargin{1};
 end
@@ -103,6 +104,7 @@ for i = 1:length(analyses_to_run)
     analysis_str = analyses_to_run{i};
     
     % 'contrasts'     : Coverage and univariate condition and contrast maps
+    % 'regression'    : Second-level multiple regression analyses
     % 'signatures'    : Pre-defined brain 'signature' responses from CANlab
     % 'svm'           : Cross-validated Support Vector Machine analyses for each contrast
     % 'bucknerlab'    : Decomposition of each condition and contrast into loadings on resting-state network maps
@@ -126,6 +128,22 @@ for i = 1:length(analyses_to_run)
             close all
             
             
+         case 'regression'
+            % ------------------------------------------------------------------------
+            
+            pubfilename = ['analysis_2nd_level_regression_' scn_get_datetime];
+            
+            % move old reports to 'older' dir
+            move_old_reports(pubdir, pubfilename);
+            
+            p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
+                'format', 'html', 'outputDir', fullfile(pubdir, pubfilename), 'showCode', false);
+
+            publish('c2a_second_level_regression.m', p)
+            
+            close all
+            
+           
             
         case 'svm'
             % ------------------------------------------------------------------------
