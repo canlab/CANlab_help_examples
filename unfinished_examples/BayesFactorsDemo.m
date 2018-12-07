@@ -11,7 +11,7 @@ t=ttest(thermal_contrast);
 orthviews(t);
 
 %% Compute BF map based on tstatistic and sample size 
-BF_tstat=estimateBF(t,'t');
+BF_tstat=estimateBayesFactor(t,'t');
 orthviews(BF_tstat);
 BF_tstat_th = threshold(BF_tstat, [-6 6], 'raw-outside');
 orthviews(BF_tstat_th);
@@ -21,7 +21,7 @@ r.dat=corr(thermal_contrast.dat',thermal_contrast.Y); %replace data with simple 
 orthviews(r); %show results
 
 %% Compute BF map based on pearson correlations and sample size
-BF_correlation=estimateBF(r,'r'); %estimate BF
+BF_correlation=estimateBayesFactor(r,'r'); %estimate BF
 orthviews(BF_correlation);  %show results
 BF_correlation_th = threshold(BF_correlation, [-6 6], 'raw-outside');
 orthviews(BF_correlation_th);
@@ -32,7 +32,7 @@ orthviews(prop);  %show results
 
 %% Compute BF map based on proportion and sample size
 
-BF_prop=estimateBF(prop,'prop'); %estimate BF
+BF_prop=estimateBayesFactor(prop,'prop'); %estimate BF
 orthviews(BF_prop);  %show results
 
 BF_prop_th = threshold(BF_prop, [-6 6], 'raw-outside');
