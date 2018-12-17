@@ -1,0 +1,11 @@
+@canlab_dataset
+
+@image_vector
+	@fmri_data
+	@statistic_image
+	@atlas
+
+@predictive_model
+
+@fmridisplay
+@region

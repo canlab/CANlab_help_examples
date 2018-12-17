@@ -1,0 +1,16 @@
+CANlab [objects](https://canlab.github.io)
+	@canlab_dataset
+	@image_vector
+		@fmri_data
+		@statistic_image
+		@atlas
+	@predictive_model
+	@fmridisplay
+	@region
+region
+Object types
+Do a t-test on a set of images
+fmri_data
+	statistic_image
+		region
+			fmridisplay
