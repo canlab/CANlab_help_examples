@@ -20,18 +20,12 @@ C = imresize(C,[n k]);
 
 C = C .* Df;
 
-% Make black areas white
-C(:, :, 1) = C(:, :, 1) + uint8(~Dflat) .* 256;
-C(:, :, 2) = C(:, :, 2) + uint8(~Dflat) .* 256;
-C(:, :, 3) = C(:, :, 3) + uint8(~Dflat) .* 256;
-
-
 f1 = create_figure('D');
 imagesc(C)
 set(gca, 'YDir', 'Reverse')
 axis image; axis tight; axis off
 
-saveas(gcf, 'Dpine_forest_white.png');
+% saveas(gcf, 'Dpine_trees_black.png');
 % saveas(gcf, 'Dpine_trees_black.svg');
 
 %%
@@ -179,6 +173,4 @@ image(S)
 axis off
 
 han = text(1250, 1600, 'CANlab', 'FontSize', 28, 'Color', [.85 .85 .85]);
-
-saveas(gcf, 'CANlab_Dbrain_logo.png');
 
