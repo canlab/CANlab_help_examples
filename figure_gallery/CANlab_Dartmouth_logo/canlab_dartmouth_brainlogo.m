@@ -8,13 +8,14 @@ mypath = fileparts(myfile);
 cd(mypath)
 
 D = imread('D-Pine_Black.jpg');
-Dflat = any(D, 3);
-
+Dflat = any(D, 3);                   % flatten
 Df = uint8(repmat(Dflat, 1, 1, 3));
 
 [n, k] = size(Dflat);
+
 t = 25;
 
+% C is the colored image that will appear in the tree portion of Dpine
 C = imread('New_hampshire_colors.jpg');
 C = imresize(C,[n k]);
 
@@ -25,16 +26,16 @@ C(:, :, 1) = C(:, :, 1) + uint8(~Dflat) .* 256;
 C(:, :, 2) = C(:, :, 2) + uint8(~Dflat) .* 256;
 C(:, :, 3) = C(:, :, 3) + uint8(~Dflat) .* 256;
 
-
 f1 = create_figure('D');
 imagesc(C)
 set(gca, 'YDir', 'Reverse')
 axis image; axis tight; axis off
 
-saveas(gcf, 'Dpine_forest_white.png');
+saveas(gcf, 'Canlab_Dpine_forest_white.png');
 % saveas(gcf, 'Dpine_trees_black.svg');
 
-%%
+%% Save brain surface figure to load and integrate
+
 figure('Color', 'w');
 
 han = addbrain('hires');
@@ -77,12 +78,42 @@ C2(wh) = S(wh);
 
 figure(f3);
 image(C2)
+axis image
 axis off
 
 saveas(gcf, 'CANlab_forest_brain.png');
 
+%% Brain D, white background
 
-%% Black D, brain in tree
+f3 = figure('Color', 'w'); % target figure
+axis off; axis image; axis vis3d
+
+% load, mask
+
+S = imread('tmp-sur.png');  % S is the brain image
+
+S = imresize(S,[n k]);
+
+% Mask
+D = imread('D-Pine_Black.jpg');
+Dflat = any(D, 3);                   % flatten
+Df = uint8(repmat(~Dflat, 1, 1, 3));
+S = Df .* S;
+
+% Make black areas white
+S(:, :, 1) = S(:, :, 1) + uint8(Dflat) .* 256;
+S(:, :, 2) = S(:, :, 2) + uint8(Dflat) .* 256;
+S(:, :, 3) = S(:, :, 3) + uint8(Dflat) .* 256;
+
+figure(f3);
+image(S)
+axis image
+axis off
+
+saveas(gcf, 'CANlab_D_brain_white.png');
+
+
+%% White D, brain in tree
 
 f3 = figure('Color', 'w'); % target figure
 axis off; axis image; axis vis3d
@@ -105,9 +136,10 @@ C2(wh) = S(wh);
 
 figure(f3);
 image(C2)
+axis image
 axis off
 
-saveas(gcf, 'CANlab_D_brain_black.png');
+saveas(gcf, 'CANlab_D_brain_white_reverse.png');
 
 %% Brain in tree, colors in D
 
@@ -139,9 +171,10 @@ S(:, :, 3) = S(:, :, 3) + D(:, :, 3) .* uint8(Dflat);
 
 figure(f3);
 image(S)
+axis image
 axis off
 
-%saveas(gcf, 'CANlab_D_brain.png');
+saveas(gcf, 'CANlab_D_brain_green_reverse.png');
 
 %% Brain in D, colors in tree
 
@@ -176,9 +209,10 @@ S(:, :, 3) = S(:, :, 3) + uint8(Dflat) .* 65;
 
 figure(f3);
 image(S)
+axis image
 axis off
 
-han = text(1250, 1600, 'CANlab', 'FontSize', 28, 'Color', [.85 .85 .85]);
+han = text(1200, 1600, 'CANlab', 'FontSize', 24, 'Color', [.85 .85 .85]);
 
 saveas(gcf, 'CANlab_Dbrain_logo.png');
 
