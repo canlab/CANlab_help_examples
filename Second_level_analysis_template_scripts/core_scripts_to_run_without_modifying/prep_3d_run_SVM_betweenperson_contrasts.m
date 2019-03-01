@@ -28,6 +28,7 @@ end
 
 myscaling = 'raw';          % 'raw' or 'scaled'
 
+if dobootstrap, svmtime = tic; end
 
 % Initialize fmridisplay slice display if needed, or clear existing display
 % --------------------------------------------------------------------
