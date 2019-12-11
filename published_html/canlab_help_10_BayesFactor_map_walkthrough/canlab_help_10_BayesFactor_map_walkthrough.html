@@ -1,0 +1,452 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>canlab_help_10_BayesFactor_map_walkthrough</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-11-21"><meta name="DC.source" content="canlab_help_10_BayesFactor_map_walkthrough.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Load Emotion Regulation data</a></li><li><a href="#3">Compute standard t-map for comparison of high heat vs baseline</a></li><li><a href="#4">Compute map of Bayes Factors based on t-statistic and sample size</a></li><li><a href="#5">Compute correlations between regulate vs look and behavioral measure</a></li><li><a href="#6">Compute map of Bayes Factors based on pearson correlations and sample size</a></li><li><a href="#7">Compute proportion of subjects with greater activation during regulation</a></li><li><a href="#8">Compute map of Bayes Factors based on proportion and sample size</a></li></ul></div><pre class="codeinput"><span class="comment">% This walkthrough calculates Bayes Factors for a voxel-wise brain map using a Bayesian t-test approach.</span>
+
+<span class="comment">% Bayesian t-tests</span>
+<span class="comment">% -----------------------------------------------------------------</span>
+<span class="comment">% We use the BF Bayes' Factor Matlab toolbox, based on:</span>
+<span class="comment">%</span>
+<span class="comment">%     Rouder et al., 2009     % one-sample t-test, t1smpbf.m</span>
+<span class="comment">%     Rouder et al., 2009     % binomial test, binombf.m</span>
+<span class="comment">%     Wetzels et al., 2012    % Pearson's r, corrbf.m</span>
+<span class="comment">%     Boekel et al., 2014     % test for replicating Pearson's r in same direction</span>
+<span class="comment">%</span>
+<span class="comment">% Implemented by Sam Schwarzkopf, UCL</span>
+<span class="comment">%</span>
+<span class="comment">% Rouder (2009) derived a formula to calculate Bayes Factors for a</span>
+<span class="comment">% one-sample t-test, a common test statistic in neuroimaging, particularly</span>
+<span class="comment">% when testing contrast or 2nd-level (across-participant) summary statistics</span>
+<span class="comment">% in a two-level hierarchical model. They also provided a web application:</span>
+<span class="comment">% http://pcl.missouri.edu/bf-one-sample</span>
+<span class="comment">%</span>
+<span class="comment">% G&ouml;nen et al. (2005) provided the corresponding equation</span>
+<span class="comment">% for the unit-information Bayes factor. Liang et al. (2008)</span>
+<span class="comment">% provided the corresponding JZS Bayes factors for testing</span>
+<span class="comment">% slopes in a regression model.</span>
+<span class="comment">%</span>
+<span class="comment">% As Rouder et al. point out: "Researchers need only provide the sample size N and</span>
+<span class="comment">% the observed t value. There is no need to input raw data.</span>
+<span class="comment">% The integration is over a single dimension and is computationally</span>
+<span class="comment">% straightforward."</span>
+<span class="comment">%</span>
+<span class="comment">% This function iterates over voxels to calculate bayes factors for a map.</span>
+<span class="comment">%</span>
+<span class="comment">% Assumptions about prior distributions and parameter choices</span>
+<span class="comment">% -----------------------------------------------------------------</span>
+<span class="comment">% With Bayesian analysis, one must specify the distributional form of the</span>
+<span class="comment">% prior belief about the effect size, which is integrated with evidence</span>
+<span class="comment">% from the data to estimate a posterior probabilities of both null and</span>
+<span class="comment">% alternative hypotheses. The Bayes Factor (BF) is a ratio of these (see below).</span>
+<span class="comment">%</span>
+<span class="comment">% Different choices of prior distribution and effect size will thus yield</span>
+<span class="comment">% different results for BFs, but there are some standard, reasonable</span>
+<span class="comment">% choices. In addition, BFs are often not very sensitive to reasonable variation</span>
+<span class="comment">% in priors, so it is reasonable to use a default choice for many applications.</span>
+<span class="comment">%</span>
+<span class="comment">% The tests in the BF toolbox use default scaling values for prior distributions, and the</span>
+<span class="comment">% Jeffrey-Zellner-Siow Prior (JZS, Cauchy distribution on effect size).</span>
+<span class="comment">% This is standard, widely used prior. The JZS prior has heavier tails than</span>
+<span class="comment">% the normal distribution, so does not penalize very large effect sizes as</span>
+<span class="comment">% much as the Normal prior (large effects can also be unlikely given an</span>
+<span class="comment">% assumption of a particular alternative distribution with moderate effect</span>
+<span class="comment">% sizes). The JZS prior is there more noninformative than Normal prior.</span>
+<span class="comment">%</span>
+<span class="comment">% One additional choice is the choice of prior effect size under the</span>
+<span class="comment">% alternative hypothesis, which is determined by the scale factor (r in the</span>
+<span class="comment">% BF toolbox). This is a noncentrality parameter that governs the expected</span>
+<span class="comment">% effect. If the observed effect is much *larger* than the belief about the</span>
+<span class="comment">% alternative, evidence for the alternative will actually go down!</span>
+<span class="comment">% However, in this case, the BFs will likely still very strongly favor the</span>
+<span class="comment">% alternative, so this is not a problem with the JZS prior.</span>
+<span class="comment">% In Rouder et al. 2009, the default r was 1.0, but it was changed in 2015</span>
+<span class="comment">% to be 0.707, which is a reasonable choice. We use this default here.</span>
+<span class="comment">%</span>
+<span class="comment">% Interpreting Bayes Factors:</span>
+<span class="comment">% -----------------------------------------------------------------</span>
+<span class="comment">% Bayes Factors &gt; 1 provide evidence in favor of the Alternative (an</span>
+<span class="comment">% effect), and those &lt; 1 provide evidence in favor of the Null (no effect).</span>
+<span class="comment">%</span>
+<span class="comment">% For example, bf = t1smpbf(3, 50); yields bf = 7.92, or about 8:1 in favor of the alternative.</span>
+<span class="comment">% bf = bf = t1smpbf(2, 50); yields bf = 0.96, or about 1.04:1 in favor of the null.</span>
+<span class="comment">%</span>
+<span class="comment">% The BF toolbox returns BF values in their original scaling. the</span>
+<span class="comment">% fmri_data.estimateBayesFactor method scales the BFs by 2*ln(BF),</span>
+<span class="comment">% so that values of 0 indicate equal support for Null and Alternative,</span>
+<span class="comment">% positive values support the Alternative, and negative values support the</span>
+<span class="comment">% Null. (See Kass and Raftery 1995)</span>
+<span class="comment">%</span>
+<span class="comment">% These are returned in a statistic_image object BF, whose .dat field</span>
+<span class="comment">% contains 2*ln(BF) values for each voxel.  A value of about 4.6 indicates</span>
+<span class="comment">% a BF of 10, or 10:1 evidence in favor of the Alternative, which is a typical cutoff.</span>
+<span class="comment">% A value of about 6 indicates 20:1 evidence in favor of the Alternative.</span>
+<span class="comment">%</span>
+</pre><h2 id="2">Load Emotion Regulation data</h2><pre class="codeinput">image_obj=load_image_set(<span class="string">'emotionreg'</span>); <span class="comment">%load fmri object for regulate vs look</span>
+behav_data=importdata(which(<span class="string">'Wager_2008_emotionreg_behavioral_data.txt'</span>)); <span class="comment">%load text file with behavior</span>
+reappraisal_success=behav_data.data(:,2); <span class="comment">%store as single variable</span>
+image_obj.Y=reappraisal_success;
+</pre><pre class="codeoutput">Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/Sample_datasets/Wager_et_al_2008_Neuron_EmotionReg/Wager_2008_emo_reg_vs_look_neg_contrast_images.nii
+</pre><h2 id="3">Compute standard t-map for comparison of high heat vs baseline</h2><pre class="codeinput">t=ttest(image_obj);
+
+<span class="comment">% Show the results:</span>
+orthviews(t)
+
+create_figure(<span class="string">'montage'</span>); axis <span class="string">off</span>
+montage(t);
+
+drawnow, snapnow
+</pre><pre class="codeoutput">One-sample t-test
+Calculating t-statistics and p-values
+
+SPM12: spm_check_registration (v6245)              13:06:31 - 21/11/2019
+========================================================================
+Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
+
+ans =
+
+  1&times;1 cell array
+
+    {1&times;1 struct}
+
+Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
+Grouping contiguous voxels:   1 regions
+sagittal montage: 1454 voxels displayed, 48338 not displayed on these slices
+sagittal montage: 1433 voxels displayed, 48359 not displayed on these slices
+sagittal montage: 1434 voxels displayed, 48358 not displayed on these slices
+axial montage: 15443 voxels displayed, 34349 not displayed on these slices
+axial montage: 16755 voxels displayed, 33037 not displayed on these slices
+</pre><img vspace="5" hspace="5" src="canlab_help_10_BayesFactor_map_walkthrough_01.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_10_BayesFactor_map_walkthrough_02.png" alt=""> <h2 id="4">Compute map of Bayes Factors based on t-statistic and sample size</h2><pre class="codeinput">BF_tstat=estimateBayesFactor(t,<span class="string">'t'</span>);
+
+<span class="comment">% Threshold at values larger than 6 in either direction. This corresponds</span>
+<span class="comment">% to about 20:1 evidence in favor of the Alternative (for positive values)</span>
+<span class="comment">% and Null (for negative values).</span>
+
+BF_tstat_th = threshold(BF_tstat, [-6 6], <span class="string">'raw-outside'</span>);
+
+orthviews(BF_tstat_th);
+
+create_figure(<span class="string">'montage'</span>); axis <span class="string">off</span>
+montage(BF_tstat_th);
+
+drawnow, snapnow
+</pre><pre class="codeoutput">Keeping vals outside of -6.000 to 6.000: 2174 voxels in .sig
+
+SPM12: spm_check_registration (v6245)              13:06:57 - 21/11/2019
+========================================================================
+Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
+Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
+Grouping contiguous voxels:  22 regions
+sagittal montage:  26 voxels displayed, 2148 not displayed on these slices
+sagittal montage:  93 voxels displayed, 2081 not displayed on these slices
+sagittal montage:  65 voxels displayed, 2109 not displayed on these slices
+axial montage: 702 voxels displayed, 1472 not displayed on these slices
+axial montage: 797 voxels displayed, 1377 not displayed on these slices
+</pre><img vspace="5" hspace="5" src="canlab_help_10_BayesFactor_map_walkthrough_03.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_10_BayesFactor_map_walkthrough_04.png" alt=""> <h2 id="5">Compute correlations between regulate vs look and behavioral measure</h2><pre class="codeinput">r=t; <span class="comment">%initialize stats object from t-test output</span>
+r.dat=corr(image_obj.dat',image_obj.Y); <span class="comment">%replace data with simple correlation</span>
+orthviews(r); <span class="comment">%show results</span>
+drawnow, snapnow
+</pre><pre class="codeoutput">
+SPM12: spm_check_registration (v6245)              13:07:05 - 21/11/2019
+========================================================================
+Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+No sig vector; displaying all voxels
+</pre><img vspace="5" hspace="5" src="canlab_help_10_BayesFactor_map_walkthrough_05.png" alt=""> <h2 id="6">Compute map of Bayes Factors based on pearson correlations and sample size</h2><pre class="codeinput">BF_correlation=estimateBayesFactor(r,<span class="string">'r'</span>); <span class="comment">%estimate BF</span>
+BF_correlation_th = threshold(BF_correlation, [-6 6], <span class="string">'raw-outside'</span>);
+orthviews(BF_correlation_th);
+drawnow, snapnow
+</pre><pre class="codeoutput">Keeping vals outside of -6.000 to 6.000:   0 voxels in .sig
+
+SPM12: spm_check_registration (v6245)              13:07:30 - 21/11/2019
+========================================================================
+Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
+</pre><img vspace="5" hspace="5" src="canlab_help_10_BayesFactor_map_walkthrough_06.png" alt=""> <h2 id="7">Compute proportion of subjects with greater activation during regulation</h2><pre class="codeinput">prop=r; <span class="comment">%initialize stats object from correlation output</span>
+prop.dat=sum(image_obj.dat'&gt;0)'; <span class="comment">%compute number of subjects with greater response to high heat</span>
+orthviews(prop);  <span class="comment">%show results</span>
+drawnow, snapnow
+</pre><pre class="codeoutput">
+SPM12: spm_check_registration (v6245)              13:07:31 - 21/11/2019
+========================================================================
+Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
+</pre><img vspace="5" hspace="5" src="canlab_help_10_BayesFactor_map_walkthrough_07.png" alt=""> <h2 id="8">Compute map of Bayes Factors based on proportion and sample size</h2><pre class="codeinput">BF_prop=estimateBayesFactor(prop,<span class="string">'prop'</span>); <span class="comment">%estimate BF</span>
+
+BF_prop_th = threshold(BF_prop, [-6 6], <span class="string">'raw-outside'</span>);
+orthviews(BF_prop_th);
+
+drawnow, snapnow
+</pre><pre class="codeoutput">Keeping vals outside of -6.000 to 6.000: 2411 voxels in .sig
+
+SPM12: spm_check_registration (v6245)              13:08:14 - 21/11/2019
+========================================================================
+Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
+</pre><img vspace="5" hspace="5" src="canlab_help_10_BayesFactor_map_walkthrough_08.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% This walkthrough calculates Bayes Factors for a voxel-wise brain map using a Bayesian t-test approach. 
+
+% Bayesian t-tests
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% We use the BF Bayes' Factor Matlab toolbox, based on:
+% 
+%     Rouder et al., 2009     % one-sample t-test, t1smpbf.m
+%     Rouder et al., 2009     % binomial test, binombf.m
+%     Wetzels et al., 2012    % Pearson's r, corrbf.m
+%     Boekel et al., 2014     % test for replicating Pearson's r in same direction
+% 
+% Implemented by Sam Schwarzkopf, UCL
+%
+% Rouder (2009) derived a formula to calculate Bayes Factors for a
+% one-sample t-test, a common test statistic in neuroimaging, particularly 
+% when testing contrast or 2nd-level (across-participant) summary statistics 
+% in a two-level hierarchical model. They also provided a web application:
+% http://pcl.missouri.edu/bf-one-sample
+%
+% Gönen et al. (2005) provided the corresponding equation
+% for the unit-information Bayes factor. Liang et al. (2008)
+% provided the corresponding JZS Bayes factors for testing
+% slopes in a regression model.
+% 
+% As Rouder et al. point out: "Researchers need only provide the sample size N and
+% the observed t value. There is no need to input raw data.
+% The integration is over a single dimension and is computationally
+% straightforward."
+%
+% This function iterates over voxels to calculate bayes factors for a map.
+%
+% Assumptions about prior distributions and parameter choices
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% With Bayesian analysis, one must specify the distributional form of the
+% prior belief about the effect size, which is integrated with evidence
+% from the data to estimate a posterior probabilities of both null and
+% alternative hypotheses. The Bayes Factor (BF) is a ratio of these (see below).
+% 
+% Different choices of prior distribution and effect size will thus yield
+% different results for BFs, but there are some standard, reasonable
+% choices. In addition, BFs are often not very sensitive to reasonable variation
+% in priors, so it is reasonable to use a default choice for many applications.
+% 
+% The tests in the BF toolbox use default scaling values for prior distributions, and the
+% Jeffrey-Zellner-Siow Prior (JZS, Cauchy distribution on effect size).
+% This is standard, widely used prior. The JZS prior has heavier tails than
+% the normal distribution, so does not penalize very large effect sizes as
+% much as the Normal prior (large effects can also be unlikely given an
+% assumption of a particular alternative distribution with moderate effect
+% sizes). The JZS prior is there more noninformative than Normal prior.
+%
+% One additional choice is the choice of prior effect size under the
+% alternative hypothesis, which is determined by the scale factor (r in the
+% BF toolbox). This is a noncentrality parameter that governs the expected
+% effect. If the observed effect is much *larger* than the belief about the
+% alternative, evidence for the alternative will actually go down!
+% However, in this case, the BFs will likely still very strongly favor the
+% alternative, so this is not a problem with the JZS prior.
+% In Rouder et al. 2009, the default r was 1.0, but it was changed in 2015
+% to be 0.707, which is a reasonable choice. We use this default here.
+%
+% Interpreting Bayes Factors:
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% Bayes Factors > 1 provide evidence in favor of the Alternative (an
+% effect), and those < 1 provide evidence in favor of the Null (no effect).
+%
+% For example, bf = t1smpbf(3, 50); yields bf = 7.92, or about 8:1 in favor of the alternative.
+% bf = bf = t1smpbf(2, 50); yields bf = 0.96, or about 1.04:1 in favor of the null.
+%
+% The BF toolbox returns BF values in their original scaling. the
+% fmri_data.estimateBayesFactor method scales the BFs by 2*ln(BF),
+% so that values of 0 indicate equal support for Null and Alternative,
+% positive values support the Alternative, and negative values support the
+% Null. (See Kass and Raftery 1995)
+%
+% These are returned in a statistic_image object BF, whose .dat field
+% contains 2*ln(BF) values for each voxel.  A value of about 4.6 indicates
+% a BF of 10, or 10:1 evidence in favor of the Alternative, which is a typical cutoff. 
+% A value of about 6 indicates 20:1 evidence in favor of the Alternative.
+% 
+
+%% Load Emotion Regulation data 
+image_obj=load_image_set('emotionreg'); %load fmri object for regulate vs look
+behav_data=importdata(which('Wager_2008_emotionreg_behavioral_data.txt')); %load text file with behavior
+reappraisal_success=behav_data.data(:,2); %store as single variable
+image_obj.Y=reappraisal_success;
+
+%% Compute standard t-map for comparison of high heat vs baseline
+
+t=ttest(image_obj);
+
+% Show the results:
+orthviews(t)
+
+create_figure('montage'); axis off
+montage(t);
+
+drawnow, snapnow
+
+%% Compute map of Bayes Factors based on t-statistic and sample size 
+BF_tstat=estimateBayesFactor(t,'t');
+
+% Threshold at values larger than 6 in either direction. This corresponds
+% to about 20:1 evidence in favor of the Alternative (for positive values)
+% and Null (for negative values).
+
+BF_tstat_th = threshold(BF_tstat, [-6 6], 'raw-outside');
+
+orthviews(BF_tstat_th);
+
+create_figure('montage'); axis off
+montage(BF_tstat_th);
+
+drawnow, snapnow
+
+%% Compute correlations between regulate vs look and behavioral measure
+r=t; %initialize stats object from t-test output
+r.dat=corr(image_obj.dat',image_obj.Y); %replace data with simple correlation
+orthviews(r); %show results
+drawnow, snapnow
+
+%% Compute map of Bayes Factors based on pearson correlations and sample size
+BF_correlation=estimateBayesFactor(r,'r'); %estimate BF
+BF_correlation_th = threshold(BF_correlation, [-6 6], 'raw-outside');
+orthviews(BF_correlation_th);
+drawnow, snapnow
+
+%% Compute proportion of subjects with greater activation during regulation
+prop=r; %initialize stats object from correlation output
+prop.dat=sum(image_obj.dat'>0)'; %compute number of subjects with greater response to high heat
+orthviews(prop);  %show results
+drawnow, snapnow
+
+%% Compute map of Bayes Factors based on proportion and sample size
+
+BF_prop=estimateBayesFactor(prop,'prop'); %estimate BF
+
+BF_prop_th = threshold(BF_prop, [-6 6], 'raw-outside');
+orthviews(BF_prop_th);
+
+drawnow, snapnow
+
+
+##### SOURCE END #####
+--></body></html>
