@@ -1,6 +1,6 @@
 % THIS SCRIPT RUNS SVMs for WITHIN-PERSON CONTRASTS
 % Specified in DAT.contrasts
-
+% Note: See also canlab_run_paired_SVM
 % --------------------------------------------------------------------
 
 % USER OPTIONS
