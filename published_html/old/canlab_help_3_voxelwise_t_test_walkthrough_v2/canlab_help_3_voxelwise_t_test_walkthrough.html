@@ -6,11 +6,11 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Perform a voxel-wise t-test</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-01-09"><meta name="DC.source" content="canlab_help_3_voxelwise_t_test_walkthrough.m"><style type="text/css">
+      --><title>Perform a voxel-wise t-test</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-08-02"><meta name="DC.source" content="canlab_help_3_voxelwise_t_test_walkthrough.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
-html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
 html body td { vertical-align:top; text-align:left; }
 
 h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
@@ -23,7 +23,7 @@ a:visited { color:#004aa0; text-decoration:none; }
 
 p { padding:0px; margin:0px 0px 20px; }
 img { padding:0px; margin:0px 0px 20px; border:none; }
-p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
 
 ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
 ul li { padding:0px; margin:0px 0px 7px 0px; }
@@ -66,12 +66,12 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Perform a voxel-wise t-test</h1><!--introduction--><p>In this example we perform a second level analysis on first level statistical parametric maps. Specifically we use a t-test to obtain an ordinary least squares estimate for the group level parameter.</p><p>The example uses the emotion regulation data provided with CANlab_Core_Tools. This dataset consists of a set of contrast images for 30 subjects from a first level analysis. The contrast is [reappraise neg vs. look neg], reappraisal of negative images vs. looking at matched negative images.</p><p>These data were published in: Wager, T. D., Davidson, M. L., Hughes, B. L., Lindquist, M. A., Ochsner, K. N.. (2008). Prefrontal-subcortical pathways mediating successful emotion regulation. Neuron, 59, 1037-50.</p><p>By the end of this example we will have regenerated the results of figure 2A of this paper.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Executive summary of the whole analysis</a></li><li><a href="#2">Load sample data</a></li><li><a href="#3">Do a t-test</a></li><li><a href="#4">Visualize the results</a></li><li><a href="#5">Print a table of results</a></li><li><a href="#6">More on getting help</a></li><li><a href="#7">Write the t-map to disk</a></li><li><a href="#8">Explore on your own</a></li><li><a href="#9">Explore More: CANlab Toolboxes</a></li></ul></div><h2 id="1">Executive summary of the whole analysis</h2><p>As a summary, here is a complete set of commands to load the data and run the entire analysis:</p><pre>   img_obj = load_image_set('emotionreg');         % Load a dataset
+  </style></head><body><div class="content"><h1>Perform a voxel-wise t-test</h1><!--introduction--><p>Edited/commented by Bogdan Petre on 9/14/2016, Tor Wager July 2018</p><p>In this example we perform a second level analysis on first level statistical parametric maps. Specifically we use a t-test to obtain an ordinary least squares estimate for the group level parameter.</p><p>The example uses the emotion regulation data provided with CANlab_Core_Tools. This dataset consists of a set of contrast images for 30 subjects from a first level analysis. The contrast is [reappraise neg vs. look neg], reappraisal of negative images vs. looking at matched negative images.</p><p>These data were published in: Wager, T. D., Davidson, M. L., Hughes, B. L., Lindquist, M. A., Ochsner, K. N.. (2008). Prefrontal-subcortical pathways mediating successful emotion regulation. Neuron, 59, 1037-50.</p><p>By the end of this example we will have regenerated the results of figure 2A of this paper.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Executive summary of the whole analysis</a></li><li><a href="#2">Load sample data</a></li><li><a href="#3">Do a t-test</a></li><li><a href="#4">Visualize the results</a></li><li><a href="#5">Print a table of results</a></li><li><a href="#6">Write the t-map to disk</a></li></ul></div><h2 id="1">Executive summary of the whole analysis</h2><p>As a summary, here is a complete set of commands to load the data and run the entire analysis:</p><pre>   img_obj = load_image_set('emotionreg');         % Load a dataset
    t = ttest(img_obj);                             % Do a group t-test
    t = threshold(t, .05, 'fdr', 'k', 10);          % Threshold with FDR q &lt; .05 and extent threshold of 10 contiguous voxels</pre><pre>   % Show regions and print a table with labeled regions:
    montage(t);  drawnow, snapnow;                  % Show results on a slice display
    r = region(t);                                  % Turn t-map into a region object with one element per contig region
-   table(r);                                       % Print a table of results using new region names</pre><p>Here a graphical description of what it does:</p><p><img vspace="5" hspace="5" src="CANlab_ttest_flowchart.png" alt=""> </p><p>Now, let's walk through it step by step, with a few minor additions.</p><h2 id="2">Load sample data</h2><pre class="codeinput"><span class="comment">% We can load this data using load_image_set(), which produces an fmri_data</span>
+   table(r);                                       % Print a table of results using new region names</pre><p>Now, let's walk through it step by step.</p><h2 id="2">Load sample data</h2><pre class="codeinput"><span class="comment">% We can load this data using load_image_set(), which produces an fmri_data</span>
 <span class="comment">% object. Data loading exceeds the scope of this tutorial, but a more</span>
 <span class="comment">% indepth demosntration may be provided by load_a_sample_dataset.m</span>
 
@@ -150,7 +150,7 @@ create_figure(<span class="string">'montage'</span>); axis <span class="string">
 montage(t)
 drawnow, snapnow;
 </pre><pre class="codeoutput">
-SPM12: spm_check_registration (v6245)              18:17:57 - 09/01/2020
+SPM12: spm_check_registration (v6245)              23:49:08 - 02/08/2018
 ========================================================================
 Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
 
@@ -167,7 +167,7 @@ Image   1
 Positive effect: 2502 voxels, min p-value: 0.00000000
 Negative effect:  37 voxels, min p-value: 0.00022793
 
-SPM12: spm_check_registration (v6245)              18:18:00 - 09/01/2020
+SPM12: spm_check_registration (v6245)              23:49:11 - 02/08/2018
 ========================================================================
 Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
 
@@ -184,7 +184,7 @@ Image   1
 Positive effect: 2460 voxels, min p-value: 0.00000000
 Negative effect:  32 voxels, min p-value: 0.00022793
 
-SPM12: spm_check_registration (v6245)              18:18:01 - 09/01/2020
+SPM12: spm_check_registration (v6245)              23:49:13 - 02/08/2018
 ========================================================================
 Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
 
@@ -203,7 +203,7 @@ sagittal montage:  76 voxels displayed, 2416 not displayed on these slices
 axial montage: 808 voxels displayed, 1684 not displayed on these slices
 axial montage: 904 voxels displayed, 1588 not displayed on these slices
 
-ans =
+ans = 
 
   fmridisplay with properties:
 
@@ -222,7 +222,7 @@ ans =
 <span class="comment">% voxels). It does many things that other object types do, and inter-operates</span>
 <span class="comment">% with them closely.  See methods(region) for more info.</span>
 
-<span class="comment">% Create a region object called "r", with contiguous blobs from the</span>
+<span class="comment">% Create a region objecft called "r", with contiguous blobs from the</span>
 <span class="comment">% thresholded t-map:</span>
 
 r = region(t);
@@ -230,6 +230,13 @@ r = region(t);
 <span class="comment">% Print the table:</span>
 
 table(r);
+
+<span class="comment">% You can get help and options for any object method, like "table". But</span>
+<span class="comment">% because the method names are simple and often overlap with other Matlab functions</span>
+<span class="comment">% and toolboxes (this is OK for objects!), you will often want to specify</span>
+<span class="comment">% the object type as well, as follows:</span>
+
+help <span class="string">region.table</span>
 </pre><pre class="codeoutput">Grouping contiguous voxels:   9 regions
 
 ____________________________________________________________________________________________________________________________________________
@@ -237,95 +244,148 @@ Positive Effects
           Region            Volume             XYZ            maxZ     modal_label_descriptions    Perc_covered_by_label    Atlas_regions_covered    region_index
     __________________    __________    _________________    ______    ________________________    _____________________    _____________________    ____________
 
-    'Ctx_TE1a_R'                9864     55      0    -27    3.9997     'Cortex_Default_ModeA'              30                        2                   1
-    'Multiple regions'         57152     55    -58     23    4.7899     'Cortex_Default_ModeA'               7                       10                   6
-    'Multiple regions'         31664    -55     21      9    4.1824     'Cortex_Default_ModeB'               9                       10                   2
-    'Multiple regions'    1.4038e+05     31     28     36    7.0345     'Cortex_Default_ModeB'               4                       38                   4
-    'Ctx_9a_L'                  4336    -24     52     27     3.443     'Cortex_Default_ModeB'              35                        1                   7
-    'Ctx_10v_L'                 3752     -3     58    -32     3.943     'Cortex_Limbic'                      7                        0                   3
-    'No label'                   912    -45     52    -23    3.8446     'No description'                     0                        0                   5
+    'Ctx_TE1a_R'                9864     55      0    -27    3.9997     'Cortex_Default_ModeA'              30                        2                   1      
+    'Multiple regions'         57152     55    -58     23    4.7899     'Cortex_Default_ModeA'               7                       10                   6      
+    'Multiple regions'         31664    -55     21      9    4.1824     'Cortex_Default_ModeB'               9                       10                   2      
+    'Multiple regions'    1.4038e+05     31     28     36    7.0345     'Cortex_Default_ModeB'               4                       38                   4      
+    'Ctx_9a_L'                  4336    -24     52     27     3.443     'Cortex_Default_ModeB'              35                        1                   7      
+    'Ctx_10v_L'                 3752     -3     58    -32     3.943     'Cortex_Limbic'                      7                        0                   3      
+    'No label'                   912    -45     52    -23    3.8446     'No description'                     0                        0                   5      
 
 
 Negative Effects
         Region        Volume          XYZ            maxZ       modal_label_descriptions     Perc_covered_by_label    Atlas_regions_covered    region_index
     ______________    ______    ________________    _______    __________________________    _____________________    _____________________    ____________
 
-    'Bstem_Pons_L'     2016     -3    -24    -50    -3.6859    'Brainstem'                            22                        0                   8
-    'Ctx_ProS_R'       2832     28    -48      9    -3.3405    'Cortex_Visual_Peripheral'             12                        0                   9
+    'Bstem_Pons_L'     2016     -3    -24    -50    -3.6859    'Brainstem'                            22                        0                   8      
+    'Ctx_ProS_R'       2832     28    -48      9    -3.3405    'Cortex_Visual_Peripheral'             12                        0                   9      
 
 
 ____________________________________________________________________________________________________________________________________________
 Regions labeled by reference atlas CANlab_2018_combined
-
+                                                       
 Volume: Volume of contiguous region in cubic mm.
 MaxZ: Signed max over Z-score for each voxel.
-Atlas_regions_covered: Number of reference atlas regions covered at least 25% by the region. This relates to whether the region covers
-multiple reference atlas regions
-Region: Best reference atlas label, defined as reference region with highest number of in-region voxels. Regions covering &gt;25% of &gt;5
-regions labeled as "Multiple regions"
+Atlas_regions_covered: Number of reference atlas regions covered at least 25% by the region. This relates to whether the region covers 
+multiple reference atlas regions                                                                                                       
+Region: Best reference atlas label, defined as reference region with highest number of in-region voxels. Regions covering &gt;25% of &gt;5 
+regions labeled as "Multiple regions"                                                                                                
 Perc_covered_by_label: Percentage of the region covered by the label.
 Ref_region_perc: Percentage of the label region within the target region.
 modal_atlas_index: Index number of label region in reference atlas
 all_regions_covered: All regions covered &gt;5% in descending order of importance
-
-For example, if a region is labeled 'TE1a' and Perc_covered_by_label = 8, Ref_region_perc = 38, and Atlas_regions_covered = 17, this means
-that 8% of the region's voxels are labeled TE1a, which is the highest percentage among reference label regions. 38% of the region TE1a is
-covered by the region. However, the region covers at least 25% of 17 distinct labeled reference regions.
-
+ 
+For example, if a region is labeled 'TE1a' and Perc_covered_by_label = 8, Ref_region_perc = 38, and Atlas_regions_covered = 17, this means 
+that 8% of the region's voxels are labeled TE1a, which is the highest percentage among reference label regions. 38% of the region TE1a is  
+covered by the region. However, the region covers at least 25% of 17 distinct labeled reference regions.                                   
+                                                                                                                                           
 References for atlases:
-
-Beliveau, Vincent, Claus Svarer, Vibe G. Frokjaer, Gitte M. Knudsen, Douglas N. Greve, and Patrick M. Fisher. 2015. &#8220;Functional
-Connectivity of the Dorsal and Median Raphe Nuclei at Rest.&#8221; NeuroImage 116 (August): 187&#8211;95.
-B&auml;r, Karl-J&uuml;rgen, Feliberto de la Cruz, Andy Schumann, Stefanie Koehler, Heinrich Sauer, Hugo Critchley, and Gerd Wagner. 2016. ?Functional
-Connectivity and Network Analysis of Midbrain and Brainstem Nuclei.? NeuroImage 134 (July):53?63.
-Diedrichsen, J&ouml;rn, Joshua H. Balsters, Jonathan Flavell, Emma Cussans, and Narender Ramnani. 2009. A Probabilistic MR Atlas of the Human
-Cerebellum. NeuroImage 46 (1): 39?46.
-Fairhurst, Merle, Katja Wiech, Paul Dunckley, and Irene Tracey. 2007. ?Anticipatory Brainstem Activity Predicts Neural Processing of Pain
-in Humans.? Pain 128 (1-2):101?10.
+                       
+Beliveau, Vincent, Claus Svarer, Vibe G. Frokjaer, Gitte M. Knudsen, Douglas N. Greve, and Patrick M. Fisher. 2015. &#8220;Functional 
+Connectivity of the Dorsal and Median Raphe Nuclei at Rest.&#8221; NeuroImage 116 (August): 187&#8211;95.                                   
+B&auml;r, Karl-J&uuml;rgen, Feliberto de la Cruz, Andy Schumann, Stefanie Koehler, Heinrich Sauer, Hugo Critchley, and Gerd Wagner. 2016. ?Functional 
+Connectivity and Network Analysis of Midbrain and Brainstem Nuclei.? NeuroImage 134 (July):53?63.                                           
+Diedrichsen, J&ouml;rn, Joshua H. Balsters, Jonathan Flavell, Emma Cussans, and Narender Ramnani. 2009. A Probabilistic MR Atlas of the Human 
+Cerebellum. NeuroImage 46 (1): 39?46.                                                                                                    
+Fairhurst, Merle, Katja Wiech, Paul Dunckley, and Irene Tracey. 2007. ?Anticipatory Brainstem Activity Predicts Neural Processing of Pain 
+in Humans.? Pain 128 (1-2):101?10.                                                                                                        
 Fan 2016 Cerebral Cortex; doi:10.1093/cercor/bhw157
-Glasser, Matthew F., Timothy S. Coalson, Emma C. Robinson, Carl D. Hacker, John Harwell, Essa Yacoub, Kamil Ugurbil, et al. 2016. A
-Multi-Modal Parcellation of Human Cerebral Cortex. Nature 536 (7615): 171?78.
-Keren, Noam I., Carl T. Lozar, Kelly C. Harris, Paul S. Morgan, and Mark A. Eckert. 2009. &#8220;In Vivo Mapping of the Human Locus Coeruleus.&#8221;
-NeuroImage 47 (4): 1261&#8211;67.
-Keuken, M. C., P-L Bazin, L. Crown, J. Hootsmans, A. Laufer, C. M&uuml;ller-Axt, R. Sier, et al. 2014. &#8220;Quantifying Inter-Individual Anatomical
-Variability in the Subcortex Using 7 T Structural MRI.&#8221; NeuroImage 94 (July): 40&#8211;46.
-Krauth A, Blanc R, Poveda A, Jeanmonod D, Morel A, Sz&eacute;kely G. (2010) A mean three-dimensional atlas of the human thalamus: generation from
-multiple histological data. Neuroimage. 2010 Feb 1;49(3):2053-62. Jakab A, Blanc R, Ber&eacute;nyi EL, Sz&eacute;kely G. (2012) Generation of
-Individualized Thalamus Target Maps by Using Statistical Shape Models and Thalamocortical Tractography. AJNR Am J Neuroradiol. 33:
-2110-2116, doi: 10.3174/ajnr.A3140
-Nash, Paul G., Vaughan G. Macefield, Iven J. Klineberg, Greg M. Murray, and Luke A. Henderson. 2009. ?Differential Activation of the Human
-Trigeminal Nuclear Complex by Noxious and Non-Noxious Orofacial Stimulation.? Human Brain Mapping 30 (11):3772?82.
+Glasser, Matthew F., Timothy S. Coalson, Emma C. Robinson, Carl D. Hacker, John Harwell, Essa Yacoub, Kamil Ugurbil, et al. 2016. A 
+Multi-Modal Parcellation of Human Cerebral Cortex. Nature 536 (7615): 171?78.                                                       
+Keren, Noam I., Carl T. Lozar, Kelly C. Harris, Paul S. Morgan, and Mark A. Eckert. 2009. &#8220;In Vivo Mapping of the Human Locus Coeruleus.&#8221; 
+NeuroImage 47 (4): 1261&#8211;67.                                                                                                               
+Keuken, M. C., P-L Bazin, L. Crown, J. Hootsmans, A. Laufer, C. M&uuml;ller-Axt, R. Sier, et al. 2014. &#8220;Quantifying Inter-Individual Anatomical 
+Variability in the Subcortex Using 7 T Structural MRI.&#8221; NeuroImage 94 (July): 40&#8211;46.                                                       
+Krauth A, Blanc R, Poveda A, Jeanmonod D, Morel A, Sz&eacute;kely G. (2010) A mean three-dimensional atlas of the human thalamus: generation from 
+multiple histological data. Neuroimage. 2010 Feb 1;49(3):2053-62. Jakab A, Blanc R, Ber&eacute;nyi EL, Sz&eacute;kely G. (2012) Generation of            
+Individualized Thalamus Target Maps by Using Statistical Shape Models and Thalamocortical Tractography. AJNR Am J Neuroradiol. 33:         
+2110-2116, doi: 10.3174/ajnr.A3140                                                                                                         
+Nash, Paul G., Vaughan G. Macefield, Iven J. Klineberg, Greg M. Murray, and Luke A. Henderson. 2009. ?Differential Activation of the Human 
+Trigeminal Nuclear Complex by Noxious and Non-Noxious Orofacial Stimulation.? Human Brain Mapping 30 (11):3772?82.                         
 Pauli 2018 Bioarxiv: CIT168 from Human Connectome Project data
-Pauli, Wolfgang M., Amanda N. Nili, and J. Michael Tyszka. 2018. ?A High-Resolution Probabilistic in Vivo Atlas of Human Subcortical Brain
-Nuclei.? Scientific Data 5 (April): 180063.
-Pauli, Wolfgang M., Randall C. O?Reilly, Tal Yarkoni, and Tor D. Wager. 2016. ?Regional Specialization within the Human Striatum for
-Diverse Psychological Functions.? Proceedings of the National Academy of Sciences of the United States of America 113 (7): 1907?12.
-Sclocco, Roberta, Florian Beissner, Gaelle Desbordes, Jonathan R. Polimeni, Lawrence L. Wald, Norman W. Kettner, Jieun Kim, et al. 2016.
-?Neuroimaging Brainstem Circuitry Supporting Cardiovagal Response to Pain: A Combined Heart Rate Variability/ultrahigh-Field (7 T)
-Functional Magnetic Resonance Imaging Study.? Philosophical Transactions. Series A, Mathematical, Physical, and Engineering Sciences 374
-(2067). rsta.royalsocietypublishing.org. https://doi.org/10.1098/rsta.2015.0189.
-Shen, X., F. Tokoglu, X. Papademetris, and R. T. Constable. 2013. &#8220;Groupwise Whole-Brain Parcellation from Resting-State fMRI Data for
-Network Node Identification.&#8221; NeuroImage 82 (November): 403&#8211;15.
-Zambreanu, L., R. G. Wise, J. C. W. Brooks, G. D. Iannetti, and I. Tracey. 2005. ?A Role for the Brainstem in Central Sensitisation in
-Humans. Evidence from Functional Magnetic Resonance Imaging.? Pain 114 (3):397?407.
-
+Pauli, Wolfgang M., Amanda N. Nili, and J. Michael Tyszka. 2018. ?A High-Resolution Probabilistic in Vivo Atlas of Human Subcortical Brain 
+Nuclei.? Scientific Data 5 (April): 180063.                                                                                                
+Pauli, Wolfgang M., Randall C. O?Reilly, Tal Yarkoni, and Tor D. Wager. 2016. ?Regional Specialization within the Human Striatum for 
+Diverse Psychological Functions.? Proceedings of the National Academy of Sciences of the United States of America 113 (7): 1907?12.  
+Sclocco, Roberta, Florian Beissner, Gaelle Desbordes, Jonathan R. Polimeni, Lawrence L. Wald, Norman W. Kettner, Jieun Kim, et al. 2016. 
+?Neuroimaging Brainstem Circuitry Supporting Cardiovagal Response to Pain: A Combined Heart Rate Variability/ultrahigh-Field (7 T)       
+Functional Magnetic Resonance Imaging Study.? Philosophical Transactions. Series A, Mathematical, Physical, and Engineering Sciences 374 
+(2067). rsta.royalsocietypublishing.org. https://doi.org/10.1098/rsta.2015.0189.                                                         
+Shen, X., F. Tokoglu, X. Papademetris, and R. T. Constable. 2013. &#8220;Groupwise Whole-Brain Parcellation from Resting-State fMRI Data for 
+Network Node Identification.&#8221; NeuroImage 82 (November): 403&#8211;15.                                                                        
+Zambreanu, L., R. G. Wise, J. C. W. Brooks, G. D. Iannetti, and I. Tracey. 2005. ?A Role for the Brainstem in Central Sensitisation in 
+Humans. Evidence from Functional Magnetic Resonance Imaging.? Pain 114 (3):397?407.                                                    
+                                                                                                     
 Note: Region object r(i).title contains full list of reference atlas regions covered by each cluster.
 ____________________________________________________________________________________________________________________________________________
-</pre><h2 id="6">More on getting help</h2><pre class="codeinput"><span class="comment">% Help info is available on https://canlab.github.io/</span>
-<span class="comment">% and in the CANlab help examples repository: https://github.com/canlab/CANlab_help_examples</span>
-<span class="comment">% This contains a series of walkthroughs, including this one.</span>
+  Print a table of all regions in a region object (cl). Return labeled
+  clusters (separated by those with positive and negative peak values) and
+  a Matlab table object with the relevant information.
+ 
+  :Usage:
+  ::
+ 
+     [poscl, negcl] = table(cl, [optional inputs])
+ 
+  :Optional inputs:
+ 
+    **k:**
+         Print only regions with k or more contiguous voxels
+ 
+    **nosep:**
+         do not separate cl with pos and neg effects based on peak in .val
+ 
+    **names:**
+         name clusters manually before printing to table and output; saves in .shorttitle field
+ 
+    **forcenames:**
+         force manual naming of cl by removing existing names in .shorttitle field
+ 
+  :Outputs:
+ 
+    Returns region objects for cl with pos and neg effects
+    - autolabeled if Neuroimaging_Pattern_Masks and atlas tools are available on Matlab path
+    - limited by size if entered
+    - manually named if requested (see optional inputs)
+ 
+  ..
+      Author and copyright information:
+ 
+      Copyright (C) 2011  Tor Wager
+ 
+      This program is free software: you can redistribute it and/or modify
+      it under the terms of the GNU General Public License as published by
+      the Free Software Foundation, either version 3 of the License, or
+      (at your option) any later version.
+ 
+      This program is distributed in the hope that it will be useful,
+      but WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      GNU General Public License for more details.
+ 
+      You should have received a copy of the GNU General Public License
+      along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+  ..
+  :Examples:
+  -------------------------------------------------------------------------
+  ::
+  Example 1:
+  % Complete group analysis of a standard dataset
+  % Do analysis and prep results region object:
+ 
+    img_obj = load_image_set('emotionreg');         % Load a dataset
+    t = ttest(img_obj, .005, 'unc');                % Do a group t-test
+    t = threshold(t, .005, 'unc', 'k', 10);         % Re-threshold with extent threshold of 10 contiguous voxels
+    r = region(t);                                  % Turn t-map into a region object with one element per contig region
+ 
+    Label regions and print a table:
+    [r, region_table, table_legend_text] = autolabel_regions_using_atlas(r);  
+                                                    % Label regions. Can be skipped because 'table' below attempts to do this automatically
+    table(r);                                       % Print a table of results using new region names
+ 
+    [rpos, rneg] = table(r);                        % Print and table and return region object separated into regions with positive vs. negative statistic values (from .Z field)
 
-<span class="comment">% You can get help for the main object types by typing this in Matlab:</span>
-<span class="comment">% doc fmri_data (or doc any other object types)</span>
-
-<span class="comment">% Also, more detailed help is available for each function using the "help" command.</span>
-<span class="comment">% You can get help and options for any object method, like "table". But</span>
-<span class="comment">% because the method names are simple and often overlap with other Matlab functions</span>
-<span class="comment">% and toolboxes (this is OK for objects!), you will often want to specify</span>
-<span class="comment">% the object type as well, as follows:</span>
-
-<span class="comment">% help region.table</span>
-</pre><h2 id="7">Write the t-map to disk</h2><pre class="codeinput"><span class="comment">% Now we need to save our results. You can save the objects in your</span>
+</pre><h2 id="6">Write the t-map to disk</h2><pre class="codeinput"><span class="comment">% Now we need to save our results. You can save the objects in your</span>
 <span class="comment">% workspace or you can write your resulting thresholded map to an analyze</span>
 <span class="comment">% file. The latter may be useful for generating surface projections using</span>
 <span class="comment">% Caret or FreeSurfer for instance.</span>
@@ -342,13 +402,13 @@ write(t, <span class="string">'thresh'</span>)
 
 t_reloaded = statistic_image(t.fullpath, <span class="string">'type'</span>, <span class="string">'generic'</span>);
 orthviews(t_reloaded)
-</pre><pre class="codeoutput">Writing:
-/Users/torwager/Documents/GitHub/example_t_image.nii
+</pre><pre class="codeoutput">Writing: 
+/Users/torwager/Documents/GitHub/Test_mediation/example_t_image.nii
 Writing thresholded statistic image.
-Writing:
-/Users/torwager/Documents/GitHub/example_t_image.nii
+Writing: 
+/Users/torwager/Documents/GitHub/Test_mediation/example_t_image.nii
 
-SPM12: spm_check_registration (v6245)              18:18:12 - 09/01/2020
+SPM12: spm_check_registration (v6245)              23:49:26 - 02/08/2018
 ========================================================================
 Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
 Displaying image   1, 2492 voxels: example_t_image.nii
@@ -359,52 +419,24 @@ ans =
 
     {1&times;9 struct}
 
-</pre><img vspace="5" hspace="5" src="canlab_help_3_voxelwise_t_test_walkthrough_05.png" alt=""> <h2 id="8">Explore on your own</h2><p>1. Click around the thresholded statistic image. What lobes of the brain are most of the results in? What can we say about areas that are not active, if anything?</p><p>2. Why might some of the results appear to be outside the brain? What does this mean for the validity of the analysis? Should we consider these areas in our interpretation, or should they be "masked out" (excluded)?</p><p>That's it for this section!!</p><h2 id="9">Explore More: CANlab Toolboxes</h2><p>Tutorials, overview, and help: <a href="https://canlab.github.io">https://canlab.github.io</a></p><p>Toolboxes and image repositories on github: <a href="https://github.com/canlab">https://github.com/canlab</a></p><p>
-<table border=1><tr>
-<td>CANlab Core Tools</td>
-<td><a href="https://github.com/canlab/CanlabCore">https://github.com/canlab/CanlabCore</a></td></tr>
-<td>CANlab Neuroimaging_Pattern_Masks repository</td>
-<td><a href="https://github.com/canlab/Neuroimaging_Pattern_Masks">https://github.com/canlab/Neuroimaging_Pattern_Masks</a></td></tr>
-<td>CANlab_help_examples</td>
-<td><a href="https://github.com/canlab/CANlab_help_examples">https://github.com/canlab/CANlab_help_examples</a></td></tr>
-<td>M3 Multilevel mediation toolbox</td>
-<td><a href="https://github.com/canlab/MediationToolbox">https://github.com/canlab/MediationToolbox</a></td></tr>
-<td>M3 CANlab robust regression toolbox</td>
-<td><a href="https://github.com/canlab/RobustToolbox">https://github.com/canlab/RobustToolbox</a></td></tr>
-<td>M3 MKDA coordinate-based meta-analysis toolbox</td>
-<td><a href="https://github.com/canlab/Canlab_MKDA_MetaAnalysis">https://github.com/canlab/Canlab_MKDA_MetaAnalysis</a></td></tr>
-</table>
-</p><p>Here are some other useful CANlab-associated resources:</p><p>
-<table border=1><tr>
-<td>Paradigms_Public - CANlab experimental paradigms</td>
-<td><a href="https://github.com/canlab/Paradigms_Public">https://github.com/canlab/Paradigms_Public</a></td></tr>
-<td>FMRI_simulations - brain movies, effect size/power</td>
-<td><a href="https://github.com/canlab/FMRI_simulations">https://github.com/canlab/FMRI_simulations</a></td></tr>
-<td>CANlab_data_public - Published datasets</td>
-<td><a href="https://github.com/canlab/CANlab_data_public">https://github.com/canlab/CANlab_data_public</a></td></tr>
-<td>M3 Neurosynth: Tal Yarkoni</td>
-<td><a href="https://github.com/neurosynth/neurosynth">https://github.com/neurosynth/neurosynth</a></td></tr>
-<td>M3 DCC - Martin Lindquist's dynamic correlation tbx</td>
-<td><a href="https://github.com/canlab/Lindquist_Dynamic_Correlation">https://github.com/canlab/Lindquist_Dynamic_Correlation</a></td></tr>
-<td>M3 CanlabScripts - in-lab Matlab/python/bash</td>
-<td><a href="https://github.com/canlab/CanlabScripts">https://github.com/canlab/CanlabScripts</a></td></tr>
-</table>
-</p><p><b>Object-oriented, interactive approach</b> The core basis for interacting with CANlab tools is through object-oriented framework. A simple set of neuroimaging data-specific objects (or <i>classes</i>) allows you to perform <b>interactive analysis</b> using simple commands (called <i>methods</i>) that operate on objects.</p><p>Map of core object classes:</p><p><img vspace="5" hspace="5" src="CANlab_object_types_flowchart.png" alt=""> </p><p>% Bogdan Petre on 9/14/2016, updated by Tor Wager July 2018, Jan 2020</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+</pre><img vspace="5" hspace="5" src="canlab_help_3_voxelwise_t_test_walkthrough_05.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Perform a voxel-wise t-test
 %
+% Edited/commented by Bogdan Petre on 9/14/2016, Tor Wager July 2018 
+%
 % In this example we perform a second level analysis on first level
 % statistical parametric maps. Specifically we use a t-test to obtain an
-% ordinary least squares estimate for the group level parameter.
+% ordinary least squares estimate for the group level parameter. 
 %
 % The example uses the emotion regulation data provided with
-% CANlab_Core_Tools. This dataset consists of a set of contrast images for
+% CANlab_Core_Tools. This dataset consists of a set of contrast images for 
 % 30 subjects from a first level analysis. The contrast is [reappraise neg vs. look neg],
-% reappraisal of negative images vs. looking at matched negative images.
+% reappraisal of negative images vs. looking at matched negative images. 
 %
 % These data were published in:
-% Wager, T. D., Davidson, M. L., Hughes, B. L., Lindquist, M. A.,
-% Ochsner, K. N.. (2008). Prefrontal-subcortical pathways mediating
+% Wager, T. D., Davidson, M. L., Hughes, B. L., Lindquist, M. A., 
+% Ochsner, K. N.. (2008). Prefrontal-subcortical pathways mediating 
 % successful emotion regulation. Neuron, 59, 1037-50.
 %
 % By the end of this example we will have regenerated the results of figure
@@ -414,21 +446,17 @@ ans =
 %
 % As a summary, here is a complete set of commands to load the data and run
 % the entire analysis:
-%
+% 
 %     img_obj = load_image_set('emotionreg');         % Load a dataset
 %     t = ttest(img_obj);                             % Do a group t-test
 %     t = threshold(t, .05, 'fdr', 'k', 10);          % Threshold with FDR q < .05 and extent threshold of 10 contiguous voxels
-%
+%  
 %     % Show regions and print a table with labeled regions:
 %     montage(t);  drawnow, snapnow;                  % Show results on a slice display
 %     r = region(t);                                  % Turn t-map into a region object with one element per contig region
 %     table(r);                                       % Print a table of results using new region names
-%
-% Here a graphical description of what it does:
-%
-% <<CANlab_ttest_flowchart.png>>
-%
-% Now, let's walk through it step by step, with a few minor additions.
+%  
+% Now, let's walk through it step by step.
 
 %% Load sample data
 
@@ -453,7 +481,7 @@ t = ttest(image_obj);
 % There are many options. See methods(statistic_image) and methods(region)
 
 orthviews(t)
-drawnow, snapnow;
+drawnow, snapnow; 
 
 % As can be seen, the ttest() result is unthresholded. The threshold
 % function can be used to apply a desired alpha level using any of a number
@@ -462,12 +490,12 @@ drawnow, snapnow;
 
 t = threshold(t, .05, 'fdr');
 orthviews(t)
-drawnow, snapnow;
+drawnow, snapnow; 
 
-% Many neuroimaging packages (e.g., SPM and FSL) do one-tailed tests
-% (with one-tailed p-values) and only show you positive effects
-% (i.e., relative activations, not relative deactivations).
-% All the CANlab tools do two-sided tests, report two-tailed p-values.
+% Many neuroimaging packages (e.g., SPM and FSL) do one-tailed tests 
+% (with one-tailed p-values) and only show you positive effects 
+% (i.e., relative activations, not relative deactivations).  
+% All the CANlab tools do two-sided tests, report two-tailed p-values. 
 % By default, hot colors (orange/yellow) will show activations, and cool
 % colors (blues) show deactivations.
 
@@ -475,15 +503,15 @@ drawnow, snapnow;
 
 t = threshold(t, .05, 'fdr', 'k', 10);
 orthviews(t)
-drawnow, snapnow;
+drawnow, snapnow; 
 
 % montage is another visualization method. This function may require a
-% relatively large amount of memory, depending on the resolution of the
-% anatomical underlay image you use. We recommend around 8GB of free memory.
+% relatively large amount of memory, depending on the resolution of the 
+% anatomical underlay image you use. We recommend around 8GB of free memory. 
 %
 create_figure('montage'); axis off
 montage(t)
-drawnow, snapnow;
+drawnow, snapnow; 
 
 %% Print a table of results
 
@@ -492,7 +520,7 @@ drawnow, snapnow;
 % voxels). It does many things that other object types do, and inter-operates
 % with them closely.  See methods(region) for more info.
 
-% Create a region object called "r", with contiguous blobs from the
+% Create a region objecft called "r", with contiguous blobs from the
 % thresholded t-map:
 
 r = region(t);
@@ -501,33 +529,23 @@ r = region(t);
 
 table(r);
 
-%% More on getting help
-
-% Help info is available on https://canlab.github.io/
-% and in the CANlab help examples repository: https://github.com/canlab/CANlab_help_examples
-% This contains a series of walkthroughs, including this one.
-
-% You can get help for the main object types by typing this in Matlab:
-% doc fmri_data (or doc any other object types)
-
-% Also, more detailed help is available for each function using the "help" command.
 % You can get help and options for any object method, like "table". But
-% because the method names are simple and often overlap with other Matlab functions
+% because the method names are simple and often overlap with other Matlab functions 
 % and toolboxes (this is OK for objects!), you will often want to specify
 % the object type as well, as follows:
 
-% help region.table
+help region.table
 
 %% Write the t-map to disk
 
 % Now we need to save our results. You can save the objects in your
 % workspace or you can write your resulting thresholded map to an analyze
-% file. The latter may be useful for generating surface projections using
+% file. The latter may be useful for generating surface projections using 
 % Caret or FreeSurfer for instance.
 %
-% Thresholding did not actually eliminate nonsignificant voxels from our
-% statistic_image object (t). If we  simply write out that object, we will
-% get t-statistics for all voxels.
+% Thresholding did not actually eliminate nonsignificant voxels from our 
+% statistic_image object (t). If we  simply write out that object, we will 
+% get t-statistics for all voxels. 
 
 t.fullpath = fullfile(pwd, 'example_t_image.nii');
 write(t)
@@ -537,71 +555,5 @@ write(t, 'thresh')
 
 t_reloaded = statistic_image(t.fullpath, 'type', 'generic');
 orthviews(t_reloaded)
-
-%% Explore on your own
-%
-% 1. Click around the thresholded statistic image. What lobes of the brain
-% are most of the results in? What can we say about areas that are not
-% active, if anything?
-%
-% 2. Why might some of the results appear to be outside the brain? What
-% does this mean for the validity of the analysis? Should we consider these
-% areas in our interpretation, or should they be "masked out" (excluded)?
-%
-% That's it for this section!!
-
-%% Explore More: CANlab Toolboxes
-% Tutorials, overview, and help: <https://canlab.github.io>
-%
-% Toolboxes and image repositories on github: <https://github.com/canlab>
-%
-% <html>
-% <table border=1><tr>
-% <td>CANlab Core Tools</td>
-% <td><a href="https://github.com/canlab/CanlabCore">https://github.com/canlab/CanlabCore</a></td></tr>
-% <td>CANlab Neuroimaging_Pattern_Masks repository</td>
-% <td><a href="https://github.com/canlab/Neuroimaging_Pattern_Masks">https://github.com/canlab/Neuroimaging_Pattern_Masks</a></td></tr>
-% <td>CANlab_help_examples</td>
-% <td><a href="https://github.com/canlab/CANlab_help_examples">https://github.com/canlab/CANlab_help_examples</a></td></tr>
-% <td>M3 Multilevel mediation toolbox</td>
-% <td><a href="https://github.com/canlab/MediationToolbox">https://github.com/canlab/MediationToolbox</a></td></tr>
-% <td>M3 CANlab robust regression toolbox</td>
-% <td><a href="https://github.com/canlab/RobustToolbox">https://github.com/canlab/RobustToolbox</a></td></tr>
-% <td>M3 MKDA coordinate-based meta-analysis toolbox</td>
-% <td><a href="https://github.com/canlab/Canlab_MKDA_MetaAnalysis">https://github.com/canlab/Canlab_MKDA_MetaAnalysis</a></td></tr>
-% </table>
-% </html>
-%
-% Here are some other useful CANlab-associated resources:
-%
-% <html>
-% <table border=1><tr>
-% <td>Paradigms_Public - CANlab experimental paradigms</td>
-% <td><a href="https://github.com/canlab/Paradigms_Public">https://github.com/canlab/Paradigms_Public</a></td></tr>
-% <td>FMRI_simulations - brain movies, effect size/power</td>
-% <td><a href="https://github.com/canlab/FMRI_simulations">https://github.com/canlab/FMRI_simulations</a></td></tr>
-% <td>CANlab_data_public - Published datasets</td>
-% <td><a href="https://github.com/canlab/CANlab_data_public">https://github.com/canlab/CANlab_data_public</a></td></tr>
-% <td>M3 Neurosynth: Tal Yarkoni</td>
-% <td><a href="https://github.com/neurosynth/neurosynth">https://github.com/neurosynth/neurosynth</a></td></tr>
-% <td>M3 DCC - Martin Lindquist's dynamic correlation tbx</td>
-% <td><a href="https://github.com/canlab/Lindquist_Dynamic_Correlation">https://github.com/canlab/Lindquist_Dynamic_Correlation</a></td></tr>
-% <td>M3 CanlabScripts - in-lab Matlab/python/bash</td>
-% <td><a href="https://github.com/canlab/CanlabScripts">https://github.com/canlab/CanlabScripts</a></td></tr>
-% </table>
-% </html>
-%
-% *Object-oriented, interactive approach*
-% The core basis for interacting with CANlab tools is through object-oriented framework.
-% A simple set of neuroimaging data-specific objects (or _classes_) allows you to perform
-% *interactive analysis* using simple commands (called _methods_) that
-% operate on objects.
-%
-% Map of core object classes:
-%
-% <<CANlab_object_types_flowchart.png>>
-%%
-% % Bogdan Petre on 9/14/2016, updated by Tor Wager July 2018, Jan 2020
-%
 ##### SOURCE END #####
 --></body></html>

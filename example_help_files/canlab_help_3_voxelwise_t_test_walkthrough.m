@@ -1,7 +1,5 @@
 %% Perform a voxel-wise t-test
 %
-% Edited/commented by Bogdan Petre on 9/14/2016, Tor Wager July 2018 
-%
 % In this example we perform a second level analysis on first level
 % statistical parametric maps. Specifically we use a t-test to obtain an
 % ordinary least squares estimate for the group level parameter. 
@@ -33,6 +31,10 @@
 %     r = region(t);                                  % Turn t-map into a region object with one element per contig region
 %     table(r);                                       % Print a table of results using new region names
 %  
+% Here a graphical description of what it does:
+%
+% <<CANlab_ttest_flowchart.png>>
+%
 % Now, let's walk through it step by step, with a few minor additions.
 
 %% Load sample data
@@ -97,7 +99,7 @@ drawnow, snapnow;
 % voxels). It does many things that other object types do, and inter-operates
 % with them closely.  See methods(region) for more info.
 
-% Create a region objecft called "r", with contiguous blobs from the
+% Create a region object called "r", with contiguous blobs from the
 % thresholded t-map:
 
 r = region(t);
@@ -142,3 +144,69 @@ write(t, 'thresh')
 
 t_reloaded = statistic_image(t.fullpath, 'type', 'generic');
 orthviews(t_reloaded)
+
+%% Explore on your own
+%
+% 1. Click around the thresholded statistic image. What lobes of the brain
+% are most of the results in? What can we say about areas that are not
+% active, if anything?
+%
+% 2. Why might some of the results appear to be outside the brain? What
+% does this mean for the validity of the analysis? Should we consider these
+% areas in our interpretation, or should they be "masked out" (excluded)?
+%
+% That's it for this section!!
+
+%% Explore More: CANlab Toolboxes
+% Tutorials, overview, and help: <https://canlab.github.io>
+%
+% Toolboxes and image repositories on github: <https://github.com/canlab>
+%
+% <html>
+% <table border=1><tr>
+% <td>CANlab Core Tools</td>
+% <td><a href="https://github.com/canlab/CanlabCore">https://github.com/canlab/CanlabCore</a></td></tr>
+% <td>CANlab Neuroimaging_Pattern_Masks repository</td>
+% <td><a href="https://github.com/canlab/Neuroimaging_Pattern_Masks">https://github.com/canlab/Neuroimaging_Pattern_Masks</a></td></tr>
+% <td>CANlab_help_examples</td>
+% <td><a href="https://github.com/canlab/CANlab_help_examples">https://github.com/canlab/CANlab_help_examples</a></td></tr>
+% <td>M3 Multilevel mediation toolbox</td>
+% <td><a href="https://github.com/canlab/MediationToolbox">https://github.com/canlab/MediationToolbox</a></td></tr>
+% <td>M3 CANlab robust regression toolbox</td>
+% <td><a href="https://github.com/canlab/RobustToolbox">https://github.com/canlab/RobustToolbox</a></td></tr>
+% <td>M3 MKDA coordinate-based meta-analysis toolbox</td>
+% <td><a href="https://github.com/canlab/Canlab_MKDA_MetaAnalysis">https://github.com/canlab/Canlab_MKDA_MetaAnalysis</a></td></tr>
+% </table>
+% </html>
+% 
+% Here are some other useful CANlab-associated resources:
+%
+% <html>
+% <table border=1><tr>
+% <td>Paradigms_Public - CANlab experimental paradigms</td>
+% <td><a href="https://github.com/canlab/Paradigms_Public">https://github.com/canlab/Paradigms_Public</a></td></tr>
+% <td>FMRI_simulations - brain movies, effect size/power</td>
+% <td><a href="https://github.com/canlab/FMRI_simulations">https://github.com/canlab/FMRI_simulations</a></td></tr>
+% <td>CANlab_data_public - Published datasets</td>
+% <td><a href="https://github.com/canlab/CANlab_data_public">https://github.com/canlab/CANlab_data_public</a></td></tr>
+% <td>M3 Neurosynth: Tal Yarkoni</td>
+% <td><a href="https://github.com/neurosynth/neurosynth">https://github.com/neurosynth/neurosynth</a></td></tr>
+% <td>M3 DCC - Martin Lindquist's dynamic correlation tbx</td>
+% <td><a href="https://github.com/canlab/Lindquist_Dynamic_Correlation">https://github.com/canlab/Lindquist_Dynamic_Correlation</a></td></tr>
+% <td>M3 CanlabScripts - in-lab Matlab/python/bash</td>
+% <td><a href="https://github.com/canlab/CanlabScripts">https://github.com/canlab/CanlabScripts</a></td></tr>
+% </table>
+% </html>
+%
+% *Object-oriented, interactive approach*
+% The core basis for interacting with CANlab tools is through object-oriented framework.
+% A simple set of neuroimaging data-specific objects (or _classes_) allows you to perform
+% *interactive analysis* using simple commands (called _methods_) that
+% operate on objects. 
+%
+% Map of core object classes:
+%
+% <<CANlab_object_types_flowchart.png>>
+%%
+% % Bogdan Petre on 9/14/2016, updated by Tor Wager July 2018, Jan 2020
+%
