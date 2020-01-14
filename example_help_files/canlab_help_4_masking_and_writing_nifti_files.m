@@ -78,7 +78,7 @@ mask_image = bucknermaps.get_wh_image(1);
 
 %% 
 % Now we'll load a sample dataset to apply the mask to.
-% This loads a series of 7 muoltivariate patterns from Kragel et al. 2016.
+% This loads a series of 7 multivariate patterns from Kragel et al. 2016.
 % These patterns were developed to predict emotion categories.
 % For our purposes here, we'll just treat them as data images.
 

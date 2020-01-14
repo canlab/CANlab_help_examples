@@ -115,6 +115,11 @@ if isempty(mypath)
     disp('Download CanlabCore from Github, and go to that folder in Matlab')
     disp('by dragging and dropping it from Finder or Explorer into the Matlab Command Window')
     return
+else
+    % Add CanlabCore to Matlab path with subfolders
+    g = genpath(mypath(1).path);
+    addpath(g);
+    
 end
 
 mypath = mypath(1).path;
@@ -142,6 +147,14 @@ end
 
 % Run the setup script:
 % ------------------------------------------------------------------------
+%
+% Note: This can be system-dependent and may not work on all computers.
+% If it doesn't, you can default to cloning the CANLab repositories and
+% adding them with subfolders to your Matlab path. The most important ones
+% starting out are CanlabCore and Neuroimaging_Pattern_Masks
+% e.g.,
+% |git clone https://github.com/canlab/CanlabCore.git|
+% |git clone https://github.com/canlab/Neuroimaging_Pattern_Masks.git|
 
 canlab_toolbox_setup
 

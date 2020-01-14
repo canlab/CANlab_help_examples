@@ -6,20 +6,20 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Load and explore a sample dataset</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-01-09"><meta name="DC.source" content="canlab_help_2_load_a_sample_dataset.m"><style type="text/css">
+      --><title>Load and explore a sample dataset</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-01-13"><meta name="DC.source" content="canlab_help_2_load_a_sample_dataset.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
-html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
 html body td { vertical-align:top; text-align:left; }
 
-h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
-h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
-h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.8em; color:#2C2D92; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.4em; color:#363538; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#363538; font-weight:bold; line-height:140%; }
 
-a { color:#005fce; text-decoration:none; }
-a:hover { color:#005fce; text-decoration:underline; }
-a:visited { color:#004aa0; text-decoration:none; }
+a { color:#4B4BA8; text-decoration:none; }
+a:hover { color:#2AAFDF; text-decoration:underline; }
+a:visited { color:#4B4BA8; text-decoration:none; }
 
 p { padding:0px; margin:0px 0px 20px; }
 img { padding:0px; margin:0px 0px 20px; border:none; }
@@ -38,7 +38,7 @@ ol li ul li { list-style:square; }
 
 .content { font-size:1.2em; line-height:140%; padding: 20px; }
 
-pre, code { font-size:12px; }
+pre, code { font-size:14px; }
 tt { font-size: 1.2em; }
 pre { margin:0px 0px 20px; }
 pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Load and explore a sample dataset</h1><!--introduction--><p>This example shows how to load a pre-set example fMRI dataset into an fmri_data object.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">General instructions</a></li><li><a href="#2">The fmri_data object</a></li><li><a href="#3">Section 1: The quick and easy way to load a pre-specified dataset</a></li><li><a href="#4">Section 2: Manual load.  Use filenames to find file names</a></li><li><a href="#5">Section 3: Plot the data we just loaded</a></li><li><a href="#6">Section 4: Get help on an object</a></li><li><a href="#7">Section 5: Explore methods</a></li><li><a href="#9">Section 6: Explore on your own</a></li><li><a href="#10">Explore More: CANlab Toolboxes</a></li></ul></div><h2 id="1">General instructions</h2><p>Before you start, the CANlab_Core_Tools must be added to your path with subfolders. Otherwise, you will get errors.</p><p>The script canlab_toolbox_setup can help download and install the toolboxes you need.</p><p>Sample datasets are in the "Sample_datasets" folder in CANlab_Core_Tools.</p><p>This example will use emotion regulation data in the folder: "Wager_et_al_2008_Neuron_EmotionReg" The dataset is a series of contrast images from N = 30 participants. Each image is a contrast image for [reappraise neg vs. look neg]</p><p>These data were published in: Wager, T. D., Davidson, M. L., Hughes, B. L., Lindquist, M. A., Ochsner, K. N.. (2008). Prefrontal-subcortical pathways mediating successful emotion regulation. Neuron, 59, 1037-50.</p><p>Here are a couple of helpful functions we will use for display: (you can ignore these.)</p><pre class="codeinput">dashes = <span class="string">'----------------------------------------------'</span>;
+  </style></head><body><div class="content"><h1>Load and explore a sample dataset</h1><!--introduction--><p>This example shows how to load a pre-set example fMRI dataset into an fmri_data object.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">General instructions</a></li><li><a href="#2">The fmri_data object</a></li><li><a href="#3">Section 1: The quick and easy way to load a pre-specified dataset</a></li><li><a href="#4">Section 2: Manual load.  Use filenames to find file names</a></li><li><a href="#5">Section 3: Plot the data we just loaded</a></li><li><a href="#6">Section 4: Get help on an object</a></li><li><a href="#7">Section 5: Explore methods</a></li><li><a href="#9">Section 6: Explore on your own</a></li><li><a href="#10">Explore More: CANlab Toolboxes</a></li></ul></div><h2 id="1">General instructions</h2><p>Before you start, the CANlab_Core_Tools must be added to your path with subfolders. Otherwise, you will get errors.</p><p>The script canlab_toolbox_setup can help download and install the toolboxes you need.</p><p>Sample datasets are in the "Sample_datasets" folder in CANlab_Core_Tools. Many tutorials apply pre-trained patterns and masks. These are stored in this Github repository:</p><p><a href="https://github.com/canlab/Neuroimaging_Pattern_Masks">https://github.com/canlab/Neuroimaging_Pattern_Masks</a></p><p>In addition, you can explore these and find more information here: <a href="https://sites.google.com/dartmouth.edu/canlab-brainpatterns/home">https://sites.google.com/dartmouth.edu/canlab-brainpatterns/home</a></p><p>This example will use emotion regulation data in the folder: "Wager_et_al_2008_Neuron_EmotionReg" The dataset is a series of contrast images from N = 30 participants. Each image is a contrast image for [reappraise neg vs. look neg]</p><p>These data were published in: Wager, T. D., Davidson, M. L., Hughes, B. L., Lindquist, M. A., Ochsner, K. N.. (2008). Prefrontal-subcortical pathways mediating successful emotion regulation. Neuron, 59, 1037-50.</p><p>Here are a couple of helpful functions we will use for display: (you can ignore these.)</p><pre class="codeinput">dashes = <span class="string">'----------------------------------------------'</span>;
 printhdr = @(str) fprintf(<span class="string">'%s\n%s\n%s\n'</span>, dashes, str, dashes);
 </pre><h2 id="2">The fmri_data object</h2><p>The fmri_data object class is one of the most important, basic types of objects in the CANlab object-oriented toolbox. It stores image data in a matrix form, which is more space efficient and friendly for analysis with various software packages/algorithms.</p><p>For philosophy, see: <a href="https://canlab.github.io/">https://canlab.github.io/</a></p><p>For more info on the object-oriented approach, see: <a href="https://canlab.github.io/objectoriented/">https://canlab.github.io/objectoriented/</a></p><p>When you call the <i>class constructor</i> fmri_data(), this is what it does:</p><p><img vspace="5" hspace="5" src="fmri_data_object_diagram.png" alt=""> </p><h2 id="3">Section 1: The quick and easy way to load a pre-specified dataset</h2><p>The function load_image_set has a number of pre-defined image sets that you can load with one simple command.  This is the easiest way to load sample data.  The images must be on your Matlab path for this to work.</p><pre class="codeinput">[data_obj, subject_names, image_names] = load_image_set(<span class="string">'emotionreg'</span>);
 
@@ -143,11 +143,12 @@ loading mask. mapping volumes.
 checking that dimensions and voxel sizes of volumes are the same. 
 Pre-allocating data array. Needed: 5975040 bytes
 Loading image number:    30
-Elapsed time is 0.180418 seconds.
+Elapsed time is 0.311033 seconds.
 fmri_data.create: Converting 1203 NaNs to 0s.Image names entered, but fullpath attribute is empty. Getting path info.
 </pre><h2 id="5">Section 3: Plot the data we just loaded</h2><p>Operations that we can perform on fmri_data objects are called methods. You can see a list of methods by typing methods(data_obj). Here, we'll call the plot method to visualize the data.</p><pre class="codeinput">plot(data_obj)
 snapnow
-</pre><pre class="codeoutput">Retained 8 components for mahalanobis distance
+</pre><pre class="codeoutput">Calculating mahalanobis distances to identify extreme-valued images
+Retained 8 components for mahalanobis distance
 Expected 50% of points within 50% normal ellipsoid, found 46.67%
 Expected 1.50 outside 95% ellipsoid, found   1
 
@@ -161,12 +162,9 @@ Image numbers:
 
 Image numbers, uncorrected: 27 
 Warning: Ignoring extra legend entries. 
-
-SPM12: spm_check_registration (v6245)              17:02:02 - 09/01/2020
-========================================================================
-Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
- (&lt;a href="matlab:spm_check_registration('/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;all&lt;/a&gt;)  &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
-        &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
+Grouping contiguous voxels:   1 regions
+Grouping contiguous voxels:   1 regions
+Grouping contiguous voxels:   1 regions
 
 ans =
 
@@ -573,6 +571,13 @@ Help for fmri_data/mean is inherited from superclass IMAGE_VECTOR
 % toolboxes you need.
 %
 % Sample datasets are in the "Sample_datasets" folder in CANlab_Core_Tools.
+% Many tutorials apply pre-trained patterns and masks. 
+% These are stored in this Github repository:
+% 
+% <https://github.com/canlab/Neuroimaging_Pattern_Masks>
+% 
+% In addition, you can explore these and find more information here:
+% <https://sites.google.com/dartmouth.edu/canlab-brainpatterns/home>
 %
 % This example will use emotion regulation data in the folder: 
 % "Wager_et_al_2008_Neuron_EmotionReg"

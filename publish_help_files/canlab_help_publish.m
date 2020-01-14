@@ -21,7 +21,7 @@ if ~exist(pubdir, 'dir'), mkdir(pubdir), end
 
 p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 800, ...
     'format', 'html', 'outputDir', pubdir, ...
-    'showCode', true);
+    'showCode', true, 'stylesheet', which('mxdom2simplehtml_CANlab.xsl'));
 
 publish(pubfilename, p)
 

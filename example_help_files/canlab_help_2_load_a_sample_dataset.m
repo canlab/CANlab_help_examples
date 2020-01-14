@@ -11,6 +11,13 @@
 % toolboxes you need.
 %
 % Sample datasets are in the "Sample_datasets" folder in CANlab_Core_Tools.
+% Many tutorials apply pre-trained patterns and masks. 
+% These are stored in this Github repository:
+% 
+% <https://github.com/canlab/Neuroimaging_Pattern_Masks>
+% 
+% In addition, you can explore these and find more information here:
+% <https://sites.google.com/dartmouth.edu/canlab-brainpatterns/home>
 %
 % This example will use emotion regulation data in the folder: 
 % "Wager_et_al_2008_Neuron_EmotionReg"

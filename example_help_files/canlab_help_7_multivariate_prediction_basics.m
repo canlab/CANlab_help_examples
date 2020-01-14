@@ -1,9 +1,26 @@
+%% Multivariate prediction of a continuous outcome
 
-% About this dataset
+%%
+% This walkthrough uses the |predict()| method for fmri_data objects to
+% predict a continuous outcome using cross-validated principal component
+% regression (PCR / LASSO-PCR). 
+%
+% The |predict()| method can run multiple algorithms with a range of options.
+% The main ones used in the CANlab are SVM for two-choice classification and PCR for
+% regression.
+
+%% About the pain dataset
 % -------------------------------------------------------------------------
 %
-% This dataset includes 33 participants, with brain responses to six levels
-% of heat (non-painful and painful).  
+% The dataset contains data from 33 participants, with brain responses to six levels
+% of heat (non-painful and painful). Each image is the average over several
+% (4-8) trials of heat delivered at a single stimulus intensity, ranging
+% from 44.3 - 49.3 degrees C in one-degree increments. Each image is also
+% paired with an average reported pain value for that set of trials, rated
+% immmediately after heat experience. 
+%
+% This dataset is interesting for mixed-effects and predictive analyses, as
+% it has both within-person and between-person sources of variance.  
 % 
 % Aspects of this data appear in these papers:
 % Wager, T.D., Atlas, L.T., Lindquist, M.A., Roy, M., Choong-Wan, W., Kross, E. (2013). 
@@ -76,14 +93,16 @@ temperatures = image_obj.additional_info.temperatures;
 % -------------------------------------------------------------------------  
 
 create_figure('ratings');
-lineplot_columns(bmrkdata.ratings, 'color', [.7 .3 .3], 'markerfacecolor', [1 .5 0]);
+hold on; plot(ratings', '-', 'Color', [.7 .7 .7], 'LineWidth', .5);
+lineplot_columns(ratings, 'color', [.7 .3 .3], 'markerfacecolor', [1 .5 0]);
 xlabel('Temperature');
 ylabel('Rating');
+set(gca, 'XTickLabel', [44.3:49.3], 'FontSize', 18);
 
-
-%% Prediction
-% There are many options
-
+%% Prediction options and choices
+% There are many choices for algorithm and process/parameter tuning 
+% Here, we describe a constrained set of some of the most common choices
+%
 % Base model: Linear, whole brain prediction
 % 
 % Outcome distribution:
@@ -105,16 +124,19 @@ ylabel('Rating');
 % - Global null hypothesis testing / sanity checks (Permutation)
 
 %% Run the Base model
-
-% relevant functions:
+%
+% *relevant functions:*
 % predict method (fmri_data)                            
 % predict_test_suite method (fmri_data) 
+%
 
-% Define custom holdout set.  If we use subject_id, which is a vector of
+%% 
+% *Define the holdout set for cross-validation*
+% We want to define custom holdout set.  If we use subject_id, which is a vector of
 % integers with a unique integer per subject, then we are doing
 % leave-one-subject-out cross-validation. 
-
-% let's build five-fold cross-validation set that leaves out ALL the images
+%
+% Let's build five-fold cross-validation set that leaves out ALL the images
 % from a subject together. That way, we are always predicting out-of-sample
 % (new individuals). If not, dependence across images from the same
 % subjects may invalidate the estimate of predictive accuracy.
@@ -128,14 +150,15 @@ for i = 1:5
     holdout_set(imgidx) = i;
 end
 
+%% 
+% *Run the prediction*
+
 algoname = 'cv_lassopcr'; % cross-validated penalized regression. Predict pain ratings
 
 [cverr, stats, optout] = predict(image_obj, 'algorithm_name', algoname, 'nfolds', holdout_set);
 
-%% Plot the results
-
-% Plot cross-validated predicted outcomes vs. actual
-
+%% Plot cross-validated predicted vs. actual outcomes
+%
 % Critical fields in stats output structure:
 % stats.Y = actual outcomes
 % stats.yfit = cross-val predicted outcomes
@@ -151,7 +174,11 @@ refline
 xlabel('Predicted pain');
 ylabel('Observed pain');
 
-% Consider that each subject has their own line:
+% Consider that each subject has their own series of multiple observations.
+% Separate subjects into multiple cells, which will be plotted as separate
+% individual lines:
+
+n = max(subject_id);
 
 for i = 1:n
     YY{i} = stats.Y(subject_id == i);
@@ -168,7 +195,45 @@ axis tight
 
 %% Summarize within-person classification accuracy
 % 
-% Turn into classification:
+% Classification can turn a continuous outcome, such as the magnitude of
+% activity in an integrated model/pattern, into a binary choice (Type A or
+% B, Yes/No, Pain/No pain). Classification accuracy is an easy-to-interpret
+% metric, which makes it appealing to report. 
+% 
+% But though it seems easy to understand, it is perhaps tricker to
+% interpret than we might think.
+%
+% Classification accuracy is not one metric, but a family of them. The accuracy
+% you obtain depends on what type of classification you're doing, and what the
+% units of analysis are. For example, is your model based on a single person 
+% (individualized for that person), or based on other participants' data? 
+% Are you classifying images corresponding to a single trial, or an average across a group of trials? 
+% Do you have knowledge about which conditions/images belong to the same person, or not?
+% Here, we will:
+% (a) use a model based on other people's data (cross-validated across participants)
+% (b) classify images summarizing a group of trials, and
+% (c) assume we have 2 images belonging to the same person, and we classify
+% which is which
+%
+% On this last point, there are two basic senses of classification, which assume different 
+% levels of background knowledge:
+% - In _single-interval classification_, we do not know which images belong to which participants,
+%   and we are classifying a single image as Type A or B based on whether
+%   the response in the model is above or below a threshold. 
+% - In _forced-choice_ classification, we have two images that we know come
+%   from the same person, and we know one is Type A and one is Type B...or,
+%   equivalently, that one is "more A" than the other (e.g., more painful).
+%   The classifier tries to pick out which is the best answer.
+%
+% Forced-choice classification is an inherently easier problem, with higher
+% resulting accuracy, because (a) each participant serves as their own control
+% (many sources of noise are canceled out), and (b) you assume more
+% background knowledge, conferring an advantage. 
+%
+% In this case, we want to summarize each subject with two images: One high
+% pain, and one low pain. We'll use stimulus intensity as the variable to
+% classify here, and ask if we can predict which intensity is highest given
+% pairs of images one degree apart for each participant.
 
 % If the stim intensity increases by 1 degree, how often do we correctly
 % predict an increase?
@@ -191,7 +256,12 @@ disp(results_table)
 
 % 45-44 degrees, 46-45, 47-46, etc.
 
-%% Visualize weight map
+%% Visualize the classifier weight map
+%
+% The weight map is stored in |stats.weight_obj|, as a statistic_image
+% class object. If we have requested bootstrapping, the image will be
+% thresholded (0.05 uncorrected by default). Otherwise, it will be unthresholded,
+% and we'll see weights everywhere within the analysis mask.
 
 w = stats.weight_obj;  % This is an image object that we can view, etc.
 
@@ -203,14 +273,42 @@ o2 = title_montage(o2, 5, 'Predictive model weights');
 
 
 %% Bootstrap weights: Get most reliable weights and p-values for voxels
-
-% Re-run prediction, adding a 'bootstrap' flag. 
-% For a final analysis, at least 5K bootstrap samples is a good idea
-
-% (This is not run in the example; see help fmri_data.predict for how to
-% run bootstrapping)
+%
+% Here is an exercise: 
+% Re-run the predictive model, adding a 'bootstrap' flag. 
+% For a final analysis, at least 5K bootstrap samples is a good idea.
+% For now, try it with just 1,000 bootstrap samples (and be prepared to
+% wait a bit). What does the resulting weight map look like?
+%
+% (This is not run in the example; see |help fmri_data.predict| for how to
+% add the bootstrap option.)
 
 %% Try normalizing/scaling data
+%
+% One of the biggest sources of noise can be whole-image (or
+% large-spatial-scale shifts) in image values across participants. These can
+% be apparent even in contrast or "subtraction" images where various
+% sources of noise and artifacts are supposed to have been "subtracted
+% out". This may result from different chance correlations between task
+% regressors and physiological noise or artifacts/outliers across
+% individuals. 
+%
+% Rescaling the data can remove whole-brain signal. This should be used
+% with caution, as you're also removing signal from the images, and the
+% resulting weight maps should be interpreted as effects *relative* to the mean
+% signal across the image. i.e., a task may be associated with whole-brain
+% increases, and *relative* decreases in a local area that appear only
+% after the global increase has been accounted for.
+%
+% Another reason to rescale images is to ask whether the *pattern* of
+% activity across the brain (or within a local area) is predictive of task
+% state, after removing the overall intensity of activation. This relates
+% to pattern information.
+%
+% Here, we'll rescale the images and ask if this improves our
+% cross-validated predictions or not. If it does, the global signal we've
+% removed is likely more noise than signal. If not, the global signal may
+% contain information about pain.
 
 % z-score every image, removing the mean and dividing by the std.
 % Remove some scaling noise, but also some signal...

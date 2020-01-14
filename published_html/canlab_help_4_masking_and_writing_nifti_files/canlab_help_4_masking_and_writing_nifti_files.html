@@ -6,24 +6,24 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>canlab_help_4_masking_and_writing_nifti_files</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-01-12"><meta name="DC.source" content="canlab_help_4_masking_and_writing_nifti_files.m"><style type="text/css">
+      --><title>canlab_help_4_masking_and_writing_nifti_files</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-01-13"><meta name="DC.source" content="canlab_help_4_masking_and_writing_nifti_files.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
-html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
 html body td { vertical-align:top; text-align:left; }
 
-h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
-h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
-h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.8em; color:#2C2D92; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.4em; color:#363538; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#363538; font-weight:bold; line-height:140%; }
 
-a { color:#005fce; text-decoration:none; }
-a:hover { color:#005fce; text-decoration:underline; }
-a:visited { color:#004aa0; text-decoration:none; }
+a { color:#4B4BA8; text-decoration:none; }
+a:hover { color:#2AAFDF; text-decoration:underline; }
+a:visited { color:#4B4BA8; text-decoration:none; }
 
 p { padding:0px; margin:0px 0px 20px; }
 img { padding:0px; margin:0px 0px 20px; border:none; }
-p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
 
 ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
 ul li { padding:0px; margin:0px 0px 7px 0px; }
@@ -38,7 +38,7 @@ ol li ul li { list-style:square; }
 
 .content { font-size:1.2em; line-height:140%; padding: 20px; }
 
-pre, code { font-size:12px; }
+pre, code { font-size:14px; }
 tt { font-size: 1.2em; }
 pre { margin:0px 0px 20px; }
 pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
@@ -86,44 +86,44 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 </pre><pre class="codeoutput">Loaded images:
 /Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Combined_multiatlas_ROI_masks/rBucknerlab_7clusters_SPMAnat_Other_combined.img
 </pre><p>This loads 7 images. try <tt>orthviews(dat)</tt> to see them all. What values do the images have? You can also see descriptive statistics for the images like this:</p><pre class="codeinput">desc = descriptives(bucknermaps);
-</pre><pre class="codeoutput">
+</pre><pre class="codeoutput"> 
 Source: Info about image source here
-
-
+ 
+ 
 Summary of dataset
 ______________________________________________________
 Images:   7	Nonempty:   7	Complete:   7
 Voxels: 352328	Nonempty: 131918	Complete:   0
 Unique data values:   1
-
+ 
 Min: 1.000	Max: 1.000	Mean: 1.000	Std: 0.000
-
+ 
     Percentiles    Values
     ___________    ______
 
-        0.1          1
-        0.5          1
-          1          1
-          5          1
-         25          1
-         50          1
-         75          1
-         95          1
-         99          1
-       99.5          1
-       99.9          1
+        0.1          1   
+        0.5          1   
+          1          1   
+          5          1   
+         25          1   
+         50          1   
+         75          1   
+         95          1   
+         99          1   
+       99.5          1   
+       99.9          1   
 
-
+ 
 </pre><p>The variable <tt>desc</tt> is a structure that contains various descriptive stats.</p><p>load_image_set will generally store and return names for each image, returned as outputs if requested (here in <tt>mapnames</tt>). Let's print those names:</p><pre class="codeinput">disp(char(mapnames))
-</pre><pre class="codeoutput">Visual
-Somatomotor
-dAttention
-vAttention
-Limbic
+</pre><pre class="codeoutput">Visual        
+Somatomotor   
+dAttention    
+vAttention    
+Limbic        
 Frontoparietal
-Default
+Default       
 </pre><p>Now we can select one image from those 7 to use as a mask.</p><pre class="codeinput">mask_image = bucknermaps.get_wh_image(1);
-</pre><p>Now we'll load a sample dataset to apply the mask to. This loads a series of 7 muoltivariate patterns from Kragel et al. 2016. These patterns were developed to predict emotion categories. For our purposes here, we'll just treat them as data images.</p><pre class="codeinput">test_dat = load_image_set(<span class="string">'kragelemotion'</span>, <span class="string">'noverbose'</span>); <span class="comment">% loads 7 masks from Kragel et al.</span>
+</pre><p>Now we'll load a sample dataset to apply the mask to. This loads a series of 7 multivariate patterns from Kragel et al. 2016. These patterns were developed to predict emotion categories. For our purposes here, we'll just treat them as data images.</p><pre class="codeinput">test_dat = load_image_set(<span class="string">'kragelemotion'</span>, <span class="string">'noverbose'</span>); <span class="comment">% loads 7 masks from Kragel et al.</span>
 
 <span class="comment">% Try |orthviews(dat)| or use |montage| to see these patterns.</span>
 <span class="comment">% This command shows the first 4 (a limit in |montage| to avoid messy</span>
@@ -172,15 +172,15 @@ axial montage: 1647 voxels displayed, 1651 not displayed on these slices
 
 <span class="comment">% |write(mask_image, 'fname', fname);|</span>
 </pre><p>If you've already done this, <tt>write()</tt> will return an error. This is a safeguard to keep users from inadvertently overwriting important files. To force overwriting the existing file, try:</p><pre class="codeinput">write(mask_image, <span class="string">'fname'</span>, fname, <span class="string">'overwrite'</span>);
-</pre><pre class="codeoutput">Writing:
+</pre><pre class="codeoutput">Writing: 
 dummy.nii
 </pre><p>Now let's read it back in from disk and view it again:</p><pre class="codeinput">orthviews(fmri_data(fname))
 </pre><pre class="codeoutput">Using default mask: /Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/brainmask.nii
-loading mask. mapping volumes.
-checking that dimensions and voxel sizes of volumes are the same.
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
 Pre-allocating data array. Needed: 1409312 bytes
 Loading image number:     1
-Elapsed time is 0.022505 seconds.
+Elapsed time is 0.030091 seconds.
 Image names entered, but fullpath attribute is empty. Getting path info.
 Grouping contiguous voxels:   3 regions
 
@@ -216,7 +216,7 @@ ans =
 % A popular one is a set of "networks" developed from resting-state fMRI
 % connectivity in 1,000 people. For our purposes, the "network" maps
 % consist of a set of voxels that load most highly on each of 7 ICA
-% components from the 1,000 Functional Connectomes project.
+% components from the 1,000 Functional Connectomes project. 
 % These were published by Randy Buckner's lab in 2011 in three papers:
 % Choi et al., Buckner et al., and Yeo et al.  We'll use the cortical
 % networks from Yeo et al. here.
@@ -226,9 +226,9 @@ ans =
 % name. Try |help load_image|set| for a list of images you can load by
 % keyword. These datasets, if they can be stored on Github, are in this
 % Github repository:
-%
+% 
 % <https://github.com/canlab/Neuroimaging_Pattern_Masks>
-%
+% 
 % In addition, you can explore these and find more information here:
 % <https://sites.google.com/dartmouth.edu/canlab-brainpatterns/home>
 %
@@ -236,7 +236,7 @@ ans =
 % download the Neuroimaging_Pattern_Masks Github repository and add it to
 % your Matlab path with subfolders.
 % The Github site has three main types of datasets, shown here:
-%
+% 
 % <<Neuroimaging_pattern_masks_site.png>>
 %
 
@@ -258,7 +258,7 @@ desc = descriptives(bucknermaps);
 % stats.
 %
 
-%%
+%% 
 % load_image_set will generally store and return names for each image,
 % returned as outputs if requested (here in |mapnames|). Let's print
 % those names:
@@ -270,9 +270,9 @@ disp(char(mapnames))
 
 mask_image = bucknermaps.get_wh_image(1);
 
-%%
+%% 
 % Now we'll load a sample dataset to apply the mask to.
-% This loads a series of 7 muoltivariate patterns from Kragel et al. 2016.
+% This loads a series of 7 multivariate patterns from Kragel et al. 2016.
 % These patterns were developed to predict emotion categories.
 % For our purposes here, we'll just treat them as data images.
 
@@ -320,17 +320,17 @@ montage(test_dat);
 % This walkthrough shows how to do this for 1) a mask image, and 2) a
 % statistic image.
 
-%%
+%% 
 % Create a Nifti image called dummy.nii in the current folder. Write the
 % mask image to this file. See help for write() for more options
 
 fname = 'dummy.nii';  % outname file name.  the extension (.nii, .img) determines the format.
 
-% |write(mask_image, 'fname', fname);|
+% |write(mask_image, 'fname', fname);| 
 
 %%
-% If you've already done this, |write()| will return an error. This is a
-% safeguard to keep users from inadvertently overwriting important files.
+% If you've already done this, |write()| will return an error. This is a 
+% safeguard to keep users from inadvertently overwriting important files. 
 % To force overwriting the existing file, try:
 
 write(mask_image, 'fname', fname, 'overwrite');

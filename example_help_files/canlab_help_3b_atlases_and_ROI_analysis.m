@@ -16,11 +16,15 @@
 %
 % * Glasser 2016 Nature 180-region cortical parcellation (in MNI space, not indivdidualized)
 % * Pauli 2016 PNAS basal ganglia subregions
-% * Amygdala/hippocampal regions from SPM Anatomy Toolbox
-% * Basal forebrain regions from Pauli "reinforcement learning" HCP atlas
+% * Amygdala/hippocampal and basal forebrain regions from SPM Anatomy Toolbox
+% * Thalamus regions from the Morel thalamus atlas
+% * Subthalamus/Basal forebrain regions from Pauli "reinforcement learning" HCP atlas
 % * Diedrichsen cerebellar atlas regions
 % * Multiple named brainstem nuclei localized based on individual papers
 % * Additional Shen atlas parcels to cover areas (esp. brainstem) not otherwise named
+%
+% References for the corresponding papers are stored in the atlas object, and 
+% printed in tables generated with the region.table() method.
 %
 % There are many methods for atlas, including all the fmri_data methods.
 % You can see those with |methods(atlas)|. For example:
