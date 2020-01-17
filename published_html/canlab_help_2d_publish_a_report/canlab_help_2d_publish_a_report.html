@@ -1,0 +1,182 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Publishing reports</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-01-15"><meta name="DC.source" content="canlab_help_2d_publish_a_report.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.8em; color:#2C2D92; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.4em; color:#363538; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#363538; font-weight:bold; line-height:140%; }
+
+a { color:#4B4BA8; text-decoration:none; }
+a:hover { color:#2AAFDF; text-decoration:underline; }
+a:visited { color:#4B4BA8; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:14px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Publishing reports</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Why?</a></li><li><a href="#2">How?</a></li><li><a href="#3">More tips</a></li><li><a href="#5">Run this code to publish this file to HTML on your computer</a></li><li><a href="#6">Explore on your own</a></li></ul></div><h2 id="1">Why?</h2><p>Publishing reports of your data analysis is a great way to save code and results.</p><p>If you're doing a paper, you can save a record of what you did in the report, and what the results were.</p><p>You can save figures in your report, and stats and tables too ... And even interpretation of your results</p><p>This is a great record, and if done right, will allow you to <b>reproduce</b> your analysis, and make changes if needed and <b>re-run</b> efficiently.</p><p>If you do it right, you can write your paper right from your report, and then <b>archive</b> the report (with more details and discussion) for later.</p><h2 id="2">How?</h2><p>Create a Matlab script that runs your analysis, and format it with Matlab <b>markup</b>.</p><p>The markup tells it how to create sections, headers, text, and code blocks. This file serves as a basic example.</p><p>Then, <b>publish</b> your code by: * Clicking on the <i>Publish</i> tab at the top of the Editor, then "Publish" arrow * Running publish('yourscriptname.m')</p><p>This creates a file with your report. Type <tt>help publish</tt> to get options for what type of report to create.</p><p>We'll use .html reports. An advantage is that you can scroll through them quickly to see results, click on sections, and view them in any web browser.</p><h2 id="3">More tips</h2><p>To submit/save a report, make a zip file of all the files in your html output directory, and save/submit the zip</p><p>To add figures produced within Matlab, just have the code generate those figures. To save the current figure windows to the report when you publish, add <tt>drawnow, snapnow</tt> to your code. Like this:</p><pre class="codeinput">a = magic(20);
+figure; imagesc(a);
+drawnow, snapnow
+</pre><img vspace="5" hspace="5" src="canlab_help_2d_publish_a_report_01.png" alt=""> <p>To add an external figure, put a .png file of your figure in your HTML output directory, and refer to it using <tt><a href="<">figname.png &gt;</a></tt> in your script.</p><p>More help on markup is on the web. e.g., <a href="https://www.mathworks.com/help/matlab/matlab_prog/marking-up-matlab-comments-for-publishing.html">https://www.mathworks.com/help/matlab/matlab_prog/marking-up-matlab-comments-for-publishing.html</a></p><p>All the m-files (original code) for walkthroughs on <a href="canlab.github.io">canlab.github.io</a> are in this repository: <a href="https://github.com/canlab/CANlab_help_examples">https://github.com/canlab/CANlab_help_examples</a></p><p>You can examine or modify any of those and re-publish them to HTML yourself.</p><p>Below is some code that sets a useful set of options for HTML and publishes this demo script.</p><h2 id="5">Run this code to publish this file to HTML on your computer</h2><pre class="language-matlab">pubdir = fullfile(fileparts(which(<span class="string">'canlab_help_publish'</span>)), <span class="string">'canlab_help_2d_publish_a_report'</span>);  <span class="comment">% Set the output directory</span>
+</pre><pre class="language-matlab">pubfilename = <span class="string">'canlab_help_2d_publish_a_report'</span>; <span class="comment">% The script you want to publish</span>
+</pre><pre class="language-matlab">p = struct(<span class="string">'useNewFigure'</span>, false, <span class="string">'maxHeight'</span>, 800, <span class="string">'maxWidth'</span>, 800, <span class="keyword">...</span>
+  <span class="string">'format'</span>, <span class="string">'html'</span>, <span class="string">'outputDir'</span>, pubdir, <span class="keyword">...</span>
+  <span class="string">'showCode'</span>, true, <span class="string">'stylesheet'</span>, which(<span class="string">'mxdom2simplehtml_CANlab.xsl'</span>));
+</pre><pre class="language-matlab">htmlfile = publish(pubfilename, p);
+</pre><pre class="language-matlab"><span class="comment">% Open the published file in the web browser</span>
+web(htmlfile)
+</pre><h2 id="6">Explore on your own</h2><p>1. Try modifying the text of this file in various ways and re-publishing it.</p><p>2. Try adding an external picture, a code block, and some other markup</p><p>3. Try producing a plot within Matlab.</p><p>4. Try opening one of the walkthroughs on    <a href="https://github.com/canlab/CANlab_help_examples">https://github.com/canlab/CANlab_help_examples</a>    and re-oublish it to an HTML file on your computer.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Publishing reports
+
+%% Why?
+%
+% Publishing reports of your data analysis is a great way to save code and
+% results.
+%
+% If you're doing a paper, you can save a record of what you did in the
+% report, and what the results were.
+%
+% You can save figures in your report, and stats and tables too ...
+% And even interpretation of your results
+%
+% This is a great record, and if done right, will allow you to *reproduce*
+% your analysis, and make changes if needed and *re-run* efficiently.
+%
+% If you do it right, you can write your paper right from your report, and
+% then *archive* the report (with more details and discussion) for later.
+
+%% How?
+%
+% Create a Matlab script that runs your analysis, and format it with
+% Matlab *markup*.
+%
+% The markup tells it how to create sections, headers, text, and code
+% blocks. This file serves as a basic example.
+%
+% Then, *publish* your code by:
+% * Clicking on the _Publish_ tab at the top of the Editor, then "Publish" arrow
+% * Running publish('yourscriptname.m')
+%
+% This creates a file with your report.
+% Type |help publish| to get options for what type of report to create.
+%
+% We'll use .html reports. An advantage is that you can scroll through them
+% quickly to see results, click on sections, and view them in any web
+% browser.
+
+%% More tips
+%
+% To submit/save a report, make a zip file of all the files in your html
+% output directory, and save/submit the zip
+%
+% To add figures produced within Matlab, just have the code generate those
+% figures. To save the current figure windows to the report when you
+% publish, add |drawnow, snapnow| to your code. Like this:
+
+a = magic(20);
+figure; imagesc(a);
+drawnow, snapnow
+
+%%
+% To add an external figure, put a .png file of your figure in your HTML output
+% directory, and refer to it using |<< figname.png >>| in your script.
+%
+% More help on markup is on the web. e.g.,
+% <https://www.mathworks.com/help/matlab/matlab_prog/marking-up-matlab-comments-for-publishing.html>
+%
+% All the m-files (original code) for walkthroughs on <canlab.github.io> are in this repository:
+% <https://github.com/canlab/CANlab_help_examples>
+% 
+% You can examine or modify any of those and re-publish them to HTML yourself.
+%
+% Below is some code that sets a useful set of options for HTML and
+% publishes this demo script. 
+
+%% Run this code to publish this file to HTML on your computer
+%
+%   pubdir = fullfile(fileparts(which('canlab_help_publish')), 'canlab_help_2d_publish_a_report');  % Set the output directory
+% 
+%   pubfilename = 'canlab_help_2d_publish_a_report'; % The script you want to publish
+% 
+%   p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 800, ...
+%     'format', 'html', 'outputDir', pubdir, ...
+%     'showCode', true, 'stylesheet', which('mxdom2simplehtml_CANlab.xsl'));
+% 
+%   htmlfile = publish(pubfilename, p);
+% 
+%   % Open the published file in the web browser
+%   web(htmlfile)
+% 
+
+%% Explore on your own
+%
+% 1. Try modifying the text of this file in various ways and re-publishing
+% it. 
+%
+% 2. Try adding an external picture, a code block, and some other markup
+%
+% 3. Try producing a plot within Matlab. 
+%
+% 4. Try opening one of the walkthroughs on
+%    <https://github.com/canlab/CANlab_help_examples>
+%    and re-oublish it to an HTML file on your computer.
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>

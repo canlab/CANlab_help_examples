@@ -97,6 +97,9 @@ drawnow, snapnow
 
 [test_images, names] = load_image_set('kragel18_alldata', 'noverbose');
 
+% This field contains a table object with metadata for each image:
+metadata = test_images.dat_descrip;
+
 % Make a plot of the spatial correlation of the average image for each study
 
 imgs = cellstr(test_images.image_names);
@@ -104,7 +107,9 @@ m = mean(test_images);
 
 for i = 1:length(names)
     
-    wh = ~cellfun(@isempty, strfind(imgs, sprintf('Study%dS', i)));
+    % Create a mean image for each study and store in "m" object.
+    
+    wh = metadata.Studynumber == i;
     studymean = mean(get_wh_image(test_images, find(wh)));
     m.dat(:, i) = studymean.dat;
     

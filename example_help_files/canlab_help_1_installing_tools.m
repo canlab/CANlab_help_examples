@@ -93,9 +93,53 @@
 % For full functionality, the other toolboxes below are recommended:
 %
 
+%% Installing SPM
+% 
+% *!* Important: You will also need to install spm12 separately, and add it
+% to your matlab path. 
+% The latest version at the time of writing is SPM12, which can be downloaded here:
+%
+% <https://www.fil.ion.ucl.ac.uk/spm/software/spm12/>
+%
+
 %% Quick start instructions
 %
-% Before you start, the CANlab_Core_Tools must be added to your path with
+% # Download SPM12 from https://www.fil.ion.ucl.ac.uk/spm/
+% # Find the SPM12 folder and drag it into your command window. 
+%    Matlab will go to that directory (execute the cd command).
+% # In Matlab, type |addpath pwd|. This adds the main SPM12 folder to your path.
+% # Type |addpath canonical|. This adds the |canonical| subfolder to your
+%    path.
+% # Go to https://github.com/canlab/ and click on CanlabCore
+% # Sign into Github (top right corner)
+% # Click "Clone or Download" 
+% # Click "Open in Desktop" (if you have Github Desktop) to clone the
+%    repository
+% # Find the folder and drag it into your Matlab command window. 
+% # In Matlab, type |g = genpath(pwd)|. This lists all the subfolders in a string |g|
+% # Type |addpath(g)|. This adds them to your path.
+% # Type |savepath|. This saves your path for future use.
+%
+% Repeat the Clone/genpath/addpath steps for the Neuroimaging_Pattern_Masks
+% repository, and save the path again.
+
+
+%%
+% Quick start: Batch install script
+%
+% The main goal of the code below is to run:
+% |canlab_toolbox_setup|
+% This is a script that attempts to:
+% # Check for CANlab repositories on your computer
+% # Download any that are missing
+% # Add them to your Matlab path with subfolders.
+%
+% _Note_: Unfortunately as of Jan 2020 this does not work well on
+% everyone's computers, due to OS-related variability. The workaround is to
+% install them manually as per the instructions above.
+%
+% |canlab_toolbox_setup| is in the CanlabCore repository. So before you run it
+% the CANlab_Core_Tools must be added to your path with
 % subfolders. Otherwise, you will get errors.
 %
 % The script canlab_toolbox_setup can help download and install the
@@ -164,11 +208,3 @@ canlab_toolbox_setup
 % It looks for and installs toolboxes in the current directory, 
 % which (thanks to the code above) is the path name in base_dir_for_repositories
 
-%% Installing SPM
-% 
-% *!* Important: You will also need to install spm12 separately, and add it
-% to your matlab path. 
-% The latest version at the time of writing is SPM12, which can be downloaded here:
-%
-% <https://www.fil.ion.ucl.ac.uk/spm/software/spm12/>
-%
