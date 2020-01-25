@@ -212,6 +212,43 @@ image_obj_48 = get_wh_image(image_obj, indx_list);  % Get the images we want
 
 % You can try to extract data from the thalamus and repeat the t-test.
 
+%% Selecting multiple regions using custom label fields
+% In addition to the .labels field, atlas objects have fields for additional 
+% labels (.labels_2, etc.). These can be used to group, and select, regions 
+% at multiple levels of a spatial hierarchy.  For example, ?canlab2018_2mm? 
+% atlas has macro-network and anatomical group labels in the ?labels_2? field. 
+% You can use these to select all the regions associated with a particular 
+% resting-state network or group like the brainstem or basal ganglia. 
+% Here?s a code snippet to locate/pull out all the default mode network 
+% regions using the select_atlas_subset() method. This method can also return 
+% a vector that you can use to select elements of associated connectivity matrices.
+%
+% You can create and/or annotate your own atlas labels and add them to the
+% .labels, labels_2, or other fields, and use select_atlas_subset to
+% extract and manipulate them.
+
+atlas_obj = load_atlas('canlab2018_2mm');
+
+% List all the macro-level labels in .labels_2 field
+disp(unique(atlas_obj.labels_2)')
+
+% Pull out all regions with ?Def? (Default) as part of the label in labels_2 
+atlas_obj = select_atlas_subset(atlas_obj, {'Def'}, 'labels_2');
+create_figure('isosurface');
+surface_handles = isosurface(atlas_obj);
+% let's add a cortical surface for context
+% We'll make the back surface (right) opaque, and the front (left) transparent
+han = addbrain('hires right');
+set(han, 'FaceAlpha', 1);
+han2 = addbrain('hires left');
+set(han2, 'FaceAlpha', 0.1);
+axis image vis3d off
+material dull
+view(-88, 31);
+
+lightRestoreSingle
+drawnow, snapnow
+
 %% Explore on your own
 %
 % 1. One of the ideas about emotion regulation is that positive appraisal involves

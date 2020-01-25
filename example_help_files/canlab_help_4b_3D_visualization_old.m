@@ -11,7 +11,7 @@
 % isocaps functions.
 %
 
-%% Prepare sample statistical results maps
+%% Prepare a sample statistical results map
 %
 % For this walkthrough, we'll use the "Pain, Cognition, Emotion balanced N = 270 dataset" 
 % from Kragel et al. 2018, Nature Neuroscience. 
@@ -48,15 +48,11 @@ t = ttest(neg_emo, .001, 'fdr');
 
 % Find the images for other conditions and save them for later:
 
-t_emo = t;
-
 wh = find(strcmp(metadata.Domain, 'Cog_control'));
 cog_control = get_wh_image(test_images, wh);
-t_cog = ttest(cog_control, .001, 'fdr');
 
 wh = find(strcmp(metadata.Domain, 'Pain'));
 pain = get_wh_image(test_images, wh);
-t_pain = ttest(pain, .001, 'fdr');
 
 
 %% The surface() method
@@ -73,77 +69,40 @@ surface(t);
 drawnow, snapnow
 
 % This generates a different plot 
-create_figure('lateral surfaces');
-surface_handles = surface(t, 'foursurfaces', 'noverbose');
+t.surface('foursurfaces', 'noverbose');
 snapnow
 
 % You can see more options with:
 % |help statistic_image.surface| or |help t.surface|
 
-% You can also use the |render_on_surface()| to method to change the colormap:
+%% Using the surface() method for 3-D cutaways
+%
+% The surface() method with the 'cutaway' option lets you render blobs
+% on a number of pre-set choices for 3-D cutaway surfaces. 
+%
+% The anatomical image used by default is adapted from the 7T high-resolution 
+% atlas of Keuken, Forstmann et al.  
+% References:
+% Keuken et al. (2014). Quantifying inter-individual anatomical variability in the subcortex using 7T structural MRI.                                                                                                                 
+% Forstmann, Birte U., Max C. Keuken, Andreas Schafer, Pierre-Louis Bazin, Anneke Alkemade, and Robert Turner. 2014. ?Multi-Modal Ultra-High Resolution Structural 7-Tesla MRI Data Repository.? Scientific Data 1 (December): 140050.
+% Returning coordinates in mm and meshgrid matrices.
 
-render_on_surface(t, surface_handles, 'colormap', 'summer');
+[all_surf_handles, pcl, ncl] = surface(t, 'cutaway', 'ycut_mm', -30, 'noverbose');
 snapnow
 
-%% Using the fmridisplay object to create a registry of montages/surfaces
-% The fmridisplay object is an object class that stores information about a
-% set of display items you have created. It stores information about a
-% series of montages (in the same figure or different figures) and surfaces
-% along with their handles. 
-%
-% You can use this to render activations on a whole set of slices/surfaces
-% at once. You can create your own custom views, or use pre-packaged sets
-% of montages/surfaces created by the function |canlab_results_fmridisplay|
-%
-% The code snippet below displays our t-map on a relatively complete series
-% of slices and surfaces, so you can see the "whole picture".
-
-my_display_obj = canlab_results_fmridisplay([], 'montagetype', 'full');
-my_display_obj = addblobs(my_display_obj, region(t));
+create_figure('cutaways');  axis off
+han = surface(t, 'right_cutaway', 'noverbose');
 snapnow
 
-%%
-% You can see some prepackaged sets in |help canlab_results_fmridisplay|
-% These include: 
-% 'full'            Axial, coronal, and saggital slices, 4 cortical surfaces
-% 'compact'         Midline saggital and two rows of axial slices [the default] 
-% 'compact2'        A single row showing midline saggital and axial slices
-% 'multirow'        A series of 'compact2' displays in one figure for comparing different images/maps side by side
-% 'regioncenters'   A series of separate axes, each focused on one region
-%
-% In addition, you can pass in a series of optional keywords that will be passed onto the
-% |addblobs| object method that controls rendering of the blobs on slices.
-% (They don't all work for surfaces). These control colors, inclusion of an
-% *outline* around each activation blob/region, and more.
-% See |help fmridisplay.addblobs| for more information.
-% Here is an example using a few of the options.
-
-my_display_obj = canlab_results_fmridisplay(t, 'compact2', 'color', [1 0 0], 'nooutline', 'trans');
-
-%% 
-% After creating the display, other maps can be added.
-% The addblobs() method requires a region object, so we use region(t) to convert to a region object.
-% This shows us regions activated during negative emotion in red and pain
-% in blue.
-
-my_display_obj = addblobs(my_display_obj, region(t_pain), 'color', [0 0 1], 'nooutline', 'trans');
+create_figure('cutaways'); axis off
+han = surface(t, 'coronal_slabs', 'noverbose');
 snapnow
 
-%%
-% my_display_obj is an fmridisplay-class object. It has its own methods:
+create_figure('cutaways'); axis off
 
-methods(my_display_obj)
-
-% One particularly useful feature is that you can add or _remove_ activation blobs.
-% This allows you to create a canonical set of views and then render one
-% activation map on them, remove the blobs, and render other maps on the
-% same set of display items. You can add points, spheres (e.g., from
-% different studies), and more.
-%
-% When you operate on an fmridisplay object, pass it back out as an output
-% argument so that the information you updated will be available. 
-
-my_display_obj = removeblobs(my_display_obj);
+poscm = colormap_tor([.5 0 .5], [1 0 0]);  % purple to red
+     
+surface_handles = t.surface('cutaway', 'ycut_mm', 10, 'pos_colormap', poscm, 'noverbose');
 snapnow
 
 %% Using addbrain to load or build surfaces
@@ -173,25 +132,7 @@ surface_handles = addbrain('thalamus_group');
 
 surface_handles = [surface_handles addbrain('pbn')];
 surface_handles = [surface_handles addbrain('rn')];
-surface_handles = [surface_handles addbrain('pag')];
 
-drawnow, snapnow
-
-%%
-% Now render the statistic image stored in _t_ onto those surfaces.
-% All non-activated areas turn gray.
-
-render_on_surface(t, surface_handles, 'colormap', 'summer');
-set(surface_handles, 'FaceAlpha', .85);
-set(surface_handles(5:6), 'FaceAlpha', .15);   % Make brainstem and thalamus shell more transparent
-drawnow, snapnow
-
-% Emphasize positive values, in a hot colormap
-render_on_surface(t, surface_handles, 'clim', [0.01 3]);
-drawnow, snapnow
-
-% Show positive and negative values, in a hot colormap
-render_on_surface(t, surface_handles, 'clim', [-3 3]);
 drawnow, snapnow
 
 %%
@@ -251,7 +192,7 @@ drawnow, snapnow
 
 surface_handles = addbrain('eraseblobs',surface_handles);
 
-title('Negative Emotion');
+title('Megative Emotion');
 t = ttest(neg_emo, .001, 'unc');
 t.surface('surface_handles', surface_handles, 'noverbose');
 drawnow, snapnow
@@ -263,10 +204,6 @@ drawnow, snapnow
 %
 % You can also pass any of these keywords into surface() to generate the
 % surface and render colored blobs.
-% Let's render these with and without an unthresholded pain map
-
-t = ttest(pain, 1, 'unc');
-t_thr = threshold(t, .05, 'fdr');
 
 keywords = {'left_cutaway' 'right_cutaway' 'left_insula_slab' 'right_insula_slab' 'accumbens_slab' 'coronal_slabs' 'coronal_slabs_4' 'coronal_slabs_5'};
 
@@ -274,58 +211,22 @@ for i = 1:length(keywords)
     
     create_figure('cutaways'); axis off
 
-    surface_handles = surface(t_thr, keywords{i});
-    
-    % This essentially runs the code below:
-    
-    % surface_handles = addbrain(keywords{i}, 'noverbose');
-    % render_on_surface(t, surface_handles, 'clim', [-7 7]);
+    surface_handles = addbrain(keywords{i});
+    title(['addbrain(' keywords{i} ')']);
     
     % Alternative: This command creates the same surfaces:
     % surface_handles = canlab_canonical_brain_surface_cutaways(keywords{i});
-    % render_on_surface(t, surface_handles, 'clim', [-7 7]);
-
+    
     drawnow, snapnow
     
 end
 
-%% 
-% Plot thresholded and unthresholded maps side by side
+%%
+% Let's add a pain map to this last one
 
-create_figure('cutaways',1, 2); axis off
-
-surface_handles = surface(t, 'right_cutaway');
-title('Pain, Unthresholded')
-
-subplot(1, 2, 2);
-surface_handles = surface(t_thr, 'right_cutaway');
-title('Pain, thresholded')
-
-drawnow, snapnow
-
-
-%% 
-% *Controlling options in render_on_surface()*
-%
-% When the t map has positive and negative values, render_on_surface creates a special
-% bicolor split colormap that has warm colors for positive vals, and cool colors
-% for negative vals. You can set the color limits (here, in t-values)
-
-create_figure('cutaways'); axis off
-surface_handles = surface(t_thr, 'coronal_slabs');
-
-render_on_surface(t_thr, surface_handles, 'clim', [-4 4]);
-drawnow, snapnow
-
-% You can set the colormap to any Matlab colormap:
-render_on_surface(t_thr, surface_handles, 'colormap', 'summer');
-drawnow, snapnow
-
-% If your image is positive-valued only (or negative-valued only), a
-% bicolor split map will not be created:
-
-t = threshold(t_thr, [2 Inf], 'raw-between');
-render_on_surface(t, surface_handles, 'colormap', 'winter', 'clim', [2 6]);
+title('Pain');
+t = ttest(pain, .001, 'unc');
+t.surface('surface_handles', surface_handles, 'noverbose');
 drawnow, snapnow
 
 %% Creating isosurfaces
@@ -338,9 +239,7 @@ drawnow, snapnow
 % Here's a simple example visualizing all of the parcels in an atlas as 3-D
 % blobs:
 
-t = ttest(pain, .01, 'unc');
-
-atlas_obj = load_atlas('thalamus');
+atlas_obj = load_atlas('basal_ganglia');
 
 create_figure('isosurface');
 surface_handles = isosurface(atlas_obj);
@@ -352,12 +251,6 @@ view(210, 20);
 lightRestoreSingle
 
 drawnow, snapnow
-
-% You can render blobs on these surfaces too.
-
-render_on_surface(t, surface_handles, 'colormap', 'hot');
-drawnow, snapnow
-
 
 %%
 % Let's load another atlas, and pull out all the "default mode" regions
@@ -383,25 +276,6 @@ view(-88, 31);
 lightRestoreSingle
 
 drawnow, snapnow
-
-%% Using isosurface to create a custom surface
-% You can build a cutaway surface or a series of them with the isosurface method, from
-% any suitable image. The image used here is a mean anatomical image that
-% renders nicely. 
-% As always, you can use Matlab's rendering to change the look of the surfaces
-
-anat = fmri_data(which('keuken_2014_enhanced_for_underlay.img'), 'noverbose');
-
-create_figure('cutaways'); axis off
-
-surface_handles = isosurface(anat, 'thresh', 140, 'nosmooth', 'xlim', [-Inf 0], 'YLim', [-30 Inf], 'ZLim', [-Inf 40]);
-
-render_on_surface(t, surface_handles, 'colormap', 'hot');
-
-view(-127, 33);
-set(surface_handles, 'FaceAlpha', .85);
-snapnow
-
 %% Explore on your own
 %
 % 1. Try to create your own custom brain surface to visualize one of the 3
