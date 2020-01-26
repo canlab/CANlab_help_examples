@@ -1,0 +1,597 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Compare pain-related brain patterns</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-01-26"><meta name="DC.source" content="compare_pain_patterns_sens_spec.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:14px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Compare pain-related brain patterns</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">About this script</a></li><li><a href="#2">Final comparison table</a></li></ul></div><h2 id="1">About this script</h2><p>This script compares several pain-related 'signature' patterns developed in the CANlab over the past years. It uses a test dataset of N = 270 participants from Kragel et al. 2018 to test the patterns' sensitivity and specificity to pain.</p><p>it collects some key pain-classification stats in a table called <tt>pain_table</tt> for comparison across signatures</p><p>At this writing, it uses the fmri_data method <tt>test_pattern_on_kragel_2018_n270_data</tt> This tests the cosine similarity between a pattern and each test image, and uses <tt>roc_plot</tt> to establish an optimal balanced accuracy threshold for one-vs-all classification of pain, cognitive control, and emotion task categories.</p><p>Tests are prospective tests on new datasets and are largely unbiased. However, there is some overlap between thermal pain datasets (Studies 1 and 2) and the training data. This presents a potential for bias, which can be assessed by comparing these studies to other, independent test studies.</p><p>One pattern, 'plspain', was developed on the N = 270 data and is not tested, as this test is biased.</p><pre class="codeinput"><span class="comment">% ----------------------------------------------------------------------</span>
+<span class="comment">% Display helper functions: Called by later scripts</span>
+<span class="comment">% ----------------------------------------------------------------------</span>
+
+dashes = <span class="string">'----------------------------------------------'</span>;
+printstr = @(dashes) disp(dashes);
+printhdr = @(str) fprintf(<span class="string">'%s\n%s\n%s\n'</span>, dashes, str, dashes);
+
+disp(<span class="string">'Process: test_pattern_on_kragel_2018_n270_data'</span>);
+printstr(dashes)
+
+<span class="comment">% Init</span>
+pain_table = table();
+
+<span class="comment">% ----------------------------------------------------------------------</span>
+<span class="comment">% Loop through patterns</span>
+<span class="comment">% ----------------------------------------------------------------------</span>
+
+pattern_names = {<span class="string">'nps'</span> <span class="string">'cpdm'</span> <span class="string">'pdm1'</span> <span class="string">'siips'</span> <span class="string">'fmpain'</span>};
+
+<span class="keyword">for</span> i = 1:length(pattern_names)
+
+    pat_name = pattern_names{i};
+
+    printhdr(<span class="string">' '</span>); printhdr(pat_name); printhdr(<span class="string">' '</span>);
+
+    <span class="keyword">switch</span> pat_name
+        <span class="keyword">case</span> <span class="string">'pdm1'</span>
+            obj = load_image_set(<span class="string">'pdm'</span>);
+            obj = get_wh_image(obj, 2);
+
+        <span class="keyword">otherwise</span>
+            obj = load_image_set(pat_name);
+    <span class="keyword">end</span>
+
+STATS = test_pattern_on_kragel_2018_n270_data(obj);
+
+drawnow, snapnow
+
+pain_table(i, :) = STATS.summary_table(1, :);
+pain_table.Properties.RowNames{i} = pat_name;
+
+<span class="keyword">end</span> <span class="comment">% Pattern loop</span>
+</pre><pre class="codeoutput">Process: test_pattern_on_kragel_2018_n270_data
+----------------------------------------------
+----------------------------------------------
+ 
+----------------------------------------------
+----------------------------------------------
+nps
+----------------------------------------------
+----------------------------------------------
+ 
+----------------------------------------------
+Loaded images:
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2013_Wager_NEJM_NPS/weights_NSF_grouppred_cvpcr.img
+Process: test_pattern_on_kragel_2018_n270_data
+----------------------------------------------
+ 
+Loading /Users/torwager/Google Drive/CanlabDataRepository/Study_Subject_Level_Maps/2018_Kragel_Generalizability/kragel_2018_nat_neurosci_270_subjects_test_images.mat
+Warning: Some images have zero values in some of the 43851 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 18  16  16  16  16  16  16  16  16 131  16  16  16  16  16  12 146 515  34 133 191 114 1204 261  68 121 269 229 212 127   4   4   4   4 297   4   4  72   4   4   4  14  16   4   4   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 29650   0   0   0   0   0   0   0   0   0   0  77  21  30  26  51  11  66  39  70  61  48   1  17   6  59   0   0   0   0   0   0   0   0   0   0  23   0   0   0   0 409 410 409 409 409 409 409 410 410 410 409 409 410 409 409 601 1242 667 571 879 601 798 964 879 1407 1400 831 749 1176 860 791 1639 524 842 985 1335 700 826 978 885 556 927 487 757 800   0   0   0   0   0   0   0   0   0   0   0   0   0 665   0   0   0   0   0   0   0   0   0   0 27836   0 27516   0   0   0 1003 1417 1368 1064 1408 1347 996 1079 1006 1046 542 1569 776 1023  23  56  74  62  87 718  56 1400 374 269  56 108 252  56  56  56   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 438   0   0   0 
+Bootstrapping CIs
+----------------------------------------------
+Pattern classification results
+----------------------------------------------
+Applied pattern to test data from 18 studies, n = 270 participants
+From Kragel et al. 2018, Nature Neuroscience
+ 
+Classification of pain vs. other
+
+ROC_PLOT Output: Single-interval, Optimal balanced error rate
+Threshold:	0.05	Sens:	 84% CI(77%-92%)	Spec:	 84% CI(78%-90%)	PPV:	 73% CI(65%-82%)	Nonparametric AUC:	0.94	Parametric d_a:	2.18	  Accuracy:	 84% +- 2.2% (SE), P = 0.000000
+Threshold for cosine_sim = 0.0481, Cohen's d(pain vs no) = 2.18, Bootstrapped CI is [1.88 2.50]
+ 
+Classification of cognitive control vs. other
+
+ROC_PLOT Output: Single-interval, Optimal balanced error rate
+Threshold:	0.01	Sens:	 33% CI(23%-43%)	Spec:	 33% CI(26%-40%)	PPV:	 20% CI(13%-27%)	Nonparametric AUC:	0.28	Parametric d_a:	-0.82	  Accuracy:	 33% +- 2.9% (SE), P = 1.000000
+Threshold for cosine_sim = 0.0075, Cohen's d(pain vs no) = -0.82, Bootstrapped CI is [-1.06 -0.59]
+Classification of emotion vs. other
+
+ROC_PLOT Output: Single-interval, Optimal balanced error rate
+Threshold:	0.01	Sens:	 37% CI(26%-47%)	Spec:	 36% CI(29%-44%)	PPV:	 22% CI(15%-29%)	Nonparametric AUC:	0.29	Parametric d_a:	-0.81	  Accuracy:	 36% +- 2.9% (SE), P = 0.332672
+Threshold for cosine_sim = 0.0092, Cohen's d(pain vs no) = -0.81, Bootstrapped CI is [-1.04 -0.56]
+ 
+                   Cos_Sim_Thresh    Cohens_d    Sensitivity    Specificity      PPV  
+                   ______________    ________    ___________    ___________    _______
+
+    Pain              0.048063         2.1792      0.84444        0.84444      0.73077
+    Cog Control      0.0075444       -0.82023      0.33333        0.33333          0.2
+    Neg Emotion      0.0091983       -0.80525      0.36667        0.36111      0.22297
+
+----------------------------------------------
+Stats for individual studies
+----------------------------------------------
+Col   1: ThermalPain1	Col   2: ThermalPain2	Col   3: VisceralPain1	Col   4: VisceralPain2	Col   5: MechanicalPain1	Col   6: MechanicalPain2	Col   7: Cog WM1	Col   8: Cog WM2	Col   9: Cog Inhib1	Col  10: Cog Inhib2	Col  11: Cog RespSel1	Col  12: Cog RespSel2	Col  13: Emotion_Aversiveimages1	Col  14: Emotion_Aversiveimages2	Col  15: Emotion_Rejection1	Col  16: Emotion_VicariousPain2	Col  17: Emotion_AversiveSound1	Col  18: Emotion_AversiveSound2	
+---------------------------------------------
+Tests of column means against zero
+---------------------------------------------
+              Name               Mean_Value     Std_Error        T            P          Cohens_d 
+    _________________________    ___________    _________    _________    __________    __________
+
+    'ThermalPain1'                   0.12138     0.016059        7.558    2.6369e-06        1.9515
+    'ThermalPain2'                   0.10681     0.015862       6.7332    9.5758e-06        1.7385
+    'VisceralPain1'                  0.15208     0.015319       9.9278    1.0217e-07        2.5634
+    'VisceralPain2'                  0.13161     0.017622       7.4688    3.0186e-06        1.9284
+    'MechanicalPain1'                0.10739     0.018766       5.7228    5.2703e-05        1.4776
+    'MechanicalPain2'                0.14618      0.01545       9.4613    1.8466e-07        2.4429
+    'Cog WM1'                      -0.075125     0.011901      -6.3126    1.9144e-05       -1.6299
+    'Cog WM2'                      -0.028527    0.0089759      -3.1782     0.0067052       -0.8206
+    'Cog Inhib1'                   0.0073717     0.010077      0.73155       0.47651       0.18888
+    'Cog Inhib2'                 -9.2291e-05     0.007427    -0.012426       0.99026    -0.0032085
+    'Cog RespSel1'                -0.0016028     0.017993    -0.089083       0.93028     -0.023001
+    'Cog RespSel2'                 -0.026105     0.020989      -1.2438       0.23401      -0.32114
+    'Emotion_Aversiveimages1'       -0.08181     0.016546      -4.9444    0.00021568       -1.2766
+    'Emotion_Aversiveimages2'      -0.030305    0.0091044      -3.3286     0.0049713      -0.85944
+    'Emotion_Rejection1'            -0.10194     0.010842      -9.4017    1.9946e-07       -2.4275
+    'Emotion_VicariousPain2'      -0.0090722     0.014281     -0.63524       0.53552      -0.16402
+    'Emotion_AversiveSound1'        0.072226     0.011162       6.4707    1.4713e-05        1.6707
+    'Emotion_AversiveSound2'        0.031567     0.015982       1.9752      0.068297          0.51
+
+</pre><img vspace="5" hspace="5" src="compare_pain_patterns_sens_spec_01.png" alt=""> <img vspace="5" hspace="5" src="compare_pain_patterns_sens_spec_02.png" alt=""> <pre class="codeoutput">----------------------------------------------
+ 
+----------------------------------------------
+----------------------------------------------
+cpdm
+----------------------------------------------
+----------------------------------------------
+ 
+----------------------------------------------
+Loaded images:
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2020_Geuter_pain_multivariate_mediation_PDM/Geuter_2020_cPDM_combined_pain_map.nii
+Process: test_pattern_on_kragel_2018_n270_data
+----------------------------------------------
+ 
+Loading /Users/torwager/Google Drive/CanlabDataRepository/Study_Subject_Level_Maps/2018_Kragel_Generalizability/kragel_2018_nat_neurosci_270_subjects_test_images.mat
+Warning: Some images have zero values in some of the 193671 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+3709 2932 2418 2380 2154 3245 2077 2291 4501 11849 1879 2545 1468 1860 3661 11302 15073 18045 10252 12063 15877 12607 29030 21318 12390 10915 21189 14487 13940 10095 1301 4047 964 2189 7451 3033 11321 4546 4377 8571 3600 5059 3814 5482 3154   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 139750   0   0   0   0   0   0   0   0   0   0 10891 10686 10928 10323 10403 7861 11266 8416 8478 12253 9866 8295 9886 9870 10446 121   0 5714   0   0 2870   0   0   0  18 17179 3929 9536 7366 2798 15372 15377 15629 15372 15372 20791 15374 15373 15374 15376 15373 18929 15510 15372 15372 28382 29623 27129 26378 29446 26863 26580 26577 29547 32041 27885 30906 29452 29939 25370 27083 27127 22233 25942 29080 32254 25124 27331 25542 26446 26945 27463 23737 28257 30238   0   0   0   0   0   0   6  17   0   0   0   0   0 15419   0  59   0   0   0   1   0   0   0   0 121032   0 126647   0   0   0 32252 30204 32298 25731 38896 33904 35218 30828 25232 31619 26235 32471 35709 29809 22098 11472 17983 17133 19425 32711 18839 31188 26615 23480 13874 20572 21999 16821 8825 6894   0 118  65 3423   4 470   0   3 1861   0  42   0 1739   0   0   0   0   0   0   0 113 2197   0   0   0   0  96   0   0   0   0  54 315  15   0   0  21  23 363   3   0  32 249 600   4   0   0  40   0   0   0 1064   0   0   0   0  79   0   0   0 
+Bootstrapping CIs
+----------------------------------------------
+Pattern classification results
+----------------------------------------------
+Applied pattern to test data from 18 studies, n = 270 participants
+From Kragel et al. 2018, Nature Neuroscience
+ 
+Classification of pain vs. other
+
+ROC_PLOT Output: Single-interval, Optimal balanced error rate
+Threshold:	0.10	Sens:	 81% CI(72%-89%)	Spec:	 81% CI(75%-87%)	PPV:	 68% CI(59%-77%)	Nonparametric AUC:	0.91	Parametric d_a:	1.87	  Accuracy:	 81% +- 2.4% (SE), P = 0.000000
+Threshold for cosine_sim = 0.0955, Cohen's d(pain vs no) = 1.87, Bootstrapped CI is [1.57 2.15]
+ 
+Classification of cognitive control vs. other
+
+ROC_PLOT Output: Single-interval, Optimal balanced error rate
+Threshold:	0.05	Sens:	 31% CI(22%-42%)	Spec:	 32% CI(25%-38%)	PPV:	 19% CI(12%-25%)	Nonparametric AUC:	0.27	Parametric d_a:	-0.88	  Accuracy:	 31% +- 2.8% (SE), P = 0.564577
+Threshold for cosine_sim = 0.0459, Cohen's d(pain vs no) = -0.88, Bootstrapped CI is [-1.10 -0.65]
+Classification of emotion vs. other
+
+ROC_PLOT Output: Single-interval, Optimal balanced error rate
+Threshold:	0.05	Sens:	 38% CI(28%-48%)	Spec:	 39% CI(32%-46%)	PPV:	 24% CI(17%-31%)	Nonparametric AUC:	0.33	Parametric d_a:	-0.61	  Accuracy:	 38% +- 3.0% (SE), P = 0.083665
+Threshold for cosine_sim = 0.0500, Cohen's d(pain vs no) = -0.61, Bootstrapped CI is [-0.84 -0.37]
+ 
+                   Cos_Sim_Thresh    Cohens_d    Sensitivity    Specificity      PPV  
+                   ______________    ________    ___________    ___________    _______
+
+    Pain              0.095523         1.8655      0.81111        0.81111      0.68224
+    Cog Control       0.045936       -0.88223      0.31111        0.31667      0.18543
+    Neg Emotion       0.049957       -0.60818      0.37778        0.38889      0.23611
+
+----------------------------------------------
+Stats for individual studies
+----------------------------------------------
+Col   1: ThermalPain1	Col   2: ThermalPain2	Col   3: VisceralPain1	Col   4: VisceralPain2	Col   5: MechanicalPain1	Col   6: MechanicalPain2	Col   7: Cog WM1	Col   8: Cog WM2	Col   9: Cog Inhib1	Col  10: Cog Inhib2	Col  11: Cog RespSel1	Col  12: Cog RespSel2	Col  13: Emotion_Aversiveimages1	Col  14: Emotion_Aversiveimages2	Col  15: Emotion_Rejection1	Col  16: Emotion_VicariousPain2	Col  17: Emotion_AversiveSound1	Col  18: Emotion_AversiveSound2	
+---------------------------------------------
+Tests of column means against zero
+---------------------------------------------
+              Name               Mean_Value    Std_Error       T            P         Cohens_d
+    _________________________    __________    _________    ________    __________    ________
+
+    'ThermalPain1'                 0.13399     0.016896         7.93    1.5167e-06      2.0475
+    'ThermalPain2'                 0.18886     0.023917       7.8962    1.5938e-06      2.0388
+    'VisceralPain1'                0.15598     0.015544       10.035     8.947e-08       2.591
+    'VisceralPain2'                0.18988     0.029261       6.4892     1.427e-05      1.6755
+    'MechanicalPain1'              0.20763     0.031004       6.6971    1.0154e-05      1.7292
+    'MechanicalPain2'              0.19355     0.019831       9.7599    1.2613e-07        2.52
+    'Cog WM1'                    -0.015196     0.013293      -1.1432       0.27213    -0.29517
+    'Cog WM2'                    -0.029146      0.01643       -1.774      0.097813    -0.45803
+    'Cog Inhib1'                  0.071067     0.012029       5.9081    3.8144e-05      1.5255
+    'Cog Inhib2'                  0.028061     0.011272       2.4895      0.025989     0.64279
+    'Cog RespSel1'               0.0089521     0.027452       0.3261       0.74917      0.0842
+    'Cog RespSel2'               -0.013554     0.025575     -0.52999       0.60442    -0.13684
+    'Emotion_Aversiveimages1'     -0.03265     0.022274      -1.4658        0.1648    -0.37847
+    'Emotion_Aversiveimages2'    -0.020217      0.01668       -1.212       0.24556    -0.31294
+    'Emotion_Rejection1'         -0.031895     0.013368      -2.3859      0.031716    -0.61603
+    'Emotion_VicariousPain2'      0.050058     0.018194       2.7514      0.015602     0.71041
+    'Emotion_AversiveSound1'       0.12074     0.016587       7.2788    4.0399e-06      1.8794
+    'Emotion_AversiveSound2'      0.069999     0.015688       4.4619    0.00053695      1.1521
+
+</pre><img vspace="5" hspace="5" src="compare_pain_patterns_sens_spec_03.png" alt=""> <pre class="codeoutput">----------------------------------------------
+ 
+----------------------------------------------
+----------------------------------------------
+pdm1
+----------------------------------------------
+----------------------------------------------
+ 
+----------------------------------------------
+Loaded images:
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2020_Geuter_pain_multivariate_mediation_PDM/Geuter_2020_cPDM_combined_pain_map.nii
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2020_Geuter_pain_multivariate_mediation_PDM/All_PDM10_unthresholded.nii
+Process: test_pattern_on_kragel_2018_n270_data
+----------------------------------------------
+ 
+Loading /Users/torwager/Google Drive/CanlabDataRepository/Study_Subject_Level_Maps/2018_Kragel_Generalizability/kragel_2018_nat_neurosci_270_subjects_test_images.mat
+Warning: Some images have zero values in some of the 193671 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+3709 2932 2418 2380 2154 3245 2077 2291 4501 11849 1879 2545 1468 1860 3661 11302 15073 18045 10252 12063 15877 12607 29030 21318 12390 10915 21189 14487 13940 10095 1301 4047 964 2189 7451 3033 11321 4546 4377 8571 3600 5059 3814 5482 3154   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 139750   0   0   0   0   0   0   0   0   0   0 10891 10686 10928 10323 10403 7861 11266 8416 8478 12253 9866 8295 9886 9870 10446 121   0 5714   0   0 2870   0   0   0  18 17179 3929 9536 7366 2798 15372 15377 15629 15372 15372 20791 15374 15373 15374 15376 15373 18929 15510 15372 15372 28382 29623 27129 26378 29446 26863 26580 26577 29547 32041 27885 30906 29452 29939 25370 27083 27127 22233 25942 29080 32254 25124 27331 25542 26446 26945 27463 23737 28257 30238   0   0   0   0   0   0   6  17   0   0   0   0   0 15419   0  59   0   0   0   1   0   0   0   0 121032   0 126647   0   0   0 32252 30204 32298 25731 38896 33904 35218 30828 25232 31619 26235 32471 35709 29809 22098 11472 17983 17133 19425 32711 18839 31188 26615 23480 13874 20572 21999 16821 8825 6894   0 118  65 3423   4 470   0   3 1861   0  42   0 1739   0   0   0   0   0   0   0 113 2197   0   0   0   0  96   0   0   0   0  54 315  15   0   0  21  23 363   3   0  32 249 600   4   0   0  40   0   0   0 1064   0   0   0   0  79   0   0   0 
+Bootstrapping CIs
+----------------------------------------------
+Pattern classification results
+----------------------------------------------
+Applied pattern to test data from 18 studies, n = 270 participants
+From Kragel et al. 2018, Nature Neuroscience
+ 
+Classification of pain vs. other
+
+ROC_PLOT Output: Single-interval, Optimal balanced error rate
+Threshold:	0.10	Sens:	 79% CI(70%-86%)	Spec:	 78% CI(72%-84%)	PPV:	 65% CI(56%-73%)	Nonparametric AUC:	0.89	Parametric d_a:	1.73	  Accuracy:	 79% +- 2.5% (SE), P = 0.000025
+Threshold for cosine_sim = 0.1014, Cohen's d(pain vs no) = 1.73, Bootstrapped CI is [1.43 2.01]
+ 
+Classification of cognitive control vs. other
+
+ROC_PLOT Output: Single-interval, Optimal balanced error rate
+Threshold:	0.05	Sens:	 32% CI(23%-42%)	Spec:	 32% CI(26%-39%)	PPV:	 19% CI(13%-26%)	Nonparametric AUC:	0.26	Parametric d_a:	-0.92	  Accuracy:	 32% +- 2.8% (SE), P = 0.751845
+Threshold for cosine_sim = 0.0540, Cohen's d(pain vs no) = -0.92, Bootstrapped CI is [-1.14 -0.70]
+Classification of emotion vs. other
+
+ROC_PLOT Output: Single-interval, Optimal balanced error rate
+Threshold:	0.06	Sens:	 40% CI(30%-50%)	Spec:	 40% CI(33%-48%)	PPV:	 25% CI(18%-33%)	Nonparametric AUC:	0.36	Parametric d_a:	-0.51	  Accuracy:	 40% +- 3.0% (SE), P = 0.025503
+Threshold for cosine_sim = 0.0648, Cohen's d(pain vs no) = -0.51, Bootstrapped CI is [-0.73 -0.28]
+ 
+                   Cos_Sim_Thresh    Cohens_d    Sensitivity    Specificity      PPV  
+                   ______________    ________    ___________    ___________    _______
+
+    Pain               0.10141         1.7273      0.78889        0.78333      0.64545
+    Cog Control       0.053972        -0.9211      0.32222        0.32222      0.19205
+    Neg Emotion       0.064815       -0.50705          0.4            0.4         0.25
+
+----------------------------------------------
+Stats for individual studies
+----------------------------------------------
+Col   1: ThermalPain1	Col   2: ThermalPain2	Col   3: VisceralPain1	Col   4: VisceralPain2	Col   5: MechanicalPain1	Col   6: MechanicalPain2	Col   7: Cog WM1	Col   8: Cog WM2	Col   9: Cog Inhib1	Col  10: Cog Inhib2	Col  11: Cog RespSel1	Col  12: Cog RespSel2	Col  13: Emotion_Aversiveimages1	Col  14: Emotion_Aversiveimages2	Col  15: Emotion_Rejection1	Col  16: Emotion_VicariousPain2	Col  17: Emotion_AversiveSound1	Col  18: Emotion_AversiveSound2	
+---------------------------------------------
+Tests of column means against zero
+---------------------------------------------
+              Name               Mean_Value    Std_Error       T            P         Cohens_d 
+    _________________________    __________    _________    ________    __________    _________
+
+    'ThermalPain1'                   0.1281    0.017451       7.3408    3.6715e-06       1.8954
+    'ThermalPain2'                  0.19821    0.025537       7.7617    1.9438e-06       2.0041
+    'VisceralPain1'                 0.15863    0.017087       9.2837    2.3267e-07        2.397
+    'VisceralPain2'                 0.19738    0.030287       6.5168    1.3636e-05       1.6826
+    'MechanicalPain1'               0.20683    0.032741       6.3172    1.8999e-05       1.6311
+    'MechanicalPain2'               0.20732    0.019116       10.845    3.3882e-08       2.8003
+    'Cog WM1'                     0.0050636    0.014126      0.35847       0.72534     0.092557
+    'Cog WM2'                     0.0034242    0.016254      0.21067       0.83618     0.054396
+    'Cog Inhib1'                   0.082204     0.01214       6.7711    9.0074e-06       1.7483
+    'Cog Inhib2'                   0.047529    0.011174       4.2535     0.0008027       1.0982
+    'Cog RespSel1'                0.0066895    0.025289      0.26452       0.79523       0.0683
+    'Cog RespSel2'                -0.016331    0.025045     -0.65209       0.52491     -0.16837
+    'Emotion_Aversiveimages1'    -0.0039341    0.023259     -0.16914        0.8681    -0.043673
+    'Emotion_Aversiveimages2'     0.0056807    0.017581      0.32311       0.75139     0.083427
+    'Emotion_Rejection1'           0.020566    0.014659        1.403        0.1824      0.36226
+    'Emotion_VicariousPain2'       0.067607     0.01906        3.547     0.0032202      0.91583
+    'Emotion_AversiveSound1'        0.11433    0.017508       6.5301     1.334e-05       1.6861
+    'Emotion_AversiveSound2'       0.080188    0.017069        4.698    0.00034249        1.213
+
+</pre><img vspace="5" hspace="5" src="compare_pain_patterns_sens_spec_04.png" alt=""> <pre class="codeoutput">----------------------------------------------
+ 
+----------------------------------------------
+----------------------------------------------
+siips
+----------------------------------------------
+----------------------------------------------
+ 
+----------------------------------------------
+Loaded images:
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2017_Woo_SIIPS1/nonnoc_v11_4_137subjmap_weighted_mean.nii
+Process: test_pattern_on_kragel_2018_n270_data
+----------------------------------------------
+ 
+Loading /Users/torwager/Google Drive/CanlabDataRepository/Study_Subject_Level_Maps/2018_Kragel_Generalizability/kragel_2018_nat_neurosci_270_subjects_test_images.mat
+Warning: Some images have zero values in some of the 206777 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+4405 3996 3484 3353 3077 4367 3001 3251 5689 13737 2801 3569 2280 2640 4852 13596 17322 21858 12523 14013 18204 14955 38842 23849 15262 13441 24024 17059 16203 12502 4106 6650 3245 6578 17057 6691 13538 11801 7206 12132 6549 10600 9782 9648 7698   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 142925   0   0   0   0   0   0   0   0   0   0 13075 12863 13452 12794 12682 10330 14093 10798 10626 14452 12621 10845 12331 12088 13109 152 923 6264 948 186 3077 3996 166 927 679 18044 4129 10034 7744 2952 20484 20489 20755 20484 20484 25955 20486 20485 20486 20488 20485 24078 20623 20484 20484 31809 33404 32430 30309 33813 30950 30271 30739 34809 36811 31883 35765 34008 34012 28796 31048 30575 26436 30356 33341 36656 28519 31295 29157 30582 31456 33453 27167 32352 35427  18  18  20  18  18  52  85  41  18  91  18  33  18 16347  65  94  65  18  31  22  20  21  20  19 132175  44 135866  35  18  18 37132 33868 37511 29397 43310 38708 38887 34997 28516 35390 32117 36126 40899 33266 25342 15441 21968 21108 23405 36951 22834 35238 30772 27551 17842 24563 26007 20800 12792 10858   0 136  87 3583   7 477   0   5 1877   0  44   0 1762   0   0   0   0   0   0   0 113 2215   0   0   0   0  96   0   0   0   9 100 408  16   6  16  78  24 458   9   0  32 278 907   9   0  92  40   0  41 463 1094 413 338   0 241 8035 2423 1309  18 
+Bootstrapping CIs
+----------------------------------------------
+Pattern classification results
+----------------------------------------------
+Applied pattern to test data from 18 studies, n = 270 participants
+From Kragel et al. 2018, Nature Neuroscience
+ 
+Classification of pain vs. other
+
+ROC_PLOT Output: Single-interval, Optimal balanced error rate
+Threshold:	0.04	Sens:	 78% CI(69%-86%)	Spec:	 77% CI(70%-82%)	PPV:	 62% CI(53%-71%)	Nonparametric AUC:	0.86	Parametric d_a:	1.53	  Accuracy:	 77% +- 2.6% (SE), P = 0.000257
+Threshold for cosine_sim = 0.0433, Cohen's d(pain vs no) = 1.53, Bootstrapped CI is [1.24 1.81]
+ 
+Classification of cognitive control vs. other
+
+ROC_PLOT Output: Single-interval, Optimal balanced error rate
+Threshold:	0.02	Sens:	 49% CI(38%-59%)	Spec:	 49% CI(42%-56%)	PPV:	 32% CI(25%-40%)	Nonparametric AUC:	0.44	Parametric d_a:	-0.27	  Accuracy:	 49% +- 3.0% (SE), P = 0.760972
+Threshold for cosine_sim = 0.0239, Cohen's d(pain vs no) = -0.27, Bootstrapped CI is [-0.50 -0.04]
+Classification of emotion vs. other
+
+ROC_PLOT Output: Single-interval, Optimal balanced error rate
+Threshold:	0.00	Sens:	 26% CI(17%-35%)	Spec:	 26% CI(19%-32%)	PPV:	 15% CI(9%-20%)	Nonparametric AUC:	0.21	Parametric d_a:	-1.09	  Accuracy:	 26% +- 2.7% (SE), P = 0.006983
+Threshold for cosine_sim = 0.0008, Cohen's d(pain vs no) = -1.09, Bootstrapped CI is [-1.34 -0.84]
+ 
+                   Cos_Sim_Thresh    Cohens_d    Sensitivity    Specificity      PPV  
+                   ______________    ________    ___________    ___________    _______
+
+    Pain              0.043322         1.5296      0.77778        0.76667        0.625
+    Cog Control       0.023928       -0.26913      0.48889        0.48889      0.32353
+    Neg Emotion      0.0008386        -1.0949      0.25556        0.25556       0.1465
+
+----------------------------------------------
+Stats for individual studies
+----------------------------------------------
+Col   1: ThermalPain1	Col   2: ThermalPain2	Col   3: VisceralPain1	Col   4: VisceralPain2	Col   5: MechanicalPain1	Col   6: MechanicalPain2	Col   7: Cog WM1	Col   8: Cog WM2	Col   9: Cog Inhib1	Col  10: Cog Inhib2	Col  11: Cog RespSel1	Col  12: Cog RespSel2	Col  13: Emotion_Aversiveimages1	Col  14: Emotion_Aversiveimages2	Col  15: Emotion_Rejection1	Col  16: Emotion_VicariousPain2	Col  17: Emotion_AversiveSound1	Col  18: Emotion_AversiveSound2	
+---------------------------------------------
+Tests of column means against zero
+---------------------------------------------
+              Name               Mean_Value    Std_Error       T           P         Cohens_d
+    _________________________    __________    _________    _______    __________    ________
+
+    'ThermalPain1'                0.021376      0.014283     1.4966       0.15669     0.38643
+    'ThermalPain2'                0.083404      0.016692     4.9967    0.00019571      1.2901
+    'VisceralPain1'                0.11829      0.013817      8.561    6.1682e-07      2.2104
+    'VisceralPain2'                 0.1409      0.015523     9.0766    3.0585e-07      2.3436
+    'MechanicalPain1'              0.11818      0.024431     4.8374    0.00026341       1.249
+    'MechanicalPain2'             0.091111      0.012443     7.3225    3.7764e-06      1.8907
+    'Cog WM1'                     0.030254       0.01351     2.2393      0.041889     0.57819
+    'Cog WM2'                    -0.095131     0.0093548    -10.169    7.5851e-08     -2.6257
+    'Cog Inhib1'                  0.052562     0.0065672     8.0037    1.3621e-06      2.0665
+    'Cog Inhib2'                  0.026193     0.0065252     4.0141     0.0012802      1.0364
+    'Cog RespSel1'               0.0084053      0.018261    0.46029       0.65238     0.11885
+    'Cog RespSel2'                0.022856      0.024479    0.93369       0.36629     0.24108
+    'Emotion_Aversiveimages1'     -0.01557      0.011852    -1.3137       0.21007     -0.3392
+    'Emotion_Aversiveimages2'    -0.043464      0.017553    -2.4761      0.026668    -0.63933
+    'Emotion_Rejection1'         -0.080843     0.0075067     -10.77    3.7013e-08     -2.7807
+    'Emotion_VicariousPain2'       0.02886      0.017654     1.6347       0.12438     0.42209
+    'Emotion_AversiveSound1'     -0.027019     0.0080803    -3.3437     0.0048236    -0.86335
+    'Emotion_AversiveSound2'     -0.064098     0.0098001    -6.5405    1.3114e-05     -1.6887
+
+</pre><img vspace="5" hspace="5" src="compare_pain_patterns_sens_spec_05.png" alt=""> <pre class="codeoutput">----------------------------------------------
+ 
+----------------------------------------------
+----------------------------------------------
+fmpain
+----------------------------------------------
+----------------------------------------------
+ 
+----------------------------------------------
+Loaded images:
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2017_Lopez_Sola_Fibromyalgia/FM_pain_wholebrain.nii
+Process: test_pattern_on_kragel_2018_n270_data
+----------------------------------------------
+ 
+Loading /Users/torwager/Google Drive/CanlabDataRepository/Study_Subject_Level_Maps/2018_Kragel_Generalizability/kragel_2018_nat_neurosci_270_subjects_test_images.mat
+Warning: Some images have zero values in some of the 204970 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+3948 3278 2772 2648 2388 3643 2307 2510 4939 12524 2065 2822 1570 2110 4003 12521 16112 20341 11460 12994 17130 13802 37351 22565 14130 12267 22842 15878 15124 11412 2493 5029 1632 4956 15393 5059 11851 10165 5581 10470 4911 8962 8134 7997 6077   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 141223   0   0   0   0   0   0   0   0   0   0 12161 12115 12745 11616 11553 9244 12836 9802 9752 13468 11780 9662 11177 11013 11959 102 868 5960 896 150 2910 3912 135 863 638 17511 3952 9662 7479 2805 18694 18699 18961 18694 18694 24153 18696 18695 18696 18698 18695 22279 18833 18694 18694 30080 31721 30647 28614 32125 29314 28514 29010 33051 35042 30208 34036 32215 32271 27136 29296 28939 24701 28701 31556 34863 26835 29630 27500 28796 29670 31677 25430 30612 33659   3   3   5   3   3   3  32  21   3   5   3   3   3 15698   3  63   5   3   3   5   3   4   3   3 131023   3 134692   3   3   3 35327 32072 35704 27590 41503 36903 37080 33190 26710 33583 30310 34320 39092 31459 23536 13643 20170 19310 21607 35152 21036 33440 28974 25753 16044 22765 24209 19002 10994 9060   0  98  65 3438   5 467   0   3 1868   0  36   0 1739   0   0   0   0   0   0   0 113 2205   0   0   0   0  96   0   0   0   0  54 327  15   1  15  71  24 418   0   0  32 274 647   4   0  63  38   0  14 411 1060 380 293   0 230 7949 2368 1238   3 
+Bootstrapping CIs
+----------------------------------------------
+Pattern classification results
+----------------------------------------------
+Applied pattern to test data from 18 studies, n = 270 participants
+From Kragel et al. 2018, Nature Neuroscience
+ 
+Classification of pain vs. other
+
+ROC_PLOT Output: Single-interval, Optimal balanced error rate
+Threshold:	-0.01	Sens:	 68% CI(57%-77%)	Spec:	 68% CI(61%-74%)	PPV:	 51% CI(43%-60%)	Nonparametric AUC:	0.73	Parametric d_a:	0.84	  Accuracy:	 68% +- 2.8% (SE), P = 0.751845
+Threshold for cosine_sim = -0.0051, Cohen's d(pain vs no) = 0.84, Bootstrapped CI is [0.60 1.09]
+ 
+Classification of cognitive control vs. other
+
+ROC_PLOT Output: Single-interval, Optimal balanced error rate
+Threshold:	-0.01	Sens:	 41% CI(31%-51%)	Spec:	 42% CI(34%-49%)	PPV:	 26% CI(19%-33%)	Nonparametric AUC:	0.37	Parametric d_a:	-0.46	  Accuracy:	 41% +- 3.0% (SE), P = 0.006236
+Threshold for cosine_sim = -0.0144, Cohen's d(pain vs no) = -0.46, Bootstrapped CI is [-0.71 -0.21]
+Classification of emotion vs. other
+
+ROC_PLOT Output: Single-interval, Optimal balanced error rate
+Threshold:	-0.01	Sens:	 44% CI(35%-55%)	Spec:	 44% CI(37%-52%)	PPV:	 29% CI(21%-36%)	Nonparametric AUC:	0.41	Parametric d_a:	-0.34	  Accuracy:	 44% +- 3.0% (SE), P = 0.077389
+Threshold for cosine_sim = -0.0138, Cohen's d(pain vs no) = -0.34, Bootstrapped CI is [-0.61 -0.06]
+ 
+                   Cos_Sim_Thresh    Cohens_d    Sensitivity    Specificity      PPV  
+                   ______________    ________    ___________    ___________    _______
+
+    Pain             -0.0050914       0.84394      0.67778        0.67778      0.51261
+    Cog Control       -0.014383      -0.45806      0.41111        0.41667      0.26056
+    Neg Emotion       -0.013837      -0.34042      0.44444        0.44444      0.28571
+
+----------------------------------------------
+Stats for individual studies
+----------------------------------------------
+Col   1: ThermalPain1	Col   2: ThermalPain2	Col   3: VisceralPain1	Col   4: VisceralPain2	Col   5: MechanicalPain1	Col   6: MechanicalPain2	Col   7: Cog WM1	Col   8: Cog WM2	Col   9: Cog Inhib1	Col  10: Cog Inhib2	Col  11: Cog RespSel1	Col  12: Cog RespSel2	Col  13: Emotion_Aversiveimages1	Col  14: Emotion_Aversiveimages2	Col  15: Emotion_Rejection1	Col  16: Emotion_VicariousPain2	Col  17: Emotion_AversiveSound1	Col  18: Emotion_AversiveSound2	
+---------------------------------------------
+Tests of column means against zero
+---------------------------------------------
+              Name               Mean_Value    Std_Error       T            P         Cohens_d 
+    _________________________    __________    _________    ________    __________    _________
+
+    'ThermalPain1'                 0.016496     0.011786      1.3996        0.1834      0.36137
+    'ThermalPain2'               -0.0017379    0.0098779    -0.17594       0.86286    -0.045427
+    'VisceralPain1'               0.0065809     0.010183     0.64628       0.52855      0.16687
+    'VisceralPain2'                0.033837     0.014444      2.3427      0.034437      0.60489
+    'MechanicalPain1'              0.015821    0.0094064      1.6819       0.11475      0.43427
+    'MechanicalPain2'              0.027866    0.0072294      3.8545     0.0017518      0.99523
+    'Cog WM1'                     -0.097643     0.010515     -9.2864    2.3182e-07      -2.3977
+    'Cog WM2'                     -0.042774    0.0072432     -5.9054    3.8323e-05      -1.5248
+    'Cog Inhib1'                  0.0053746    0.0054158     0.99239       0.33785      0.25624
+    'Cog Inhib2'                  -0.031564     0.003737     -8.4464     7.238e-07      -2.1808
+    'Cog RespSel1'               -0.0085902    0.0094155    -0.91235       0.37703     -0.23557
+    'Cog RespSel2'                0.0071314     0.016059     0.44408       0.66377      0.11466
+    'Emotion_Aversiveimages1'     -0.070407      0.01508     -4.6688    0.00036194      -1.2055
+    'Emotion_Aversiveimages2'     -0.029747    0.0088192     -3.3729     0.0045513     -0.87089
+    'Emotion_Rejection1'          -0.067875     0.008402     -8.0784    1.2223e-06      -2.0858
+    'Emotion_VicariousPain2'      -0.027178     0.011445     -2.3747      0.032402     -0.61313
+    'Emotion_AversiveSound1'       0.053977    0.0067099      8.0443    1.2841e-06        2.077
+    'Emotion_AversiveSound2'       -0.00265    0.0073659    -0.35977       0.72439    -0.092893
+
+</pre><img vspace="5" hspace="5" src="compare_pain_patterns_sens_spec_06.png" alt=""> <h2 id="2">Final comparison table</h2><pre class="codeinput">disp(pain_table)
+</pre><pre class="codeoutput">              Cos_Sim_Thresh    Cohens_d    Sensitivity    Specificity      PPV  
+              ______________    ________    ___________    ___________    _______
+
+    nps           0.048063       2.1792       0.84444        0.84444      0.73077
+    cpdm          0.095523       1.8655       0.81111        0.81111      0.68224
+    pdm1           0.10141       1.7273       0.78889        0.78333      0.64545
+    siips         0.043322       1.5296       0.77778        0.76667        0.625
+    fmpain      -0.0050914      0.84394       0.67778        0.67778      0.51261
+
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Compare pain-related brain patterns
+
+%% About this script
+% 
+% This script compares several pain-related 'signature' patterns developed in the
+% CANlab over the past years. It uses a test dataset of N = 270
+% participants from Kragel et al. 2018 to test the patterns' sensitivity
+% and specificity to pain.
+%
+% it collects some key pain-classification stats in a table called
+% |pain_table| for comparison across signatures
+%
+% At this writing, it uses the fmri_data method
+% |test_pattern_on_kragel_2018_n270_data|
+% This tests the cosine similarity between a pattern and each test image,
+% and uses |roc_plot| to establish an optimal balanced accuracy threshold
+% for one-vs-all classification of pain, cognitive control, and emotion
+% task categories.
+%
+% Tests are prospective tests on new datasets and are
+% largely unbiased. However, there is some overlap between thermal pain
+% datasets (Studies 1 and 2) and the training data. This presents a
+% potential for bias, which can be assessed by comparing these studies to
+% other, independent test studies.
+%
+% One pattern, 'plspain', was developed on the N = 270 data and is not tested, as
+% this test is biased. 
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% Display helper functions: Called by later scripts
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+
+dashes = 'REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH';
+printstr = @(dashes) disp(dashes);
+printhdr = @(str) fprintf('%s\n%s\n%s\n', dashes, str, dashes);
+
+disp('Process: test_pattern_on_kragel_2018_n270_data');
+printstr(dashes)
+
+% Init
+pain_table = table();
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% Loop through patterns
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+
+pattern_names = {'nps' 'cpdm' 'pdm1' 'siips' 'fmpain'};
+
+for i = 1:length(pattern_names)
+
+    pat_name = pattern_names{i};
+    
+    printhdr(' '); printhdr(pat_name); printhdr(' ');
+    
+    switch pat_name
+        case 'pdm1'
+            obj = load_image_set('pdm');
+            obj = get_wh_image(obj, 2);
+            
+        otherwise
+            obj = load_image_set(pat_name);
+    end
+
+STATS = test_pattern_on_kragel_2018_n270_data(obj);
+
+drawnow, snapnow
+
+pain_table(i, :) = STATS.summary_table(1, :);
+pain_table.Properties.RowNames{i} = pat_name;
+
+end % Pattern loop
+
+%% Final comparison table
+
+disp(pain_table)
+
+
+
+
+##### SOURCE END #####
+--></body></html>
