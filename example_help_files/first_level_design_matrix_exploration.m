@@ -383,6 +383,38 @@ fit = X * b;
 plot(fit)
 legend({'Data' 'Fit'});
 
+% save the figure handle so we can re-activate it and add to it:
+fighan = gcf;
+
+%% 
+% Another way to look at this is with a scatterplot
+% Notice the outlier!
+
+create_figure('scatter');
+scatter(fit, y, 'MarkerFaceColor', [.3 .2 .6]);
+h = refline;
+
+%% 
+% *Questions to answer:*
+
+% 1. If the outlier were farther out on the x-axis (predictor axis), i.e.,
+% more extreme, would you expect it to have more or less pull on the
+% regression line?
+%
+
+%%
+% Now let's make a new outlier at an extreme X value.
+
+wh = find(X(:, 1) == max(X(:, 1)));
+y(wh) = -10;
+
+% 2. Re-plot the scatterplot and show the new graph
+% 3, Re-activate the fit figure and add the new fit
+
+% % figure(fighan)          % re-activate the old figure
+% % plot(fit)
+% % legend({'Data' 'Fit' 'Robust Fit'});
+
 %%
 % Now we'll try the fit with robust regression instead
 % Robust regression with robfit adds an intercept to the *first column* of
@@ -398,15 +430,14 @@ b_rob = [b_rob(2:end); b_rob(1)];
 % Get and plot the fit
 rob_fit = X * b_rob;
 
+figure(fighan)          % re-activate the old figure
 plot(rob_fit)
 legend({'Data' 'Fit' 'Robust Fit'});
 
-%% 
-% Another way to look at this is with a scatterplot
+% *Questions to answer:*
 
-create_figure('scatter');
-scatter(fit, y, 'MarkerFaceColor', [.3 .2 .6]);
-h = refline;
+% 1. When does the robust regression make the most difference? Why?
+
 
 
 

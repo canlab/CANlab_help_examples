@@ -61,7 +61,47 @@ orthviews(atlas_obj);
 o2 = montage(atlas_obj);
 
 drawnow, snapnow
-%% select regions of interest
+%% Selecting regions of interest
+% There are several ways of selecting regions of interest. You can do it:
+% * By name or part of name (in the .labels, .labels_2, or other fields)
+% * By number
+% * Graphically, or by entering a coordinate and a search radius
+
+%% 
+% *Select regions graphically or by coordinate*
+
+% First bring up the orthviews display:
+orthviews(atlas_obj);
+
+% Now click on a coordinate in the center of vmPFC
+% We'll use the SPM code below to do this here:
+
+spm_orthviews('Reposition', [0 38 -11])
+
+% Running this will create a subset atlas containing only regions with centers 
+% within 20 mm of that coordinate.
+
+[obj_within_20mm,index_vals] = select_regions_near_crosshairs(atlas_obj, 'thresh', 20);
+
+orthviews(obj_within_20mm);
+drawnow, snapnow
+
+% To reproduce this later in a script, you can enter the coordinates as
+% input instead:
+
+[obj_within_20mm,index_vals] = select_regions_near_crosshairs(atlas_obj, 'coords', [0 38 -11], 'thresh', 20);
+
+% This function returns index values, so you can use these directly to
+% specify the regions in select_atlas_subset as well.
+
+find(index_vals)
+
+test_obj = select_atlas_subset(atlas_obj, find(index_vals));
+
+% % This should yield the same map of vmPFC regions: orthviews(test_obj)
+
+%% 
+% *Select regions by name*
 % Let's select all the regions in the thalamus. All regions are labeled in
 % the atlas object, so we can select them by name.
 
@@ -78,7 +118,11 @@ thal.labels
 % Select all the regions with "Thal" in the label, and collapse them into a single region:
 whole_thal = select_atlas_subset(atlas_obj, {'Thal'}, 'flatten');
 
-%% load a dataset to extract data from for an ROI analysis
+%% Extract and analyze data from atlas regions
+% 
+
+%%
+% First, we'll load a dataset to extract data from for an ROI analysis
 % The dataset contains data from 33 participants, with brain responses to six levels
 % of heat (non-painful and painful).  
 % 
@@ -136,7 +180,8 @@ load(fmri_data_file);
 descriptives(image_obj);
 
 
-%% extract data from each atlas region
+%% 
+% *Now, we'll extract data from each atlas region*
 % - "r" is a region-class object. see >> help region
 % - r(i).dat contains averages over voxels within region i. for n images, it contains an n x 1 vector with average data.
 % - r(i).data contains an images x voxels matrix of all data within region i.
