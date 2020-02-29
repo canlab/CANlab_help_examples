@@ -153,7 +153,10 @@ orthviews(fmri_data(fname))
 %    of absolute values > .0005, and write it to disk. Load it again from
 %    disk and display it. See the thresholding walkthrough for more help if
 %    needed.
-%
+%    Hint: help fmri_data.threshold will give you help on how to do this
+%    e.g., Retain voxels with absolute value > .0001
+%     obj = threshold(obj, [-.0001 0001], 'raw-outside')
+%     
 % 2. Do the one-sample t-test on the emotion regulation dataset (see the
 %   t-test walkthrough if needed), and threshold the results at 0.05
 %   FDR-corrected. Write the thresholded results map to disk. Reload it from

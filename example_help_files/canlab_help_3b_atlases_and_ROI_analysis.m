@@ -301,6 +301,9 @@ drawnow, snapnow
 % Load the emotion regulation dataset from previous walkthroughs.
 % Try to locate and extract data from this region, and do an ROI analysis.
 % What do you see?
+% Hint: The NAc is part of the ventral striatum. 
+% To extract the ventral striatum from the canonical CANlab atlas, try: 
+% NAc = select_atlas_subset(atlas_obj, {'V_Str'});
 %
 % 2. try the t-test on 48 degree only images above. What do you see? Which
 % regions show sigificant activation?

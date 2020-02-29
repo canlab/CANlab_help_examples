@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>canlab_help_4_masking_and_writing_nifti_files</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-01-13"><meta name="DC.source" content="canlab_help_4_masking_and_writing_nifti_files.m"><style type="text/css">
+      --><title>canlab_help_4_masking_and_writing_nifti_files</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-02-26"><meta name="DC.source" content="canlab_help_4_masking_and_writing_nifti_files.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -132,7 +132,6 @@ Default
 montage(test_dat);
 </pre><pre class="codeoutput">Warning: Showing first 4 images in data object only.
 Setting up fmridisplay objects
-This takes a lot of memory, and can hang if you have too little.
 Grouping contiguous voxels:   8 regions
 sagittal montage: 1329 voxels displayed, 17999 not displayed on these slices
 axial montage: 7967 voxels displayed, 11361 not displayed on these slices
@@ -155,7 +154,6 @@ montage(test_dat);
 <span class="comment">% subsequent analyses or operations would test only that.</span>
 </pre><pre class="codeoutput">Warning: Showing first 4 images in data object only.
 Setting up fmridisplay objects
-This takes a lot of memory, and can hang if you have too little.
 Grouping contiguous voxels:   2 regions
 sagittal montage: 201 voxels displayed, 3097 not displayed on these slices
 axial montage: 1647 voxels displayed, 1651 not displayed on these slices
@@ -180,7 +178,7 @@ loading mask. mapping volumes.
 checking that dimensions and voxel sizes of volumes are the same. 
 Pre-allocating data array. Needed: 1409312 bytes
 Loading image number:     1
-Elapsed time is 0.030091 seconds.
+Elapsed time is 0.020703 seconds.
 Image names entered, but fullpath attribute is empty. Getting path info.
 Grouping contiguous voxels:   3 regions
 
@@ -190,7 +188,7 @@ ans =
 
     {1&times;3 region}
 
-</pre><img vspace="5" hspace="5" src="canlab_help_4_masking_and_writing_nifti_files_03.png" alt=""> <h2 id="15">Exercises</h2><p>1. Select a sample image from <tt>test_dat</tt>, threshold it at an arbitrary threshold    of absolute values &gt; .0005, and write it to disk. Load it again from    disk and display it. See the thresholding walkthrough for more help if    needed.</p><p>2. Do the one-sample t-test on the emotion regulation dataset (see the   t-test walkthrough if needed), and threshold the results at 0.05   FDR-corrected. Write the thresholded results map to disk. Reload it from   disk and display it using the montage() method.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+</pre><img vspace="5" hspace="5" src="canlab_help_4_masking_and_writing_nifti_files_03.png" alt=""> <h2 id="15">Exercises</h2><p>1. Select a sample image from <tt>test_dat</tt>, threshold it at an arbitrary threshold    of absolute values &gt; .0005, and write it to disk. Load it again from    disk and display it. See the thresholding walkthrough for more help if    needed.    Hint: help fmri_data.threshold will give you help on how to do this    e.g., Retain voxels with absolute value &gt; .0001     obj = threshold(obj, [-.0001 0001], 'raw-outside')</p><p>2. Do the one-sample t-test on the emotion regulation dataset (see the   t-test walkthrough if needed), and threshold the results at 0.05   FDR-corrected. Write the thresholded results map to disk. Reload it from   disk and display it using the montage() method.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Applying masks and writing image data to disk
 
@@ -347,7 +345,10 @@ orthviews(fmri_data(fname))
 %    of absolute values > .0005, and write it to disk. Load it again from
 %    disk and display it. See the thresholding walkthrough for more help if
 %    needed.
-%
+%    Hint: help fmri_data.threshold will give you help on how to do this
+%    e.g., Retain voxels with absolute value > .0001
+%     obj = threshold(obj, [-.0001 0001], 'raw-outside')
+%     
 % 2. Do the one-sample t-test on the emotion regulation dataset (see the
 %   t-test walkthrough if needed), and threshold the results at 0.05
 %   FDR-corrected. Write the thresholded results map to disk. Reload it from

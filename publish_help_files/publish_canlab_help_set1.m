@@ -7,6 +7,7 @@ canlab_help_publish('canlab_help_2_load_a_sample_dataset')
 canlab_help_publish('canlab_help_2b_basic_image_visualization')
 canlab_help_publish('canlab_help_2c_loading_datasets')
 canlab_help_publish('canlab_help_2b_basic_image_visualization')
+canlab_help_publish('canlab_help_4b_3D_visualization')
 
 % -------------------------------------------------------------------------
 % Basic statistical tests
@@ -16,12 +17,17 @@ canlab_help_publish('canlab_help_3_voxelwise_t_test_walkthrough')
 canlab_help_publish('canlab_help_3b_atlases_and_ROI_analysis')
 canlab_help_publish('canlab_help_4_masking_and_writing_nifti_files')
 canlab_help_publish('canlab_help_5_regression_walkthrough')
+canlab_help_publish('first_level_design_matrix_exploration')
 
 % -------------------------------------------------------------------------
 % Multivariate prediction of outcomes
 % -------------------------------------------------------------------------
 
 canlab_help_publish('canlab_help_7_multivariate_prediction_basics')
+
+canlab_help_publish('compare_pain_patterns_sens_spec')
+
+
 
 % 
 % % -------------------------------------------------------------------------

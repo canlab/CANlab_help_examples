@@ -1,11 +1,18 @@
 % test_dat = load_image_set('npsplus', 'noverbose');
 %  image_obj = get_wh_image(test_dat, 1);
 
-test_dat = load_image_set('emotionreg', 'noverbose');
- image_obj = mean(test_dat);
+% test_dat = load_image_set('emotionreg', 'noverbose');
+%  image_obj = mean(test_dat);
+ 
+test_dat = load_image_set('pain_pdm');
+image_obj = test_dat.get_wh_image(1);
 
-
-% If data file is not found:
+% Note: You need the Neurosynth Feature Set 1 file
+% It can be found on Dropbox here. You need to add it to your matlab path
+% before you run this script.
+% https://www.dropbox.com/s/rgfymakk6whr06o/Yarkoni_2013_Neurosynth_featureset1.mat?dl=0
+%
+% If you have access to the CANLab data reposity google drive folder, the file is also here:
 % cd('/Users/tor/Google_Drive/CanlabDataRepository/Neuroimaging_Autolabeler')
 % g =genpath(pwd); addpath(g); savepath
 
@@ -27,6 +34,36 @@ test_dat = load_image_set('emotionreg', 'noverbose');
 %     -0.19202     'read'           0.23043       'somatosensory'
 %     -0.18744     'semantic'       0.22025       'temperature'  
 %     -0.18732     'memory'         0.20817       'sensory'      
+
+% Example for cPDM:
+%     testr_low      words_low      testr_high      words_high   
+%     _________    _____________    __________    _______________
+% 
+%     -0.24189     'objects'         0.39314      'pain'         
+%     -0.24171     'object'          0.37668      'sensation'    
+%     -0.23679     'recognition'     0.36646      'painful'      
+%     -0.23183     'memory'          0.36146      'stimulation'  
+%     -0.20987     'intention'       0.34066      'heat'         
+%     -0.19942     'judgment'          0.339      'noxious'      
+%     -0.19696     'mental'          0.32824      'somatosensory'
+%     -0.18262     'familiar'        0.29334      'sensory'      
+%      -0.1684     'grasping'         0.2716      'foot'         
+%     -0.16751     'semantic'        0.26118      'muscle'  
+    
+%     testr_low       words_low       testr_high     words_high 
+%     _________    _______________    __________    ____________
+% 
+%     -0.23326     'stimulation'        0.2495      'monitoring'
+%     -0.19523     'frequency'         0.24703      'control'   
+%     -0.17128     'noise'             0.24036      'memory'    
+%     -0.16888     'male'              0.23539      'working'   
+%     -0.15396     'adaptation'        0.22153      'demand'    
+%     -0.15345     'female'            0.22031      'demands'   
+%     -0.15209     'somatosensory'     0.21877      'executive' 
+%     -0.15023     'images'            0.21601      'correct'   
+%     -0.14991     'animal'            0.21213      'knowledge' 
+%     -0.13918     'sensory'           0.19795      'conflict' 
+
 
 %% Aggregate results for plot
 

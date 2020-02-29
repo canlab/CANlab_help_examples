@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>canlab_help_5_regression_walkthrough</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-01-13"><meta name="DC.source" content="canlab_help_5_regression_walkthrough.m"><style type="text/css">
+      --><title>Regression Walkthrough</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-02-13"><meta name="DC.source" content="canlab_help_5_regression_walkthrough.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,7 +66,15 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Part 1: Load sample data</a></li><li><a href="#2">Part 2: Examine the setup and coverage</a></li><li><a href="#3">Part 3: Examine the brain data</a></li><li><a href="#4">Part 3: Examine the behavioral/task predictor(s)</a></li><li><a href="#5">Part 4: Make data prep and analysis decisions</a></li><li><a href="#6">Part 5: Run the regression analysis and get results</a></li><li><a href="#7">Write the thesholded t-image to disk</a></li><li><a href="#8">Display regions at a lower threshold, alongside meta-analysis regions</a></li><li><a href="#9">Part 6: Compare to a standard analysis with no scaling or variable transformation</a></li><li><a href="#10">Make plots comparing the analysis with our choices and a naive analysis directly</a></li><li><a href="#11">Part 7: Localize results using a brain atlas</a></li><li><a href="#12">Part 8: Extract and plot data from regions of interest</a></li><li><a href="#13">Extract and plot from (biased) regions of interest based on results</a></li><li><a href="#14">Extract and plot data from unbiased regions of interest</a></li><li><a href="#15">Part 9: (bonus) Multivariate prediction from unbiased ROI averages</a></li></ul></div><h2 id="1">Part 1: Load sample data</h2><p>Load a sample dataset, including a standard brain mask And a meta-analysis mask that provides a priori regions of interest. ---------------------------------------------------------------</p><pre class="codeinput"><span class="comment">% Load sample data using load_image_set(), which produces an fmri_data</span>
+  </style></head><body><div class="content"><h1>Regression Walkthrough</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#3">Part 1: Load sample data</a></li><li><a href="#4">Part 2: Examine the setup and coverage</a></li><li><a href="#5">Part 3: Examine the brain data</a></li><li><a href="#6">Part 4: Examine the behavioral/task predictor(s)</a></li><li><a href="#7">Part 5: Make data prep and analysis decisions</a></li><li><a href="#8">Part 6: Run the regression analysis and get results</a></li><li><a href="#9">Write the thesholded t-image to disk</a></li><li><a href="#10">Part 7. Explore: Display regions at a lower threshold, alongside meta-analysis regions</a></li><li><a href="#11">Part 8: Compare to a standard analysis with no scaling or variable transformation</a></li><li><a href="#12">Make plots comparing the analysis with our choices and a naive analysis directly</a></li><li><a href="#13">Part 9: Localize results using a brain atlas</a></li><li><a href="#14">Part 10: Extract and plot data from regions of interest</a></li><li><a href="#15">Extract and plot from (biased) regions of interest based on results</a></li><li><a href="#16">Extract and plot data from unbiased regions of interest</a></li><li><a href="#17">Part 11: (bonus) Multivariate prediction from unbiased ROI averages</a></li></ul></div><p>This walkthrough works through multiple aspects of a basic 2nd-level (group) analysis. We are interested in activity related to emotion regulation for a contrast comparing reappraisal of negative images vs. looking at negative images without reappraisal, i.e., a [Reappraise Negative - Look Negative] contrast. This walkthrough will regress brain contrast values in each voxel (y) onto individual differences in "Reappraisal Success", defined as the drop in negative emotion ratings for the [Reappraise Negative - Look Negative] contrast.</p><p>We are interested in both the brain correlates of individual differences and the group-average [Reappraise Negative - Look Negative] effect in the brain, which is the intercept in our regression model.</p><p>This walkthrough includes multiple considerations you'll need when doing a practical data analysis. This goes far beyond just running a model! It's also important to understand the data and results. Understanding the data allows you to make informed a priori choices about the analysis and avoid "P-Hacking". Understanding the results helps ensure they are valid, and helps you interpret them.</p><p>A) Understanding the data</p><div><ol><li>Loading the dataset into an fmri_data object</li><li>Examining the brain data and checking</li></ol></div><pre class="language-matlab">outliers
+<span class="keyword">global</span> signal
+which <span class="string">voxels</span> <span class="string">are</span> <span class="string">analyzed</span> <span class="string">(coverage)</span>
+homogeneity <span class="string">across</span> <span class="string">subjects</span> <span class="string">(images)</span>
+</pre><div><ol><li>Examining the behavioral (individual differences) data and leverages</li><li>Use the info gained to make data preparation and analysis decisions</li></ol></div><pre class="language-matlab">Masking
+Transformation <span class="string">of</span> <span class="string">the</span> <span class="string">y</span> <span class="string">variable</span>
+Rescaling/normalizing image <span class="string">data</span>
+Robust <span class="string">vs.</span> <span class="string">OLS</span> <span class="string">estimation</span>
+</pre><p>B) Fitting the model</p><div><ol><li>Running the regression and writing results images to disk</li></ol></div><p>C) Understanding the results</p><div><ol><li>Explore variations in statistical threshold</li><li>Compare with other studies by comparing with a meta-analysis mask</li><li>Explore the impact of variations in data scaling/transformation</li><li>Localizing results, labeling regions, and making tables using a brain atlas</li><li>Extract and plot data from regions of interest</li><li>Explore the impact of plotting data in biased vs. unbiased regions of interest</li></ol></div><p>D) Multivariate prediction (overlaps with later walkthroughs) # Extra: Multivariate prediction within a set of unbiased ROIs</p><h2 id="3">Part 1: Load sample data</h2><p>Load a sample dataset, including a standard brain mask And a meta-analysis mask that provides a priori regions of interest. ---------------------------------------------------------------</p><pre class="codeinput"><span class="comment">% Load sample data using load_image_set(), which produces an fmri_data</span>
 <span class="comment">% object. Data loading exceeds the scope of this tutorial, but a more</span>
 <span class="comment">% indepth demosntration may be provided by canlab_help_2_load_a_sample_dataset.m</span>
 
@@ -172,7 +180,7 @@ metaimg =
 
     '/Users/torwager/Documents/GitHub/MediationToolbox/Mediation_walkthrough/emotion regulation_pAgF_z_FDR_0.01_8_14_2015.nii'
 
-</pre><h2 id="2">Part 2: Examine the setup and coverage</h2><pre class="codeinput"><span class="comment">% Visualize the mask</span>
+</pre><h2 id="4">Part 2: Examine the setup and coverage</h2><pre class="codeinput"><span class="comment">% Visualize the mask</span>
 <span class="comment">% ---------------------------------------------------------------</span>
 <span class="comment">% BLOCK 2: Check mask</span>
 
@@ -222,7 +230,7 @@ Grouping contiguous voxels:   1 regions
 Grouping contiguous voxels: 151 regions
 sagittal montage: 451 voxels displayed, 5590 not displayed on these slices
 axial montage: 1579 voxels displayed, 4462 not displayed on these slices
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_02.png" alt=""> <h2 id="3">Part 3: Examine the brain data</h2><p>--------------------------------------------------------------- This is a really important step to understand what your images look like! Good data tend to produce good results.</p><pre class="codeinput"><span class="comment">% The method plot() for an fmri_data object shows a number of plots that</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_02.png" alt=""> <h2 id="5">Part 3: Examine the brain data</h2><p>This is a really important step to understand what your images look like! Good data tend to produce good results.</p><pre class="codeinput"><span class="comment">% The method plot() for an fmri_data object shows a number of plots that</span>
 <span class="comment">% are helpful in diagnosing some problems.</span>
 
 plot(image_obj);
@@ -286,7 +294,7 @@ ans =
       Number: 5
         Name: 'histogram by tissue type'
        Color: [1 1 1]
-    Position: [560 528 560 420]
+    Position: [680 558 560 420]
        Units: 'pixels'
 
   Use GET to show all properties
@@ -368,7 +376,7 @@ Tests of column means against zero
  
   See also fmri_data.preprocess
 
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_03.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_04.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_05.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_06.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_07.png" alt=""> <h2 id="4">Part 3: Examine the behavioral/task predictor(s)</h2><p>--------------------------------------------------------------- Examine predictor distribution and leverages Leverage is a measure of how much each point influences the regression line. The more extreme the predictor value, the higher the leverage. Outliers will have very high leverage. High-leverage behavioral observations can strongly influence, and sometimes invalidate, an analysis.</p><pre class="codeinput">X = scale(success, 1); X(:, end+1) = 1;         <span class="comment">% A simple design matrix, behavioral predictor + intercept</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_03.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_04.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_05.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_06.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_07.png" alt=""> <h2 id="6">Part 4: Examine the behavioral/task predictor(s)</h2><p>Examine predictor distribution and leverages Leverage is a measure of how much each point influences the regression line. The more extreme the predictor value, the higher the leverage. Outliers will have very high leverage. High-leverage behavioral observations can strongly influence, and sometimes invalidate, an analysis.</p><pre class="codeinput">X = scale(success, 1); X(:, end+1) = 1;         <span class="comment">% A simple design matrix, behavioral predictor + intercept</span>
 H = X * inv(X'* X) * X';                        <span class="comment">% The "Hat Matrix", which produces fits. Diagonals are leverage</span>
 
 create_figure(<span class="string">'levs'</span>, 2, 1);
@@ -389,7 +397,7 @@ drawnow, snapnow
 <span class="comment">% watch out for. They will influence the results disproportionately at every voxel in the brain!</span>
 <span class="comment">% Ranking predictors and/or robust regression are good</span>
 <span class="comment">% mitigation/prevention procedures in many cases.</span>
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_08.png" alt=""> <h2 id="5">Part 4: Make data prep and analysis decisions</h2><p>Before we've "peeked" at the results, let's make some sensible decisions about what to do with the analysis. We'll compare the results to the "standard analysis" if we hadn't examined the data at all at end.</p><pre class="codeinput"><span class="comment">% Choices:</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_08.png" alt=""> <h2 id="7">Part 5: Make data prep and analysis decisions</h2><p>Before we've "peeked" at the results, let's make some sensible decisions about what to do with the analysis. We'll compare the results to the "standard analysis" if we hadn't examined the data at all at end.</p><pre class="codeinput"><span class="comment">% Choices:</span>
 
 <span class="comment">% 1. Masking: Apply a gray-matter mask. This will limit the area subjected to multiple-comparisons</span>
 <span class="comment">%    correction to a meaningful set.  I considered {gray matter, no mask}</span>
@@ -421,7 +429,7 @@ image_obj = rescale(image_obj, <span class="string">'rankvoxels'</span>);     <s
 <span class="comment">% regression}.  I chose robust regression because it helps mitigate the</span>
 <span class="comment">% effects of outliers.  However, this is partly redundant with ranking, so</span>
 <span class="comment">% it would have been sensible to choose ranking OR robust regression.</span>
-</pre><h2 id="6">Part 5: Run the regression analysis and get results</h2><p>The regress method takes predictors that are attached in the object's X attribute (X stands for design matrix) and regresses each voxel's activity (y) on the set of regressors. This is a group analysis, in this case correlating brain activity with reappraisal success at each voxel.</p><pre class="codeinput"><span class="comment">% .X must have the same number of observations, n, in an n x k matrix.</span>
+</pre><h2 id="8">Part 6: Run the regression analysis and get results</h2><p>The regress method takes predictors that are attached in the object's X attribute (X stands for design matrix) and regresses each voxel's activity (y) on the set of regressors. This is a group analysis, in this case correlating brain activity with reappraisal success at each voxel.</p><pre class="codeinput"><span class="comment">% .X must have the same number of observations, n, in an n x k matrix.</span>
 <span class="comment">% n images is the number of COLUMNS in image_obj.dat</span>
 
 <span class="comment">% mean-center success scores and attach them to image_obj in image_obj.X</span>
@@ -491,7 +499,7 @@ Running regression: 34332 voxels. Design:  30 obs,   2 regressors, intercept is 
 
 Predicting exogenous variable(s) in dat.X using brain data as predictors, mass univariate
 Running in Robust Mode
-Model run in 0 minutes and 43.82 seconds
+Model run in 0 minutes and 44.32 seconds
 
 Image   1
  40 contig. clusters, sizes   1 to  62
@@ -502,7 +510,7 @@ Image   2
  40 contig. clusters, sizes   1 to  62
 Positive effect: 34332 voxels, min p-value: 0.00000000
 Negative effect:   0 voxels, min p-value: 
-Elapsed time is 46.536195 seconds.
+Elapsed time is 47.574783 seconds.
 Image   1 FDR q &lt; 0.050 threshold is 0.000048
 
 Image   1
@@ -516,7 +524,6 @@ Image   2
 Positive effect: 34331 voxels, min p-value: 0.00000000
 Negative effect:   0 voxels, min p-value: 
 Setting up fmridisplay objects
-This takes a lot of memory, and can hang if you have too little.
     48
 
 Grouping contiguous voxels:  11 regions
@@ -528,102 +535,11 @@ Warning: Unknown input string option:full
 axial montage:  29 voxels displayed,   6 not displayed on these slices
 Warning: Unknown input string option:full 
 axial montage:  16 voxels displayed,  19 not displayed on these slices
-Using custom color maps.
-Found surface patch handles - plotting on existing surfaces.
-cluster_surf
-___________________________________________
-	  1 cluster structures entered
-  Colors are:
- 1  0  0
- Building XYZ coord list
-
-ans =
-
-    4.2574
-
- Getting heat-mapped colors
- Building color change function call
- Using existing surface image
- Running color change.
- eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],2,'ovlcolor',[0 1 1],'colorscale',actcolors{1});
-Main color vertices: 221348 vertices.  selecting: 71832
- 35 coords.  selecting:  33
-Running   1 sets of coordinates: 001Finished!
-___________________________________________
-Using custom color maps.
-Found surface patch handles - plotting on existing surfaces.
-cluster_surf
-___________________________________________
-	  1 cluster structures entered
-  Colors are:
- 1  0  0
- Building XYZ coord list
-
-ans =
-
-    4.2574
-
- Getting heat-mapped colors
- Building color change function call
- Using existing surface image
- Running color change.
- eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],2,'ovlcolor',[0 1 1],'colorscale',actcolors{1});
-Main color vertices: 225350 vertices.  selecting: 118437
- 35 coords.  selecting:  17
-Running   1 sets of coordinates: 001Finished!
-___________________________________________
-Using custom color maps.
-Found surface patch handles - plotting on existing surfaces.
-cluster_surf
-___________________________________________
-	  1 cluster structures entered
-  Colors are:
- 1  0  0
- Building XYZ coord list
-
-ans =
-
-    4.2574
-
- Getting heat-mapped colors
- Building color change function call
- Using existing surface image
- Running color change.
- eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],2,'ovlcolor',[0 1 1],'colorscale',actcolors{1});
-Main color vertices: 221348 vertices.  selecting: 71832
- 35 coords.  selecting:  33
-Running   1 sets of coordinates: 001Finished!
-___________________________________________
-Using custom color maps.
-Found surface patch handles - plotting on existing surfaces.
-cluster_surf
-___________________________________________
-	  1 cluster structures entered
-  Colors are:
- 1  0  0
- Building XYZ coord list
-
-ans =
-
-    4.2574
-
- Getting heat-mapped colors
- Building color change function call
- Using existing surface image
- Running color change.
- eval: [c,alld] = getVertexColors(xyz{1},p,mycolors{1},[.5 .5 .5],2,'ovlcolor',[0 1 1],'colorscale',actcolors{1});
-Main color vertices: 225350 vertices.  selecting: 118437
- 35 coords.  selecting:  17
-Running   1 sets of coordinates: 001Finished!
-___________________________________________
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_09.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_10.png" alt=""> <h2 id="7">Write the thesholded t-image to disk</h2><pre class="codeinput">t.fullpath = fullfile(pwd, <span class="string">'Reapp_Success_005_FDR05.nii'</span>);
-write(t)
-
-disp([<span class="string">'Written to disk: '</span> t.fullpath])
-</pre><pre class="codeoutput">Writing: 
-/Users/torwager/Documents/GitHub/Reapp_Success_005_FDR05.nii
-Written to disk: /Users/torwager/Documents/GitHub/Reapp_Success_005_FDR05.nii
-</pre><h2 id="8">Display regions at a lower threshold, alongside meta-analysis regions</h2><p>Display the results on slices another way: multi_threshold lets us see the blobs with significant voxels at the highest (most stringent) threshold, and voxels that are touching (contiguous) down to the lowest threshold, in different colors. This shows results at p &lt; .001 one-tailed (p &lt; .002 two-tailed), with 10 contiguous voxels. Contiguous blobs are more liberal thresholds, down to .02 two-tailed = .01 one tailed, are shown in different colors.</p><pre class="codeinput"><span class="comment">% Set up a display object with two separate brain montages:</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_09.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_10.png" alt=""> <h2 id="9">Write the thesholded t-image to disk</h2><pre class="codeinput"><span class="comment">% % t.fullpath = fullfile(pwd, 'Reapp_Success_005_FDR05.nii');</span>
+<span class="comment">% % write(t)</span>
+<span class="comment">% %</span>
+<span class="comment">% % disp(['Written to disk: ' t.fullpath])</span>
+</pre><h2 id="10">Part 7. Explore: Display regions at a lower threshold, alongside meta-analysis regions</h2><p>Display the results on slices another way: multi_threshold lets us see the blobs with significant voxels at the highest (most stringent) threshold, and voxels that are touching (contiguous) down to the lowest threshold, in different colors. This shows results at p &lt; .001 one-tailed (p &lt; .002 two-tailed), with 10 contiguous voxels. Contiguous blobs are more liberal thresholds, down to .02 two-tailed = .01 one tailed, are shown in different colors.</p><pre class="codeinput"><span class="comment">% Set up a display object with two separate brain montages:</span>
 o2 = canlab_results_fmridisplay([], <span class="string">'multirow'</span>, 2);
 
 <span class="comment">% Use multi-threshold to threshold and display the t-map:</span>
@@ -647,7 +563,6 @@ o2 = title_montage(o2, 4, <span class="string">'Neurosynth mask: Emotion regulat
 <span class="comment">% Here, the regions predictive of success are largely different from those</span>
 <span class="comment">% that respond to reappraisal demand in past literature.</span>
 </pre><pre class="codeoutput">Setting up fmridisplay objects
-This takes a lot of memory, and can hang if you have too little.
 
 Multi-threshold
 _____________________________________________
@@ -672,7 +587,7 @@ Warning: Unknown input string option:sizethresh
 </pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_11.png" alt=""> <pre class="codeoutput">Grouping contiguous voxels: 151 regions
 sagittal montage: 451 voxels displayed, 5590 not displayed on these slices
 axial montage: 1579 voxels displayed, 4462 not displayed on these slices
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_12.png" alt=""> <h2 id="9">Part 6: Compare to a standard analysis with no scaling or variable transformation</h2><pre class="codeinput"><span class="comment">% Start over and re-load the images:</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_12.png" alt=""> <h2 id="11">Part 8: Compare to a standard analysis with no scaling or variable transformation</h2><pre class="codeinput"><span class="comment">% Start over and re-load the images:</span>
 [image_obj_untouched] = load_image_set(<span class="string">'emotionreg'</span>, <span class="string">'noverbose'</span>);
 
 <span class="comment">% attach success scores to image_obj in image_obj.X</span>
@@ -712,7 +627,7 @@ Running regression: 49792 voxels. Design:  30 obs,   2 regressors, intercept is 
 
 Predicting exogenous variable(s) in dat.X using brain data as predictors, mass univariate
 Running in OLS Mode
-Model run in 0 minutes and 0.05 seconds
+Model run in 0 minutes and 0.08 seconds
 
 Image   1
  24 contig. clusters, sizes   1 to  51
@@ -736,7 +651,6 @@ Image   2
 Positive effect: 3133 voxels, min p-value: 0.00000000
 Negative effect:  51 voxels, min p-value: 0.00024068
 Setting up fmridisplay objects
-This takes a lot of memory, and can hang if you have too little.
 Grouping contiguous voxels:   0 regions
 Grouping contiguous voxels:  28 regions
 sagittal montage: 162 voxels displayed, 3022 not displayed on these slices
@@ -752,14 +666,13 @@ Image   2
 Positive effect: 3673 voxels, min p-value: 0.00000000
 Negative effect:  75 voxels, min p-value: 0.00024068
 Setting up fmridisplay objects
-This takes a lot of memory, and can hang if you have too little.
 Grouping contiguous voxels:  67 regions
 sagittal montage: 119 voxels displayed, 1050 not displayed on these slices
 axial montage: 439 voxels displayed, 730 not displayed on these slices
 Grouping contiguous voxels:  33 regions
 sagittal montage: 191 voxels displayed, 3557 not displayed on these slices
 axial montage: 1921 voxels displayed, 1827 not displayed on these slices
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_13.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_14.png" alt=""> <h2 id="10">Make plots comparing the analysis with our choices and a naive analysis directly</h2><pre class="codeinput">o2 = canlab_results_fmridisplay([], <span class="string">'multirow'</span>, 4);
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_13.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_14.png" alt=""> <h2 id="12">Make plots comparing the analysis with our choices and a naive analysis directly</h2><pre class="codeinput">o2 = canlab_results_fmridisplay([], <span class="string">'multirow'</span>, 4);
 
 t = threshold(t, .05, <span class="string">'fdr'</span>);
 o2 = montage(region(t), o2, <span class="string">'wh_montages'</span>, 1:2, <span class="string">'colormap'</span>);
@@ -782,7 +695,6 @@ o2 = title_montage(o2, 8, <span class="string">'Reappraisal success with no scal
 <span class="comment">% One-tailed results are the default in SPM and FSL - so this is what you'd</span>
 <span class="comment">% get with 0.001 in SPM.</span>
 </pre><pre class="codeoutput">Setting up fmridisplay objects
-This takes a lot of memory, and can hang if you have too little.
 Image   1 FDR q &lt; 0.050 threshold is 0.000048
 
 Image   1
@@ -829,7 +741,7 @@ Threshold p &lt; 0.02000000 and k &gt;=   1	3313 significant voxels contiguous w
 
 Montage 1 of 1
 _____________________________________
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_16.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_17.png" alt=""> <h2 id="11">Part 7: Localize results using a brain atlas</h2><p>The table() command is a simple way to label regions In addition, we can visualize each region in table to check the accuracy of the labels and the extent of the region.</p><pre class="codeinput"><span class="comment">% Select the Success regressor map</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_16.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_17.png" alt=""> <h2 id="13">Part 9: Localize results using a brain atlas</h2><p>The table() command is a simple way to label regions In addition, we can visualize each region in table to check the accuracy of the labels and the extent of the region.</p><pre class="codeinput"><span class="comment">% Select the Success regressor map</span>
 r = region(t);
 
 <span class="comment">% Autolabel regions and print a table</span>
@@ -917,7 +829,7 @@ Humans. Evidence from Functional Magnetic Resonance Imaging.? Pain 114 (3):397?4
                                                                                                      
 Note: Region object r(i).title contains full list of reference atlas regions covered by each cluster.
 ____________________________________________________________________________________________________________________________________________
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_18.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_19.png" alt=""> <h2 id="12">Part 8: Extract and plot data from regions of interest</h2><p>Here, we'll explore data extracted from two kinds of regions:</p><pre class="codeinput"><span class="comment">% 1 - biased regions based on the significant results. This is good for</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_18.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_19.png" alt=""> <h2 id="14">Part 10: Extract and plot data from regions of interest</h2><p>Here, we'll explore data extracted from two kinds of regions:</p><pre class="codeinput"><span class="comment">% 1 - biased regions based on the significant results. This is good for</span>
 <span class="comment">% visualizing the distribution of the data in a region and checking</span>
 <span class="comment">% assumptions, but examining the correlation in these regions is</span>
 <span class="comment">% "circular", as the correlation was used to select voxels in the first</span>
@@ -927,7 +839,7 @@ ________________________________________________________________________________
 <span class="comment">% using criteria that are non-independent of the effect of interest.</span>
 
 <span class="comment">% 2 - unbiased regions from the meta-analysis.  These are fair.</span>
-</pre><h2 id="13">Extract and plot from (biased) regions of interest based on results</h2><p>Let's visualize the correlation scatterplots in the areas we've discovered as related to Success</p><pre class="codeinput"><span class="comment">% Extract data from all regions</span>
+</pre><h2 id="15">Extract and plot from (biased) regions of interest based on results</h2><p>Here, we'll compare the implications of picking BIASED ROIs (which is often done in the literature) vs. picking UNBIASED ROIs.</p><p>First, let's visualize the correlation scatterplots in the areas we've discovered as related to Success</p><pre class="codeinput"><span class="comment">% Extract data from all regions</span>
 <span class="comment">% r(i).dat has the averages for each subject across voxels for region i</span>
 r = extract_data(r, image_obj);
 
@@ -960,7 +872,7 @@ create_figure(<span class="string">'scatterplot_region'</span>, nrows, ncols);
 <span class="keyword">end</span>
 </pre><pre class="codeoutput">Warning: Iteration limit reached. 
 Warning: Iteration limit reached. 
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_20.png" alt=""> <h2 id="14">Extract and plot data from unbiased regions of interest</h2><p>Let's visualize the correlation scatterplots in some meta-analysis derived ROIs</p><pre class="codeinput"><span class="comment">% Select the Neurosynth meta-analysis map</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_20.png" alt=""> <h2 id="16">Extract and plot data from unbiased regions of interest</h2><p>Let's visualize the correlation scatterplots in some meta-analysis derived ROIs</p><pre class="codeinput"><span class="comment">% Select the Neurosynth meta-analysis map</span>
 r = region(metaimg);
 
 <span class="comment">% Extract data from all regions</span>
@@ -1096,7 +1008,7 @@ Humans. Evidence from Functional Magnetic Resonance Imaging.? Pain 114 (3):397?4
                                                                                                      
 Note: Region object r(i).title contains full list of reference atlas regions covered by each cluster.
 ____________________________________________________________________________________________________________________________________________
-</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_21.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_22.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_23.png" alt=""> <h2 id="15">Part 9: (bonus) Multivariate prediction from unbiased ROI averages</h2><p>Predict reappraisal success using brain images with 5-fold cross-validation</p><pre class="codeinput"><span class="comment">% Since we are predicting outcome data from brain images, we have to attach</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_21.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_22.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_23.png" alt=""> <h2 id="17">Part 11: (bonus) Multivariate prediction from unbiased ROI averages</h2><p>Predict reappraisal success using brain images with 5-fold cross-validation</p><pre class="codeinput"><span class="comment">% Since we are predicting outcome data from brain images, we have to attach</span>
 <span class="comment">% data in the .Y field of the fmri_data object.</span>
 <span class="comment">% .Y is the outcome to be explained, in this case success scores</span>
 image_obj.Y = image_obj.X;
@@ -1133,9 +1045,67 @@ Regression mode (Gaussian) Fold 3/5 done in:   0 hours   0 min  0 sec
 Regression mode (Gaussian) Fold 4/5 done in:   0 hours   0 min  0 sec
 Regression mode (Gaussian) Fold 5/5 done in:   0 hours   0 min  0 sec
 
-Total Elapsed Time =   0 hours   0 min  1 sec
+Total Elapsed Time =   0 hours   0 min  0 sec
 </pre><img vspace="5" hspace="5" src="canlab_help_5_regression_walkthrough_24.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
+%% Regression Walkthrough
+
+%%
+% This walkthrough works through multiple aspects of a basic 2nd-level (group)
+% analysis. We are interested in activity related to emotion regulation
+% for a contrast comparing reappraisal of negative images vs. looking at
+% negative images without reappraisal, i.e., a [Reappraise Negative - Look Negative]
+% contrast. This walkthrough will regress brain
+% contrast values in each voxel (y) onto individual differences in
+% "Reappraisal Success", defined as the drop in negative emotion ratings
+% for the [Reappraise Negative - Look Negative] contrast.
+%
+% We are interested in both the brain correlates of individual differences
+% and the group-average [Reappraise Negative - Look Negative] effect in the
+% brain, which is the intercept in our regression model.
+
+%%
+% This walkthrough includes multiple considerations you'll need when doing
+% a practical data analysis. This goes far beyond just running a model!
+% It's also important to understand the data and results. 
+% Understanding the data allows you to make informed a priori choices about
+% the analysis and avoid "P-Hacking". Understanding the results helps
+% ensure they are valid, and helps you interpret them.
+%
+% A) Understanding the data
+%
+% # Loading the dataset into an fmri_data object
+% # Examining the brain data and checking 
+%
+%   outliers
+%   global signal
+%   which voxels are analyzed (coverage) 
+%   homogeneity across subjects (images)
+%
+% # Examining the behavioral (individual differences) data and leverages
+% # Use the info gained to make data preparation and analysis decisions
+%
+%   Masking 
+%   Transformation of the y variable
+%   Rescaling/normalizing image data
+%   Robust vs. OLS estimation
+%
+% B) Fitting the model
+%
+% # Running the regression and writing results images to disk
+%
+% C) Understanding the results
+%
+% # Explore variations in statistical threshold
+% # Compare with other studies by comparing with a meta-analysis mask
+% # Explore the impact of variations in data scaling/transformation
+% # Localizing results, labeling regions, and making tables using a brain atlas
+% # Extract and plot data from regions of interest
+% # Explore the impact of plotting data in biased vs. unbiased regions of interest
+%
+% D) Multivariate prediction (overlaps with later walkthroughs)
+% # Extra: Multivariate prediction within a set of unbiased ROIs
+
 %% Part 1: Load sample data
 % Load a sample dataset, including a standard brain mask
 % And a meta-analysis mask that provides a priori regions of interest.
@@ -1217,7 +1187,6 @@ set(title_han, 'FontSize', 18)
 % orthviews(desc.coverage_obj, 'continuous');
 
 %% Part 3: Examine the brain data 
-% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
 % This is a really important step to understand what your images look like!
 % Good data tend to produce good results.  
 
@@ -1261,8 +1230,7 @@ hist_han = histogram(image_obj, 'byimage', 'by_tissue_type');
 help image_obj.rescale
 
 
-%% Part 3: Examine the behavioral/task predictor(s) 
-% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+%% Part 4: Examine the behavioral/task predictor(s) 
 % Examine predictor distribution and leverages
 % Leverage is a measure of how much each point influences the regression
 % line. The more extreme the predictor value, the higher the leverage.
@@ -1291,7 +1259,7 @@ drawnow, snapnow
 % Ranking predictors and/or robust regression are good
 % mitigation/prevention procedures in many cases.
 
-%% Part 4: Make data prep and analysis decisions
+%% Part 5: Make data prep and analysis decisions
 % Before we've "peeked" at the results, let's make some sensible decisions
 % about what to do with the analysis. We'll compare the results to the
 % "standard analysis" if we hadn't examined the data at all at end.
@@ -1329,7 +1297,7 @@ image_obj = rescale(image_obj, 'rankvoxels');     % rescale images within this m
 % effects of outliers.  However, this is partly redundant with ranking, so
 % it would have been sensible to choose ranking OR robust regression.
 
-%% Part 5: Run the regression analysis and get results
+%% Part 6: Run the regression analysis and get results
 % The regress method takes predictors that are attached in the object's X
 % attribute (X stands for design matrix) and regresses each voxel's
 % activity (y) on the set of regressors.  
@@ -1399,12 +1367,12 @@ snapnow
 
 %% Write the thesholded t-image to disk
 
-t.fullpath = fullfile(pwd, 'Reapp_Success_005_FDR05.nii');
-write(t)
+% % t.fullpath = fullfile(pwd, 'Reapp_Success_005_FDR05.nii');
+% % write(t)
+% % 
+% % disp(['Written to disk: ' t.fullpath])
 
-disp(['Written to disk: ' t.fullpath])
-
-%% Display regions at a lower threshold, alongside meta-analysis regions
+%% Part 7. Explore: Display regions at a lower threshold, alongside meta-analysis regions
 % Display the results on slices another way:
 % multi_threshold lets us see the blobs with significant voxels at the
 % highest (most stringent) threshold, and voxels that are touching
@@ -1437,7 +1405,7 @@ o2 = title_montage(o2, 4, 'Neurosynth mask: Emotion regulation');
 % Here, the regions predictive of success are largely different from those
 % that respond to reappraisal demand in past literature.
 
-%% Part 6: Compare to a standard analysis with no scaling or variable transformation
+%% Part 8: Compare to a standard analysis with no scaling or variable transformation
 
 % Start over and re-load the images:
 [image_obj_untouched] = load_image_set('emotionreg', 'noverbose');
@@ -1496,7 +1464,7 @@ o2 = title_montage(o2, 8, 'Reappraisal success with no scaling (p < .001 unc, sh
 
 
 
-%% Part 7: Localize results using a brain atlas
+%% Part 9: Localize results using a brain atlas
 % The table() command is a simple way to label regions
 % In addition, we can visualize each region in table to check the accuracy
 % of the labels and the extent of the region.
@@ -1510,7 +1478,7 @@ r = table(r);
 % Make a montage showing each significant region
 montage(r, 'colormap', 'regioncenters');
 
-%% Part 8: Extract and plot data from regions of interest
+%% Part 10: Extract and plot data from regions of interest
 % Here, we'll explore data extracted from two kinds of regions:
 
 % 1 - biased regions based on the significant results. This is good for
@@ -1527,7 +1495,10 @@ montage(r, 'colormap', 'regioncenters');
 
 
 %% Extract and plot from (biased) regions of interest based on results
-% Let's visualize the correlation scatterplots in the areas we've
+% Here, we'll compare the implications of picking BIASED ROIs (which is
+% often done in the literature) vs. picking UNBIASED ROIs.
+% 
+% First, let's visualize the correlation scatterplots in the areas we've
 % discovered as related to Success
 
 % Extract data from all regions
@@ -1605,7 +1576,7 @@ for i = 1:length(r)
    
 end
 
-%% Part 9: (bonus) Multivariate prediction from unbiased ROI averages
+%% Part 11: (bonus) Multivariate prediction from unbiased ROI averages
 % Predict reappraisal success using brain images
 % with 5-fold cross-validation
 

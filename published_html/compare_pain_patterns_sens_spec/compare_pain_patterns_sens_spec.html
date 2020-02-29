@@ -1,0 +1,310 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Compare pain-related brain patterns</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-02-12"><meta name="DC.source" content="compare_pain_patterns_sens_spec.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.8em; color:#2C2D92; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.4em; color:#363538; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#363538; font-weight:bold; line-height:140%; }
+
+a { color:#4B4BA8; text-decoration:none; }
+a:hover { color:#2AAFDF; text-decoration:underline; }
+a:visited { color:#4B4BA8; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:14px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Compare pain-related brain patterns</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">About this script</a></li><li><a href="#2">Final comparison table</a></li></ul></div><h2 id="1">About this script</h2><p>This script compares several pain-related 'signature' patterns developed in the CANlab over the past years. It uses a test dataset of N = 270 participants from Kragel et al. 2018 to test the patterns' sensitivity and specificity to pain.</p><p>it collects some key pain-classification stats in a table called <tt>pain_table</tt> for comparison across signatures</p><p>At this writing, it uses the fmri_data method <tt>test_pattern_on_kragel_2018_n270_data</tt> This tests the cosine similarity between a pattern and each test image, and uses <tt>roc_plot</tt> to establish an optimal balanced accuracy threshold for one-vs-all classification of pain, cognitive control, and emotion task categories.</p><p>Tests are prospective tests on new datasets and are largely unbiased. However, there is some overlap between thermal pain datasets (Studies 1 and 2) and the training data. This presents a potential for bias, which can be assessed by comparing these studies to other, independent test studies.</p><p>One pattern, 'plspain', was developed on the N = 270 data and is not tested, as this test is biased.</p><pre class="codeinput"><span class="comment">% ----------------------------------------------------------------------</span>
+<span class="comment">% Display helper functions: Called by later scripts</span>
+<span class="comment">% ----------------------------------------------------------------------</span>
+
+dashes = <span class="string">'----------------------------------------------'</span>;
+printstr = @(dashes) disp(dashes);
+printhdr = @(str) fprintf(<span class="string">'%s\n%s\n%s\n'</span>, dashes, str, dashes);
+
+disp(<span class="string">'Process: test_pattern_on_kragel_2018_n270_data'</span>);
+printstr(dashes)
+
+<span class="comment">% Init</span>
+pain_table = table();
+
+<span class="comment">% ----------------------------------------------------------------------</span>
+<span class="comment">% Loop through patterns</span>
+<span class="comment">% ----------------------------------------------------------------------</span>
+
+pattern_names = {<span class="string">'nps'</span> <span class="string">'cpdm'</span> <span class="string">'pdm1'</span> <span class="string">'siips'</span> <span class="string">'fmpain'</span>};
+
+<span class="keyword">for</span> i = 1:length(pattern_names)
+
+    pat_name = pattern_names{i};
+
+    printhdr(<span class="string">' '</span>); printhdr(pat_name); printhdr(<span class="string">' '</span>);
+
+    <span class="keyword">switch</span> pat_name
+        <span class="keyword">case</span> <span class="string">'pdm1'</span>
+            obj = load_image_set(<span class="string">'pdm'</span>);
+            obj = get_wh_image(obj, 2);
+
+        <span class="keyword">otherwise</span>
+            obj = load_image_set(pat_name);
+    <span class="keyword">end</span>
+
+STATS = test_pattern_on_kragel_2018_n270_data(obj);
+
+drawnow, snapnow
+
+pain_table(i, :) = STATS.summary_table(1, :);
+pain_table.Properties.RowNames{i} = pat_name;
+
+<span class="keyword">end</span> <span class="comment">% Pattern loop</span>
+</pre><pre class="codeoutput">Process: test_pattern_on_kragel_2018_n270_data
+----------------------------------------------
+----------------------------------------------
+ 
+----------------------------------------------
+----------------------------------------------
+nps
+----------------------------------------------
+----------------------------------------------
+ 
+----------------------------------------------
+Loaded images:
+/Users/torwager/Documents/GitHub/MasksPrivate/Masks_private/2013_Wager_NEJM_NPS/weights_NSF_grouppred_cvpcr.img
+Process: test_pattern_on_kragel_2018_n270_data
+----------------------------------------------
+ 
+Loading /Users/torwager/Google Drive/CanlabDataRepository/Study_Subject_Level_Maps/2018_Kragel_Generalizability/kragel_2018_nat_neurosci_270_subjects_test_images.mat
+Warning: Some images have zero values in some of the 43851 voxels in weight mask. These will be excluded from similarity analysis image-wise.
+Number of zero or NaN values within weight mask, by input image:
+ 18  16  16  16  16  16  16  16  16 131  16  16  16  16  16  12 146 515  34 133 191 114 1204 261  68 121 269 229 212 127   4   4   4   4 297   4   4  72   4   4   4  14  16   4   4   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 29650   0   0   0   0   0   0   0   0   0   0  77  21  30  26  51  11  66  39  70  61  48   1  17   6  59   0   0   0   0   0   0   0   0   0   0  23   0   0   0   0 409 410 409 409 409 409 409 410 410 410 409 409 410 409 409 601 1242 667 571 879 601 798 964 879 1407 1400 831 749 1176 860 791 1639 524 842 985 1335 700 826 978 885 556 927 487 757 800   0   0   0   0   0   0   0   0   0   0   0   0   0 665   0   0   0   0   0   0   0   0   0   0 27836   0 27516   0   0   0 1003 1417 1368 1064 1408 1347 996 1079 1006 1046 542 1569 776 1023  23  56  74  62  87 718  56 1400 374 269  56 108 252  56  56  56   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 438   0   0   0 
+Bootstrapping CIs
+----------------------------------------------
+Pattern classification results
+----------------------------------------------
+Applied pattern to test data from 18 studies, n = 270 participants
+From Kragel et al. 2018, Nature Neuroscience
+ 
+Classification of pain vs. other
+
+ROC_PLOT Output: Single-interval, Optimal balanced error rate
+Threshold:	0.05	Sens:	 84% CI(76%-91%)	Spec:	 84% CI(79%-90%)	PPV:	 73% CI(64%-81%)	Nonparametric AUC:	0.94	Parametric d_a:	2.18	  Accuracy:	 84% +- 2.2% (SE), P = 0.000000
+Threshold for cosine_sim = 0.0481, Cohen's d(pain vs no) = 2.18, Bootstrapped CI is [1.86 2.49]
+ 
+Classification of cognitive control vs. other
+
+ROC_PLOT Output: Single-interval, Optimal balanced error rate
+Threshold:	0.01	Sens:	 33% CI(24%-43%)	Spec:	 33% CI(27%-40%)	PPV:	 20% CI(14%-27%)	Nonparametric AUC:	0.28	Parametric d_a:	-0.82	  Accuracy:	 33% +- 2.9% (SE), P = 1.000000
+Threshold for cosine_sim = 0.0075, Cohen's d(pain vs no) = -0.82, Bootstrapped CI is [-1.05 -0.58]
+Classification of emotion vs. other
+
+ROC_PLOT Output: Single-interval, Optimal balanced error rate
+Threshold:	0.01	Sens:	 37% CI(27%-46%)	Spec:	 36% CI(29%-43%)	PPV:	 22% CI(16%-29%)	Nonparametric AUC:	0.29	Parametric d_a:	-0.81	  Accuracy:	 36% +- 2.9% (SE), P = 0.332672
+Threshold for cosine_sim = 0.0092, Cohen's d(pain vs no) = -0.81, Bootstrapped CI is [-1.05 -0.56]
+ 
+                   Cos_Sim_Thresh    Cohens_d    Sensitivity    Specificity      PPV  
+                   ______________    ________    ___________    ___________    _______
+
+    Pain              0.048063         2.1792      0.84444        0.84444      0.73077
+    Cog Control      0.0075444       -0.82023      0.33333        0.33333          0.2
+    Neg Emotion      0.0091983       -0.80525      0.36667        0.36111      0.22297
+
+----------------------------------------------
+Stats for individual studies
+----------------------------------------------
+Col   1: ThermalPain1	Col   2: ThermalPain2	Col   3: VisceralPain1	Col   4: VisceralPain2	Col   5: MechanicalPain1	Col   6: MechanicalPain2	Col   7: Cog WM1	Col   8: Cog WM2	Col   9: Cog Inhib1	Col  10: Cog Inhib2	Col  11: Cog RespSel1	Col  12: Cog RespSel2	Col  13: Emotion_Aversiveimages1	Col  14: Emotion_Aversiveimages2	Col  15: Emotion_Rejection1	Col  16: Emotion_VicariousPain2	Col  17: Emotion_AversiveSound1	Col  18: Emotion_AversiveSound2	
+---------------------------------------------
+Tests of column means against zero
+---------------------------------------------
+              Name               Mean_Value     Std_Error        T            P          Cohens_d 
+    _________________________    ___________    _________    _________    __________    __________
+
+    'ThermalPain1'                   0.12138     0.016059        7.558    2.6369e-06        1.9515
+    'ThermalPain2'                   0.10681     0.015862       6.7332    9.5758e-06        1.7385
+    'VisceralPain1'                  0.15208     0.015319       9.9278    1.0217e-07        2.5634
+    'VisceralPain2'                  0.13161     0.017622       7.4688    3.0186e-06        1.9284
+    'MechanicalPain1'                0.10739     0.018766       5.7228    5.2703e-05        1.4776
+    'MechanicalPain2'                0.14618      0.01545       9.4613    1.8466e-07        2.4429
+    'Cog WM1'                      -0.075125     0.011901      -6.3126    1.9144e-05       -1.6299
+    'Cog WM2'                      -0.028527    0.0089759      -3.1782     0.0067052       -0.8206
+    'Cog Inhib1'                   0.0073717     0.010077      0.73155       0.47651       0.18888
+    'Cog Inhib2'                 -9.2291e-05     0.007427    -0.012426       0.99026    -0.0032085
+    'Cog RespSel1'                -0.0016028     0.017993    -0.089083       0.93028     -0.023001
+    'Cog RespSel2'                 -0.026105     0.020989      -1.2438       0.23401      -0.32114
+    'Emotion_Aversiveimages1'       -0.08181     0.016546      -4.9444    0.00021568       -1.2766
+    'Emotion_Aversiveimages2'      -0.030305    0.0091044      -3.3286     0.0049713      -0.85944
+    'Emotion_Rejection1'            -0.10194     0.010842      -9.4017    1.9946e-07       -2.4275
+    'Emotion_VicariousPain2'      -0.0090722     0.014281     -0.63524       0.53552      -0.16402
+    'Emotion_AversiveSound1'        0.072226     0.011162       6.4707    1.4713e-05        1.6707
+    'Emotion_AversiveSound2'        0.031567     0.015982       1.9752      0.068297          0.51
+
+</pre><img vspace="5" hspace="5" src="compare_pain_patterns_sens_spec_01.png" alt=""> <img vspace="5" hspace="5" src="compare_pain_patterns_sens_spec_02.png" alt=""> <pre class="codeoutput">----------------------------------------------
+ 
+----------------------------------------------
+----------------------------------------------
+cpdm
+----------------------------------------------
+----------------------------------------------
+ 
+----------------------------------------------
+CANNOT FIND IMAGES Geuter_2020_cPDM_combined_pain_map.nii 
+</pre><pre class="codeoutput error">Error using load_image_set&gt;check_image_names_get_full_path (line 361)
+Exiting.
+
+Error in load_image_set&gt;load_signature (line 590)
+imagenames = check_image_names_get_full_path(imagenames(wh));
+
+Error in load_image_set (line 245)
+            [image_obj, networknames, imagenames] = load_signature(image_names_or_keyword);
+
+Error in compare_pain_patterns_sens_spec (line 61)
+            obj = load_image_set(pat_name);
+
+Error in evalmxdom&gt;instrumentAndRun (line 115)
+text = evalc(evalstr);
+
+Error in evalmxdom (line 21)
+[data,text,laste] = instrumentAndRun(file,cellBoundaries,imageDir,imagePrefix,options);
+
+Error in publish
+
+Error in canlab_help_publish (line 26)
+publish(pubfilename, p)
+
+Error in untitled3 (line 6)
+canlab_help_publish('compare_pain_patterns_sens_spec')
+</pre><h2 id="2">Final comparison table</h2><pre class="codeinput">disp(pain_table)
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Compare pain-related brain patterns
+
+%% About this script
+% 
+% This script compares several pain-related 'signature' patterns developed in the
+% CANlab over the past years. It uses a test dataset of N = 270
+% participants from Kragel et al. 2018 to test the patterns' sensitivity
+% and specificity to pain.
+%
+% it collects some key pain-classification stats in a table called
+% |pain_table| for comparison across signatures
+%
+% At this writing, it uses the fmri_data method
+% |test_pattern_on_kragel_2018_n270_data|
+% This tests the cosine similarity between a pattern and each test image,
+% and uses |roc_plot| to establish an optimal balanced accuracy threshold
+% for one-vs-all classification of pain, cognitive control, and emotion
+% task categories.
+%
+% Tests are prospective tests on new datasets and are
+% largely unbiased. However, there is some overlap between thermal pain
+% datasets (Studies 1 and 2) and the training data. This presents a
+% potential for bias, which can be assessed by comparing these studies to
+% other, independent test studies.
+%
+% One pattern, 'plspain', was developed on the N = 270 data and is not tested, as
+% this test is biased. 
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% Display helper functions: Called by later scripts
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+
+dashes = 'REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH';
+printstr = @(dashes) disp(dashes);
+printhdr = @(str) fprintf('%s\n%s\n%s\n', dashes, str, dashes);
+
+disp('Process: test_pattern_on_kragel_2018_n270_data');
+printstr(dashes)
+
+% Init
+pain_table = table();
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% Loop through patterns
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+
+pattern_names = {'nps' 'cpdm' 'pdm1' 'siips' 'fmpain'};
+
+for i = 1:length(pattern_names)
+
+    pat_name = pattern_names{i};
+    
+    printhdr(' '); printhdr(pat_name); printhdr(' ');
+    
+    switch pat_name
+        case 'pdm1'
+            obj = load_image_set('pdm');
+            obj = get_wh_image(obj, 2);
+            
+        otherwise
+            obj = load_image_set(pat_name);
+    end
+
+STATS = test_pattern_on_kragel_2018_n270_data(obj);
+
+drawnow, snapnow
+
+pain_table(i, :) = STATS.summary_table(1, :);
+pain_table.Properties.RowNames{i} = pat_name;
+
+end % Pattern loop
+
+%% Final comparison table
+
+disp(pain_table)
+
+
+
+
+##### SOURCE END #####
+--></body></html>

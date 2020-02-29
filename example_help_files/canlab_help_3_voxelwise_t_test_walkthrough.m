@@ -41,7 +41,7 @@
 
 % We can load this data using load_image_set(), which produces an fmri_data
 % object. Data loading exceeds the scope of this tutorial, but a more
-% indepth demosntration may be provided by load_a_sample_dataset.m
+% indepth demonstration may be provided by load_a_sample_dataset.m
 
 [image_obj, networknames, imagenames] = load_image_set('emotionreg');
 

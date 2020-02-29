@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Using the atlas object for Region of Interest (ROI) analyses</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-01-13"><meta name="DC.source" content="canlab_help_3b_atlases_and_ROI_analysis.m"><style type="text/css">
+      --><title>Using the atlas object for Region of Interest (ROI) analyses</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-02-12"><meta name="DC.source" content="canlab_help_3b_atlases_and_ROI_analysis.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Using the atlas object for Region of Interest (ROI) analyses</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">About the atlas object</a></li><li><a href="#2">load an atlas</a></li><li><a href="#3">visualize the atlas regions</a></li><li><a href="#4">select regions of interest</a></li><li><a href="#5">load a dataset to extract data from for an ROI analysis</a></li><li><a href="#6">extract data from each atlas region</a></li><li><a href="#9">Do a group ROI analysis and make a "violin plot" (or barplot) for each region</a></li><li><a href="#12">Explore on your own</a></li></ul></div><h2 id="1">About the atlas object</h2><p>An atlas-class object is a specialized subclass of fmri_data that stores information about a series of parcels, or pre-defined regions, and in some cases the probalistic maps that underlie the final parcellation.</p><p>Some common uses of atlas objects include: * Labeling regions by best-matching atlas regions, as in region.table() * Analysis within specific ROIs, or on ROI averages * Defining regions for connectivity and graph theoretic analyses</p><p>A list of pre-defined atlases is contained in the function <tt>load_atlas</tt>. The default atlas for some CANlab functions is the "CANlab combined 2018" This was created by Tor Wager from other published atlases. It includes:</p><div><ul><li>Glasser 2016 Nature 180-region cortical parcellation (in MNI space, not indivdidualized)</li><li>Pauli 2016 PNAS basal ganglia subregions</li><li>Amygdala/hippocampal and basal forebrain regions from SPM Anatomy Toolbox</li><li>Thalamus regions from the Morel thalamus atlas</li><li>Subthalamus/Basal forebrain regions from Pauli "reinforcement learning" HCP atlas</li><li>Diedrichsen cerebellar atlas regions</li><li>Multiple named brainstem nuclei localized based on individual papers</li><li>Additional Shen atlas parcels to cover areas (esp. brainstem) not otherwise named</li></ul></div><p>References for the corresponding papers are stored in the atlas object, and printed in tables generated with the region.table() method.</p><p>There are many methods for atlas, including all the fmri_data methods. You can see those with <tt>methods(atlas)</tt>. For example:</p><p>Using the <tt>select_atlas_subset()</tt> method: You can select any subset of atlas regions by name or number, and return them in a new atlas object. You can also 'flatten' regions, combining them into a single new region.</p><p>% Using the <tt>extract_data()</tt> method: You can extract average data from every image in an atlas, for a series of target images.</p><p>We will explore these here.</p><h2 id="2">load an atlas</h2><p>'atlas' objects are a class of objects specially designed for brain atlases. Here is more information on this class (also try <tt>doc atlas</tt>)</p><pre class="codeinput">help <span class="string">atlas</span>
+  </style></head><body><div class="content"><h1>Using the atlas object for Region of Interest (ROI) analyses</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">About the atlas object</a></li><li><a href="#2">load an atlas</a></li><li><a href="#3">visualize the atlas regions</a></li><li><a href="#4">Selecting regions of interest</a></li><li><a href="#7">Extract and analyze data from atlas regions</a></li><li><a href="#12">Do a group ROI analysis and make a "violin plot" (or barplot) for each region</a></li><li><a href="#15">Selecting multiple regions using custom label fields</a></li><li><a href="#16">Explore on your own</a></li></ul></div><h2 id="1">About the atlas object</h2><p>An atlas-class object is a specialized subclass of fmri_data that stores information about a series of parcels, or pre-defined regions, and in some cases the probalistic maps that underlie the final parcellation.</p><p>Some common uses of atlas objects include: * Labeling regions by best-matching atlas regions, as in region.table() * Analysis within specific ROIs, or on ROI averages * Defining regions for connectivity and graph theoretic analyses</p><p>A list of pre-defined atlases is contained in the function <tt>load_atlas</tt>. The default atlas for some CANlab functions is the "CANlab combined 2018" This was created by Tor Wager from other published atlases. It includes:</p><div><ul><li>Glasser 2016 Nature 180-region cortical parcellation (in MNI space, not indivdidualized)</li><li>Pauli 2016 PNAS basal ganglia subregions</li><li>Amygdala/hippocampal and basal forebrain regions from SPM Anatomy Toolbox</li><li>Thalamus regions from the Morel thalamus atlas</li><li>Subthalamus/Basal forebrain regions from Pauli "reinforcement learning" HCP atlas</li><li>Diedrichsen cerebellar atlas regions</li><li>Multiple named brainstem nuclei localized based on individual papers</li><li>Additional Shen atlas parcels to cover areas (esp. brainstem) not otherwise named</li></ul></div><p>References for the corresponding papers are stored in the atlas object, and printed in tables generated with the region.table() method.</p><p>There are many methods for atlas, including all the fmri_data methods. You can see those with <tt>methods(atlas)</tt>. For example:</p><p>Using the <tt>select_atlas_subset()</tt> method: You can select any subset of atlas regions by name or number, and return them in a new atlas object. You can also 'flatten' regions, combining them into a single new region.</p><p>% Using the <tt>extract_data()</tt> method: You can extract average data from every image in an atlas, for a series of target images.</p><p>We will explore these here.</p><h2 id="2">load an atlas</h2><p>'atlas' objects are a class of objects specially designed for brain atlases. Here is more information on this class (also try <tt>doc atlas</tt>)</p><pre class="codeinput">help <span class="string">atlas</span>
 
 <span class="comment">% The function load_atlas in the CANlab toolbox loads a number of named</span>
 <span class="comment">% atlases included with the toolbox.  Here is a list of named atlases:</span>
@@ -75,9 +75,7 @@ help <span class="string">load_atlas</span>
 
 <span class="comment">% Now load the "CANlab combined 2018" atlas:</span>
 atlas_obj = load_atlas(<span class="string">'canlab2018_2mm'</span>);
-</pre><pre class="codeoutput">--- help for atlas ---
-
-  atlas: Subclass of image_vector designed for brain atlases and parcellations
+</pre><pre class="codeoutput">  atlas: Subclass of image_vector designed for brain atlases and parcellations
  
   'atlas' is a data class containing information about brain atlases and parcellations
   stored in a structure-like object.  It inherits the properties and
@@ -263,7 +261,49 @@ o2 = montage(atlas_obj);
 
 drawnow, snapnow
 </pre><pre class="codeoutput">Grouping voxels with unique mask values, assuming integer-valued mask: 489 regions
-</pre><img vspace="5" hspace="5" src="canlab_help_3b_atlases_and_ROI_analysis_01.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_3b_atlases_and_ROI_analysis_02.png" alt=""> <h2 id="4">select regions of interest</h2><p>Let's select all the regions in the thalamus. All regions are labeled in the atlas object, so we can select them by name.</p><pre class="codeinput"><span class="comment">% Select all regions with "Thal" in the label:</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_3b_atlases_and_ROI_analysis_01.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_3b_atlases_and_ROI_analysis_02.png" alt=""> <h2 id="4">Selecting regions of interest</h2><p>There are several ways of selecting regions of interest. You can do it: * By name or part of name (in the .labels, .labels_2, or other fields) * By number * Graphically, or by entering a coordinate and a search radius</p><p><b>Select regions graphically or by coordinate</b></p><pre class="codeinput"><span class="comment">% First bring up the orthviews display:</span>
+orthviews(atlas_obj);
+
+<span class="comment">% Now click on a coordinate in the center of vmPFC</span>
+<span class="comment">% We'll use the SPM code below to do this here:</span>
+
+spm_orthviews(<span class="string">'Reposition'</span>, [0 38 -11])
+
+<span class="comment">% Running this will create a subset atlas containing only regions with centers</span>
+<span class="comment">% within 20 mm of that coordinate.</span>
+
+[obj_within_20mm,index_vals] = select_regions_near_crosshairs(atlas_obj, <span class="string">'thresh'</span>, 20);
+
+orthviews(obj_within_20mm);
+drawnow, snapnow
+
+<span class="comment">% To reproduce this later in a script, you can enter the coordinates as</span>
+<span class="comment">% input instead:</span>
+
+[obj_within_20mm,index_vals] = select_regions_near_crosshairs(atlas_obj, <span class="string">'coords'</span>, [0 38 -11], <span class="string">'thresh'</span>, 20);
+
+<span class="comment">% This function returns index values, so you can use these directly to</span>
+<span class="comment">% specify the regions in select_atlas_subset as well.</span>
+
+find(index_vals)
+
+test_obj = select_atlas_subset(atlas_obj, find(index_vals));
+
+<span class="comment">% % This should yield the same map of vmPFC regions: orthviews(test_obj)</span>
+</pre><pre class="codeoutput">Grouping voxels with unique mask values, assuming integer-valued mask: 489 regions
+Grouping voxels with unique mask values, assuming integer-valued mask:  14 regions
+</pre><img vspace="5" hspace="5" src="canlab_help_3b_atlases_and_ROI_analysis_03.png" alt=""> <pre class="codeoutput">
+ans =
+
+  Columns 1 through 13
+
+   121   122   127   128   129   130   175   176   185   186   327   328   329
+
+  Column 14
+
+   330
+
+</pre><p><b>Select regions by name</b> Let's select all the regions in the thalamus. All regions are labeled in the atlas object, so we can select them by name.</p><pre class="codeinput"><span class="comment">% Select all regions with "Thal" in the label:</span>
 thal = select_atlas_subset(atlas_obj, {<span class="string">'Thal'</span>})
 
 <span class="comment">% Print the labels:</span>
@@ -336,7 +376,7 @@ ans =
 
     {'Thal_MD'}    {'Thal_Hb'}
 
-</pre><h2 id="5">load a dataset to extract data from for an ROI analysis</h2><p>The dataset contains data from 33 participants, with brain responses to six levels of heat (non-painful and painful).</p><p>Aspects of this data appear in these papers: Wager, T.D., Atlas, L.T., Lindquist, M.A., Roy, M., Choong-Wan, W., Kross, E. (2013). An fMRI-Based Neurologic Signature of Physical Pain. The New England Journal of Medicine. 368:1388-1397 (Study 2)</p><p>Woo, C. -W., Roy, M., Buhle, J. T. &amp; Wager, T. D. (2015). Distinct brain systems mediate the effects of nociceptive input and self-regulation on pain. PLOS Biology. 13(1): e1002036. doi:10.1371/journal.pbio.1002036</p><p>Lindquist, Martin A., Anjali Krishnan, Marina L&oacute;pez-Sol&agrave;, Marieke Jepma, Choong-Wan Woo, Leonie Koban, Mathieu Roy, et al. 2015. ?Group-Regularized Individual Prediction: Theory and Application to Pain.? NeuroImage. <a href="http://www.sciencedirect.com/science/article/pii/S1053811915009982">http://www.sciencedirect.com/science/article/pii/S1053811915009982</a>.</p><p>This dataset is shared on figshare.com, under this link: https://figshare.com/s/ca23e5974a310c44ca93</p><p>Here is a direct link to the dataset file with the fmri_data object: https://ndownloader.figshare.com/files/12708989</p><p>The key variable is image_obj This is an fmri_data object from the CANlab Core Tools repository for neuroimaging data analysis. See https://canlab.github.io/</p><p>image_obj.dat contains brain data for each image (average across trials) image_obj.Y contains pain ratings (one average rating per image)</p><p>image_obj.additional_info.subject_id contains integers coding for which Load the data file, downloading from figshare if needed</p><p>Alternative sample datasets: -------------------------------------------- This dataset will take time to download from figshare if you haven't yet downloaded it. An alternative is to use the dataset included with the CANlab Core toolbox (though the results are less interesting for this example). image_obj = load_image_set('emotionreg');</p><pre class="codeinput">fmri_data_file = which(<span class="string">'bmrk3_6levels_pain_dataset.mat'</span>);
+</pre><h2 id="7">Extract and analyze data from atlas regions</h2><p>First, we'll load a dataset to extract data from for an ROI analysis The dataset contains data from 33 participants, with brain responses to six levels of heat (non-painful and painful).</p><p>Aspects of this data appear in these papers: Wager, T.D., Atlas, L.T., Lindquist, M.A., Roy, M., Choong-Wan, W., Kross, E. (2013). An fMRI-Based Neurologic Signature of Physical Pain. The New England Journal of Medicine. 368:1388-1397 (Study 2)</p><p>Woo, C. -W., Roy, M., Buhle, J. T. &amp; Wager, T. D. (2015). Distinct brain systems mediate the effects of nociceptive input and self-regulation on pain. PLOS Biology. 13(1): e1002036. doi:10.1371/journal.pbio.1002036</p><p>Lindquist, Martin A., Anjali Krishnan, Marina L&oacute;pez-Sol&agrave;, Marieke Jepma, Choong-Wan Woo, Leonie Koban, Mathieu Roy, et al. 2015. ?Group-Regularized Individual Prediction: Theory and Application to Pain.? NeuroImage. <a href="http://www.sciencedirect.com/science/article/pii/S1053811915009982">http://www.sciencedirect.com/science/article/pii/S1053811915009982</a>.</p><p>This dataset is shared on figshare.com, under this link: https://figshare.com/s/ca23e5974a310c44ca93</p><p>Here is a direct link to the dataset file with the fmri_data object: https://ndownloader.figshare.com/files/12708989</p><p>The key variable is image_obj This is an fmri_data object from the CANlab Core Tools repository for neuroimaging data analysis. See https://canlab.github.io/</p><p>image_obj.dat contains brain data for each image (average across trials) image_obj.Y contains pain ratings (one average rating per image)</p><p>image_obj.additional_info.subject_id contains integers coding for which Load the data file, downloading from figshare if needed</p><p>Alternative sample datasets: -------------------------------------------- This dataset will take time to download from figshare if you haven't yet downloaded it. An alternative is to use the dataset included with the CANlab Core toolbox (though the results are less interesting for this example). image_obj = load_image_set('emotionreg');</p><pre class="codeinput">fmri_data_file = which(<span class="string">'bmrk3_6levels_pain_dataset.mat'</span>);
 
 <span class="keyword">if</span> isempty(fmri_data_file)
 
@@ -392,12 +432,12 @@ Min: -11.529	Max: 7.862	Mean: -0.004	Std: 0.227
        99.9            1.3177
 
  
-</pre><h2 id="6">extract data from each atlas region</h2><p>- "r" is a region-class object. see &gt;&gt; help region - r(i).dat contains averages over voxels within region i. for n images, it contains an n x 1 vector with average data. - r(i).data contains an images x voxels matrix of all data within region i.</p><pre class="codeinput">r = extract_roi_averages(image_obj, thal);
+</pre><p><b>Now, we'll extract data from each atlas region</b> - "r" is a region-class object. see &gt;&gt; help region - r(i).dat contains averages over voxels within region i. for n images, it contains an n x 1 vector with average data. - r(i).data contains an images x voxels matrix of all data within region i.</p><pre class="codeinput">r = extract_roi_averages(image_obj, thal);
 </pre><pre class="codeoutput">fmri_data.extract_roi_averages: Defining mask object. Resampling mask. 
 Grouping voxels with unique mask values, assuming integer-valued mask:   6 regions
 Averaging data. Averaging over unique mask values, assuming integer-valued mask:   6 regions
 Done.
-</pre><p>You could also extract data from the whole thalamus into a single variable using: <tt>r = extract_roi_averages(data_obj, whole_thal);</tt></p><p>An alternative is the extract_data method: <tt>region_avgs = extract_data(thal, image_obj);</tt> The values may differ slightly based on which image is being resampled to which. Resampling matches the voxels in two sets of images that may have different voxel sizes and voxel boundaries by interpolating values from one to match the space of the other.</p><h2 id="9">Do a group ROI analysis and make a "violin plot" (or barplot) for each region</h2><p>We'll use the <tt>barplot_columns</tt> function, which is a versatile function for plotting columns of matrices. It has many options for displaying or hiding individual data points, "violins" (distribution estimates), standard errors, and more.</p><p>The <tt>barplot_columns</tt> function also does a basic one-sample t-test analysis on each column, which corresponds to the average of each region here. This ROI analysis can be used for inference about a region.</p><p>With the pain dataset, for a real analysis we might worry that multiple images come from the same subject. We can't do stats across all the iamges without accounting for the correlations among images belonging to the same subject. But first, let's plot the averages and see waht we get:</p><pre class="codeinput"><span class="comment">% Concatenate the region averages into a matrix:</span>
+</pre><p>You could also extract data from the whole thalamus into a single variable using: <tt>r = extract_roi_averages(data_obj, whole_thal);</tt></p><p>An alternative is the extract_data method: <tt>region_avgs = extract_data(thal, image_obj);</tt> The values may differ slightly based on which image is being resampled to which. Resampling matches the voxels in two sets of images that may have different voxel sizes and voxel boundaries by interpolating values from one to match the space of the other.</p><h2 id="12">Do a group ROI analysis and make a "violin plot" (or barplot) for each region</h2><p>We'll use the <tt>barplot_columns</tt> function, which is a versatile function for plotting columns of matrices. It has many options for displaying or hiding individual data points, "violins" (distribution estimates), standard errors, and more.</p><p>The <tt>barplot_columns</tt> function also does a basic one-sample t-test analysis on each column, which corresponds to the average of each region here. This ROI analysis can be used for inference about a region.</p><p>With the pain dataset, for a real analysis we might worry that multiple images come from the same subject. We can't do stats across all the iamges without accounting for the correlations among images belonging to the same subject. But first, let's plot the averages and see waht we get:</p><pre class="codeinput"><span class="comment">% Concatenate the region averages into a matrix:</span>
 roi_averages = cat(2, r.dat);
 
 <span class="comment">% Get the labels for each region from the atlas object, \</span>
@@ -444,13 +484,71 @@ Tests of column means against zero
     'Thal MD'           0.041843      0.012939    3.2338     0.0014324     0.22982
     'Thal Hb'           0.027095       0.01771    1.5299       0.12764     0.10873
 
-</pre><img vspace="5" hspace="5" src="canlab_help_3b_atlases_and_ROI_analysis_03.png" alt=""> <p>Look at the results. Do they make sense for a pain dataset? The sensory/nociceptive regions of the thalamus (VL and intralaminar) respond to painful stimuli, but not the regions in visual and auditory pathways  (LGN, MGN). The habenula also responds.</p><p>To do a proper ROI analysis, let's just select a subset of the images responding to one stimulus intensity, with one image per person. the stimulus temperatures are stored in <tt>image_obj.additional_info.temperatures</tt> So we can use basic Matlab code to select one temperature.</p><pre class="codeinput">wh = image_obj.additional_info.temperatures == 48;  <span class="comment">% A logical vector for 48 degrees</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_3b_atlases_and_ROI_analysis_04.png" alt=""> <p>Look at the results. Do they make sense for a pain dataset? The sensory/nociceptive regions of the thalamus (VL and intralaminar) respond to painful stimuli, but not the regions in visual and auditory pathways  (LGN, MGN). The habenula also responds.</p><p>To do a proper ROI analysis, let's just select a subset of the images responding to one stimulus intensity, with one image per person. the stimulus temperatures are stored in <tt>image_obj.additional_info.temperatures</tt> So we can use basic Matlab code to select one temperature.</p><pre class="codeinput">wh = image_obj.additional_info.temperatures == 48;  <span class="comment">% A logical vector for 48 degrees</span>
 indx_list = find(wh);                               <span class="comment">% a list of which images</span>
 
 image_obj_48 = get_wh_image(image_obj, indx_list);  <span class="comment">% Get the images we want</span>
 
 <span class="comment">% You can try to extract data from the thalamus and repeat the t-test.</span>
-</pre><h2 id="12">Explore on your own</h2><p>1. One of the ideas about emotion regulation is that positive appraisal involves activity increases in the nucleus accumbens (NaC) in the basal ganglia. Load the emotion regulation dataset from previous walkthroughs. Try to locate and extract data from this region, and do an ROI analysis. What do you see?</p><p>2. try the t-test on 48 degree only images above. What do you see? Which regions show sigificant activation?</p><p>3. Try to identify which prefrontal regions show the greatest emotion regulation effect, and which show the greatest response during pain. Are they the same?</p><pre class="codeinput"><span class="comment">% That's it for this section!!</span>
+</pre><h2 id="15">Selecting multiple regions using custom label fields</h2><p>In addition to the .labels field, atlas objects have fields for additional labels (.labels_2, etc.). These can be used to group, and select, regions at multiple levels of a spatial hierarchy.  For example, ?canlab2018_2mm? atlas has macro-network and anatomical group labels in the ?labels_2? field. You can use these to select all the regions associated with a particular resting-state network or group like the brainstem or basal ganglia. Here?s a code snippet to locate/pull out all the default mode network regions using the select_atlas_subset() method. This method can also return a vector that you can use to select elements of associated connectivity matrices.</p><p>You can create and/or annotate your own atlas labels and add them to the .labels, labels_2, or other fields, and use select_atlas_subset to extract and manipulate them.</p><pre class="codeinput">atlas_obj = load_atlas(<span class="string">'canlab2018_2mm'</span>);
+
+<span class="comment">% List all the macro-level labels in .labels_2 field</span>
+disp(unique(atlas_obj.labels_2)')
+
+<span class="comment">% Pull out all regions with ?Def? (Default) as part of the label in labels_2</span>
+atlas_obj = select_atlas_subset(atlas_obj, {<span class="string">'Def'</span>}, <span class="string">'labels_2'</span>);
+create_figure(<span class="string">'isosurface'</span>);
+surface_handles = isosurface(atlas_obj);
+<span class="comment">% let's add a cortical surface for context</span>
+<span class="comment">% We'll make the back surface (right) opaque, and the front (left) transparent</span>
+han = addbrain(<span class="string">'hires right'</span>);
+set(han, <span class="string">'FaceAlpha'</span>, 1);
+han2 = addbrain(<span class="string">'hires left'</span>);
+set(han2, <span class="string">'FaceAlpha'</span>, 0.1);
+axis <span class="string">image</span> <span class="string">vis3d</span> <span class="string">off</span>
+material <span class="string">dull</span>
+view(-88, 31);
+
+lightRestoreSingle
+drawnow, snapnow
+</pre><pre class="codeoutput">Loading atlas: CANlab_combined_atlas_object_2018_2mm.mat
+    'Amygdala'
+    'Basal_forebrain'
+    'Basal_ganglia'
+    'Brainstem'
+    'Cerebellum'
+    'Cortex_Default_ModeA'
+    'Cortex_Default_ModeB'
+    'Cortex_Default_ModeC'
+    'Cortex_Dorsal_AttentionA'
+    'Cortex_Dorsal_AttentionB'
+    'Cortex_Fronto_ParietalA'
+    'Cortex_Fronto_ParietalB'
+    'Cortex_Fronto_ParietalC'
+    'Cortex_Limbic'
+    'Cortex_SomatomotorA'
+    'Cortex_SomatomotorB'
+    'Cortex_Temporal_Parietal'
+    'Cortex_Ventral_AttentionA'
+    'Cortex_Ventral_AttentionB'
+    'Cortex_Visual_Central'
+    'Cortex_Visual_Peripheral'
+    'Diencephalon'
+    'Hippocampus'
+
+
+ans = 
+
+  Light with properties:
+
+       Color: [1 1 1]
+       Style: 'infinite'
+    Position: [-1.2115 -0.0423 0.7284]
+     Visible: 'on'
+
+  Use GET to show all properties
+
+</pre><img vspace="5" hspace="5" src="canlab_help_3b_atlases_and_ROI_analysis_05.png" alt=""> <h2 id="16">Explore on your own</h2><p>1. One of the ideas about emotion regulation is that positive appraisal involves activity increases in the nucleus accumbens (NaC) in the basal ganglia. Load the emotion regulation dataset from previous walkthroughs. Try to locate and extract data from this region, and do an ROI analysis. What do you see?</p><p>2. try the t-test on 48 degree only images above. What do you see? Which regions show sigificant activation?</p><p>3. Try to identify which prefrontal regions show the greatest emotion regulation effect, and which show the greatest response during pain. Are they the same?</p><pre class="codeinput"><span class="comment">% That's it for this section!!</span>
 </pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Using the atlas object for Region of Interest (ROI) analyses
@@ -516,7 +614,47 @@ orthviews(atlas_obj);
 o2 = montage(atlas_obj);
 
 drawnow, snapnow
-%% select regions of interest
+%% Selecting regions of interest
+% There are several ways of selecting regions of interest. You can do it:
+% * By name or part of name (in the .labels, .labels_2, or other fields)
+% * By number
+% * Graphically, or by entering a coordinate and a search radius
+
+%% 
+% *Select regions graphically or by coordinate*
+
+% First bring up the orthviews display:
+orthviews(atlas_obj);
+
+% Now click on a coordinate in the center of vmPFC
+% We'll use the SPM code below to do this here:
+
+spm_orthviews('Reposition', [0 38 -11])
+
+% Running this will create a subset atlas containing only regions with centers 
+% within 20 mm of that coordinate.
+
+[obj_within_20mm,index_vals] = select_regions_near_crosshairs(atlas_obj, 'thresh', 20);
+
+orthviews(obj_within_20mm);
+drawnow, snapnow
+
+% To reproduce this later in a script, you can enter the coordinates as
+% input instead:
+
+[obj_within_20mm,index_vals] = select_regions_near_crosshairs(atlas_obj, 'coords', [0 38 -11], 'thresh', 20);
+
+% This function returns index values, so you can use these directly to
+% specify the regions in select_atlas_subset as well.
+
+find(index_vals)
+
+test_obj = select_atlas_subset(atlas_obj, find(index_vals));
+
+% % This should yield the same map of vmPFC regions: orthviews(test_obj)
+
+%% 
+% *Select regions by name*
 % Let's select all the regions in the thalamus. All regions are labeled in
 % the atlas object, so we can select them by name.
 
@@ -533,7 +671,11 @@ thal.labels
 % Select all the regions with "Thal" in the label, and collapse them into a single region:
 whole_thal = select_atlas_subset(atlas_obj, {'Thal'}, 'flatten');
 
-%% load a dataset to extract data from for an ROI analysis
+%% Extract and analyze data from atlas regions
+% 
+
+%%
+% First, we'll load a dataset to extract data from for an ROI analysis
 % The dataset contains data from 33 participants, with brain responses to six levels
 % of heat (non-painful and painful).  
 % 
@@ -591,7 +733,8 @@ load(fmri_data_file);
 descriptives(image_obj);
 
 
-%% extract data from each atlas region
+%% 
+% *Now, we'll extract data from each atlas region*
 % - "r" is a region-class object. see >> help region
 % - r(i).dat contains averages over voxels within region i. for n images, it contains an n x 1 vector with average data.
 % - r(i).data contains an images x voxels matrix of all data within region i.
@@ -666,6 +809,43 @@ indx_list = find(wh);                               % a list of which images
 image_obj_48 = get_wh_image(image_obj, indx_list);  % Get the images we want
 
 % You can try to extract data from the thalamus and repeat the t-test.
+
+%% Selecting multiple regions using custom label fields
+% In addition to the .labels field, atlas objects have fields for additional 
+% labels (.labels_2, etc.). These can be used to group, and select, regions 
+% at multiple levels of a spatial hierarchy.  For example, ?canlab2018_2mm? 
+% atlas has macro-network and anatomical group labels in the ?labels_2? field. 
+% You can use these to select all the regions associated with a particular 
+% resting-state network or group like the brainstem or basal ganglia. 
+% Here?s a code snippet to locate/pull out all the default mode network 
+% regions using the select_atlas_subset() method. This method can also return 
+% a vector that you can use to select elements of associated connectivity matrices.
+%
+% You can create and/or annotate your own atlas labels and add them to the
+% .labels, labels_2, or other fields, and use select_atlas_subset to
+% extract and manipulate them.
+
+atlas_obj = load_atlas('canlab2018_2mm');
+
+% List all the macro-level labels in .labels_2 field
+disp(unique(atlas_obj.labels_2)')
+
+% Pull out all regions with ?Def? (Default) as part of the label in labels_2 
+atlas_obj = select_atlas_subset(atlas_obj, {'Def'}, 'labels_2');
+create_figure('isosurface');
+surface_handles = isosurface(atlas_obj);
+% let's add a cortical surface for context
+% We'll make the back surface (right) opaque, and the front (left) transparent
+han = addbrain('hires right');
+set(han, 'FaceAlpha', 1);
+han2 = addbrain('hires left');
+set(han2, 'FaceAlpha', 0.1);
+axis image vis3d off
+material dull
+view(-88, 31);
+
+lightRestoreSingle
+drawnow, snapnow
 
 %% Explore on your own
 %

@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Perform a voxel-wise t-test</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-01-13"><meta name="DC.source" content="canlab_help_3_voxelwise_t_test_walkthrough.m"><style type="text/css">
+      --><title>Perform a voxel-wise t-test</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-02-12"><meta name="DC.source" content="canlab_help_3_voxelwise_t_test_walkthrough.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -73,7 +73,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
    r = region(t);                                  % Turn t-map into a region object with one element per contig region
    table(r);                                       % Print a table of results using new region names</pre><p>Here a graphical description of what it does:</p><p><img vspace="5" hspace="5" src="CANlab_ttest_flowchart.png" alt=""> </p><p>Now, let's walk through it step by step, with a few minor additions.</p><h2 id="2">Load sample data</h2><pre class="codeinput"><span class="comment">% We can load this data using load_image_set(), which produces an fmri_data</span>
 <span class="comment">% object. Data loading exceeds the scope of this tutorial, but a more</span>
-<span class="comment">% indepth demosntration may be provided by load_a_sample_dataset.m</span>
+<span class="comment">% indepth demonstration may be provided by load_a_sample_dataset.m</span>
 
 [image_obj, networknames, imagenames] = load_image_set(<span class="string">'emotionreg'</span>);
 </pre><pre class="codeoutput">Loaded images:
@@ -183,7 +183,6 @@ ans =
     {1&times;9 struct}
 
 </pre><img vspace="5" hspace="5" src="canlab_help_3_voxelwise_t_test_walkthrough_03.png" alt=""> <pre class="codeoutput">Setting up fmridisplay objects
-This takes a lot of memory, and can hang if you have too little.
 Grouping contiguous voxels:   9 regions
 sagittal montage:  31 voxels displayed, 2461 not displayed on these slices
 sagittal montage:  97 voxels displayed, 2395 not displayed on these slices
@@ -331,12 +330,26 @@ write(t, <span class="string">'thresh'</span>)
 t_reloaded = statistic_image(t.fullpath, <span class="string">'type'</span>, <span class="string">'generic'</span>);
 orthviews(t_reloaded)
 </pre><pre class="codeoutput">Writing: 
-/Users/torwager/Documents/GitHub/example_t_image.nii
+/Users/torwager/Dropbox (Dartmouth College)/A2_IN_PREP/2020_Ceko_MPA1_MPA2_PainMem_B_AVERSIVE/Analysis/MPA2_EXP/example_t_image.nii
 </pre><pre class="codeoutput error">Error using image_vector/write (line 79)
 write() error: File already exists. Use 'overwrite' option to force overwrite.
 
 Error in canlab_help_3_voxelwise_t_test_walkthrough (line 143)
 write(t, 'thresh')
+
+Error in evalmxdom&gt;instrumentAndRun (line 115)
+text = evalc(evalstr);
+
+Error in evalmxdom (line 21)
+[data,text,laste] = instrumentAndRun(file,cellBoundaries,imageDir,imagePrefix,options);
+
+Error in publish
+
+Error in canlab_help_publish (line 26)
+publish(pubfilename, p)
+
+Error in untitled3 (line 3)
+canlab_help_publish('canlab_help_3_voxelwise_t_test_walkthrough')
 </pre><h2 id="8">Explore on your own</h2><p>1. Click around the thresholded statistic image. What lobes of the brain are most of the results in? What can we say about areas that are not active, if anything?</p><p>2. Why might some of the results appear to be outside the brain? What does this mean for the validity of the analysis? Should we consider these areas in our interpretation, or should they be "masked out" (excluded)?</p><p>That's it for this section!!</p><h2 id="9">Explore More: CANlab Toolboxes</h2><p>Tutorials, overview, and help: <a href="https://canlab.github.io">https://canlab.github.io</a></p><p>Toolboxes and image repositories on github: <a href="https://github.com/canlab">https://github.com/canlab</a></p><p>
 <table border=1><tr>
 <td>CANlab Core Tools</td>
@@ -412,7 +425,7 @@ write(t, 'thresh')
 
 % We can load this data using load_image_set(), which produces an fmri_data
 % object. Data loading exceeds the scope of this tutorial, but a more
-% indepth demosntration may be provided by load_a_sample_dataset.m
+% indepth demonstration may be provided by load_a_sample_dataset.m
 
 [image_obj, networknames, imagenames] = load_image_set('emotionreg');
 

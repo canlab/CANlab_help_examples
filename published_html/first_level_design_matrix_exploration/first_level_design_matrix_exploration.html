@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Create and plot design matrices</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-02-05"><meta name="DC.source" content="first_level_design_matrix_exploration.m"><style type="text/css">
+      --><title>Create and plot design matrices</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-02-13"><meta name="DC.source" content="first_level_design_matrix_exploration.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Create and plot design matrices</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Create a simple,  one-event design</a></li><li><a href="#4">Create a randomized event-related design with 4 conditions</a></li><li><a href="#8">Create an alternating block design with 3 conditions</a></li><li><a href="#9">Create a simple design with two event types and pre-specified onsets</a></li><li><a href="#10">Create a simple design, with three different basis sets</a></li><li><a href="#12">Simulate data and model fits</a></li></ul></div><p>Create and plot your own design matrix easily using CANlab tools! Note: This also requires SPM software functions</p><p>These functions are useful for design simulations. They use the following core functions, which may also be useful to use separately if you are doing simulations or building/testing design matrices:</p><pre class="codeinput"><span class="comment">% onsets2fmridesign : Turn a cell array of event onsets into a design matrix, with a chosen basis set</span>
+  </style></head><body><div class="content"><h1>Create and plot design matrices</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#3">Create a simple,  one-event design</a></li><li><a href="#5">Create a randomized event-related design with 4 conditions</a></li><li><a href="#9">Create an alternating block design with 3 conditions</a></li><li><a href="#10">Create a simple design with two event types and pre-specified onsets</a></li><li><a href="#11">Create a simple design, with three different basis sets</a></li><li><a href="#13">Simulate data and model fits</a></li></ul></div><p>Create and plot your own design matrix easily using CANlab tools! Note: This also requires SPM software functions</p><p>These functions are useful for design simulations. They use the following core functions, which may also be useful to use separately if you are doing simulations or building/testing design matrices:</p><pre class="codeinput"><span class="comment">% onsets2fmridesign : Turn a cell array of event onsets into a design matrix, with a chosen basis set</span>
 <span class="comment">% hpfilter          : High-pass filter a set of data vectors (or design matrix)</span>
 <span class="comment">% plotDesign        : Make a plot of onsets and regressors</span>
 <span class="comment">% plot_matrix_cols  : Plot columns of a matrix as lines; useful for visualizing regressors</span>
@@ -80,7 +80,9 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 <span class="comment">%                     predictors) into account, but not variance in the</span>
 <span class="comment">%                     predictors, which also contributes to efficiency and power to</span>
 <span class="comment">%                     detect an effect.</span>
-</pre><h2 id="2">Create a simple,  one-event design</h2><pre class="codeinput">TR = 2;                 <span class="comment">% Repetition time for scans; one image every TR; in seconds</span>
+<span class="comment">%</span>
+</pre><p>Note: You need the Matlab stats toolbox on your path. Check for it here:</p><pre class="codeinput"><span class="keyword">if</span> isempty(ver(<span class="string">'stats'</span>)), warning(<span class="string">'You do not have the statistics toolbox on your Matlab path. You may/will get errors'</span>); <span class="keyword">end</span>
+</pre><h2 id="3">Create a simple,  one-event design</h2><pre class="codeinput">TR = 2;                 <span class="comment">% Repetition time for scans; one image every TR; in seconds</span>
 ISI = 18;               <span class="comment">% Inter-stimulus interval in sec (min time between events)</span>
 eventduration = 3;      <span class="comment">% Duration of 'neural' events in sec</span>
 HPlength = 128;         <span class="comment">% High-pass filter length in sec</span>
@@ -92,7 +94,14 @@ drawnow, snapnow
 
 <span class="comment">% X is the design matrix.</span>
 <span class="comment">% Efficiency is e. More is better.</span>
-</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_01.png" alt=""> <p><b>Questions to answer:</b></p><pre class="codeinput"><span class="comment">% 1. How many columns does X have?</span>
+<span class="comment">%</span>
+<span class="comment">% To explore the design matrix, try typing X &lt;and then return&gt; to see the</span>
+<span class="comment">% values. Remember that the last column is the intercept. The intercept is</span>
+<span class="comment">% not shown on the plot.  Too see a heatmap of X, you can also try:</span>
+
+figure; imagesc(X); colorbar
+drawnow, snapnow
+</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_01.png" alt=""> <img vspace="5" hspace="5" src="first_level_design_matrix_exploration_02.png" alt=""> <p><b>Questions to answer:</b></p><pre class="codeinput"><span class="comment">% 1. How many columns does X have?</span>
 <span class="comment">% 2. What does each represent (i.e., a task event type, etc.)?</span>
 <span class="comment">% 3. Make the events really brief (0.5 sec). What happens to the efficiency?</span>
 <span class="comment">% 4. Make the events really long (17 sec). What happens to the efficiency?</span>
@@ -104,7 +113,7 @@ drawnow, snapnow
 <span class="comment">% % figure; plot(e)</span>
 
 <span class="comment">% When is efficiency maximal?  Why does this make sense?</span>
-</pre><h2 id="4">Create a randomized event-related design with 4 conditions</h2><pre class="codeinput">TR = 1;
+</pre><h2 id="5">Create a randomized event-related design with 4 conditions</h2><pre class="codeinput">TR = 1;
 ISI = 1.3;
 eventduration = 1;
 freqConditions = [.2 .2 .2 .2];         <span class="comment">% Frequencies of each condition, from 0 - 1</span>
@@ -123,7 +132,7 @@ drawnow, snapnow
 </pre><pre class="codeoutput">Variance inflation: 1 (black line) = minimum possible (best)
 Successive lines indicate doublings of variance inflation factor.
 Red boxes have extremely high VIFs, perfect multicolinearity
-</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_02.png" alt=""> <img vspace="5" hspace="5" src="first_level_design_matrix_exploration_03.png" alt=""> <p><b>Questions to answer:</b></p><pre class="codeinput"><span class="comment">% 1. How correlated are the regressors? hint: corr.m in Matlab</span>
+</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_03.png" alt=""> <img vspace="5" hspace="5" src="first_level_design_matrix_exploration_04.png" alt=""> <p><b>Questions to answer:</b></p><pre class="codeinput"><span class="comment">% 1. How correlated are the regressors? hint: corr.m in Matlab</span>
 <span class="comment">% 2. What are the VIFs? Are they in an acceptable range?</span>
 <span class="comment">% 3. Create a new regressor that is a linear combination of the first two.</span>
 
@@ -153,13 +162,13 @@ disp(t);
 </pre><pre class="codeoutput">    Evt1_Time    Evt1_Dur    Evt2_Time    Evt2_Dur
     _________    ________    _________    ________
 
-      57.2          1              0         1    
-      62.4          1           29.9         1    
-      66.3          1           54.6         1    
-      80.6          1            104         1    
-      93.6          1          136.5         1    
+         26         1           68.9         1    
+       53.3         1           98.8         1    
+       58.5         1            117         1    
+      115.7         1          127.4         1    
+      146.9         1          137.8         1    
 
-</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_04.png" alt=""> <p><b>Questions to answer:</b></p><pre class="codeinput"><span class="comment">% 1. Create a dense randomized event design with two conditions, with 100%</span>
+</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_05.png" alt=""> <p><b>Questions to answer:</b></p><pre class="codeinput"><span class="comment">% 1. Create a dense randomized event design with two conditions, with 100%</span>
 <span class="comment">% of the time bins filled, spread evenly across 2 event types</span>
 <span class="comment">%</span>
 <span class="comment">% % create_figure('design');</span>
@@ -172,7 +181,7 @@ disp(t);
 <span class="comment">% The efficiency relates to the ability to detect a contrast effect. Here, this is the difference</span>
 <span class="comment">% between regression slopes for event 1 vs 2. What happens to the efficiency?</span>
 <span class="comment">% Why does this make sense?</span>
-</pre><h2 id="8">Create an alternating block design with 3 conditions</h2><pre class="codeinput">scanLength = 230 * 1.3;     <span class="comment">% 230 frames * 1.3 sec/frame</span>
+</pre><h2 id="9">Create an alternating block design with 3 conditions</h2><pre class="codeinput">scanLength = 230 * 1.3;     <span class="comment">% 230 frames * 1.3 sec/frame</span>
 TR = 1.3;
 nconditions = 3;
 blockduration = 20;
@@ -187,7 +196,7 @@ drawnow, snapnow
 
 <span class="comment">% % X(:, 3) = [];</span>
 <span class="comment">% % v = getvif(X)</span>
-</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_05.png" alt=""> <h2 id="9">Create a simple design with two event types and pre-specified onsets</h2><pre class="codeinput">T = 96;  <span class="comment">% time points</span>
+</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_06.png" alt=""> <h2 id="10">Create a simple design with two event types and pre-specified onsets</h2><pre class="codeinput">T = 96;  <span class="comment">% time points</span>
 n = 12;  <span class="comment">% number of events</span>
 
 <span class="comment">% Create onsets for two events types</span>
@@ -217,7 +226,7 @@ hh = plot_vertical_line(2 - .25); set(hh, <span class="string">'LineStyle'</span
 axis <span class="string">tight</span>
 axis <span class="string">off</span>
 drawnow, snapnow
-</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_06.png" alt=""> <img vspace="5" hspace="5" src="first_level_design_matrix_exploration_07.png" alt=""> <h2 id="10">Create a simple design, with three different basis sets</h2><pre class="codeinput">T = 96;  <span class="comment">% time points</span>
+</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_07.png" alt=""> <img vspace="5" hspace="5" src="first_level_design_matrix_exploration_08.png" alt=""> <h2 id="11">Create a simple design, with three different basis sets</h2><pre class="codeinput">T = 96;  <span class="comment">% time points</span>
 n = 4;  <span class="comment">% number of events</span>
 
 <span class="comment">% Create onsets for two event types (conditions)</span>
@@ -266,13 +275,13 @@ drawnow, snapnow
 </pre><pre class="codeoutput">    Evt1_Time    Evt1_Dur    Evt2_Time    Evt2_Dur
     _________    ________    _________    ________
 
-      57.2          1              0         1    
-      62.4          1           29.9         1    
-      66.3          1           54.6         1    
-      80.6          1            104         1    
-      93.6          1          136.5         1    
+         26         1           68.9         1    
+       53.3         1           98.8         1    
+       58.5         1            117         1    
+      115.7         1          127.4         1    
+      146.9         1          137.8         1    
 
-</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_08.png" alt=""> <p><b>Questions to answer:</b></p><pre class="codeinput"><span class="comment">% 1. What is the interpretation of each of the columns? Which event type</span>
+</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_09.png" alt=""> <p><b>Questions to answer:</b></p><pre class="codeinput"><span class="comment">% 1. What is the interpretation of each of the columns? Which event type</span>
 <span class="comment">% and which effect is represented?</span>
 <span class="comment">%</span>
 <span class="comment">% 2. Would it make sense to calculate contrasts across regressors 1 and 2</span>
@@ -282,7 +291,7 @@ drawnow, snapnow
 <span class="comment">% 3. What contrast weights would capture the difference in the canonical</span>
 <span class="comment">% HRF regressor amplitudes between event type 1 and 2, for Model 1?  For</span>
 <span class="comment">% Model 2?</span>
-</pre><h2 id="12">Simulate data and model fits</h2><p>We'll create simulated data that responds to only one event type with a typical canonical response (+ noise)</p><p>Create a longer design with more events:</p><pre class="codeinput">T = 300;    <span class="comment">% time points</span>
+</pre><h2 id="13">Simulate data and model fits</h2><p>We'll create simulated data that responds to only one event type with a typical canonical response (+ noise)</p><p>Create a longer design with more events:</p><pre class="codeinput">T = 300;    <span class="comment">% time points</span>
 n = 20;     <span class="comment">% number of events per condition</span>
 TR = 1;     <span class="comment">% Time per image (sec)</span>
 ISI = 2;
@@ -323,19 +332,19 @@ create_figure(<span class="string">'observed data (y)'</span>);
 plot(y)
 xlabel(<span class="string">'Time'</span>)
 ylabel(<span class="string">'Signal'</span>)
-</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_09.png" alt=""> <p>To fit the model, we calculate the projection of the data onto the model space. The betas (b vector) are the regression slopes. In linear algebraic terms, the model is:</p><p><img src="first_level_design_matrix_exploration_eq15975415804246175665.png" alt="$$y = X\beta + e$$" style="width:56px;height:10px;"></p><p>And the solution is this:</p><p><img src="first_level_design_matrix_exploration_eq13688771475551007594.png" alt="$$ \hat{b} = (X^tX)^{-1}X^ty  $$" style="width:80px;height:14px;"></p><p>In code:</p><pre class="codeinput">b = inv(X' * X) * X' * y;
-</pre><p>The fitted response is as close as we can get in the model space, and equals the predictors multiplied with the betas:</p><p>$$ \hat{y} = X\hat{\beta};</p><p>The fitted response is as close as we can get in the model space, and equals the predictors multiplied with the betas:</p><p><img src="first_level_design_matrix_exploration_eq18348210959659911127.png" alt="$$ \hat{y} = X\hat{\beta} $$" style="width:37px;height:13px;"></p><p>In code:</p><pre class="codeinput">fit = X * b;
+</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_10.png" alt=""> <p>To fit the model, we calculate the projection of the data onto the model space. The betas (b vector) are the regression slopes. In linear algebraic terms, the model is:</p><p><img src="first_level_design_matrix_exploration_eq15975415804246175665.png" alt="$$y = X\beta + e$$"></p><p>And the solution is this:</p><p><img src="first_level_design_matrix_exploration_eq13688771475551007594.png" alt="$$ \hat{b} = (X^tX)^{-1}X^ty  $$"></p><p>In code:</p><pre class="codeinput">b = inv(X' * X) * X' * y;
+</pre><p>The fitted response is as close as we can get in the model space, and equals the predictors multiplied with the betas:</p><p>$$ \hat{y} = X\hat{\beta};</p><p>The fitted response is as close as we can get in the model space, and equals the predictors multiplied with the betas:</p><p><img src="first_level_design_matrix_exploration_eq18348210959659911127.png" alt="$$ \hat{y} = X\hat{\beta} $$"></p><p>In code:</p><pre class="codeinput">fit = X * b;
 </pre><p>Plot the fitted response</p><pre class="codeinput">plot(fit)
 legend({<span class="string">'Data'</span> <span class="string">'Fit'</span>});
 drawnow, snapnow
-</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_10.png" alt=""> <p>Now we'll make a table with the true and estimated betas side by side</p><pre class="codeinput">t = table(b_true, b, <span class="string">'VariableNames'</span>, {<span class="string">'True'</span> <span class="string">'Estimated'</span>});
+</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_11.png" alt=""> <p>Now we'll make a table with the true and estimated betas side by side</p><pre class="codeinput">t = table(b_true, b, <span class="string">'VariableNames'</span>, {<span class="string">'True'</span> <span class="string">'Estimated'</span>});
 disp(t)
 </pre><pre class="codeoutput">    True    Estimated
     ____    _________
 
-     1         0.741 
-     0       0.13819 
-     0       0.17673 
+     1         1.0333
+     0      -0.049884
+     0        0.26248
 
 </pre><p>Explore the FIR model fit</p><pre class="codeinput">X_fir = onsets2fmridesign(events, 1, T, <span class="string">'Finite Impulse Response'</span>);
 
@@ -367,15 +376,15 @@ ans =
 
   Figure (Estimated HRF) with properties:
 
-      Number: 7
+      Number: 8
         Name: 'Estimated HRF'
        Color: [1 1 1]
-    Position: [560 528 560 420]
+    Position: [680 558 560 420]
        Units: 'pixels'
 
   Use GET to show all properties
 
-</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_11.png" alt=""> <p>Now let's add an outlier time point.</p><pre class="codeinput">when = min(T, floor(events{1}(1) + 6));
+</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_12.png" alt=""> <p>Now let's add an outlier time point.</p><pre class="codeinput">when = min(T, floor(events{1}(1) + 6));
 y(when) = -20;
 
 create_figure(<span class="string">'observed data (y)'</span>);
@@ -393,20 +402,22 @@ disp(t)
     True    Estimated
     ____    _________
 
-     1       0.66194 
-     0        0.1744 
-     0       0.12899 
+     1       0.80265 
+     0      0.012366 
+     0       0.30015 
 
-</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_12.png" alt=""> <p>Plot the fitted response</p><pre class="codeinput">fit = X * b;
+</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_13.png" alt=""> <p>Plot the fitted response</p><pre class="codeinput">fit = X * b;
 plot(fit)
 legend({<span class="string">'Data'</span> <span class="string">'Fit'</span>});
 
 <span class="comment">% save the figure handle so we can re-activate it and add to it:</span>
 fighan = gcf;
-</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_13.png" alt=""> <p>Another way to look at this is with a scatterplot Notice the outlier!</p><pre class="codeinput">create_figure(<span class="string">'scatter'</span>);
+</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_14.png" alt=""> <p>Another way to look at this is with a scatterplot Notice the outlier!</p><pre class="codeinput">create_figure(<span class="string">'scatter'</span>);
 scatter(fit, y, <span class="string">'MarkerFaceColor'</span>, [.3 .2 .6]);
+xlabel(<span class="string">'Fitted response (based on X)'</span>);
+ylabel(<span class="string">'Observed response (brain)'</span>);
 h = refline;
-</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_14.png" alt=""> <p><b>Questions to answer:</b></p><pre class="codeinput"><span class="comment">% 1. If the outlier were farther out on the x-axis (predictor axis), i.e.,</span>
+</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_15.png" alt=""> <p><b>Questions to answer:</b></p><pre class="codeinput"><span class="comment">% 1. If the outlier were farther out on the x-axis (predictor axis), i.e.,</span>
 <span class="comment">% more extreme, would you expect it to have more or less pull on the</span>
 <span class="comment">% regression line?</span>
 <span class="comment">%</span>
@@ -431,7 +442,7 @@ legend({<span class="string">'Data'</span> <span class="string">'Fit'</span> <sp
 <span class="comment">% *Questions to answer:*</span>
 
 <span class="comment">% 1. When does the robust regression make the most difference? Why?</span>
-</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_15.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+</pre><img vspace="5" hspace="5" src="first_level_design_matrix_exploration_16.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Create and plot design matrices
 
@@ -457,6 +468,14 @@ legend({<span class="string">'Data'</span> <span class="string">'Fit'</span> <sp
 %                     predictors) into account, but not variance in the
 %                     predictors, which also contributes to efficiency and power to
 %                     detect an effect.
+%
+
+%%
+%
+% Note: You need the Matlab stats toolbox on your path.
+% Check for it here:
+
+if isempty(ver('stats')), warning('You do not have the statistics toolbox on your Matlab path. You may/will get errors'); end
 
 %% Create a simple,  one-event design
 
@@ -472,6 +491,13 @@ drawnow, snapnow
 
 % X is the design matrix.
 % Efficiency is e. More is better.
+%
+% To explore the design matrix, try typing X <and then return> to see the
+% values. Remember that the last column is the intercept. The intercept is
+% not shown on the plot.  Too see a heatmap of X, you can also try:
+
+figure; imagesc(X); colorbar
+drawnow, snapnow
 
 %%
 % *Questions to answer:*
@@ -827,7 +853,10 @@ fighan = gcf;
 
 create_figure('scatter');
 scatter(fit, y, 'MarkerFaceColor', [.3 .2 .6]);
+xlabel('Fitted response (based on X)');
+ylabel('Observed response (brain)');
 h = refline;
+
 
 %% 
 % *Questions to answer:*

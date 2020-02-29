@@ -22,6 +22,14 @@
 %                     predictors) into account, but not variance in the
 %                     predictors, which also contributes to efficiency and power to
 %                     detect an effect.
+%
+
+%%
+%
+% Note: You need the Matlab stats toolbox on your path.
+% Check for it here:
+
+if isempty(ver('stats')), warning('You do not have the statistics toolbox on your Matlab path. You may/will get errors'); end
 
 %% Create a simple,  one-event design
 
@@ -37,6 +45,13 @@ drawnow, snapnow
 
 % X is the design matrix.
 % Efficiency is e. More is better.
+%
+% To explore the design matrix, try typing X <and then return> to see the
+% values. Remember that the last column is the intercept. The intercept is
+% not shown on the plot.  Too see a heatmap of X, you can also try:
+
+figure; imagesc(X); colorbar
+drawnow, snapnow
 
 %%
 % *Questions to answer:*
@@ -392,7 +407,10 @@ fighan = gcf;
 
 create_figure('scatter');
 scatter(fit, y, 'MarkerFaceColor', [.3 .2 .6]);
+xlabel('Fitted response (based on X)');
+ylabel('Observed response (brain)');
 h = refline;
+
 
 %% 
 % *Questions to answer:*
