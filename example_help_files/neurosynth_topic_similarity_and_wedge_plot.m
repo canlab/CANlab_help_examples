@@ -11,14 +11,17 @@ image_obj = test_dat.get_wh_image(1);
 % It can be found on Dropbox here. You need to add it to your matlab path
 % before you run this script.
 % https://www.dropbox.com/s/rgfymakk6whr06o/Yarkoni_2013_Neurosynth_featureset1.mat?dl=0
-%
+% Download the linked file and put it in a folder on your Matlab path.
+
+% ALTERNATIVE:
 % If you have access to the CANLab data reposity google drive folder, the file is also here:
 % cd('/Users/tor/Google_Drive/CanlabDataRepository/Neuroimaging_Autolabeler')
 % g =genpath(pwd); addpath(g); savepath
 
+
 %% Run neurosynth similarity
 
-[image_by_feature_correlations, top_feature_tables] = neurosynth_feature_labels( image_obj, 'images_are_replicates', false, 'noverbose');
+[image_by_feature_correlations, top_feature_tables] = neurosynth_feature_labels(image_obj, 'images_are_replicates', false, 'noverbose');
 
 % Example for NPS: 
 %     testr_low      words_low      testr_high      words_high   
