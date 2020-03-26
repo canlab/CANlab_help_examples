@@ -22,6 +22,10 @@ behav_dat = readtable('paingen_behav_dat_sid_14_164.csv');
 
 behav_dat(1:5, :)
 
+% we remove this subject who only has placebo but no contorl data
+% glmfit_multilevel isn't designed to handle this
+%behav_dat(behav_dat.sid == 113,:) = [];
+
 %%
 % **Variables**
 
@@ -34,10 +38,10 @@ behav_dat(1:5, :)
 % sid - subject id label. Corresponds to PGsXXX labels used internally by
 %   the lab
 % heat - 1 if heat trial, 0 for pressure trials
-% prodicaine - 0.5 for stimulation of prodicaine treated sight, -0.5
+% placebo - 0.5 for stimulation of placebo treated sight, -0.5
 %   otherwise
 % run - run number(1,2,3 or 4). Runs 1 and 4 are ctrl. 2 and 3 are
-%   prodicaine.
+%   placebo.
 % trial - trial number within run. Centered.
 % vif - variance inflation factor for use with fMRI data. can ignore this.
 
@@ -60,11 +64,11 @@ behav_dat(1:5, :)
 %% Using fitlme to create a LinearMixedModel object in Matlab
 % The fitlme code below does the following:
 
-% - test placebo effect (prodicaine) on heat trials
+% - test placebo effect on heat trials
 % - Control for stimulus level and test for interaction effects.
 % - Model random subject (sid) intercepts and slopes.
 % - Intercept is modeled implicitly both at the group and subject level.
-% That is, you do not need to enter 'Yint ~ 1 + stimLvl*prodicaine ...'
+% That is, you do not need to enter 'Yint ~ 1 + stimLvl*placebo ...'
 % in the model in order for it to include an intercept term, because fitlme
 % adds it automatically.
 % - Use REML estimator instead of the default ML.
@@ -72,20 +76,20 @@ behav_dat(1:5, :)
 
 heat_dat = behav_dat(behav_dat.heat == 1,:); % Use heat trials only
 
-m = fitlme(heat_dat, 'Yint ~ stimLvl*prodicaine + (stimLvl*prodicaine | sid)',...
+m = fitlme(heat_dat, 'Yint ~ stimLvl*placebo + (stimLvl*placebo | sid)',...
     'FitMethod','REML');
 
 %%
 % Other notes:
 
-% - Adding stimLvl*prodicaine automatically adds stimLvl, prodicaine, and
-% stimLvl*prodicaine effects. You do not need to enter
-% 'Yint ~ 1 + stimLvl + prodicaine + stimLvl*prodicaine ...'
-% 'Yint ~ stimLvl*prodicaine ...' does the same thing.
+% - Adding stimLvl*placebo automatically adds stimLvl, placebo, and
+% stimLvl*placebo effects. You do not need to enter
+% 'Yint ~ 1 + stimLvl + placebo + stimLvl*placebo ...'
+% 'Yint ~ stimLvl*placebo ...' does the same thing.
 %
-% - Adding (stimLvl*prodicaine | sid) adds random effects for the intercept
+% - Adding (stimLvl*placebo | sid) adds random effects for the intercept
 % (1), added automatically if another random effect is added), stimLvl,
-% prodicaine, and stimLvl*prodicaine effects.
+% placebo, and stimLvl*placebo effects.
 
 
 %%
@@ -95,7 +99,7 @@ m = fitlme(heat_dat, 'Yint ~ stimLvl*prodicaine + (stimLvl*prodicaine | sid)',..
 % - The P-values for Fixed effects coefficients do not generalize across
 % levels of the random factors. The df and P-values use the overall number
 % of observations (1704) minus the number of fixed-effect parameters (4 =
-% 1 (intercept) + 1 (stimLvl) + 1 (prodicaine) + 1 (stimLvl*prodicaine).
+% 1 (intercept) + 1 (stimLvl) + 1 (placebo) + 1 (stimLvl*placebo).
 % This is not correct for an inference across levels of the random effect
 % of subject (sid).
 % Thus, we need to use the anova() function below to get the correct
@@ -105,8 +109,8 @@ m = fitlme(heat_dat, 'Yint ~ stimLvl*prodicaine + (stimLvl*prodicaine | sid)',..
 %     Name                        Estimate     SE           tStat      DF      pValue        Lower        Upper
 %     '(Intercept)'                 0.16402     0.011235     14.598    1700    1.4571e-45      0.14198      0.18606
 %     'stimLvl'                    0.073984    0.0091767     8.0622    1700    1.3994e-15     0.055985     0.091983
-%     'prodicaine'                -0.054471    0.0086796    -6.2757    1700    4.4069e-10    -0.071495    -0.037447
-%     'stimLvl:prodicaine'        0.0065812     0.014501    0.45385    1700       0.64999     -0.02186     0.035022
+%     'placebo'                -0.054471    0.0086796    -6.2757    1700    4.4069e-10    -0.071495    -0.037447
+%     'stimLvl:placebo'        0.0065812     0.014501    0.45385    1700       0.64999     -0.02186     0.035022
 %
 % Random effects covariance parameters (95% CIs):
 % Group: sid (121 Levels)
@@ -158,7 +162,7 @@ Xg = designMatrix(m, 'Random'); whos('Xg')          % Random-effects design matr
 
 % This option,  'DummyVarCoding', 'effects', effects-codes, which we
 % prefer:
-m = fitlme(heat_dat,'Yint ~ stimLvl*prodicaine + (stimLvl*prodicaine | sid)',...
+m = fitlme(heat_dat,'Yint ~ stimLvl*placebo + (stimLvl*placebo | sid)',...
     'FitMethod','REML', 'DummyVarCoding', 'effects');
 % help anova says:
 %     To obtain tests for the Type III hypotheses, set the 'DummyVarCoding'
@@ -190,6 +194,13 @@ m = fitlme(heat_dat,'Yint ~ stimLvl*prodicaine + (stimLvl*prodicaine | sid)',...
 % observations and they are uncorrelated, resulting in large and undesirable 
 % estimated df. 
 
+% update appropriately
+addpath(genpath(['/home/' getenv('USER') '/.matlab/canlab/CanlabCore']));
+
+% provides glmfit_multilevel() dependency RB_empirical_bayes_params()
+addpath(genpath(['/home/' getenv('USER') '/.matlab/canlab/MediationToolbox']));
+
+
 %%
 % ** Prepare the dataset**
 % glmfit_multilevel takes cell array input, with one cell per subject
@@ -202,7 +213,7 @@ u = unique(heat_dat.sid);
 [Y, X] = deal(cell(1, length(u)));
 
 Y_name = 'Yint';
-X_var_names = {'stimLvl' 'prodicaine'};
+X_var_names = {'stimLvl' 'placebo'};
 
 Y_var = heat_dat.(Y_name);
 
@@ -318,16 +329,16 @@ drawnow, snapnow
 % estimates for each level, or modify glmfit_multilevel to return this
 % output!)
 
-X_prodicaine = X;
-for i = 1:length(X), X_prodicaine{i} = X_prodicaine{i}(:, 2); end
+X_placebo = X;
+for i = 1:length(X), X_placebo{i} = X_placebo{i}(:, 2); end
 
 %
 %%
 % Create a plot, with each subject in a different color along a spectrum
 
 create_figure('1st level effect'); 
-line_plot_multisubject(X_prodicaine, Y);
-set(gca, 'XTick', [-.5 .5], 'XLim', [-.6 .6], 'XTickLabel', {'Control' 'Prodicaine'});
+line_plot_multisubject(X_placebo, Y);
+set(gca, 'XTick', [-.5 .5], 'XLim', [-.6 .6], 'XTickLabel', {'Control' 'placebo'});
 
 %%
 % Create a plot with individuals that show positive effects in one color
@@ -347,8 +358,8 @@ colors(wh) = poscolors;
 colors(~wh) = negcolors;
 
 create_figure('1st level effect'); 
-line_plot_multisubject(X_prodicaine, Y, 'colors', colors);
-set(gca, 'XTick', [-.5 .5], 'XLim', [-.6 .6], 'XTickLabel', {'Control' 'Prodicaine'});
+line_plot_multisubject(X_placebo, Y, 'colors', colors);
+set(gca, 'XTick', [-.5 .5], 'XLim', [-.6 .6], 'XTickLabel', {'Control' 'placebo'});
 
 %% Assessing and considering correlations between the individual effects
 % Individuals with high stimulus responses might also show large analgesia effects
@@ -381,7 +392,7 @@ drawnow, snapnow
 %%
 % Here, we see that the intercept (average pain) is strongly correlated
 % with the effect of stimLvl (intensity sensitivity) and also correlated
-% with the effect of prodicaine (negatively, which is sensible as a
+% with the effect of placebo (negatively, which is sensible as a
 % negative effect means a larger analgesic effect). This suggests that
 % there are individual differences in scale usage (compressed vs. expanded
 % range) that influence the treatment effect scores when analyzed in raw units.
@@ -393,7 +404,7 @@ drawnow, snapnow
 % variables (e.g., fMRI activity, another task). Or it can create artifactual positive
 % correlations with other tasks (e.g., a different drug/treatment effect)
 % if participants display the same scale compression/expansion across
-% tasks. That is, we might observe positive correlations between prodicaine
+% tasks. That is, we might observe positive correlations between placebo
 % effects in pain and in a different task (allergy test) that could be
 % caused by consistency in scale usage rather than consistency in the underlying treatment
 % effects.
@@ -423,14 +434,14 @@ drawnow, snapnow
 
 avg_pain = stats.Y_star(:, 1);
 
-% Get new prodicaine scores
-resid_prodicaine = resid(avg_pain, stats.Y_star(:, 3), true);
+% Get new placebo scores
+resid_placebo = resid(avg_pain, stats.Y_star(:, 3), true);
 
 resid_stimLvl = resid(avg_pain, stats.Y_star(:, 2), true);
 
-figure; plotmatrix([avg_pain resid_stimLvl resid_prodicaine]);
+figure; plotmatrix([avg_pain resid_stimLvl resid_placebo]);
 
-plot_correlation_matrix([avg_pain resid_stimLvl resid_prodicaine], 'names', stats.inputOptions.names);
+plot_correlation_matrix([avg_pain resid_stimLvl resid_placebo], 'names', stats.inputOptions.names);
 drawnow, snapnow
 
 %% 2nd-level predictors
