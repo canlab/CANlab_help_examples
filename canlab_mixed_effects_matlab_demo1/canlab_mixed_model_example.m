@@ -127,9 +127,34 @@ m.Coefficients
 % LinearMixedModel.anova Perform hypothesis tests on fixed effect terms.
 %     STATS = anova(LME) tests the significance of each fixed effect term in
 %     the linear mixed effects model LME and returns a table array STATS.
+%     If DummyVarCoding is used in fitlme call, anova will perform Type III
+%     hypothesis tests across DummyVar (not shown here).
 %
 
 anova(m,'dfmethod','satterthwaite')
+
+%%
+% Satterthwaite corrected p-values can also be obtained using 
+%     LinearMixedModel/coefTest, which can be useful for certain
+%     circumstances where anova doesn't return the specific contrast of
+%     interest by default. One circumstance where this arises is when you
+%     have type III hypothesis tests in your model, in which case 
+%     LinearMixedModel/anova will not return statistics on other contrasts
+%     which may be present.
+%
+% The following implementation tests stimLvl = 0, which should provide the
+%   same results as above, while the other should test whether 
+%   placebo + stimLvl = 0, which conceptually amounts to testing if placebo 
+%   effects are larger than a 1C *decrease* in stimulus intensity. The test
+%   is somewhat contrived, but mostly selected to illustrate how to use
+%   coefTest. 
+
+[Pa, Fa, DF1a, DF2a] = coefTest(m,[0,1,0,0],0,'dfmethod','satterthwaite');
+
+[Pb, Fb, DF1b, DF2b] = coefTest(m,[0,1,1,0],0,'dfmethod','satterthwaite');
+
+t = array2table([Pa,Fa,DF1a,DF2a; Pb, Fb, DF1b, DF2b],'VariableNames',...
+    {'pValue','F','DF1','DF2'},'RowNames',{'stimLvl','placebo = (-1)*stimLvl'})
 
 %%
 % **Satterthwaite correction**
