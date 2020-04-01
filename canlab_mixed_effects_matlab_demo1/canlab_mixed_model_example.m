@@ -138,12 +138,11 @@ anova(m,'dfmethod','satterthwaite')
 %     LinearMixedModel/coefTest, which can be useful for certain
 %     circumstances where anova doesn't return the specific contrast of
 %     interest by default. One circumstance where this arises is when you
-%     have type III hypothesis tests in your model, in which case 
-%     LinearMixedModel/anova will not return statistics on other contrasts
-%     which may be present.
+%     have DummyVarCoding in your fitlme invocation, but it's also useful
+%     for performing post-hoc comparisons.
 %
 % The following implementation tests stimLvl = 0, which should provide the
-%   same results as above, while the other should test whether 
+%   same results as above, while the other should post-hoc test whether
 %   placebo + stimLvl = 0, which conceptually amounts to testing if placebo 
 %   effects are larger than a 1C *decrease* in stimulus intensity. The test
 %   is somewhat contrived, but mostly selected to illustrate how to use
