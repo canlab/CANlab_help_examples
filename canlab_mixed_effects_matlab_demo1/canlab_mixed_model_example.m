@@ -13,12 +13,12 @@
 %% About the dataset
 
 %%
-% The example uses a subset of data from the PainGen project, provided for model
+% The example uses a subset of data from an ongoing study, provided for model
 % demonstration purposes only. Do not reuse or reshare this dataset for other
 % purposes. It was collected by Tor Wager's Cognitive and Affective
 % Neuroscience lab at the University of Colorado.
 
-behav_dat = readtable('paingen_behav_dat_sid_14_164.csv');
+behav_dat = readtable('study_behav_dat_sid_14_164.csv');
 
 behav_dat(1:5, :)
 
