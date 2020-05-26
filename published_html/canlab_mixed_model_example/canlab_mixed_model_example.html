@@ -1,0 +1,1171 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Linear Mixed Model demo</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-03-30"><meta name="DC.source" content="canlab_mixed_model_example.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.8em; color:#2C2D92; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.4em; color:#363538; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#363538; font-weight:bold; line-height:140%; }
+
+a { color:#4B4BA8; text-decoration:none; }
+a:hover { color:#2AAFDF; text-decoration:underline; }
+a:visited { color:#4B4BA8; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:14px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Linear Mixed Model demo</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">About the dataset</a></li><li><a href="#6">Using fitlme to create a LinearMixedModel object in Matlab</a></li><li><a href="#13">Simple two-level mixed effects using CANlab glmfit_multilevel</a></li><li><a href="#18">Plotting data and effects</a></li><li><a href="#26">Assessing and considering correlations between the individual effects</a></li><li><a href="#30">2nd-level predictors</a></li></ul></div><p>This demonstration was prepared by Bogdan Petre and Tor Wager</p><p>It includes code to perform a mixed-effects analysis on a dataset in both Matlab and R. The published version runs the Matlab code.</p><p>To reproduce the analysis, you must have the dataset, which is in the <tt>CANlab_help_examples</tt> repository on Github, on your Matlab path. it is in the subfolder <tt>canlab_mixed_effects_matlab_demo1</tt></p><h2 id="2">About the dataset</h2><p>The example uses a subset of data from the PainGen project, provided for model demonstration purposes only. Do not reuse or reshare this dataset for other purposes. It was collected by Tor Wager's Cognitive and Affective Neuroscience lab at the University of Colorado.</p><pre class="codeinput">behav_dat = readtable(<span class="string">'paingen_behav_dat_sid_14_164.csv'</span>);
+
+behav_dat(1:5, :)
+
+<span class="comment">% we remove this subject who only has placebo but no contorl data</span>
+<span class="comment">% glmfit_multilevel isn't designed to handle this</span>
+<span class="comment">%behav_dat(behav_dat.sid == 113,:) = [];</span>
+</pre><pre class="codeoutput">
+ans =
+
+  5&times;11 table
+
+     Yint       Yunp       RTint      RTunp     stimLvl    sid    heat    placebo    run    trial     vif  
+    _______    _______    _______    _______    _______    ___    ____    _______    ___    _____    ______
+
+    0.91016          1     3.4159     4.4826     -0.5       6      1       -0.5       1     -1.5     2.0965
+    0.59766     0.4668     3.6492     2.5496      0.5       6      1       -0.5       1     -0.5     1.7078
+          0          0    0.81655    0.68308     -0.5       6      1       -0.5       1      0.5     1.7062
+          0          0    0.46561    0.46575     -0.5       6      0       -0.5       1     -0.5     1.4626
+    0.82031    0.55664      3.466     3.3659      0.5       6      0       -0.5       1      0.5     1.5805
+
+</pre><p><b>*Variables</b>*</p><pre class="codeinput"><span class="comment">% Yint - pain intensity rating</span>
+<span class="comment">% Yunp - pain unpleasantness rating.</span>
+<span class="comment">% RTint - reaction time for intensity ratings</span>
+<span class="comment">% RTunp - reaction time for unpleasantness ratings</span>
+<span class="comment">% stimLvl - low, medium or high. 46.5C, 47C and 47.5C, possibly different</span>
+<span class="comment">%   for earliest subjects, but we think all with different temps are excluded</span>
+<span class="comment">% sid - subject id label. Corresponds to PGsXXX labels used internally by</span>
+<span class="comment">%   the lab</span>
+<span class="comment">% heat - 1 if heat trial, 0 for pressure trials</span>
+<span class="comment">% placebo - 0.5 for stimulation of placebo treated sight, -0.5</span>
+<span class="comment">%   otherwise</span>
+<span class="comment">% run - run number(1,2,3 or 4). Runs 1 and 4 are ctrl. 2 and 3 are</span>
+<span class="comment">%   placebo.</span>
+<span class="comment">% trial - trial number within run. Centered.</span>
+<span class="comment">% vif - variance inflation factor for use with fMRI data. can ignore this.</span>
+</pre><p><b>*Preparation</b>*</p><pre class="codeinput"><span class="comment">% this data was prepared with various preprocessing steps:</span>
+<span class="comment">% any response times &lt;= 0.02s were removed (we had sticky button problems</span>
+<span class="comment">%   and based on temporal distribution of responses it seems that anything</span>
+<span class="comment">%   &lt; 0.02 is likely to be due to this rather than a deliberate response)</span>
+<span class="comment">% any response times &gt;= 5.01 seconds. These are timeouts without a click</span>
+<span class="comment">%   and it's ambiguous whether the cursor location recorded corresponds to</span>
+<span class="comment">%   the subjects rating or not.</span>
+<span class="comment">% subjects with sid 1-13 were removed due to changes to the paradigm at</span>
+<span class="comment">%   this stage of the study. Subject 6 retained because this subject was</span>
+<span class="comment">%   processed out of order and actually was run on the newer paradigm.</span>
+<span class="comment">% subject 23 and 84 are removed because too few of their responses passed</span>
+<span class="comment">%   the timing criteria above</span>
+</pre><h2 id="6">Using fitlme to create a LinearMixedModel object in Matlab</h2><p>The fitlme code below does the following:</p><pre class="codeinput"><span class="comment">% - test placebo effect on heat trials</span>
+<span class="comment">% - Control for stimulus level and test for interaction effects.</span>
+<span class="comment">% - Model random subject (sid) intercepts and slopes.</span>
+<span class="comment">% - Intercept is modeled implicitly both at the group and subject level.</span>
+<span class="comment">% That is, you do not need to enter 'Yint ~ 1 + stimLvl*placebo ...'</span>
+<span class="comment">% in the model in order for it to include an intercept term, because fitlme</span>
+<span class="comment">% adds it automatically.</span>
+<span class="comment">% - Use REML estimator instead of the default ML.</span>
+
+
+heat_dat = behav_dat(behav_dat.heat == 1,:); <span class="comment">% Use heat trials only</span>
+
+m = fitlme(heat_dat, <span class="string">'Yint ~ stimLvl*placebo + (stimLvl*placebo | sid)'</span>,<span class="keyword">...</span>
+    <span class="string">'FitMethod'</span>,<span class="string">'REML'</span>);
+</pre><p>Other notes:</p><pre class="codeinput"><span class="comment">% - Adding stimLvl*placebo automatically adds stimLvl, placebo, and</span>
+<span class="comment">% stimLvl*placebo effects. You do not need to enter</span>
+<span class="comment">% 'Yint ~ 1 + stimLvl + placebo + stimLvl*placebo ...'</span>
+<span class="comment">% 'Yint ~ stimLvl*placebo ...' does the same thing.</span>
+<span class="comment">%</span>
+<span class="comment">% - Adding (stimLvl*placebo | sid) adds random effects for the intercept</span>
+<span class="comment">% (1), added automatically if another random effect is added), stimLvl,</span>
+<span class="comment">% placebo, and stimLvl*placebo effects.</span>
+</pre><p><b>*Sample output</b>* Here is a sample of the output.</p><pre class="codeinput"><span class="comment">% - The P-values for Fixed effects coefficients do not generalize across</span>
+<span class="comment">% levels of the random factors. The df and P-values use the overall number</span>
+<span class="comment">% of observations (1704) minus the number of fixed-effect parameters (4 =</span>
+<span class="comment">% 1 (intercept) + 1 (stimLvl) + 1 (placebo) + 1 (stimLvl*placebo).</span>
+<span class="comment">% This is not correct for an inference across levels of the random effect</span>
+<span class="comment">% of subject (sid).</span>
+<span class="comment">% Thus, we need to use the anova() function below to get the correct</span>
+<span class="comment">% inferences.</span>
+
+<span class="comment">% Fixed effects coefficients (95% CIs):</span>
+<span class="comment">%     Name                        Estimate     SE           tStat      DF      pValue        Lower        Upper</span>
+<span class="comment">%     '(Intercept)'                 0.16402     0.011235     14.598    1700    1.4571e-45      0.14198      0.18606</span>
+<span class="comment">%     'stimLvl'                    0.073984    0.0091767     8.0622    1700    1.3994e-15     0.055985     0.091983</span>
+<span class="comment">%     'placebo'                -0.054471    0.0086796    -6.2757    1700    4.4069e-10    -0.071495    -0.037447</span>
+<span class="comment">%     'stimLvl:placebo'        0.0065812     0.014501    0.45385    1700       0.64999     -0.02186     0.035022</span>
+<span class="comment">%</span>
+<span class="comment">% Random effects covariance parameters (95% CIs):</span>
+<span class="comment">% Group: sid (121 Levels)</span>
+<span class="comment">%     Name1                       Name2                       Type          Estimate      Lower        Upper</span>
+<span class="comment">%     '(Intercept)'               '(Intercept)'               'std'            0.11924      0.10469     0.13581</span>
+<span class="comment">%     'stimLvl'                   '(Intercept)'               'corr'            0.7489      0.71099     0.78247</span>
+</pre><p>inspect model coefficients (ignore p-values)</p><pre class="codeinput">m.Coefficients
+</pre><pre class="codeoutput">
+ans = 
+
+
+    FIXED EFFECT COEFFICIENTS: DFMETHOD = 'RESIDUAL', ALPHA = 0.05
+
+    Name                     Estimate     SE           tStat      DF  
+    '(Intercept)'              0.16402     0.011235     14.598    1700
+    'stimLvl'                 0.073984    0.0091767     8.0622    1700
+    'placebo'                -0.054471    0.0086796    -6.2757    1700
+    'stimLvl:placebo'        0.0065812     0.014501    0.45385    1700
+
+
+    pValue        Lower        Upper    
+    1.4571e-45      0.14198      0.18606
+    1.3994e-15     0.055985     0.091983
+    4.4069e-10    -0.071495    -0.037447
+       0.64999     -0.02186     0.035022
+
+</pre><p>get satterthwaite corrected p-values LinearMixedModel.anova Perform hypothesis tests on fixed effect terms.     STATS = anova(LME) tests the significance of each fixed effect term in     the linear mixed effects model LME and returns a table array STATS.</p><pre class="codeinput">anova(m,<span class="string">'dfmethod'</span>,<span class="string">'satterthwaite'</span>)
+</pre><pre class="codeoutput">
+ans = 
+
+
+    ANOVA MARGINAL TESTS: DFMETHOD = 'SATTERTHWAITE'
+
+    Term                     FStat      DF1    DF2       pValue    
+    '(Intercept)'             213.11    1      120.31     2.119e-28
+    'stimLvl'                 64.999    1      127.14     4.762e-13
+    'placebo'                 39.384    1      121.44    5.5834e-09
+    'stimLvl:placebo'        0.20598    1      255.48       0.65032
+
+</pre><p><b>*Satterthwaite correction</b>*</p><pre class="codeinput"><span class="comment">% Using the satterthwaite option for df estimates the error degrees of</span>
+<span class="comment">% freedom based on the rank</span>
+<span class="comment">% The formula was developed by the statistician Franklin E. Satterthwaite and a derivation of the</span>
+<span class="comment">% result is given in Satterthwaite's article in Psychometrika (vol. 6, no. 5, October 1941).</span>
+<span class="comment">% This site is useful for deriving the df in the two-sample case: https://secure-media.collegeboard.org/apc/ap05_stats_allwood_fin4prod.pdf</span>
+<span class="comment">% Code for Satterthwaite df calculation for mulitple regression can be found in</span>
+<span class="comment">% fit_gls.m (Martin Lindquist), and is included here for the</span>
+<span class="comment">% no-autocorrelation (AR(p), p==0) case:</span>
+
+<span class="comment">% A = W;   % for ar p = 0 case; weights</span>
+<span class="comment">% R = (eye(T) - X * invxvx * X' * iV);        % Residual inducing matrix</span>
+<span class="comment">%</span>
+<span class="comment">% Wd = R * A * inv(iV) * A';                  % inv(iV) = Covariance matrix</span>
+<span class="comment">% df = (trace(Wd).^2)./trace(Wd*Wd);       % Satterthwaite approximation for degrees of freedom</span>
+</pre><p><b>*Model properties</b>* You can query the model object (m) to get its properties. e.g.,</p><pre class="codeinput">help <span class="string">LinearMixedModel</span>
+m.Rsquared
+m.VariableInfo                          <span class="comment">% all variables in input dataset and which are in model</span>
+m.Variables(1:5, :)                     <span class="comment">% all variables in input dataset</span>
+X = designMatrix(m); X(1:5, :)          <span class="comment">% Fixed-effects design matrix</span>
+Xg = designMatrix(m, <span class="string">'Random'</span>); whos(<span class="string">'Xg'</span>)          <span class="comment">% Random-effects design matrix</span>
+
+
+<span class="comment">% This option,  'DummyVarCoding', 'effects', effects-codes, which we</span>
+<span class="comment">% prefer:</span>
+m = fitlme(heat_dat,<span class="string">'Yint ~ stimLvl*placebo + (stimLvl*placebo | sid)'</span>,<span class="keyword">...</span>
+    <span class="string">'FitMethod'</span>,<span class="string">'REML'</span>, <span class="string">'DummyVarCoding'</span>, <span class="string">'effects'</span>);
+<span class="comment">% help anova says:</span>
+<span class="comment">%     To obtain tests for the Type III hypotheses, set the 'DummyVarCoding'</span>
+<span class="comment">%     to 'effects' when fitting the model.</span>
+</pre><pre class="codeoutput"> LinearMixedModel Fitted linear mixed effects model.
+    LME = FITLME(...) fits a linear mixed effects model to data. The fitted
+    model LME is a LinearMixedModel modeling a response variable as a
+    linear function of fixed effect predictors and random effect
+    predictors.
+ 
+    LinearMixedModel methods:
+        coefCI - Coefficient confidence intervals
+        coefTest - Linear hypothesis test on coefficients
+        predict - Compute predicted values given predictor values
+        random - Generate random response values given predictor values
+        plotResiduals - Plot of residuals
+        designMatrix - Fixed and random effects design matrices
+        fixedEffects - Stats on fixed effects
+        randomEffects - Stats on random effects
+        covarianceParameters - Stats on covariance parameters
+        fitted - Fitted response
+        residuals - Various types of residuals
+        response - Response used to fit the model
+        compare - Compare fitted models
+        anova - Marginal tests for fixed effect terms           
+        disp - Display a fitted model                                                                                                                 
+ 
+    LinearMixedModel properties:
+        FitMethod - Method used for fitting (either 'ML' or 'REML')
+        MSE - Mean squared error (estimate of residual variance)
+        Formula - Representation of the model used in this fit
+        LogLikelihood - Log of likelihood function at coefficient estimates
+        DFE - Degrees of freedom for residuals
+        SSE - Error sum of squares
+        SST - Total sum of squares
+        SSR - Regression sum of squares
+        CoefficientCovariance - Covariance matrix for coefficient estimates
+        CoefficientNames - Coefficient names
+        NumCoefficients - Number of coefficients
+        NumEstimatedCoefficients - Number of estimated coefficients
+        Coefficients - Coefficients and related statistics
+        Rsquared - R-squared and adjusted R-squared
+        ModelCriterion - AIC and other model criteria
+        VariableInfo - Information about variables used in the fit
+        ObservationInfo - Information about observations used in the fit
+        Variables - Table of variables used in fit
+        NumVariables - Number of variables used in fit
+        VariableNames - Names of variables used in fit
+        NumPredictors - Number of predictors
+        PredictorNames - Names of predictors
+        ResponseName - Name of response
+        NumObservations - Number of observations in the fit
+        ObservationNames - Names of observations in the fit
+ 
+    See also FITLME, FITLMEMATRIX, LinearModel, GeneralizedLinearModel, NonLinearModel.    
+
+    Reference page in Doc Center
+       doc LinearMixedModel
+
+
+
+ans = 
+
+  struct with fields:
+
+    Ordinary: 0.5735
+    Adjusted: 0.5728
+
+
+ans =
+
+  11&times;4 table
+
+                Class         Range        InModel    IsCategorical
+               ________    ____________    _______    _____________
+
+    Yint       'double'    [1&times;2 double]     false         false    
+    Yunp       'double'    [1&times;2 double]     false         false    
+    RTint      'double'    [1&times;2 double]     false         false    
+    RTunp      'double'    [1&times;2 double]     false         false    
+    stimLvl    'double'    [1&times;2 double]     true          false    
+    sid        'double'    [1&times;2 double]     true          false    
+    heat       'double'    [1&times;2 double]     false         false    
+    placebo    'double'    [1&times;2 double]     true          false    
+    run        'double'    [1&times;2 double]     false         false    
+    trial      'double'    [1&times;2 double]     false         false    
+    vif        'double'    [1&times;2 double]     false         false    
+
+
+ans =
+
+  5&times;11 table
+
+     Yint       Yunp       RTint      RTunp     stimLvl    sid    heat    placebo    run    trial     vif  
+    _______    _______    _______    _______    _______    ___    ____    _______    ___    _____    ______
+
+    0.91016          1     3.4159     4.4826     -0.5       6      1       -0.5       1     -1.5     2.0965
+    0.59766     0.4668     3.6492     2.5496      0.5       6      1       -0.5       1     -0.5     1.7078
+          0          0    0.81655    0.68308     -0.5       6      1       -0.5       1      0.5     1.7062
+    0.67578    0.74805     2.0656     4.0154      0.5       6      1        0.5       2     -0.5     1.8016
+    0.24609    0.13672     1.3997     1.6329     -0.5       6      1        0.5       2      0.5     1.7161
+
+
+ans =
+
+    1.0000   -0.5000   -0.5000    0.2500
+    1.0000    0.5000   -0.5000   -0.2500
+    1.0000   -0.5000   -0.5000    0.2500
+    1.0000    0.5000    0.5000    0.2500
+    1.0000   -0.5000    0.5000   -0.2500
+
+  Name         Size             Bytes  Class     Attributes
+
+  Xg        1704x484            98472  double    sparse    
+
+</pre><h2 id="13">Simple two-level mixed effects using CANlab glmfit_multilevel</h2><p>Mixed-effects models differ in their assumptions and implementation details. glmfit_multilevel is a fast and simple option for running a two-level mixed effects model with participant as a random effect. It implements a random-intercept, random-slope model across 2nd-level units (e.g., participants). it fits regressions for individual 2nd-level units (e.g., participants), and then (optionally) uses a precision-weighted least squares approach to model group effects. It thus treats participants as a random effect. This is appropriate when 2nd-level units are participants and 1st-level units are observations (e.g., trials) within participants. glmfit_multilevel was designed with this use case in mind.</p><p>glmfit_multilevel requires enough 1st-level units to fit a separate model for each 2nd-level unit (participant). If this is not the case, other models (igls.m, LMER, etc.) are preferred.</p><p>Degrees of freedom: glmfit_multilevel is conservative in the sense that the degrees of freedom in the group statistical test is always based on the number of subjects - 2nd-level parameters. The df is never higher than the sample size, which you would have with mixed effects models that estimate the df from the data. This causes problems in many other packages, particularly when there are many 1st-level observations and they are uncorrelated, resulting in large and undesirable estimated df.</p><pre class="codeinput"><span class="comment">% update appropriately</span>
+addpath(genpath([<span class="string">'/home/'</span> getenv(<span class="string">'USER'</span>) <span class="string">'/.matlab/canlab/CanlabCore'</span>]));
+
+<span class="comment">% provides glmfit_multilevel() dependency RB_empirical_bayes_params()</span>
+addpath(genpath([<span class="string">'/home/'</span> getenv(<span class="string">'USER'</span>) <span class="string">'/.matlab/canlab/MediationToolbox'</span>]));
+</pre><p>Prepare the dataset** glmfit_multilevel takes cell array input, with one cell per subject Y contains the response for each subject, and X the within-subject design matrix.</p><p>First, we need to turn the dataset into cell arrays:</p><pre class="codeinput">u = unique(heat_dat.sid);
+[Y, X] = deal(cell(1, length(u)));
+
+Y_name = <span class="string">'Yint'</span>;
+X_var_names = {<span class="string">'stimLvl'</span> <span class="string">'placebo'</span>};
+
+Y_var = heat_dat.(Y_name);
+
+X_var = zeros(size(Y_var, 1), length(X_var_names));
+
+<span class="keyword">for</span> j = 1:length(X_var_names)
+    X_var(:, j) = heat_dat.(X_var_names{j});
+<span class="keyword">end</span>
+
+<span class="keyword">for</span> i = 1:length(u)
+
+    wh = heat_dat.sid == u(i);  <span class="comment">% indicator for this subject</span>
+
+    Y{i} = Y_var(wh);
+
+    <span class="keyword">for</span> j = 1:length(X_var_names)
+
+        X{i}(:, j) = X_var(wh, j);
+
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+
+<span class="comment">% X2 is the 2nd-level (between-person) design matrix.</span>
+<span class="comment">% we don't have any between-person predictors, so X2 is empty here:</span>
+X2 = [];
+
+X2_names = {<span class="string">'2nd-level Intercept (average within-person effects)'</span>};
+</pre><p><b>*Between-person predictors</b>* Note: if we had a between-person predictor, the intercept would be first, and names would be, e.g., X2_names = {'2nd-level Intercept (overall group effect)' '2nd-lev predictor: Group membership'}</p><p><b>*Within-person variation</b>* glmfit_multilevel takes a summary statistics approach with precision-reweighting. it fits a model for each person individually. Therefore, each individual must have variance in Y and individual X.</p><p><b>Run the model</b></p><pre class="codeinput">stats = glmfit_multilevel(Y, X, X2, <span class="string">'names'</span>, X_var_names, <span class="string">'beta_names'</span>, X2_names);
+
+<span class="comment">% The 'weighted' option uses Empirical Bayes weighting for a single-step</span>
+<span class="comment">% precision reweighting. This is a simple version of what is acccomplished</span>
+<span class="comment">% by fitlme in Matlab or LMER in R, or igls.m (Lindquist/Wager).</span>
+
+stats = glmfit_multilevel(Y, X, X2, <span class="string">'names'</span>, X_var_names, <span class="string">'beta_names'</span>, X2_names, <span class="string">'weighted'</span>);
+
+<span class="comment">% The 'boot' option, with 'bootsamples', n, runs n boostrap samples at the 2nd level:</span>
+<span class="comment">% Run with 1000 bootstrap samples initially, and more are added based on P-value tolerance to avoid instability with too-few samples</span>
+
+stats = glmfit_multilevel(Y, X, X2, <span class="string">'names'</span>, X_var_names, <span class="string">'beta_names'</span>, X2_names, <span class="string">'weighted'</span>, <span class="string">'boot'</span>);
+</pre><pre class="codeoutput">Warning! Some participants have no variance in X column(s) and will be excluded
+Participant numbers:80
+Analysis description: Second Level of Multilevel Model  
+GLS analysis
+
+Observations: 120, Predictors:   1
+Outcome names: Intercept	stimLvl	placebo	
+Weighting option: unweighted
+Inference option: t-test
+
+Other Options:
+	Plots: No
+	Robust: no
+	Save: No
+	Output file: glmfit_general_output.txt
+	Total time: 0.06 s
+
+________________________________________
+
+Second Level of Multilevel Model 
+	Outcome variables:
+	Intercept	stimLvl	placebo	
+Adj. mean	0.16	0.07	-0.05	
+
+2nd-level Intercept (average within-person effects)
+	Intercept	stimLvl	placebo	
+Coeff	0.16	0.07	-0.05	
+STE	0.01	0.01	0.01	
+t	14.53	8.23	-6.31	
+Z	8.21	7.30	-5.85	
+p	0.00000	0.00000	0.00000	
+
+________________________________________
+Warning! Some participants have no variance in X column(s) and will be excluded
+Participant numbers:80
+Analysis description: Second Level of Multilevel Model  
+GLS analysis
+
+Observations: 120, Predictors:   1
+Outcome names: Intercept	stimLvl	placebo	
+Weighting option: weighted
+Inference option: t-test
+
+Other Options:
+	Plots: No
+	Robust: no
+	Save: No
+	Output file: glmfit_general_output.txt
+	R &amp; B - type Empirical Bayes reweighting.
+Total time: 0.06 s
+
+________________________________________
+
+Second Level of Multilevel Model 
+	Outcome variables:
+	Intercept	stimLvl	placebo	
+Adj. mean	0.16	0.05	-0.05	
+
+2nd-level Intercept (average within-person effects)
+	Intercept	stimLvl	placebo	
+Coeff	0.16	0.05	-0.05	
+STE	0.01	0.01	0.01	
+t	14.24	6.69	-5.52	
+Z	8.21	6.11	-5.18	
+p	0.00000	0.00000	0.00000	
+
+________________________________________
+Warning! Some participants have no variance in X column(s) and will be excluded
+Participant numbers:80
+Analysis description: Second Level of Multilevel Model  
+GLS analysis
+
+Observations: 120, Predictors:   1
+Outcome names: Intercept	stimLvl	placebo	
+Weighting option: weighted
+Inference option: bootstrap
+
+Other Options:
+	Plots: No
+	Robust: no
+	Save: No
+	Output file: glmfit_general_output.txt
+	R &amp; B - type Empirical Bayes reweighting.
+ Min p-value is 0.000000. Needed: 5867 samples
+ Bootstrapping 5867 samples... Bootstrap done in 0.04 s, bias correct in 0.00 s 
+Total time: 0.58 s
+
+________________________________________
+Average p-value tolerance (average max alpha): 0.0060
+
+Bootstrapped statistics. Bootstrap inference
+	Outcome variables:
+	Intercept	stimLvl	placebo	
+Adj. mean	0.16	0.05	-0.05	
+
+2nd-level Intercept (average within-person effects)
+	Intercept	stimLvl	placebo	
+Coeff	0.16	0.05	-0.05	
+STE	0.01	0.01	0.01	
+t	14.24	6.69	-5.52	
+Z	3.73	3.77	-3.32	
+p	0.00019	0.00016	0.00091	
+
+________________________________________
+</pre><h2 id="18">Plotting data and effects</h2><p>This is a crucial part of the analysis process!</p><p>with glmfit_multilevel, the 'plots' option generates some plots. you can also use functions including barplot_columns() to plot summary 2nd-level stats, and lineplot_multisubject() to plot individual and group within-person effects</p><pre class="codeinput"><span class="comment">% % stats = glmfit_multilevel(Y, X, X2, 'names', X_var_names, 'beta_names', X2_names, 'weighted', 'boot', 'plots');</span>
+
+effectcolors = {[.5 .5 .5] [.7 .4 .4] [.4 .4 .7]};
+</pre><p>Plot the individual within-person effect scores and group summary statistics Note: P values and Cohen's d from the barplot_columns output may not match your model results in stats exactly, because it provides a simple t-test on each column. so you should prefer the stats from the mixed model output.</p><pre class="codeinput">create_figure(<span class="string">'2nd level stats'</span>);
+barplot_columns(stats.first_level.beta', <span class="string">'names'</span>, stats.inputOptions.names, <span class="string">'colors'</span>, effectcolors, <span class="string">'nofigure'</span>);
+ylabel(Y_name);
+title(<span class="string">'Naive individual within-person scores'</span>);
+drawnow, snapnow
+</pre><pre class="codeoutput">Col   1: Intercept	Col   2: stimLvl	Col   3: placebo	
+---------------------------------------------
+Tests of column means against zero
+---------------------------------------------
+       Name        Mean_Value    Std_Error      T           P         Cohens_d
+    ___________    __________    _________    ______    __________    ________
+
+    'Intercept'      0.16386      0.011276    14.532    2.2204e-15      1.3266
+    'stimLvl'       0.074936     0.0091093    8.2263    2.7751e-13     0.75096
+    'placebo'      -0.054998     0.0087174    -6.309    4.9825e-09    -0.57593
+
+</pre><img vspace="5" hspace="5" src="canlab_mixed_model_example_01.png" alt=""> <p>If you are using subject scores on within-person effects for other purposes, e.g., to regress on brain variables, then using the Empirical Bayes estimates for these is a good idea!!  They are likely to be more accurate representation of the individual participants' scores than the naive within-person effects.</p><pre class="codeinput">create_figure(<span class="string">'2nd level stats comparison'</span>, 1, 2);
+subplot(1, 2, 1);
+barplot_columns(stats.first_level.beta', <span class="string">'names'</span>, stats.inputOptions.names, <span class="string">'colors'</span>, effectcolors, <span class="string">'nofigure'</span>);
+ylabel(Y_name);
+title(<span class="string">'Naive individual within-person scores'</span>);
+
+subplot(1, 2, 2);
+barplot_columns(stats.Y_star, <span class="string">'names'</span>, stats.inputOptions.names, <span class="string">'colors'</span>, effectcolors, <span class="string">'nofigure'</span>);
+ylabel(Y_name);
+title(<span class="string">'Empirical Bayes individual scores'</span>);
+drawnow, snapnow
+</pre><pre class="codeoutput">Col   1: Intercept	Col   2: stimLvl	Col   3: placebo	
+---------------------------------------------
+Tests of column means against zero
+---------------------------------------------
+       Name        Mean_Value    Std_Error      T           P         Cohens_d
+    ___________    __________    _________    ______    __________    ________
+
+    'Intercept'      0.16386      0.011276    14.532    2.2204e-15      1.3266
+    'stimLvl'       0.074936     0.0091093    8.2263    2.7751e-13     0.75096
+    'placebo'      -0.054998     0.0087174    -6.309    4.9825e-09    -0.57593
+
+Col   1: Intercept	Col   2: stimLvl	Col   3: placebo	
+---------------------------------------------
+Tests of column means against zero
+---------------------------------------------
+       Name        Mean_Value    Std_Error       T           P         Cohens_d
+    ___________    __________    _________    _______    __________    ________
+
+    'Intercept'      0.15939      0.010343      15.41    2.2204e-15     1.4067 
+    'stimLvl'       0.067031     0.0058821     11.396    2.2204e-15     1.0403 
+    'placebo'       -0.05237     0.0062338    -8.4009    1.0938e-13    -0.7669 
+
+</pre><img vspace="5" hspace="5" src="canlab_mixed_model_example_02.png" alt=""> <p>With line_plot_multisubject, you can plot the within-person scores for one effect at a time. This does not control for other effects, and stats reported are simple summary stats, so you should prefer the stats from the mixed model output.</p><p>Get one column of X (Alternatively, you could reconstruct individual scores for marginal estimates for each level, or modify glmfit_multilevel to return this output!)</p><pre class="codeinput">X_placebo = X;
+<span class="keyword">for</span> i = 1:length(X), X_placebo{i} = X_placebo{i}(:, 2); <span class="keyword">end</span>
+
+<span class="comment">%</span>
+</pre><p>Create a plot, with each subject in a different color along a spectrum</p><pre class="codeinput">create_figure(<span class="string">'1st level effect'</span>);
+line_plot_multisubject(X_placebo, Y);
+set(gca, <span class="string">'XTick'</span>, [-.5 .5], <span class="string">'XLim'</span>, [-.6 .6], <span class="string">'XTickLabel'</span>, {<span class="string">'Control'</span> <span class="string">'placebo'</span>});
+</pre><pre class="codeoutput">Warnings:
+
+____________________________________________________________________________________________________________________________________________
+X: some input cells have no varability:
+80
+X: input cells with low varability:
+80
+Y: input cells with low varability:
+18 25 53 70 113 116
+Excluded some subjects from individual fits:
+80
+____________________________________________________________________________________________________________________________________________
+
+____________________________________________________________________________________________________________________________________________
+Input data:
+X scaling: Centered
+Y scaling: No centering or z-scoring
+                
+Transformations:
+No data transformations before plot
+                                                                    
+Correlations:                                                       
+r = -0.15 across all observations, based on untransformed input data
+                                                                
+Stats on slopes after transformation, subject is random effect: 
+Mean b = -0.06, t(119) = -6.62, p = 0.000000, num. missing:   1 
+                                                                
+Average within-person r = -0.21 +- 0.35 (std)
+ 
+Between-person r (across subject means) = 0.05, p = 0.554204
+____________________________________________________________________________________________________________________________________________
+</pre><img vspace="5" hspace="5" src="canlab_mixed_model_example_03.png" alt=""> <p>Create a plot with individuals that show positive effects in one color and negative effects in another color (Negative effects mean analgesia here)</p><pre class="codeinput">indiv_scores = stats.Y_star(:, 3);
+<span class="comment">% or: indiv_scores = stats.first_level.beta(3, :)';</span>
+
+wh = indiv_scores &gt; 0; <span class="comment">% individuals with positive effects</span>
+
+poscolors = {[1 .4 .4]}; <span class="comment">% custom_colors([.3 .3 .7], [.3 .5 1], sum(wh))';    % colors for those with pos effects</span>
+negcolors = {[.3 .3 1]}; <span class="comment">% custom_colors([.7 .2 .2], [.7 .4 .4], sum(~wh))';    % colors for everyone else</span>
+
+colors = {};
+colors(wh) = poscolors;
+colors(~wh) = negcolors;
+
+create_figure(<span class="string">'1st level effect'</span>);
+line_plot_multisubject(X_placebo, Y, <span class="string">'colors'</span>, colors);
+set(gca, <span class="string">'XTick'</span>, [-.5 .5], <span class="string">'XLim'</span>, [-.6 .6], <span class="string">'XTickLabel'</span>, {<span class="string">'Control'</span> <span class="string">'placebo'</span>});
+</pre><pre class="codeoutput">Warnings:
+
+____________________________________________________________________________________________________________________________________________
+X: some input cells have no varability:
+80
+X: input cells with low varability:
+80
+Y: input cells with low varability:
+18 25 53 70 113 116
+Excluded some subjects from individual fits:
+80
+____________________________________________________________________________________________________________________________________________
+
+____________________________________________________________________________________________________________________________________________
+Input data:
+X scaling: Centered
+Y scaling: No centering or z-scoring
+                
+Transformations:
+No data transformations before plot
+                                                                    
+Correlations:                                                       
+r = -0.15 across all observations, based on untransformed input data
+                                                                
+Stats on slopes after transformation, subject is random effect: 
+Mean b = -0.06, t(119) = -6.62, p = 0.000000, num. missing:   1 
+                                                                
+Average within-person r = -0.21 +- 0.35 (std)
+ 
+Between-person r (across subject means) = 0.05, p = 0.554204
+____________________________________________________________________________________________________________________________________________
+</pre><img vspace="5" hspace="5" src="canlab_mixed_model_example_04.png" alt=""> <h2 id="26">Assessing and considering correlations between the individual effects</h2><p>Individuals with high stimulus responses might also show large analgesia effects</p><p>Or, commonly, the individuals with higher baseline outcomes (here, pain) might show larger effects. This is likely if there are individual differences in the <b>*scale</b>* of the outcome, such that some individuals have compressed values on the outcome relative to others, causing a proportional compression of the treatment effects. This is very common with outcome measures including self-reported symptoms and reaction times. If so, it's ambiguous what the best individual difference scores for treatment effects ought to be. They could be the effect scores in raw units, or after adjusting for potential response scale differences.</p><p>In both these cases, the within-person effects will be correlated -- across treatment effects, in the former case, and with the intercept (average outcome value) in the latter. We can assess these empirically, using the EB estimates from our mixed-effects model:</p><pre class="codeinput">plot_correlation_matrix(stats.Y_star, <span class="string">'names'</span>, stats.inputOptions.names);
+drawnow, snapnow
+</pre><img vspace="5" hspace="5" src="canlab_mixed_model_example_05.png" alt=""> <p>it's also a good idea to look at the scatterplots and marginal distributions (e.g., check for outliers)</p><pre class="codeinput">figure; plotmatrix(stats.Y_star);
+drawnow, snapnow
+</pre><img vspace="5" hspace="5" src="canlab_mixed_model_example_06.png" alt=""> <p>Here, we see that the intercept (average pain) is strongly correlated with the effect of stimLvl (intensity sensitivity) and also correlated with the effect of placebo (negatively, which is sensible as a negative effect means a larger analgesic effect). This suggests that there are individual differences in scale usage (compressed vs. expanded range) that influence the treatment effect scores when analyzed in raw units. Specifically, e.g., here about half the variation in stimulus intensity effects can be explained by overall pain report differences (r = 0.71)</p><p>This can add noise variability that masks effects (makes them non-significant) in the linear model, or when correlating with external variables (e.g., fMRI activity, another task). Or it can create artifactual positive correlations with other tasks (e.g., a different drug/treatment effect) if participants display the same scale compression/expansion across tasks. That is, we might observe positive correlations between placebo effects in pain and in a different task (allergy test) that could be caused by consistency in scale usage rather than consistency in the underlying treatment effects.</p><p>Some options for dealing with this include: 1. Include baseline scale (e.g., average outcome) as a 2nd-level covariate in the mixed-effects model. This makes the GLM a bi-linear model: Treatment effects vary linearly as a function of baseline pain.</p><p>2. Transform outcome values to be on the same scale (e.g., within-subject Z-scores    or normalization of the outcome by the L2 norm)</p><p>3. Residualizing effects by removing the average outcome (individual intercepts) from each treatment effect</p><p>Here is what happens when we use Option 3. This removes the predicted effects of baseline pain from the treatment effect estimates.</p><p>We'll use the Empirical Bayes estimates because these are probably the best estimates of individual scores we have.</p><p>Note: the resid() function has a flag that preserves the overall mean response so we can remove the covariate without removing the average treatment effects.</p><pre class="codeinput">avg_pain = stats.Y_star(:, 1);
+
+<span class="comment">% Get new placebo scores</span>
+resid_placebo = resid(avg_pain, stats.Y_star(:, 3), true);
+
+resid_stimLvl = resid(avg_pain, stats.Y_star(:, 2), true);
+
+figure; plotmatrix([avg_pain resid_stimLvl resid_placebo]);
+
+plot_correlation_matrix([avg_pain resid_stimLvl resid_placebo], <span class="string">'names'</span>, stats.inputOptions.names);
+drawnow, snapnow
+</pre><img vspace="5" hspace="5" src="canlab_mixed_model_example_07.png" alt=""> <img vspace="5" hspace="5" src="canlab_mixed_model_example_08.png" alt=""> <h2 id="30">2nd-level predictors</h2><p>Mixed models can include between-person (e.g., group) predictors as well. These could include sex/gender, counterbalancing order variables, and others.</p><p>You can include between-person and within-person predictors in any mixed effects model. They can interact with (i.e., moderate) the within-person effects, and/or they can have main effects on the response.</p><p>In glmfit_multilevel, these are entered in a second-level design matrix, X2. X2 will automatically include an intercept as the first effect. One block of output stats is included for the average within-person effects (the group intercept), with one block for each of the 2nd-level predictors.</p><p>e.g., here, we will include baseline pain as a 2nd-level predictor. The first stats block reports the within-person effects at the average baseline pain, and the second reports baseline pain effects on each within-person effect (the intercept is not of interest here)</p><p>Note: you must mean-center all 2nd-level predictors (except the intercept) for the interpretations above to hold. If you do not, your estimates of within-person effects will change and be potentially uninterpretable. Centering will be done automatically UNLESS you explicitly turn it off using the 'nocenter' option.</p><pre class="codeinput">X2 = cellfun(@nanmean, Y)';
+
+stats = glmfit_multilevel(Y, X, X2, <span class="string">'names'</span>, X_var_names, <span class="string">'beta_names'</span>, {<span class="string">'Average_pain'</span>}, <span class="string">'weighted'</span>, <span class="string">'boot'</span>);
+</pre><pre class="codeoutput">Warning! Some participants have no variance in X column(s) and will be excluded
+Participant numbers:80
+Analysis description: Second Level of Multilevel Model  
+GLS analysis
+
+Observations: 120, Predictors:   2
+Outcome names: Intercept	stimLvl	placebo	
+Weighting option: weighted
+Inference option: bootstrap
+
+Other Options:
+	Plots: No
+	Robust: no
+	Save: No
+	Output file: glmfit_general_output.txt
+	R &amp; B - type Empirical Bayes reweighting.
+ Min p-value is 0.000000. Needed: 5867 samples
+ Bootstrapping 5867 samples... Bootstrap done in 0.03 s, bias correct in 0.00 s 
+Total time: 0.98 s
+
+________________________________________
+Average p-value tolerance (average max alpha): 0.0060
+
+Bootstrapped statistics. Bootstrap inference
+	Outcome variables:
+	Intercept	stimLvl	placebo	
+Adj. mean	0.00	1.01	0.01	0.36	-0.01	-0.26	
+
+Within-person average effects
+	Intercept	stimLvl	placebo	
+Coeff	0.00	0.01	-0.01	
+STE	0.00	0.01	0.01	
+t	0.50	0.68	-1.03	
+Z	0.82	1.03	-1.24	
+p	0.40976	0.30380	0.21422	
+
+
+Average_pain
+	Intercept	stimLvl	placebo	
+Coeff	1.01	0.36	-0.26	
+STE	0.01	0.07	0.09	
+t	123.11	5.84	-3.58	
+Z	3.33	3.52	-3.39	
+p	0.00086	0.00043	0.00070	
+
+________________________________________
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Linear Mixed Model demo
+
+%%
+% This demonstration was prepared by Bogdan Petre and Tor Wager
+%
+% It includes code to perform a mixed-effects analysis on a dataset 
+% in both Matlab and R. The published version runs the Matlab code.
+%
+% To reproduce the analysis, you must have the dataset, which is in the 
+% |CANlab_help_examples| repository on Github, on your Matlab path.
+% it is in the subfolder |canlab_mixed_effects_matlab_demo1|
+
+%% About the dataset
+
+%%
+% The example uses a subset of data from the PainGen project, provided for model
+% demonstration purposes only. Do not reuse or reshare this dataset for other
+% purposes. It was collected by Tor Wager's Cognitive and Affective
+% Neuroscience lab at the University of Colorado.
+
+behav_dat = readtable('paingen_behav_dat_sid_14_164.csv');
+
+behav_dat(1:5, :)
+
+% we remove this subject who only has placebo but no contorl data
+% glmfit_multilevel isn't designed to handle this
+%behav_dat(behav_dat.sid == 113,:) = [];
+
+%%
+% **Variables**
+
+% Yint - pain intensity rating
+% Yunp - pain unpleasantness rating.
+% RTint - reaction time for intensity ratings
+% RTunp - reaction time for unpleasantness ratings
+% stimLvl - low, medium or high. 46.5C, 47C and 47.5C, possibly different
+%   for earliest subjects, but we think all with different temps are excluded
+% sid - subject id label. Corresponds to PGsXXX labels used internally by
+%   the lab
+% heat - 1 if heat trial, 0 for pressure trials
+% placebo - 0.5 for stimulation of placebo treated sight, -0.5
+%   otherwise
+% run - run number(1,2,3 or 4). Runs 1 and 4 are ctrl. 2 and 3 are
+%   placebo.
+% trial - trial number within run. Centered.
+% vif - variance inflation factor for use with fMRI data. can ignore this.
+
+%%
+% **Preparation**
+
+% this data was prepared with various preprocessing steps:
+% any response times <= 0.02s were removed (we had sticky button problems
+%   and based on temporal distribution of responses it seems that anything
+%   < 0.02 is likely to be due to this rather than a deliberate response)
+% any response times >= 5.01 seconds. These are timeouts without a click
+%   and it's ambiguous whether the cursor location recorded corresponds to
+%   the subjects rating or not.
+% subjects with sid 1-13 were removed due to changes to the paradigm at
+%   this stage of the study. Subject 6 retained because this subject was
+%   processed out of order and actually was run on the newer paradigm.
+% subject 23 and 84 are removed because too few of their responses passed
+%   the timing criteria above
+
+%% Using fitlme to create a LinearMixedModel object in Matlab
+% The fitlme code below does the following:
+
+% - test placebo effect on heat trials
+% - Control for stimulus level and test for interaction effects.
+% - Model random subject (sid) intercepts and slopes.
+% - Intercept is modeled implicitly both at the group and subject level.
+% That is, you do not need to enter 'Yint ~ 1 + stimLvl*placebo ...'
+% in the model in order for it to include an intercept term, because fitlme
+% adds it automatically.
+% - Use REML estimator instead of the default ML.
+
+
+heat_dat = behav_dat(behav_dat.heat == 1,:); % Use heat trials only
+
+m = fitlme(heat_dat, 'Yint ~ stimLvl*placebo + (stimLvl*placebo | sid)',...
+    'FitMethod','REML');
+
+%%
+% Other notes:
+
+% - Adding stimLvl*placebo automatically adds stimLvl, placebo, and
+% stimLvl*placebo effects. You do not need to enter
+% 'Yint ~ 1 + stimLvl + placebo + stimLvl*placebo ...'
+% 'Yint ~ stimLvl*placebo ...' does the same thing.
+%
+% - Adding (stimLvl*placebo | sid) adds random effects for the intercept
+% (1), added automatically if another random effect is added), stimLvl,
+% placebo, and stimLvl*placebo effects.
+
+
+%%
+% **Sample output**
+% Here is a sample of the output.
+
+% - The P-values for Fixed effects coefficients do not generalize across
+% levels of the random factors. The df and P-values use the overall number
+% of observations (1704) minus the number of fixed-effect parameters (4 =
+% 1 (intercept) + 1 (stimLvl) + 1 (placebo) + 1 (stimLvl*placebo).
+% This is not correct for an inference across levels of the random effect
+% of subject (sid).
+% Thus, we need to use the anova() function below to get the correct
+% inferences.
+
+% Fixed effects coefficients (95% CIs):
+%     Name                        Estimate     SE           tStat      DF      pValue        Lower        Upper
+%     '(Intercept)'                 0.16402     0.011235     14.598    1700    1.4571e-45      0.14198      0.18606
+%     'stimLvl'                    0.073984    0.0091767     8.0622    1700    1.3994e-15     0.055985     0.091983
+%     'placebo'                -0.054471    0.0086796    -6.2757    1700    4.4069e-10    -0.071495    -0.037447
+%     'stimLvl:placebo'        0.0065812     0.014501    0.45385    1700       0.64999     -0.02186     0.035022
+%
+% Random effects covariance parameters (95% CIs):
+% Group: sid (121 Levels)
+%     Name1                       Name2                       Type          Estimate      Lower        Upper
+%     '(Intercept)'               '(Intercept)'               'std'            0.11924      0.10469     0.13581
+%     'stimLvl'                   '(Intercept)'               'corr'            0.7489      0.71099     0.78247
+
+%%
+% inspect model coefficients (ignore p-values)
+m.Coefficients
+
+%%
+% get satterthwaite corrected p-values
+% LinearMixedModel.anova Perform hypothesis tests on fixed effect terms.
+%     STATS = anova(LME) tests the significance of each fixed effect term in
+%     the linear mixed effects model LME and returns a table array STATS.
+%
+
+anova(m,'dfmethod','satterthwaite')
+
+%%
+% **Satterthwaite correction**
+
+% Using the satterthwaite option for df estimates the error degrees of
+% freedom based on the rank
+% The formula was developed by the statistician Franklin E. Satterthwaite and a derivation of the
+% result is given in Satterthwaite's article in Psychometrika (vol. 6, no. 5, October 1941).
+% This site is useful for deriving the df in the two-sample case: https://secure-media.collegeboard.org/apc/ap05_stats_allwood_fin4prod.pdf
+% Code for Satterthwaite df calculation for mulitple regression can be found in
+% fit_gls.m (Martin Lindquist), and is included here for the
+% no-autocorrelation (AR(p), p==0) case:
+
+% A = W;   % for ar p = 0 case; weights
+% R = (eye(T) - X * invxvx * X' * iV);        % Residual inducing matrix
+%
+% Wd = R * A * inv(iV) * A';                  % inv(iV) = Covariance matrix
+% df = (trace(Wd).^2)./trace(Wd*Wd);       % Satterthwaite approximation for degrees of freedom
+
+%%
+% **Model properties**
+% You can query the model object (m) to get its properties. e.g.,
+help LinearMixedModel
+m.Rsquared
+m.VariableInfo                          % all variables in input dataset and which are in model
+m.Variables(1:5, :)                     % all variables in input dataset
+X = designMatrix(m); X(1:5, :)          % Fixed-effects design matrix
+Xg = designMatrix(m, 'Random'); whos('Xg')          % Random-effects design matrix
+
+
+% This option,  'DummyVarCoding', 'effects', effects-codes, which we
+% prefer:
+m = fitlme(heat_dat,'Yint ~ stimLvl*placebo + (stimLvl*placebo | sid)',...
+    'FitMethod','REML', 'DummyVarCoding', 'effects');
+% help anova says:
+%     To obtain tests for the Type III hypotheses, set the 'DummyVarCoding'
+%     to 'effects' when fitting the model.
+
+%% Simple two-level mixed effects using CANlab glmfit_multilevel
+%
+% Mixed-effects models differ in their assumptions and implementation
+% details. glmfit_multilevel is a fast and simple option for running a 
+% two-level mixed effects model with participant as a random effect. 
+% It implements a random-intercept, random-slope model across 2nd-level units 
+% (e.g., participants). it fits regressions for individual 2nd-level
+% units (e.g., participants), and then (optionally) uses a precision-weighted least
+% squares approach to model group effects. It thus treats participants as a
+% random effect. This is appropriate when 2nd-level units are participants
+% and 1st-level units are observations (e.g., trials) within participants. 
+% glmfit_multilevel was designed with this use case in mind.
+% 
+% glmfit_multilevel requires enough 1st-level units to fit a separate model for each
+% 2nd-level unit (participant). If this is not the case, other models
+% (igls.m, LMER, etc.) are preferred.
+%
+% Degrees of freedom: glmfit_multilevel is conservative in the sense that the degrees of 
+% freedom in the group statistical test is always based on the number of 
+% subjects - 2nd-level parameters. 
+% The df is never higher than the sample size, which you would have with 
+% mixed effects models that estimate the df from the data. This causes
+% problems in many other packages, particularly when there are many 1st-level
+% observations and they are uncorrelated, resulting in large and undesirable 
+% estimated df. 
+
+% update appropriately
+addpath(genpath(['/home/' getenv('USER') '/.matlab/canlab/CanlabCore']));
+
+% provides glmfit_multilevel() dependency RB_empirical_bayes_params()
+addpath(genpath(['/home/' getenv('USER') '/.matlab/canlab/MediationToolbox']));
+
+
+%%
+% ** Prepare the dataset**
+% glmfit_multilevel takes cell array input, with one cell per subject
+% Y contains the response for each subject, and X the within-subject design
+% matrix.
+%
+% First, we need to turn the dataset into cell arrays:
+
+u = unique(heat_dat.sid);
+[Y, X] = deal(cell(1, length(u)));
+
+Y_name = 'Yint';
+X_var_names = {'stimLvl' 'placebo'};
+
+Y_var = heat_dat.(Y_name);
+
+X_var = zeros(size(Y_var, 1), length(X_var_names));
+
+for j = 1:length(X_var_names)
+    X_var(:, j) = heat_dat.(X_var_names{j});
+end
+
+for i = 1:length(u)
+    
+    wh = heat_dat.sid == u(i);  % indicator for this subject
+    
+    Y{i} = Y_var(wh);
+    
+    for j = 1:length(X_var_names)
+        
+        X{i}(:, j) = X_var(wh, j);
+        
+    end
+    
+end
+
+% X2 is the 2nd-level (between-person) design matrix.
+% we don't have any between-person predictors, so X2 is empty here:
+X2 = [];
+
+X2_names = {'2nd-level Intercept (average within-person effects)'};  
+
+%%
+% **Between-person predictors**
+% Note: if we had a between-person predictor, the intercept would be first,
+% and names would be, e.g.,  
+% X2_names = {'2nd-level Intercept (overall group effect)' '2nd-lev predictor: Group membership'}
+
+%%
+% **Within-person variation**
+% glmfit_multilevel takes a summary statistics approach with
+% precision-reweighting. it fits a model for each person individually.
+% Therefore, each individual must have variance in Y and individual X.
+
+%%
+% *Run the model*
+
+stats = glmfit_multilevel(Y, X, X2, 'names', X_var_names, 'beta_names', X2_names);
+
+% The 'weighted' option uses Empirical Bayes weighting for a single-step
+% precision reweighting. This is a simple version of what is acccomplished
+% by fitlme in Matlab or LMER in R, or igls.m (Lindquist/Wager).
+
+stats = glmfit_multilevel(Y, X, X2, 'names', X_var_names, 'beta_names', X2_names, 'weighted');
+
+% The 'boot' option, with 'bootsamples', n, runs n boostrap samples at the 2nd level:
+% Run with 1000 bootstrap samples initially, and more are added based on P-value tolerance to avoid instability with too-few samples
+
+stats = glmfit_multilevel(Y, X, X2, 'names', X_var_names, 'beta_names', X2_names, 'weighted', 'boot');
+
+%% Plotting data and effects
+% This is a crucial part of the analysis process!
+
+%%
+% with glmfit_multilevel, the 'plots' option generates some plots.
+% you can also use functions including 
+% barplot_columns() to plot summary 2nd-level stats, and 
+% lineplot_multisubject() to plot individual and group within-person effects
+
+% % stats = glmfit_multilevel(Y, X, X2, 'names', X_var_names, 'beta_names', X2_names, 'weighted', 'boot', 'plots');
+
+effectcolors = {[.5 .5 .5] [.7 .4 .4] [.4 .4 .7]};
+
+%%
+% Plot the individual within-person effect scores and group summary statistics
+% Note: P values and Cohen's d from the barplot_columns output may not
+% match your model results in stats exactly, because it provides a simple
+% t-test on each column. so you should prefer the stats from the mixed model
+% output.
+
+create_figure('2nd level stats'); 
+barplot_columns(stats.first_level.beta', 'names', stats.inputOptions.names, 'colors', effectcolors, 'nofigure');
+ylabel(Y_name);
+title('Naive individual within-person scores');
+drawnow, snapnow
+
+%%
+% If you are using subject scores on within-person effects for other
+% purposes, e.g., to regress on brain variables, then using the Empirical
+% Bayes estimates for these is a good idea!!  They are likely to be more
+% accurate representation of the individual participants' scores than the
+% naive within-person effects.
+
+create_figure('2nd level stats comparison', 1, 2); 
+subplot(1, 2, 1);
+barplot_columns(stats.first_level.beta', 'names', stats.inputOptions.names, 'colors', effectcolors, 'nofigure');
+ylabel(Y_name);
+title('Naive individual within-person scores');
+
+subplot(1, 2, 2);
+barplot_columns(stats.Y_star, 'names', stats.inputOptions.names, 'colors', effectcolors, 'nofigure');
+ylabel(Y_name);
+title('Empirical Bayes individual scores');
+drawnow, snapnow
+
+%% 
+% With line_plot_multisubject, you can plot the within-person scores for
+% one effect at a time. 
+% This does not control for other effects, and stats reported are simple
+% summary stats, so you should prefer the stats from the mixed model
+% output.
+
+%%
+% Get one column of X
+% (Alternatively, you could reconstruct individual scores for marginal
+% estimates for each level, or modify glmfit_multilevel to return this
+% output!)
+
+X_placebo = X;
+for i = 1:length(X), X_placebo{i} = X_placebo{i}(:, 2); end
+
+%
+%%
+% Create a plot, with each subject in a different color along a spectrum
+
+create_figure('1st level effect'); 
+line_plot_multisubject(X_placebo, Y);
+set(gca, 'XTick', [-.5 .5], 'XLim', [-.6 .6], 'XTickLabel', {'Control' 'placebo'});
+
+%%
+% Create a plot with individuals that show positive effects in one color
+% and negative effects in another color
+% (Negative effects mean analgesia here)
+
+indiv_scores = stats.Y_star(:, 3);
+% or: indiv_scores = stats.first_level.beta(3, :)';
+
+wh = indiv_scores > 0; % individuals with positive effects
+
+poscolors = {[1 .4 .4]}; % custom_colors([.3 .3 .7], [.3 .5 1], sum(wh))';    % colors for those with pos effects
+negcolors = {[.3 .3 1]}; % custom_colors([.7 .2 .2], [.7 .4 .4], sum(~wh))';    % colors for everyone else
+
+colors = {};
+colors(wh) = poscolors;
+colors(~wh) = negcolors;
+
+create_figure('1st level effect'); 
+line_plot_multisubject(X_placebo, Y, 'colors', colors);
+set(gca, 'XTick', [-.5 .5], 'XLim', [-.6 .6], 'XTickLabel', {'Control' 'placebo'});
+
+%% Assessing and considering correlations between the individual effects
+% Individuals with high stimulus responses might also show large analgesia effects
+%
+% Or, commonly, the individuals with higher baseline outcomes (here, pain) might
+% show larger effects. This is likely if there are individual differences
+% in the **scale** of the outcome, such that some individuals have compressed
+% values on the outcome relative to others, causing a proportional
+% compression of the treatment effects. This is very common with outcome
+% measures including self-reported symptoms and reaction times. If so, it's
+% ambiguous what the best individual difference scores for treatment effects 
+% ought to be. They could be the effect scores in raw units, or after
+% adjusting for potential response scale differences. 
+%
+% In both these cases, the within-person effects will be correlated REPLACE_WITH_DASH_DASH across 
+% treatment effects, in the former case, and with the intercept (average
+% outcome value) in the latter. We can assess these empirically, using the
+% EB estimates from our mixed-effects model:
+
+plot_correlation_matrix(stats.Y_star, 'names', stats.inputOptions.names);
+drawnow, snapnow
+
+%%
+% it's also a good idea to look at the scatterplots and marginal
+% distributions (e.g., check for outliers)
+
+figure; plotmatrix(stats.Y_star);
+drawnow, snapnow
+
+%%
+% Here, we see that the intercept (average pain) is strongly correlated
+% with the effect of stimLvl (intensity sensitivity) and also correlated
+% with the effect of placebo (negatively, which is sensible as a
+% negative effect means a larger analgesic effect). This suggests that
+% there are individual differences in scale usage (compressed vs. expanded
+% range) that influence the treatment effect scores when analyzed in raw units.
+% Specifically, e.g., here about half the variation in stimulus intensity
+% effects can be explained by overall pain report differences (r = 0.71)
+%
+% This can add noise variability that masks effects (makes them
+% non-significant) in the linear model, or when correlating with external
+% variables (e.g., fMRI activity, another task). Or it can create artifactual positive
+% correlations with other tasks (e.g., a different drug/treatment effect)
+% if participants display the same scale compression/expansion across
+% tasks. That is, we might observe positive correlations between placebo
+% effects in pain and in a different task (allergy test) that could be
+% caused by consistency in scale usage rather than consistency in the underlying treatment
+% effects.
+%
+% Some options for dealing with this include:
+% 1. Include baseline scale (e.g., average outcome) as a 2nd-level covariate in the
+% mixed-effects model. This makes the GLM a bi-linear model: Treatment effects
+% vary linearly as a function of baseline pain.
+%
+% 2. Transform outcome values to be on the same scale (e.g., within-subject Z-scores
+%    or normalization of the outcome by the L2 norm)
+%
+% 3. Residualizing effects by removing the average outcome (individual
+% intercepts) from each treatment effect
+% 
+
+%%
+% Here is what happens when we use Option 3. This removes the predicted
+% effects of baseline pain from the treatment effect estimates.
+%
+% We'll use the Empirical Bayes estimates because these are probably the
+% best estimates of individual scores we have. 
+%
+% Note: the resid() function has a flag that preserves the overall mean
+% response so we can remove the covariate without removing the average
+% treatment effects.
+
+avg_pain = stats.Y_star(:, 1);
+
+% Get new placebo scores
+resid_placebo = resid(avg_pain, stats.Y_star(:, 3), true);
+
+resid_stimLvl = resid(avg_pain, stats.Y_star(:, 2), true);
+
+figure; plotmatrix([avg_pain resid_stimLvl resid_placebo]);
+
+plot_correlation_matrix([avg_pain resid_stimLvl resid_placebo], 'names', stats.inputOptions.names);
+drawnow, snapnow
+
+%% 2nd-level predictors
+% Mixed models can include between-person (e.g., group) predictors as well.
+% These could include sex/gender, counterbalancing order variables, and
+% others.
+% 
+% You can include between-person and within-person predictors in 
+% any mixed effects model. They can interact with (i.e., moderate)
+% the within-person effects, and/or they can have main effects on the
+% response.
+%
+% In glmfit_multilevel, these are entered in a second-level design matrix,
+% X2. X2 will automatically include an intercept as the first effect.
+% One block of output stats is included for the average within-person effects (the
+% group intercept), with one block for each of the 2nd-level predictors.
+%
+% e.g., here, we will include baseline pain as a 2nd-level predictor.
+% The first stats block reports the within-person effects at the average
+% baseline pain, and the second reports baseline pain effects on each within-person
+% effect (the intercept is not of interest here) 
+%
+% Note: you must mean-center all 2nd-level predictors (except the
+% intercept) for the interpretations above to hold. If you do not, your
+% estimates of within-person effects will change and be potentially
+% uninterpretable. Centering will be done automatically UNLESS you
+% explicitly turn it off using the 'nocenter' option.
+
+X2 = cellfun(@nanmean, Y)';
+
+stats = glmfit_multilevel(Y, X, X2, 'names', X_var_names, 'beta_names', {'Average_pain'}, 'weighted', 'boot');
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>

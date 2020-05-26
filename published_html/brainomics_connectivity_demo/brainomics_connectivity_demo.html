@@ -1,0 +1,788 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>brainomics_connectivity_demo</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-03-03"><meta name="DC.source" content="brainomics_connectivity_demo.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.8em; color:#2C2D92; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.4em; color:#363538; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#363538; font-weight:bold; line-height:140%; }
+
+a { color:#4B4BA8; text-decoration:none; }
+a:hover { color:#2AAFDF; text-decoration:underline; }
+a:visited { color:#4B4BA8; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:14px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Set paths</a></li><li><a href="#2">Load a fixed design matrix to remove task effects</a></li><li><a href="#3">Get data image names (list files)</a></li><li><a href="#4">Load a sample subject's data</a></li><li><a href="#5">Preprocess the dataset</a></li><li><a href="#6">Extract and plot left vs. right M1 (motor) time series</a></li><li><a href="#7">Do a simple seed-based connectivity</a></li><li><a href="#8">Create a brainpathway object</a></li><li><a href="#9">Assign the subject's data to the object and calculate connectivity</a></li><li><a href="#10">Do a seed connectivity analysis</a></li></ul></div><h2 id="1">Set paths</h2><p>-------------------------------------------------------------</p><pre class="codeinput">basedir = <span class="string">'/Users/torwager/Dropbox (Dartmouth College)/COURSES/Courses_Dartmouth/2020_2_Winter_fMRI_Class/fMRI_Scanning_Logistics/Pinel_localizer'</span>;
+basedir = <span class="string">'/Users/torwager/Dropbox (Dartmouth College)/COURSES/Courses_Dartmouth/2020_2_Winter_fMRI_Class/Shared_resources_for_students/Pinel_localizer'</span>;
+
+cd(basedir)
+
+scriptsdir = fullfile(basedir, <span class="string">'scripts'</span>);
+addpath(scriptsdir)
+g = genpath(scriptsdir);
+addpath(g)
+
+resultsdir = fullfile(basedir, <span class="string">'results'</span>);
+addpath(resultsdir)
+
+datadir = fullfile(basedir, <span class="string">'data'</span>, <span class="string">'brainomics_data'</span>);
+
+dosave = true; <span class="comment">% Flag to save .mat files to disk</span>
+
+<span class="comment">% Display helper functions: Called by later scripts</span>
+<span class="comment">% --------------------------------------------------------</span>
+
+dashes = <span class="string">'--------------------------------------------------------------------------------------------'</span>;
+printstr = @(dashes) disp(dashes);
+printhdr = @(str) fprintf(<span class="string">'%s\n%s\n%s\n'</span>, dashes, str, dashes);
+
+printhdr(<span class="string">' '</span>)
+printhdr(<span class="string">'This walkthrough uses CANlab tools to look at connectivity for one participant'</span>)
+printhdr(<span class="string">' '</span>)
+</pre><pre class="codeoutput">--------------------------------------------------------------------------------------------
+ 
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+This walkthrough uses CANlab tools to look at connectivity for one participant
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+ 
+--------------------------------------------------------------------------------------------
+</pre><h2 id="2">Load a fixed design matrix to remove task effects</h2><pre class="codeinput"><span class="comment">% (From brainomics_build_design_matrix.m)</span>
+<span class="comment">% -------------------------------------------------------------</span>
+<span class="comment">%</span>
+resultsdir = fullfile(basedir, <span class="string">'results'</span>);
+load(fullfile(resultsdir, <span class="string">'Brainomics_Design_Matrix'</span>));
+<span class="comment">% X.X = design matrix,</span>
+<span class="comment">% X.C = contrast matrix, etc.</span>
+
+<span class="comment">% First pre-calculate some linear algebra for the regression]</span>
+<span class="comment">% Beta-forming matrix: PX * data = betas</span>
+PX = pinv(X.X);
+</pre><h2 id="3">Get data image names (list files)</h2><p>create a cell array, imgs, with one cell per subject this contains the file names for the BOLD images for each subject</p><pre class="codeinput">subj = canlab_list_subjects(datadir, <span class="string">'S*'</span>);
+
+imgs = canlab_list_files(datadir, subj, <span class="string">'preprocessed_fMRI_bold.nii.gz'</span>);
+</pre><h2 id="4">Load a sample subject's data</h2><pre class="codeinput"><span class="comment">% Load one subject's data file into an object.</span>
+i = 1;
+dat = fmri_data(imgs{i});
+
+plot(dat)
+drawnow, snapnow
+
+<span class="comment">% remove the task effects from each voxel in the dataset</span>
+<span class="comment">% except the intercept (the last column)</span>
+<span class="comment">% you wouldn't have to do this for resting-state data, but for this demo,</span>
+<span class="comment">% we're using task data for convenience.</span>
+resid_data = dat.dat' - X.X(:, 1:end-1) * PX(1:end-1, :) * dat.dat';
+
+<span class="comment">% add the data back into the object</span>
+dat.dat = resid_data';
+
+wh_outliers = plot(dat);
+drawnow, snapnow
+</pre><pre class="codeoutput">Using default mask: /Users/torwager/Dropbox (Dartmouth College)/Matlab_code_external/spm12/toolbox/FieldMap/brainmask.nii
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 50137088 bytes
+Loading image number:   128
+Elapsed time is 0.858601 seconds.
+Image names entered, but fullpath attribute is empty. Getting path info.
+.fullpath should have image name for each image column in .dat
+Attempting to expand image filenames in case image list is unexpanded 4-D images
+Calculating mahalanobis distances to identify extreme-valued images
+Retained 5 components for mahalanobis distance
+Expected 50% of points within 50% normal ellipsoid, found 57.03%
+Expected 6.40 outside 95% ellipsoid, found   0
+
+Potential outliers based on mahalanobis distance:
+Bonferroni corrected: 0 images		Cases  
+Uncorrected: 0 images		Cases  
+
+Outliers:
+Outliers after p-value correction:
+Image numbers:  
+
+Image numbers, uncorrected:  
+Warning: Ignoring extra legend entries. 
+Grouping contiguous voxels:   1 regions
+Grouping contiguous voxels:   1 regions
+Grouping contiguous voxels:   1 regions
+
+ans =
+
+  128&times;1 logical array
+
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+   0
+
+</pre><img vspace="5" hspace="5" src="brainomics_connectivity_demo_01.png" alt=""> <img vspace="5" hspace="5" src="brainomics_connectivity_demo_02.png" alt=""> <pre class="codeoutput">Calculating mahalanobis distances to identify extreme-valued images
+Warning: Columns of X are linearly dependent to within machine precision.
+Using only the first 118 components to compute TSQUARED. 
+Retained 5 components for mahalanobis distance
+Expected 50% of points within 50% normal ellipsoid, found 53.91%
+Expected 6.40 outside 95% ellipsoid, found   5
+
+Potential outliers based on mahalanobis distance:
+Bonferroni corrected: 0 images		Cases  
+Uncorrected: 5 images		Cases 5 6 7 101 103 
+
+Outliers:
+Outliers after p-value correction:
+Image numbers:  
+
+Image numbers, uncorrected: 5 6 7 101 103 
+Warning: Ignoring extra legend entries. 
+Grouping contiguous voxels:   1 regions
+Grouping contiguous voxels:   1 regions
+Grouping contiguous voxels:   1 regions
+</pre><img vspace="5" hspace="5" src="brainomics_connectivity_demo_03.png" alt=""> <img vspace="5" hspace="5" src="brainomics_connectivity_demo_04.png" alt=""> <h2 id="5">Preprocess the dataset</h2><p>We notice some slow drift, and some potential outliers Run canlab_connectivity_preproc, which runs a series of preprocessing steps:   <b>Steps in order [with defaults]:</b>     1. Remove nuisance covariates (and linear trend if requested)     2. Remove ventricle and white matter - default: uses canonical images     with eroded MNI-space masks for these tissue compartments     3. High/low/bandpass filter on both data and covs before regression (plot)     4. Residualization using regression (plot)     5. (optional) Run additional GLM using the same additional preprocessing     6. Windsorize based on distribution of full data matrix (plot)     7. Extract region-by-region average ROI or pattern expression data</p><pre class="codeinput">TR = 2.5;  <span class="comment">% Repetition time between images</span>
+[preprocessed_dat] = canlab_connectivity_preproc(dat, <span class="string">'vw'</span>, <span class="string">'windsorize'</span>, 3, <span class="string">'bpf'</span>, [.008 .25], TR);
+
+drawnow, snapnow
+</pre><pre class="codeoutput">===============================================================
+Canlab_connectivity_preproc: starting preprocessing ... 
+::: removing ventricle &amp; white matter signal ... 
+Extracting from gray_matter_mask.nii.
+Extracting from canonical_white_matter_thrp5_ero1.nii.
+Extracting from canonical_ventricles_thrp5_ero1.nii.
+::: temporal filtering brain data... 
+::: temporal filtering covariates ... 
+Windsorized data matrix to 3 STD; adjusted 148713 values, 1.2% of values
+Done: data preprocessing in 1.1e+01 sec.
+
+---------------------------------------------------------------
+
+</pre><img vspace="5" hspace="5" src="brainomics_connectivity_demo_05.png" alt=""> <h2 id="6">Extract and plot left vs. right M1 (motor) time series</h2><p>This essentially reproduces the analysis in Biswal 1995</p><pre class="codeinput"><span class="comment">% Create a sub-atlas of regions whose labels match 'Ctx_1_'</span>
+m1_bilat = select_atlas_subset(atlas_obj, {<span class="string">'Ctx_1_'</span>});
+
+m1_bilat.labels
+
+<span class="comment">% Extract the timeseries in the 'seed' region for this dataset</span>
+m1_bilat_timeseries = extract_data(m1_bilat, preprocessed_dat);
+
+<span class="comment">% Plot the time series</span>
+
+figure; plot(m1_bilat_timeseries)
+legend(m1_bilat.labels)
+
+figure; scatter(m1_bilat_timeseries(:, 1), (m1_bilat_timeseries(:, 2)));
+xlabel(m1_bilat.labels{1})
+ylabel(m1_bilat.labels{2})
+</pre><pre class="codeoutput">
+ans =
+
+  1&times;2 cell array
+
+    {'Ctx_1_L'}    {'Ctx_1_R'}
+
+Resampling data object to space defined by atlas object.
+</pre><img vspace="5" hspace="5" src="brainomics_connectivity_demo_06.png" alt=""> <img vspace="5" hspace="5" src="brainomics_connectivity_demo_07.png" alt=""> <h2 id="7">Do a simple seed-based connectivity</h2><pre class="codeinput"><span class="comment">% Load an atlas object to use to define the regions in the brainpathway object</span>
+atlas_obj = load_atlas(<span class="string">'canlab2018_2mm'</span>);
+
+m1 = select_atlas_subset(atlas_obj, {<span class="string">'Ctx_1_R'</span>});
+
+<span class="comment">% Extract the timeseries in the 'seed' region for this dataset</span>
+m1_timeseries = extract_data(m1, preprocessed_dat);
+
+
+<span class="comment">% Assign seed region to .X field (design matrix) in data object, and run</span>
+<span class="comment">% regression of this time series on all voxels</span>
+preprocessed_dat.X = m1_timeseries;
+
+out = regress(preprocessed_dat);
+
+<span class="comment">% Regression method for fmri_data object</span>
+<span class="comment">%</span>
+<span class="comment">% Regress dat.X on dat.dat at each voxel, and return voxel-wise statistic</span>
+<span class="comment">% images. Each column of dat.X is a predictor in a multiple regression,</span>
+<span class="comment">% and the intercept is automatically added as the last column.</span>
+
+drawnow, snapnow
+
+<span class="comment">% The t-map for M1 connectivity is stored in the out.t, which has multiple</span>
+<span class="comment">% images (one for the seed, and one for the intercept). We'll save the</span>
+<span class="comment">% first one:</span>
+
+m1_t_map = get_wh_image(out.t, 1);
+
+<span class="comment">% now we can re-threshold it however we want:</span>
+
+m1_t_map = threshold(m1_t_map, .001, <span class="string">'unc'</span>);
+
+<span class="comment">% display the map</span>
+create_figure(<span class="string">'slices'</span>); axis <span class="string">off</span>
+montage(m1_t_map)
+drawnow, snapnow
+</pre><pre class="codeoutput">Loading atlas: CANlab_combined_atlas_object_2018_2mm.mat
+Resampling data object to space defined by atlas object.
+Analysis: 
+----------------------------------
+Design matrix warnings:
+----------------------------------
+No intercept detected, adding intercept to last column of design matrix                             
+Warning:  Predictors are not centered -- intercept is not interpretable as stats for average subject
+ 
+----------------------------------
+Running regression: 97924 voxels. Design: 128 obs,   2 regressors, intercept is last
+
+Predicting exogenous variable(s) in dat.X using brain data as predictors, mass univariate
+Running in OLS Mode
+Model run in 0 minutes and 0.23 seconds
+
+Image   1
+144 contig. clusters, sizes   1 to 17278
+Positive effect: 17910 voxels, min p-value: 0.00000000
+Negative effect: 239 voxels, min p-value: 0.00000012
+
+Image   2
+144 contig. clusters, sizes   1 to 17278
+Positive effect:   0 voxels, min p-value: 0.16930103
+Negative effect:   0 voxels, min p-value: 0.11178017
+</pre><img vspace="5" hspace="5" src="brainomics_connectivity_demo_08.png" alt=""> <pre class="codeoutput">
+Image   1
+144 contig. clusters, sizes   1 to 17278
+Positive effect: 17910 voxels, min p-value: 0.00000000
+Negative effect: 239 voxels, min p-value: 0.00000012
+Setting up fmridisplay objects
+Grouping contiguous voxels: 144 regions
+sagittal montage: 572 voxels displayed, 17577 not displayed on these slices
+sagittal montage: 641 voxels displayed, 17508 not displayed on these slices
+sagittal montage: 744 voxels displayed, 17405 not displayed on these slices
+axial montage: 3492 voxels displayed, 14657 not displayed on these slices
+axial montage: 4069 voxels displayed, 14080 not displayed on these slices
+
+ans = 
+
+  fmridisplay with properties:
+
+            overlay: '/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img'
+              SPACE: [1&times;1 struct]
+    activation_maps: {[1&times;1 struct]}
+            montage: {1&times;5 cell}
+            surface: {}
+          orthviews: {}
+            history: {}
+    history_descrip: []
+    additional_info: ''
+
+</pre><img vspace="5" hspace="5" src="brainomics_connectivity_demo_09.png" alt=""> <h2 id="8">Create a brainpathway object</h2><p>Now we will use another object class, a "brainpathway" object This object class has specialized tools for handling connectivity and graphs.</p><pre class="codeinput"><span class="comment">% Show some of the methods (ignore 'static methods')</span>
+methods(brainpathway)
+
+<span class="comment">% This is a special type of object: When you operate on the object ("b" below),</span>
+<span class="comment">% it changes the values everywhere, automatically. So you don't have to pass</span>
+<span class="comment">% the object (b) in or out of functions. If you want to create a copy of</span>
+<span class="comment">% the object, use the copy() method, e.g., b_copy = copy(b)</span>
+
+<span class="comment">% Load an atlas object to use to define the regions in the brainpathway object</span>
+atlas_obj = load_atlas(<span class="string">'canlab2018_2mm'</span>);
+
+<span class="comment">% Create the object using this atlas</span>
+ b = brainpathway(atlas_obj);      <span class="comment">% Construct a brainpathway object from an atlas object, here "pain_pathways"</span>
+
+<span class="comment">% b.region_atlas stores the atlas object within the brainpathways object</span>
+<span class="comment">% you can assign a new atlas to change it.</span>
+<span class="comment">% b.region_atlas.labels has all the labels for the regions.</span>
+
+b.region_atlas.labels(1:5)
+</pre><pre class="codeoutput">Loading atlas: CANlab_combined_atlas_object_2018_2mm.mat
+Initializing nodes to match regions.
+
+Methods for class brainpathway:
+
+attach_voxel_data                      find_node_indices                      
+brainpathway                           plot_connectivity                      
+brainpathway2fmri_data                 reorder_regions_by_node_cluster        
+cluster_region_subset_by_connectivity  seed_connectivity                      
+cluster_regions                        select_atlas_subset                    
+cluster_voxels                         threshold_connectivity                 
+copy                                   
+degree_calc                            
+
+Static methods:
+
+intialize_nodes                        update_region_connectivity             
+update_node_connectivity               update_region_data                     
+update_node_data                       
+
+Call "methods('handle')" for methods of brainpathway inherited from handle.
+
+Loading atlas: CANlab_combined_atlas_object_2018_2mm.mat
+Initializing nodes to match regions.
+
+ans =
+
+  1&times;5 cell array
+
+  Columns 1 through 4
+
+    {'Ctx_V1_L'}    {'Ctx_V1_R'}    {'Ctx_MST_L'}    {'Ctx_MST_R'}
+
+  Column 5
+
+    {'Ctx_V6_L'}
+
+</pre><h2 id="9">Assign the subject's data to the object and calculate connectivity</h2><p>When we do assign voxel-wise data to the object, it will automatically extract region averages for each parcel in the atlas and automatically calculate connectivity values</p><pre class="codeinput"><span class="comment">% First sample data to the space of the atlas</span>
+preprocessed_dat = resample_space(preprocessed_dat, atlas_obj);
+
+<span class="comment">% Now attach it to the brainpathway object (b) and calculate connectivity</span>
+b.voxel_dat = preprocessed_dat.dat;  <span class="comment">% This calculates connectivity matrix and more when data are assigned</span>
+
+<span class="comment">% Now we have:</span>
+<span class="comment">% b.connectivity.regions.r  : Correlation matrices for all pairs of regions</span>
+<span class="comment">% b.connectivity.regions.p  : P-values for correlations (assuming independent noise)</span>
+
+<span class="comment">% And we can visualize this:</span>
+plot_connectivity(b)
+drawnow, snapnow
+</pre><pre class="codeoutput">Updating node response data.
+Updating obj.connectivity.nodes.
+Updating obj.connectivity.nodes.
+Updating region averages.
+Updating obj.connectivity.regions.
+Warning: Error occurred while executing the listener callback for the
+brainpathway class voxel_dat property PostSet event:
+A dot name structure assignment is illegal when the structure is empty.  Use a
+subscript on the structure.
+
+Error in brainpathway.update_region_data (line 817)
+            obj.data_quality.tSNR = mean(obj.region_dat) ./ std(obj.region_dat);
+            % if data is mean-centered, will be meaningless
+
+Error in brainpathway&gt;@(src,evt)brainpathway.update_region_data(obj,src,evt)
+(line 403)
+            obj.listeners = addlistener(obj,'voxel_dat', 'PostSet',  @(src, evt)
+            brainpathway.update_region_data(obj, src, evt));
+
+Error in brainomics_connectivity_demo (line 188)
+b.voxel_dat = preprocessed_dat.dat;  % This calculates connectivity matrix and
+more when data are assigned
+
+Error in evalmxdom&gt;instrumentAndRun (line 115)
+text = evalc(evalstr);
+
+Error in evalmxdom (line 21)
+[data,text,laste] =
+instrumentAndRun(file,cellBoundaries,imageDir,imagePrefix,options);
+
+Error in publish
+
+Error in canlab_help_publish (line 26)
+publish(pubfilename, p) 
+
+ans = 
+
+  struct with fields:
+
+            r: [489&times;489 single]
+            p: [489&times;489 double]
+          sig: [489&times;489 logical]
+    var_names: {}
+
+</pre><img vspace="5" hspace="5" src="brainomics_connectivity_demo_10.png" alt=""> <h2 id="10">Do a seed connectivity analysis</h2><p>...with one or more seeds, specified by the atlas labels</p><pre class="codeinput"><span class="comment">% Calculate correlation maps with all network averages in right M1 (primary</span>
+<span class="comment">% motor cortex)</span>
+fmri_dat_connectivity_maps = seed_connectivity(b, {<span class="string">'Ctx_1_R'</span>});
+
+<span class="comment">% Calculate correlation maps with all network averages containing 'NAC' in the label</span>
+fmri_dat_connectivity_maps = seed_connectivity(b, {<span class="string">'NAC'</span>});
+
+<span class="comment">% Visualize the resulting maps, one per seed</span>
+orthviews(fmri_dat_connectivity_maps);
+</pre><pre class="codeoutput">Calculating correlations between region averages and seed regions.
+Calculating correlations between region averages and seed regions.
+Grouping contiguous voxels:   1 regions
+Grouping contiguous voxels:   1 regions
+</pre><img vspace="5" hspace="5" src="brainomics_connectivity_demo_11.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Set paths
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+basedir = '/Users/torwager/Dropbox (Dartmouth College)/COURSES/Courses_Dartmouth/2020_2_Winter_fMRI_Class/fMRI_Scanning_Logistics/Pinel_localizer';
+basedir = '/Users/torwager/Dropbox (Dartmouth College)/COURSES/Courses_Dartmouth/2020_2_Winter_fMRI_Class/Shared_resources_for_students/Pinel_localizer';
+
+cd(basedir)
+
+scriptsdir = fullfile(basedir, 'scripts');
+addpath(scriptsdir)
+g = genpath(scriptsdir);
+addpath(g)
+
+resultsdir = fullfile(basedir, 'results');
+addpath(resultsdir)
+
+datadir = fullfile(basedir, 'data', 'brainomics_data');
+
+dosave = true; % Flag to save .mat files to disk
+
+% Display helper functions: Called by later scripts
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+
+dashes = 'REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH';
+printstr = @(dashes) disp(dashes);
+printhdr = @(str) fprintf('%s\n%s\n%s\n', dashes, str, dashes);
+
+printhdr(' ')
+printhdr('This walkthrough uses CANlab tools to look at connectivity for one participant')
+printhdr(' ')
+
+%% Load a fixed design matrix to remove task effects
+
+% (From brainomics_build_design_matrix.m)
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+%
+resultsdir = fullfile(basedir, 'results');
+load(fullfile(resultsdir, 'Brainomics_Design_Matrix'));
+% X.X = design matrix,
+% X.C = contrast matrix, etc.
+
+% First pre-calculate some linear algebra for the regression]
+% Beta-forming matrix: PX * data = betas
+PX = pinv(X.X);
+
+%% Get data image names (list files)
+% create a cell array, imgs, with one cell per subject
+% this contains the file names for the BOLD images for each subject
+
+subj = canlab_list_subjects(datadir, 'S*');
+
+imgs = canlab_list_files(datadir, subj, 'preprocessed_fMRI_bold.nii.gz');
+
+%% Load a sample subject's data
+
+% Load one subject's data file into an object.
+i = 1;
+dat = fmri_data(imgs{i});
+
+plot(dat)
+drawnow, snapnow
+
+% remove the task effects from each voxel in the dataset
+% except the intercept (the last column)
+% you wouldn't have to do this for resting-state data, but for this demo,
+% we're using task data for convenience.
+resid_data = dat.dat' - X.X(:, 1:end-1) * PX(1:end-1, :) * dat.dat';
+
+% add the data back into the object
+dat.dat = resid_data';
+
+wh_outliers = plot(dat);
+drawnow, snapnow
+
+%% Preprocess the dataset
+% We notice some slow drift, and some potential outliers
+% Run canlab_connectivity_preproc, which runs a series of preprocessing
+% steps:
+%   *Steps in order [with defaults]:*
+%     1. Remove nuisance covariates (and linear trend if requested)
+%     2. Remove ventricle and white matter - default: uses canonical images
+%     with eroded MNI-space masks for these tissue compartments
+%     3. High/low/bandpass filter on both data and covs before regression (plot)
+%     4. Residualization using regression (plot)
+%     5. (optional) Run additional GLM using the same additional preprocessing
+%     6. Windsorize based on distribution of full data matrix (plot)
+%     7. Extract region-by-region average ROI or pattern expression data
+    
+TR = 2.5;  % Repetition time between images
+[preprocessed_dat] = canlab_connectivity_preproc(dat, 'vw', 'windsorize', 3, 'bpf', [.008 .25], TR);
+
+drawnow, snapnow
+
+%% Extract and plot left vs. right M1 (motor) time series
+% This essentially reproduces the analysis in Biswal 1995
+
+% Create a sub-atlas of regions whose labels match 'Ctx_1_'
+m1_bilat = select_atlas_subset(atlas_obj, {'Ctx_1_'});
+
+m1_bilat.labels
+
+% Extract the timeseries in the 'seed' region for this dataset
+m1_bilat_timeseries = extract_data(m1_bilat, preprocessed_dat);
+
+% Plot the time series
+
+figure; plot(m1_bilat_timeseries)
+legend(m1_bilat.labels)
+
+figure; scatter(m1_bilat_timeseries(:, 1), (m1_bilat_timeseries(:, 2)));
+xlabel(m1_bilat.labels{1})
+ylabel(m1_bilat.labels{2})
+
+
+%% Do a simple seed-based connectivity
+
+% Load an atlas object to use to define the regions in the brainpathway object
+atlas_obj = load_atlas('canlab2018_2mm');
+
+m1 = select_atlas_subset(atlas_obj, {'Ctx_1_R'});
+
+% Extract the timeseries in the 'seed' region for this dataset
+m1_timeseries = extract_data(m1, preprocessed_dat);
+
+
+% Assign seed region to .X field (design matrix) in data object, and run
+% regression of this time series on all voxels
+preprocessed_dat.X = m1_timeseries;
+
+out = regress(preprocessed_dat);
+
+% Regression method for fmri_data object
+%
+% Regress dat.X on dat.dat at each voxel, and return voxel-wise statistic
+% images. Each column of dat.X is a predictor in a multiple regression,
+% and the intercept is automatically added as the last column.
+
+drawnow, snapnow
+
+% The t-map for M1 connectivity is stored in the out.t, which has multiple
+% images (one for the seed, and one for the intercept). We'll save the
+% first one:
+
+m1_t_map = get_wh_image(out.t, 1);
+
+% now we can re-threshold it however we want:
+
+m1_t_map = threshold(m1_t_map, .001, 'unc');
+
+% display the map
+create_figure('slices'); axis off
+montage(m1_t_map)
+drawnow, snapnow
+
+%% Create a brainpathway object
+% Now we will use another object class, a "brainpathway" object 
+% This object class has specialized tools for handling connectivity
+% and graphs.
+
+% Show some of the methods (ignore 'static methods')
+methods(brainpathway)
+
+% This is a special type of object: When you operate on the object ("b" below), 
+% it changes the values everywhere, automatically. So you don't have to pass
+% the object (b) in or out of functions. If you want to create a copy of
+% the object, use the copy() method, e.g., b_copy = copy(b)
+
+% Load an atlas object to use to define the regions in the brainpathway object
+atlas_obj = load_atlas('canlab2018_2mm');
+
+% Create the object using this atlas
+ b = brainpathway(atlas_obj);      % Construct a brainpathway object from an atlas object, here "pain_pathways"
+
+% b.region_atlas stores the atlas object within the brainpathways object
+% you can assign a new atlas to change it.
+% b.region_atlas.labels has all the labels for the regions.
+
+b.region_atlas.labels(1:5)
+
+%% Assign the subject's data to the object and calculate connectivity
+% When we do assign voxel-wise data to the object, it will automatically 
+% extract region averages for each parcel in the atlas
+% and automatically calculate connectivity values
+
+% First sample data to the space of the atlas
+preprocessed_dat = resample_space(preprocessed_dat, atlas_obj);
+
+% Now attach it to the brainpathway object (b) and calculate connectivity
+b.voxel_dat = preprocessed_dat.dat;  % This calculates connectivity matrix and more when data are assigned
+
+% Now we have:
+% b.connectivity.regions.r  : Correlation matrices for all pairs of regions
+% b.connectivity.regions.p  : P-values for correlations (assuming independent noise)
+
+% And we can visualize this:
+plot_connectivity(b)
+drawnow, snapnow
+
+%% Do a seed connectivity analysis
+% ...with one or more seeds, specified by the atlas labels
+
+% Calculate correlation maps with all network averages in right M1 (primary
+% motor cortex)
+fmri_dat_connectivity_maps = seed_connectivity(b, {'Ctx_1_R'});
+
+% Calculate correlation maps with all network averages containing 'NAC' in the label
+fmri_dat_connectivity_maps = seed_connectivity(b, {'NAC'});
+
+% Visualize the resulting maps, one per seed
+orthviews(fmri_dat_connectivity_maps);
+
+
+##### SOURCE END #####
+--></body></html>

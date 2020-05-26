@@ -1,0 +1,469 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Installing CANlab Core Tools</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-01-16"><meta name="DC.source" content="canlab_help_1_installing_tools.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.8em; color:#2C2D92; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.4em; color:#363538; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#363538; font-weight:bold; line-height:140%; }
+
+a { color:#4B4BA8; text-decoration:none; }
+a:hover { color:#2AAFDF; text-decoration:underline; }
+a:visited { color:#4B4BA8; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:14px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Installing CANlab Core Tools</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">About the CANlab Core Tools repository and CANlab toolboxes</a></li><li><a href="#2">CANlab Toolboxes</a></li><li><a href="#3">Dependencies</a></li><li><a href="#4">Installing SPM</a></li><li><a href="#5">Quick start instructions</a></li></ul></div><h2 id="1">About the CANlab Core Tools repository and CANlab toolboxes</h2><p>The CANlab Core Tools repository is on https://github.com/canlab/CanlabCore It contains core tools for MRI/fMRI/PET analysis from the Cognitive and Affective Neuorscience Lab (Tor Wager, PI) and our collaborators. Many of these functions are needed to run other toolboxes, e.g., the CAN lab?s multilevel mediation and Martin Lindquist?s hemodynamic response estimation toolboxes.</p><p>The tools include object-oriented tools for doing neuroimaging analysis with simple commands and scripts that provide high-level functionality for neuroimaging analysis. For example, there is an "fmri_data" object type that contains neuroimaging datasets (both PET and fMRI data are ok, despite the name). If you have created and object called my_fmri_data_obj, then plot(my_fmri_data_obj) will generate a series of plots specific to neuroimaging data, including an interactive brain viewer (courtesy of SPM software). predict(my_fmri_data_obj) will perform cross-validated multivariate prediction of outcomes based on brain data. ica(my_fmri_data_obj) will perform independent components analysis on the data, and so forth.</p><p>There are a wide range of functions and techniques that we've used in the CANlab. Most of these are supported by specific functionality in our object-oriented tools. You can download other toolboxes from: https://github.com/canlab</p><p>And you can find an overview of core object-oriented tool functionality and demos/walkthroughs on https://canlab.github.io</p><p><img vspace="5" hspace="5" src="CANlab_Methods.png" alt=""> </p><h2 id="2">CANlab Toolboxes</h2><p>Tutorials, overview, and help: <a href="https://canlab.github.io">https://canlab.github.io</a></p><p>Toolboxes and image repositories on github: <a href="https://github.com/canlab">https://github.com/canlab</a></p><p>
+<table border=1><tr>
+<td>CANlab Core Tools</td>
+<td><a href="https://github.com/canlab/CanlabCore">https://github.com/canlab/CanlabCore</a></td></tr>
+<td>CANlab Neuroimaging_Pattern_Masks repository</td>
+<td><a href="https://github.com/canlab/Neuroimaging_Pattern_Masks">https://github.com/canlab/Neuroimaging_Pattern_Masks</a></td></tr>
+<td>CANlab_help_examples</td>
+<td><a href="https://github.com/canlab/CANlab_help_examples">https://github.com/canlab/CANlab_help_examples</a></td></tr>
+<td>M3 Multilevel mediation toolbox</td>
+<td><a href="https://github.com/canlab/MediationToolbox">https://github.com/canlab/MediationToolbox</a></td></tr>
+<td>M3 CANlab robust regression toolbox</td>
+<td><a href="https://github.com/canlab/RobustToolbox">https://github.com/canlab/RobustToolbox</a></td></tr>
+<td>M3 MKDA coordinate-based meta-analysis toolbox</td>
+<td><a href="https://github.com/canlab/Canlab_MKDA_MetaAnalysis">https://github.com/canlab/Canlab_MKDA_MetaAnalysis</a></td></tr>
+</table>
+</p><p>Here are some other useful CANlab-associated resources:</p><p>
+<table border=1><tr>
+<td>Paradigms_Public - CANlab experimental paradigms</td>
+<td><a href="https://github.com/canlab/Paradigms_Public">https://github.com/canlab/Paradigms_Public</a></td></tr>
+<td>FMRI_simulations - brain movies, effect size/power</td>
+<td><a href="https://github.com/canlab/FMRI_simulations">https://github.com/canlab/FMRI_simulations</a></td></tr>
+<td>CANlab_data_public - Published datasets</td>
+<td><a href="https://github.com/canlab/CANlab_data_public">https://github.com/canlab/CANlab_data_public</a></td></tr>
+<td>M3 Neurosynth: Tal Yarkoni</td>
+<td><a href="https://github.com/neurosynth/neurosynth">https://github.com/neurosynth/neurosynth</a></td></tr>
+<td>M3 DCC - Martin Lindquist's dynamic correlation tbx</td>
+<td><a href="https://github.com/canlab/Lindquist_Dynamic_Correlation">https://github.com/canlab/Lindquist_Dynamic_Correlation</a></td></tr>
+<td>M3 CanlabScripts - in-lab Matlab/python/bash</td>
+<td><a href="https://github.com/canlab/CanlabScripts">https://github.com/canlab/CanlabScripts</a></td></tr>
+</table>
+</p><p><b>Object-oriented, interactive approach</b> The core basis for interacting with CANlab tools is through object-oriented framework. A simple set of neuroimaging data-specific objects (or <i>classes</i>) allows you to perform <b>interactive analysis</b> using simple commands (called <i>methods</i>) that operate on objects.</p><p>Map of core object classes:</p><p><img vspace="5" hspace="5" src="CANlab_object_types_flowchart.png" alt=""> </p><h2 id="3">Dependencies</h2><div><ul><li>Matlab statistics toolbox</li><li>Matlab signal processing toolbox</li><li>Statistical Parametric Mapping (SPM) software https://www.fil.ion.ucl.ac.uk/spm/ (this is used for image reading/writing and the orthviews function.)</li></ul></div><p>For full functionality, the other toolboxes below are recommended:</p><h2 id="4">Installing SPM</h2><p><b>!</b> Important: You will also need to install spm12 separately, and add it to your matlab path. The latest version at the time of writing is SPM12, which can be downloaded here:</p><p><a href="https://www.fil.ion.ucl.ac.uk/spm/software/spm12/">https://www.fil.ion.ucl.ac.uk/spm/software/spm12/</a></p><h2 id="5">Quick start instructions</h2><div><ol><li>Download SPM12 from https://www.fil.ion.ucl.ac.uk/spm/</li><li>Find the SPM12 folder and drag it into your command window.    Matlab will go to that directory (execute the cd command).</li><li>In Matlab, type <tt>addpath pwd</tt>. This adds the main SPM12 folder to your path.</li><li>Type <tt>addpath canonical</tt>. This adds the <tt>canonical</tt> subfolder to your    path.</li><li>Go to https://github.com/canlab/ and click on CanlabCore</li><li>Sign into Github (top right corner)</li><li>Click "Clone or Download"</li><li>Click "Open in Desktop" (if you have Github Desktop) to clone the    repository</li><li>Find the folder and drag it into your Matlab command window.</li><li>In Matlab, type <tt>g = genpath(pwd)</tt>. This lists all the subfolders in a string <tt>g</tt></li><li>Type <tt>addpath(g)</tt>. This adds them to your path.</li><li>Type <tt>savepath</tt>. This saves your path for future use.</li></ol></div><p>Repeat the Clone/genpath/addpath steps for the Neuroimaging_Pattern_Masks repository, and save the path again.</p><p>Quick start: Batch install script</p><p>The main goal of the code below is to run: <tt>canlab_toolbox_setup</tt> This is a script that attempts to: # Check for CANlab repositories on your computer # Download any that are missing # Add them to your Matlab path with subfolders.</p><p><i>Note</i>: Unfortunately as of Jan 2020 this does not work well on everyone's computers, due to OS-related variability. The workaround is to install them manually as per the instructions above.</p><p><tt>canlab_toolbox_setup</tt> is in the CanlabCore repository. So before you run it the CANlab_Core_Tools must be added to your path with subfolders. Otherwise, you will get errors.</p><p>The script canlab_toolbox_setup can help download and install the toolboxes you need.</p><p>First, go to a folder where you want to install toolboxes/repositories on your hard drive. Mine are in "Github" and I've already installed CanlabCore, so let's find it and go there:</p><pre class="codeinput"><span class="comment">% Locate the CanlabCore Github files on your local computer:</span>
+<span class="comment">% ------------------------------------------------------------------------</span>
+
+mypath = what(fullfile(<span class="string">'CanlabCore'</span>, <span class="string">'CanlabCore'</span>));
+
+<span class="comment">% Check if we've got it</span>
+<span class="keyword">if</span> isempty(mypath)
+    disp(<span class="string">'Download CanlabCore from Github, and go to that folder in Matlab'</span>)
+    disp(<span class="string">'by dragging and dropping it from Finder or Explorer into the Matlab Command Window'</span>)
+    <span class="keyword">return</span>
+<span class="keyword">else</span>
+    <span class="comment">% Add CanlabCore to Matlab path with subfolders</span>
+    g = genpath(mypath(1).path);
+    addpath(g);
+
+<span class="keyword">end</span>
+
+mypath = mypath(1).path;
+
+<span class="comment">% Set the folder in which the repositories will be installed</span>
+<span class="comment">% ------------------------------------------------------------------------</span>
+
+<span class="comment">% This is the location (folder) in which the repositories will be installed:</span>
+base_dir_for_repositories = fileparts(fileparts(mypath));
+
+cd(base_dir_for_repositories)
+fprintf(<span class="string">'\nInstalling repositories in %s\n'</span>, base_dir_for_repositories);
+
+<span class="comment">% Find the setup file, canlab_toolbox_setup.m</span>
+<span class="comment">% ------------------------------------------------------------------------</span>
+
+<span class="comment">% This is the file</span>
+setupfile = fullfile(mypath, <span class="string">'canlab_toolbox_setup.m'</span>);
+
+<span class="comment">% Make sure we've got it</span>
+<span class="keyword">if</span> ~exist(setupfile, <span class="string">'file'</span>)
+    disp(<span class="string">'Something went wrong.  I can''t find canlab_toolbox_setup.m'</span>);
+    disp(<span class="string">'This file should be included in the CanlabCore Github repository.'</span>)
+<span class="keyword">end</span>
+
+<span class="comment">% Run the setup script:</span>
+<span class="comment">% ------------------------------------------------------------------------</span>
+<span class="comment">%</span>
+<span class="comment">% Note: This can be system-dependent and may not work on all computers.</span>
+<span class="comment">% If it doesn't, you can default to cloning the CANLab repositories and</span>
+<span class="comment">% adding them with subfolders to your Matlab path. The most important ones</span>
+<span class="comment">% starting out are CanlabCore and Neuroimaging_Pattern_Masks</span>
+<span class="comment">% e.g.,</span>
+<span class="comment">% |git clone https://github.com/canlab/CanlabCore.git|</span>
+<span class="comment">% |git clone https://github.com/canlab/Neuroimaging_Pattern_Masks.git|</span>
+
+canlab_toolbox_setup
+
+<span class="comment">% This will attempt to locate toolboxes, add them to your path, and give</span>
+<span class="comment">% you the option to download them from Github if it can't find them.</span>
+
+<span class="comment">% It looks for and installs toolboxes in the current directory,</span>
+<span class="comment">% which (thanks to the code above) is the path name in base_dir_for_repositories</span>
+</pre><pre class="codeoutput">
+Installing repositories in /Users/torwager/Documents/GitHub
+
+-----------------------------------------
+Checking and/or installing CANlab tools in:
+/Users/torwager/Documents/GitHub
+-----------------------------------------
+Looking for CANlab repositories and adding to Matlab path:
+ 
+CANlab core tools - Object-oriented interactive analysis and tools used in other functions	CanlabCore
+CANlab help examples - Example scripts and html output, second-level analysis batch scripts	CANlab_help_examples
+MKDA meta-analysis toolbox - Coordinate-based meta-analysis of neuroimaging data	Canlab_MKDA_MetaAnalysis
+FMRI_simulations - Misc tools for simulating and testing power and image data	FMRI_simulations
+Private masks and signatures - Selected models shared on request	MasksPrivate
+M3 Mediation toolbox - Single and Multi-level mediation tools	MediationToolbox
+Neuroimaging_Pattern_Masks - meta-analysis masks, signatures, parcellations	Neuroimaging_Pattern_Masks
+Robust regression toolbox - Voxel-wise robust regression for neuroimaging data	RobustToolbox
+CanlabPrivate - Private repository for lab members and collaborators	CanlabPrivate
+
+-----------------------------------------
+
+-----------------------------------------
+
+Repository: CANlab core tools - Object-oriented interactive analysis and tools used in other functions
+Site:CanlabCore
+Finding repo: Running command:
+find /Users/torwager/Documents/GitHub/CanlabCore -name "fmri_data.m"
+Found and added to path with subfolders: /Users/torwager/Documents/GitHub/CanlabCore
+
+-----------------------------------------
+
+Repository: CANlab help examples - Example scripts and html output, second-level analysis batch scripts
+Site:CANlab_help_examples
+Finding repo: Running command:
+find /Users/torwager/Documents/GitHub/CANlab_help_examples -name "a2_second_level_toolbox_check_dependencies.m"
+Found and added to path with subfolders: /Users/torwager/Documents/GitHub/CANlab_help_examples
+
+-----------------------------------------
+
+Repository: MKDA meta-analysis toolbox - Coordinate-based meta-analysis of neuroimaging data
+Site:Canlab_MKDA_MetaAnalysis
+Finding repo: Running command:
+find /Users/torwager/Documents/GitHub/Canlab_MKDA_MetaAnalysis -name "i_density.m"
+Found and added to path with subfolders: /Users/torwager/Documents/GitHub/Canlab_MKDA_MetaAnalysis
+
+-----------------------------------------
+
+Repository: FMRI_simulations - Misc tools for simulating and testing power and image data
+Site:FMRI_simulations
+Finding repo: Running command:
+find /Users/torwager/Documents/GitHub/FMRI_simulations -name "power_figure3_num_comparisons.m"
+Found and added to path with subfolders: /Users/torwager/Documents/GitHub/FMRI_simulations
+
+-----------------------------------------
+
+Repository: Private masks and signatures - Selected models shared on request
+Site:MasksPrivate
+Finding repo: Running command:
+find /Users/torwager/Documents/GitHub/MasksPrivate -name "apply_nps.m"
+Found and added to path with subfolders: /Users/torwager/Documents/GitHub/MasksPrivate
+
+-----------------------------------------
+
+Repository: M3 Mediation toolbox - Single and Multi-level mediation tools
+Site:MediationToolbox
+Finding repo: Running command:
+find /Users/torwager/Documents/GitHub/MediationToolbox -name "mediation_brain.m"
+Warning: Function vecnorm has the same name as a MATLAB builtin. We suggest you
+rename the function to avoid a potential name conflict. 
+Found and added to path with subfolders: /Users/torwager/Documents/GitHub/MediationToolbox
+
+-----------------------------------------
+
+Repository: Neuroimaging_Pattern_Masks - meta-analysis masks, signatures, parcellations
+Site:Neuroimaging_Pattern_Masks
+Finding repo: Running command:
+find /Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks -name "apply_all_signatures.m"
+Found and added to path with subfolders: /Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks
+
+-----------------------------------------
+
+Repository: Robust regression toolbox - Voxel-wise robust regression for neuroimaging data
+Site:RobustToolbox
+Finding repo: Running command:
+find /Users/torwager/Documents/GitHub/RobustToolbox -name "robust_results_batch.m"
+Found and added to path with subfolders: /Users/torwager/Documents/GitHub/RobustToolbox
+
+-----------------------------------------
+
+Repository: CanlabPrivate - Private repository for lab members and collaborators
+Site:CanlabPrivate
+Finding repo: Running command:
+find /Users/torwager/Documents/GitHub/CanlabPrivate -name "power_calc.m"
+Found and added to path with subfolders: /Users/torwager/Documents/GitHub/CanlabPrivate
+
+-----------------------------------------
+
+All CANlab repositories previously installed. Saving path
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Installing CANlab Core Tools
+
+%% About the CANlab Core Tools repository and CANlab toolboxes
+%
+% The CANlab Core Tools repository is on https://github.com/canlab/CanlabCore
+% It contains core tools for MRI/fMRI/PET analysis from the Cognitive and 
+% Affective Neuorscience Lab (Tor Wager, PI) and our collaborators. Many of 
+% these functions are needed to run other toolboxes, e.g., the CAN lab?s 
+% multilevel mediation and Martin Lindquist?s hemodynamic response estimation 
+% toolboxes.
+%
+% The tools include object-oriented tools for doing neuroimaging analysis with 
+% simple commands and scripts that provide high-level functionality for 
+% neuroimaging analysis. For example, there is an "fmri_data" object type 
+% that contains neuroimaging datasets (both PET and fMRI data are ok, despite 
+% the name). If you have created and object called my_fmri_data_obj, then
+% plot(my_fmri_data_obj) will generate a series of plots specific to neuroimaging 
+% data, including an interactive brain viewer (courtesy of SPM software). 
+% predict(my_fmri_data_obj) will perform cross-validated multivariate prediction 
+% of outcomes based on brain data. ica(my_fmri_data_obj) will perform independent 
+% components analysis on the data, and so forth.
+%
+% There are a wide range of functions and techniques that we've used in the
+% CANlab. Most of these are supported by specific functionality in our
+% object-oriented tools. You can download other toolboxes from:
+% https://github.com/canlab
+%
+% And you can find an overview of core object-oriented tool functionality
+% and demos/walkthroughs on https://canlab.github.io
+% 
+% <<CANlab_Methods.png>>
+% 
+%
+
+%% CANlab Toolboxes
+% Tutorials, overview, and help: <https://canlab.github.io>
+%
+% Toolboxes and image repositories on github: <https://github.com/canlab>
+%
+% <html>
+% <table border=1><tr>
+% <td>CANlab Core Tools</td>
+% <td><a href="https://github.com/canlab/CanlabCore">https://github.com/canlab/CanlabCore</a></td></tr>
+% <td>CANlab Neuroimaging_Pattern_Masks repository</td>
+% <td><a href="https://github.com/canlab/Neuroimaging_Pattern_Masks">https://github.com/canlab/Neuroimaging_Pattern_Masks</a></td></tr>
+% <td>CANlab_help_examples</td>
+% <td><a href="https://github.com/canlab/CANlab_help_examples">https://github.com/canlab/CANlab_help_examples</a></td></tr>
+% <td>M3 Multilevel mediation toolbox</td>
+% <td><a href="https://github.com/canlab/MediationToolbox">https://github.com/canlab/MediationToolbox</a></td></tr>
+% <td>M3 CANlab robust regression toolbox</td>
+% <td><a href="https://github.com/canlab/RobustToolbox">https://github.com/canlab/RobustToolbox</a></td></tr>
+% <td>M3 MKDA coordinate-based meta-analysis toolbox</td>
+% <td><a href="https://github.com/canlab/Canlab_MKDA_MetaAnalysis">https://github.com/canlab/Canlab_MKDA_MetaAnalysis</a></td></tr>
+% </table>
+% </html>
+% 
+% Here are some other useful CANlab-associated resources:
+%
+% <html>
+% <table border=1><tr>
+% <td>Paradigms_Public - CANlab experimental paradigms</td>
+% <td><a href="https://github.com/canlab/Paradigms_Public">https://github.com/canlab/Paradigms_Public</a></td></tr>
+% <td>FMRI_simulations - brain movies, effect size/power</td>
+% <td><a href="https://github.com/canlab/FMRI_simulations">https://github.com/canlab/FMRI_simulations</a></td></tr>
+% <td>CANlab_data_public - Published datasets</td>
+% <td><a href="https://github.com/canlab/CANlab_data_public">https://github.com/canlab/CANlab_data_public</a></td></tr>
+% <td>M3 Neurosynth: Tal Yarkoni</td>
+% <td><a href="https://github.com/neurosynth/neurosynth">https://github.com/neurosynth/neurosynth</a></td></tr>
+% <td>M3 DCC - Martin Lindquist's dynamic correlation tbx</td>
+% <td><a href="https://github.com/canlab/Lindquist_Dynamic_Correlation">https://github.com/canlab/Lindquist_Dynamic_Correlation</a></td></tr>
+% <td>M3 CanlabScripts - in-lab Matlab/python/bash</td>
+% <td><a href="https://github.com/canlab/CanlabScripts">https://github.com/canlab/CanlabScripts</a></td></tr>
+% </table>
+% </html>
+%
+% *Object-oriented, interactive approach*
+% The core basis for interacting with CANlab tools is through object-oriented framework.
+% A simple set of neuroimaging data-specific objects (or _classes_) allows you to perform
+% *interactive analysis* using simple commands (called _methods_) that
+% operate on objects. 
+%
+% Map of core object classes:
+%
+% <<CANlab_object_types_flowchart.png>>
+
+%% Dependencies
+%
+% * Matlab statistics toolbox
+% * Matlab signal processing toolbox
+% * Statistical Parametric Mapping (SPM) software https://www.fil.ion.ucl.ac.uk/spm/
+% (this is used for image reading/writing and the orthviews function.)
+%
+% For full functionality, the other toolboxes below are recommended:
+%
+
+%% Installing SPM
+% 
+% *!* Important: You will also need to install spm12 separately, and add it
+% to your matlab path. 
+% The latest version at the time of writing is SPM12, which can be downloaded here:
+%
+% <https://www.fil.ion.ucl.ac.uk/spm/software/spm12/>
+%
+
+%% Quick start instructions
+%
+% # Download SPM12 from https://www.fil.ion.ucl.ac.uk/spm/
+% # Find the SPM12 folder and drag it into your command window. 
+%    Matlab will go to that directory (execute the cd command).
+% # In Matlab, type |addpath pwd|. This adds the main SPM12 folder to your path.
+% # Type |addpath canonical|. This adds the |canonical| subfolder to your
+%    path.
+% # Go to https://github.com/canlab/ and click on CanlabCore
+% # Sign into Github (top right corner)
+% # Click "Clone or Download" 
+% # Click "Open in Desktop" (if you have Github Desktop) to clone the
+%    repository
+% # Find the folder and drag it into your Matlab command window. 
+% # In Matlab, type |g = genpath(pwd)|. This lists all the subfolders in a string |g|
+% # Type |addpath(g)|. This adds them to your path.
+% # Type |savepath|. This saves your path for future use.
+%
+% Repeat the Clone/genpath/addpath steps for the Neuroimaging_Pattern_Masks
+% repository, and save the path again.
+
+
+%%
+% Quick start: Batch install script
+%
+% The main goal of the code below is to run:
+% |canlab_toolbox_setup|
+% This is a script that attempts to:
+% # Check for CANlab repositories on your computer
+% # Download any that are missing
+% # Add them to your Matlab path with subfolders.
+%
+% _Note_: Unfortunately as of Jan 2020 this does not work well on
+% everyone's computers, due to OS-related variability. The workaround is to
+% install them manually as per the instructions above.
+%
+% |canlab_toolbox_setup| is in the CanlabCore repository. So before you run it
+% the CANlab_Core_Tools must be added to your path with
+% subfolders. Otherwise, you will get errors.
+%
+% The script canlab_toolbox_setup can help download and install the
+% toolboxes you need.
+%
+% First, go to a folder where you want to install
+% toolboxes/repositories on your hard drive. Mine are in "Github" and I've
+% already installed CanlabCore, so let's find it and go there:
+
+% Locate the CanlabCore Github files on your local computer:
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+
+mypath = what(fullfile('CanlabCore', 'CanlabCore'));
+
+% Check if we've got it
+if isempty(mypath)
+    disp('Download CanlabCore from Github, and go to that folder in Matlab')
+    disp('by dragging and dropping it from Finder or Explorer into the Matlab Command Window')
+    return
+else
+    % Add CanlabCore to Matlab path with subfolders
+    g = genpath(mypath(1).path);
+    addpath(g);
+    
+end
+
+mypath = mypath(1).path;
+
+% Set the folder in which the repositories will be installed
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+
+% This is the location (folder) in which the repositories will be installed: 
+base_dir_for_repositories = fileparts(fileparts(mypath));
+
+cd(base_dir_for_repositories)
+fprintf('\nInstalling repositories in %s\n', base_dir_for_repositories);
+
+% Find the setup file, canlab_toolbox_setup.m
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+
+% This is the file
+setupfile = fullfile(mypath, 'canlab_toolbox_setup.m');
+
+% Make sure we've got it
+if ~exist(setupfile, 'file')
+    disp('Something went wrong.  I can''t find canlab_toolbox_setup.m');
+    disp('This file should be included in the CanlabCore Github repository.')
+end
+
+% Run the setup script:
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%
+% Note: This can be system-dependent and may not work on all computers.
+% If it doesn't, you can default to cloning the CANLab repositories and
+% adding them with subfolders to your Matlab path. The most important ones
+% starting out are CanlabCore and Neuroimaging_Pattern_Masks
+% e.g.,
+% |git clone https://github.com/canlab/CanlabCore.git|
+% |git clone https://github.com/canlab/Neuroimaging_Pattern_Masks.git|
+
+canlab_toolbox_setup
+
+% This will attempt to locate toolboxes, add them to your path, and give
+% you the option to download them from Github if it can't find them.
+
+% It looks for and installs toolboxes in the current directory, 
+% which (thanks to the code above) is the path name in base_dir_for_repositories
+
+
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,358 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>canlab_help_4_masking_and_writing_nifti_files</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-02-26"><meta name="DC.source" content="canlab_help_4_masking_and_writing_nifti_files.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.8em; color:#2C2D92; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.4em; color:#363538; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#363538; font-weight:bold; line-height:140%; }
+
+a { color:#4B4BA8; text-decoration:none; }
+a:hover { color:#2AAFDF; text-decoration:underline; }
+a:visited { color:#4B4BA8; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:14px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Applying masks and writing image data to disk</a></li><li><a href="#2">The Neuroimaging_pattern_masks Github repository and website</a></li><li><a href="#3">Load and select a sample mask</a></li><li><a href="#9">Apply a mask</a></li><li><a href="#10">A few exercises</a></li><li><a href="#11">Writing image data in objects to Nifti files on disk</a></li><li><a href="#15">Exercises</a></li></ul></div><h2 id="1">Applying masks and writing image data to disk</h2><pre class="codeinput"><span class="comment">% One common operation in neuroimaging is masking. Masking is defining a set</span>
+<span class="comment">% of voxels to include or exclude from analysis or presentation. Some uses</span>
+<span class="comment">% include:</span>
+<span class="comment">%</span>
+<span class="comment">% * Apply a generous brain mask to store only in-brain voxels, saving space,</span>
+<span class="comment">%   (CANlab data objects do this by default, with a liberal mask)</span>
+<span class="comment">% * Identify gray matter voxels to calculate global mean signal or other metrics</span>
+<span class="comment">% * Identify voxels in ventricles or out-of-brain to try to isolate sources</span>
+<span class="comment">%   of noise or artifacts to remove</span>
+<span class="comment">% * Identify gray matter voxels of interest to limit the space within which</span>
+<span class="comment">%   you correct for multiple comparisons, thus increasing power</span>
+<span class="comment">% * Limiting presentation of results to an a priori set of ROIs</span>
+<span class="comment">% * Limiting the scope of training or testing a multivariate pattern or</span>
+<span class="comment">%   predictive model, to help test hypotheses about which systems/regions</span>
+<span class="comment">%   contribute to prediction.</span>
+<span class="comment">%</span>
+</pre><h2 id="2">The Neuroimaging_pattern_masks Github repository and website</h2><p>For this walkthrough, we'll load some new image datasets to use as masks. A popular one is a set of "networks" developed from resting-state fMRI connectivity in 1,000 people. For our purposes, the "network" maps consist of a set of voxels that load most highly on each of 7 ICA components from the 1,000 Functional Connectomes project. These were published by Randy Buckner's lab in 2011 in three papers: Choi et al., Buckner et al., and Yeo et al.  We'll use the cortical networks from Yeo et al. here.</p><p>This set of images and other broadly useful sets of images are stored in the CANlab function <tt>load_image_set</tt> in a registry that you can access by name. Try <tt>help load_image|set</tt> for a list of images you can load by keyword. These datasets, if they can be stored on Github, are in this Github repository:</p><p><a href="https://github.com/canlab/Neuroimaging_Pattern_Masks">https://github.com/canlab/Neuroimaging_Pattern_Masks</a></p><p>In addition, you can explore these and find more information here: <a href="https://sites.google.com/dartmouth.edu/canlab-brainpatterns/home">https://sites.google.com/dartmouth.edu/canlab-brainpatterns/home</a></p><p>To run this tutorial and many others in this series, you'll need to download the Neuroimaging_Pattern_Masks Github repository and add it to your Matlab path with subfolders. The Github site has three main types of datasets, shown here:</p><p><img vspace="5" hspace="5" src="Neuroimaging_pattern_masks_site.png" alt=""> </p><h2 id="3">Load and select a sample mask</h2><p>You will need the Neuroimaging_Pattern_Masks repository installed to find these images.</p><pre class="codeinput">[bucknermaps, mapnames] = load_image_set(<span class="string">'bucknerlab'</span>); <span class="comment">% loads 7 masks from Yeo et al.</span>
+</pre><pre class="codeoutput">Loaded images:
+/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Combined_multiatlas_ROI_masks/rBucknerlab_7clusters_SPMAnat_Other_combined.img
+</pre><p>This loads 7 images. try <tt>orthviews(dat)</tt> to see them all. What values do the images have? You can also see descriptive statistics for the images like this:</p><pre class="codeinput">desc = descriptives(bucknermaps);
+</pre><pre class="codeoutput"> 
+Source: Info about image source here
+ 
+ 
+Summary of dataset
+______________________________________________________
+Images:   7	Nonempty:   7	Complete:   7
+Voxels: 352328	Nonempty: 131918	Complete:   0
+Unique data values:   1
+ 
+Min: 1.000	Max: 1.000	Mean: 1.000	Std: 0.000
+ 
+    Percentiles    Values
+    ___________    ______
+
+        0.1          1   
+        0.5          1   
+          1          1   
+          5          1   
+         25          1   
+         50          1   
+         75          1   
+         95          1   
+         99          1   
+       99.5          1   
+       99.9          1   
+
+ 
+</pre><p>The variable <tt>desc</tt> is a structure that contains various descriptive stats.</p><p>load_image_set will generally store and return names for each image, returned as outputs if requested (here in <tt>mapnames</tt>). Let's print those names:</p><pre class="codeinput">disp(char(mapnames))
+</pre><pre class="codeoutput">Visual        
+Somatomotor   
+dAttention    
+vAttention    
+Limbic        
+Frontoparietal
+Default       
+</pre><p>Now we can select one image from those 7 to use as a mask.</p><pre class="codeinput">mask_image = bucknermaps.get_wh_image(1);
+</pre><p>Now we'll load a sample dataset to apply the mask to. This loads a series of 7 multivariate patterns from Kragel et al. 2016. These patterns were developed to predict emotion categories. For our purposes here, we'll just treat them as data images.</p><pre class="codeinput">test_dat = load_image_set(<span class="string">'kragelemotion'</span>, <span class="string">'noverbose'</span>); <span class="comment">% loads 7 masks from Kragel et al.</span>
+
+<span class="comment">% Try |orthviews(dat)| or use |montage| to see these patterns.</span>
+<span class="comment">% This command shows the first 4 (a limit in |montage| to avoid messy</span>
+<span class="comment">% displays):</span>
+
+montage(test_dat);
+</pre><pre class="codeoutput">Warning: Showing first 4 images in data object only.
+Setting up fmridisplay objects
+Grouping contiguous voxels:   8 regions
+sagittal montage: 1329 voxels displayed, 17999 not displayed on these slices
+axial montage: 7967 voxels displayed, 11361 not displayed on these slices
+Grouping contiguous voxels:   8 regions
+sagittal montage: 1329 voxels displayed, 17999 not displayed on these slices
+axial montage: 7967 voxels displayed, 11361 not displayed on these slices
+Grouping contiguous voxels:   8 regions
+sagittal montage: 1329 voxels displayed, 17999 not displayed on these slices
+axial montage: 7967 voxels displayed, 11361 not displayed on these slices
+Grouping contiguous voxels:   8 regions
+sagittal montage: 1329 voxels displayed, 17999 not displayed on these slices
+axial montage: 7967 voxels displayed, 11361 not displayed on these slices
+</pre><img vspace="5" hspace="5" src="canlab_help_4_masking_and_writing_nifti_files_01.png" alt=""> <h2 id="9">Apply a mask</h2><p>We can apply the mask using the apply_mask() method for fmri_data objects. It has various options, but the simplest one applies a single mask to an fmri_data object. As a rule, you should pass in the object you're operating on first, followed by additional modifying arguments/objects. Here, this means data object followed by mask object.</p><pre class="codeinput">test_dat = apply_mask(test_dat, mask_image);
+
+<span class="comment">% Now let's view the new, masked dataset:</span>
+
+montage(test_dat);
+
+<span class="comment">% Now, the dataset contains only voxels in the "visual network", and</span>
+<span class="comment">% subsequent analyses or operations would test only that.</span>
+</pre><pre class="codeoutput">Warning: Showing first 4 images in data object only.
+Setting up fmridisplay objects
+Grouping contiguous voxels:   2 regions
+sagittal montage: 201 voxels displayed, 3097 not displayed on these slices
+axial montage: 1647 voxels displayed, 1651 not displayed on these slices
+Grouping contiguous voxels:   2 regions
+sagittal montage: 201 voxels displayed, 3097 not displayed on these slices
+axial montage: 1647 voxels displayed, 1651 not displayed on these slices
+Grouping contiguous voxels:   2 regions
+sagittal montage: 201 voxels displayed, 3097 not displayed on these slices
+axial montage: 1647 voxels displayed, 1651 not displayed on these slices
+Grouping contiguous voxels:   2 regions
+sagittal montage: 201 voxels displayed, 3097 not displayed on these slices
+axial montage: 1647 voxels displayed, 1651 not displayed on these slices
+</pre><img vspace="5" hspace="5" src="canlab_help_4_masking_and_writing_nifti_files_02.png" alt=""> <h2 id="10">A few exercises</h2><p>1. Here's a question to answer: What are some potential uses of the masking operation we did above? Why would you want to do it?</p><p>2. Try loading the emotion regulation dataset from previous tutorials, and do a one-sample t-test group analysis only within the "frontoparietal" network. Try thresholding the results with FDR correction for both the full dataset and the analysis within the restricted mask. How are the results different? Why?</p><h2 id="11">Writing image data in objects to Nifti files on disk</h2><p>canlabcore fmri data objects can be easily written to standard image file formats.  The main function for this is write()</p><p>This walkthrough shows how to do this for 1) a mask image, and 2) a statistic image.</p><p>Create a Nifti image called dummy.nii in the current folder. Write the mask image to this file. See help for write() for more options</p><pre class="codeinput">fname = <span class="string">'dummy.nii'</span>;  <span class="comment">% outname file name.  the extension (.nii, .img) determines the format.</span>
+
+<span class="comment">% |write(mask_image, 'fname', fname);|</span>
+</pre><p>If you've already done this, <tt>write()</tt> will return an error. This is a safeguard to keep users from inadvertently overwriting important files. To force overwriting the existing file, try:</p><pre class="codeinput">write(mask_image, <span class="string">'fname'</span>, fname, <span class="string">'overwrite'</span>);
+</pre><pre class="codeoutput">Writing: 
+dummy.nii
+</pre><p>Now let's read it back in from disk and view it again:</p><pre class="codeinput">orthviews(fmri_data(fname))
+</pre><pre class="codeoutput">Using default mask: /Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/brainmask.nii
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 1409312 bytes
+Loading image number:     1
+Elapsed time is 0.020703 seconds.
+Image names entered, but fullpath attribute is empty. Getting path info.
+Grouping contiguous voxels:   3 regions
+
+ans =
+
+  1&times;1 cell array
+
+    {1&times;3 region}
+
+</pre><img vspace="5" hspace="5" src="canlab_help_4_masking_and_writing_nifti_files_03.png" alt=""> <h2 id="15">Exercises</h2><p>1. Select a sample image from <tt>test_dat</tt>, threshold it at an arbitrary threshold    of absolute values &gt; .0005, and write it to disk. Load it again from    disk and display it. See the thresholding walkthrough for more help if    needed.    Hint: help fmri_data.threshold will give you help on how to do this    e.g., Retain voxels with absolute value &gt; .0001     obj = threshold(obj, [-.0001 0001], 'raw-outside')</p><p>2. Do the one-sample t-test on the emotion regulation dataset (see the   t-test walkthrough if needed), and threshold the results at 0.05   FDR-corrected. Write the thresholded results map to disk. Reload it from   disk and display it using the montage() method.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Applying masks and writing image data to disk
+
+% One common operation in neuroimaging is masking. Masking is defining a set
+% of voxels to include or exclude from analysis or presentation. Some uses
+% include:
+%
+% * Apply a generous brain mask to store only in-brain voxels, saving space,
+%   (CANlab data objects do this by default, with a liberal mask)
+% * Identify gray matter voxels to calculate global mean signal or other metrics
+% * Identify voxels in ventricles or out-of-brain to try to isolate sources
+%   of noise or artifacts to remove
+% * Identify gray matter voxels of interest to limit the space within which
+%   you correct for multiple comparisons, thus increasing power
+% * Limiting presentation of results to an a priori set of ROIs
+% * Limiting the scope of training or testing a multivariate pattern or
+%   predictive model, to help test hypotheses about which systems/regions
+%   contribute to prediction.
+%
+%% The Neuroimaging_pattern_masks Github repository and website
+%
+% For this walkthrough, we'll load some new image datasets to use as masks.
+% A popular one is a set of "networks" developed from resting-state fMRI
+% connectivity in 1,000 people. For our purposes, the "network" maps
+% consist of a set of voxels that load most highly on each of 7 ICA
+% components from the 1,000 Functional Connectomes project. 
+% These were published by Randy Buckner's lab in 2011 in three papers:
+% Choi et al., Buckner et al., and Yeo et al.  We'll use the cortical
+% networks from Yeo et al. here.
+%
+% This set of images and other broadly useful sets of images are stored in
+% the CANlab function |load_image_set| in a registry that you can access by
+% name. Try |help load_image|set| for a list of images you can load by
+% keyword. These datasets, if they can be stored on Github, are in this
+% Github repository:
+% 
+% <https://github.com/canlab/Neuroimaging_Pattern_Masks>
+% 
+% In addition, you can explore these and find more information here:
+% <https://sites.google.com/dartmouth.edu/canlab-brainpatterns/home>
+%
+% To run this tutorial and many others in this series, you'll need to
+% download the Neuroimaging_Pattern_Masks Github repository and add it to
+% your Matlab path with subfolders.
+% The Github site has three main types of datasets, shown here:
+% 
+% <<Neuroimaging_pattern_masks_site.png>>
+%
+
+%% Load and select a sample mask
+% You will need the Neuroimaging_Pattern_Masks repository installed to find
+% these images.
+
+[bucknermaps, mapnames] = load_image_set('bucknerlab'); % loads 7 masks from Yeo et al.
+
+%%
+% This loads 7 images. try |orthviews(dat)| to see them all.
+% What values do the images have?
+% You can also see descriptive statistics for the images like this:
+
+desc = descriptives(bucknermaps);
+
+%%
+% The variable |desc| is a structure that contains various descriptive
+% stats.
+%
+
+%% 
+% load_image_set will generally store and return names for each image,
+% returned as outputs if requested (here in |mapnames|). Let's print
+% those names:
+
+disp(char(mapnames))
+
+%%
+% Now we can select one image from those 7 to use as a mask.
+
+mask_image = bucknermaps.get_wh_image(1);
+
+%% 
+% Now we'll load a sample dataset to apply the mask to.
+% This loads a series of 7 multivariate patterns from Kragel et al. 2016.
+% These patterns were developed to predict emotion categories.
+% For our purposes here, we'll just treat them as data images.
+
+test_dat = load_image_set('kragelemotion', 'noverbose'); % loads 7 masks from Kragel et al.
+
+% Try |orthviews(dat)| or use |montage| to see these patterns.
+% This command shows the first 4 (a limit in |montage| to avoid messy
+% displays):
+
+montage(test_dat);
+
+%% Apply a mask
+%
+% We can apply the mask using the apply_mask() method for fmri_data
+% objects. It has various options, but the simplest one applies a single
+% mask to an fmri_data object. As a rule, you should pass in the object you're
+% operating on first, followed by additional modifying arguments/objects.
+% Here, this means data object followed by mask object.
+
+test_dat = apply_mask(test_dat, mask_image);
+
+% Now let's view the new, masked dataset:
+
+montage(test_dat);
+
+% Now, the dataset contains only voxels in the "visual network", and
+% subsequent analyses or operations would test only that.
+
+%% A few exercises
+%
+% 1. Here's a question to answer: What are some potential uses of the masking
+% operation we did above? Why would you want to do it?
+%
+% 2. Try loading the emotion regulation dataset from previous tutorials,
+% and do a one-sample t-test group analysis only within the
+% "frontoparietal" network. Try thresholding the results with FDR
+% correction for both the full dataset and the analysis within the
+% restricted mask. How are the results different? Why?
+
+%% Writing image data in objects to Nifti files on disk
+%
+% canlabcore fmri data objects can be easily written to standard image file
+% formats.  The main function for this is write()
+%
+% This walkthrough shows how to do this for 1) a mask image, and 2) a
+% statistic image.
+
+%% 
+% Create a Nifti image called dummy.nii in the current folder. Write the
+% mask image to this file. See help for write() for more options
+
+fname = 'dummy.nii';  % outname file name.  the extension (.nii, .img) determines the format.
+
+% |write(mask_image, 'fname', fname);| 
+
+%%
+% If you've already done this, |write()| will return an error. This is a 
+% safeguard to keep users from inadvertently overwriting important files. 
+% To force overwriting the existing file, try:
+
+write(mask_image, 'fname', fname, 'overwrite');
+
+%%
+% Now let's read it back in from disk and view it again:
+
+orthviews(fmri_data(fname))
+
+
+%% Exercises
+%
+% 1. Select a sample image from |test_dat|, threshold it at an arbitrary threshold
+%    of absolute values > .0005, and write it to disk. Load it again from
+%    disk and display it. See the thresholding walkthrough for more help if
+%    needed.
+%    Hint: help fmri_data.threshold will give you help on how to do this
+%    e.g., Retain voxels with absolute value > .0001
+%     obj = threshold(obj, [-.0001 0001], 'raw-outside')
+%     
+% 2. Do the one-sample t-test on the emotion regulation dataset (see the
+%   t-test walkthrough if needed), and threshold the results at 0.05
+%   FDR-corrected. Write the thresholded results map to disk. Reload it from
+%   disk and display it using the montage() method.
+
+##### SOURCE END #####
+--></body></html>

@@ -1,3 +1,61 @@
+%% Regression Walkthrough
+
+%%
+% This walkthrough works through multiple aspects of a basic 2nd-level (group)
+% analysis. We are interested in activity related to emotion regulation
+% for a contrast comparing reappraisal of negative images vs. looking at
+% negative images without reappraisal, i.e., a [Reappraise Negative - Look Negative]
+% contrast. This walkthrough will regress brain
+% contrast values in each voxel (y) onto individual differences in
+% "Reappraisal Success", defined as the drop in negative emotion ratings
+% for the [Reappraise Negative - Look Negative] contrast.
+%
+% We are interested in both the brain correlates of individual differences
+% and the group-average [Reappraise Negative - Look Negative] effect in the
+% brain, which is the intercept in our regression model.
+
+%%
+% This walkthrough includes multiple considerations you'll need when doing
+% a practical data analysis. This goes far beyond just running a model!
+% It's also important to understand the data and results. 
+% Understanding the data allows you to make informed a priori choices about
+% the analysis and avoid "P-Hacking". Understanding the results helps
+% ensure they are valid, and helps you interpret them.
+%
+% A) Understanding the data
+%
+% # Loading the dataset into an fmri_data object
+% # Examining the brain data and checking 
+%
+%   outliers
+%   global signal
+%   which voxels are analyzed (coverage) 
+%   homogeneity across subjects (images)
+%
+% # Examining the behavioral (individual differences) data and leverages
+% # Use the info gained to make data preparation and analysis decisions
+%
+%   Masking 
+%   Transformation of the y variable
+%   Rescaling/normalizing image data
+%   Robust vs. OLS estimation
+%
+% B) Fitting the model
+%
+% # Running the regression and writing results images to disk
+%
+% C) Understanding the results
+%
+% # Explore variations in statistical threshold
+% # Compare with other studies by comparing with a meta-analysis mask
+% # Explore the impact of variations in data scaling/transformation
+% # Localizing results, labeling regions, and making tables using a brain atlas
+% # Extract and plot data from regions of interest
+% # Explore the impact of plotting data in biased vs. unbiased regions of interest
+%
+% D) Multivariate prediction (overlaps with later walkthroughs)
+% # Extra: Multivariate prediction within a set of unbiased ROIs
+
 %% Part 1: Load sample data
 % Load a sample dataset, including a standard brain mask
 % And a meta-analysis mask that provides a priori regions of interest.
@@ -79,7 +137,6 @@ set(title_han, 'FontSize', 18)
 % orthviews(desc.coverage_obj, 'continuous');
 
 %% Part 3: Examine the brain data 
-% ---------------------------------------------------------------
 % This is a really important step to understand what your images look like!
 % Good data tend to produce good results.  
 
@@ -123,8 +180,7 @@ hist_han = histogram(image_obj, 'byimage', 'by_tissue_type');
 help image_obj.rescale
 
 
-%% Part 3: Examine the behavioral/task predictor(s) 
-% ---------------------------------------------------------------
+%% Part 4: Examine the behavioral/task predictor(s) 
 % Examine predictor distribution and leverages
 % Leverage is a measure of how much each point influences the regression
 % line. The more extreme the predictor value, the higher the leverage.
@@ -153,7 +209,7 @@ drawnow, snapnow
 % Ranking predictors and/or robust regression are good
 % mitigation/prevention procedures in many cases.
 
-%% Part 4: Make data prep and analysis decisions
+%% Part 5: Make data prep and analysis decisions
 % Before we've "peeked" at the results, let's make some sensible decisions
 % about what to do with the analysis. We'll compare the results to the
 % "standard analysis" if we hadn't examined the data at all at end.
@@ -191,7 +247,7 @@ image_obj = rescale(image_obj, 'rankvoxels');     % rescale images within this m
 % effects of outliers.  However, this is partly redundant with ranking, so
 % it would have been sensible to choose ranking OR robust regression.
 
-%% Part 5: Run the regression analysis and get results
+%% Part 6: Run the regression analysis and get results
 % The regress method takes predictors that are attached in the object's X
 % attribute (X stands for design matrix) and regresses each voxel's
 % activity (y) on the set of regressors.  
@@ -261,12 +317,12 @@ snapnow
 
 %% Write the thesholded t-image to disk
 
-t.fullpath = fullfile(pwd, 'Reapp_Success_005_FDR05.nii');
-write(t)
+% % t.fullpath = fullfile(pwd, 'Reapp_Success_005_FDR05.nii');
+% % write(t)
+% % 
+% % disp(['Written to disk: ' t.fullpath])
 
-disp(['Written to disk: ' t.fullpath])
-
-%% Display regions at a lower threshold, alongside meta-analysis regions
+%% Part 7. Explore: Display regions at a lower threshold, alongside meta-analysis regions
 % Display the results on slices another way:
 % multi_threshold lets us see the blobs with significant voxels at the
 % highest (most stringent) threshold, and voxels that are touching
@@ -299,7 +355,7 @@ o2 = title_montage(o2, 4, 'Neurosynth mask: Emotion regulation');
 % Here, the regions predictive of success are largely different from those
 % that respond to reappraisal demand in past literature.
 
-%% Part 6: Compare to a standard analysis with no scaling or variable transformation
+%% Part 8: Compare to a standard analysis with no scaling or variable transformation
 
 % Start over and re-load the images:
 [image_obj_untouched] = load_image_set('emotionreg', 'noverbose');
@@ -358,7 +414,7 @@ o2 = title_montage(o2, 8, 'Reappraisal success with no scaling (p < .001 unc, sh
 
 
 
-%% Part 7: Localize results using a brain atlas
+%% Part 9: Localize results using a brain atlas
 % The table() command is a simple way to label regions
 % In addition, we can visualize each region in table to check the accuracy
 % of the labels and the extent of the region.
@@ -372,7 +428,7 @@ r = table(r);
 % Make a montage showing each significant region
 montage(r, 'colormap', 'regioncenters');
 
-%% Part 8: Extract and plot data from regions of interest
+%% Part 10: Extract and plot data from regions of interest
 % Here, we'll explore data extracted from two kinds of regions:
 
 % 1 - biased regions based on the significant results. This is good for
@@ -389,7 +445,10 @@ montage(r, 'colormap', 'regioncenters');
 
 
 %% Extract and plot from (biased) regions of interest based on results
-% Let's visualize the correlation scatterplots in the areas we've
+% Here, we'll compare the implications of picking BIASED ROIs (which is
+% often done in the literature) vs. picking UNBIASED ROIs.
+% 
+% First, let's visualize the correlation scatterplots in the areas we've
 % discovered as related to Success
 
 % Extract data from all regions
@@ -467,7 +526,7 @@ for i = 1:length(r)
    
 end
 
-%% Part 9: (bonus) Multivariate prediction from unbiased ROI averages
+%% Part 11: (bonus) Multivariate prediction from unbiased ROI averages
 % Predict reappraisal success using brain images
 % with 5-fold cross-validation
 

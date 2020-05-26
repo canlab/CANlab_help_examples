@@ -36,4 +36,13 @@ bottom center: violin plots indicate predicted random effect distributions for c
 bottom right: training and validation data mean contrast estimates. Bayes factors provide a quantitative way of determining if these the same or different, providing a formal framework for evaluating whether our validation data in fact validates our inferential and MVPA models.
 
 
+Additional Reading ::
+
+Two sources in particular might provide helpful reading
+
+The documentation for stan is technical but helpful (for instance the procedure for obtaining posterior point estimates is different from that for obtaining posterior samples).
+https://mc-stan.org/users/documentation/
+
+Andrew Gelman's "Bayesian Data Analysis" textbook is also quite good, but presupposes a certain level of mathematical abilities and statistical knowledge.
+
 Example provided by Bogdan Petre, 9/18/20

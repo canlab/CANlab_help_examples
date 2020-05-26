@@ -6,20 +6,20 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>canlab_help_7_multivariate_prediction_basics</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-08-04"><meta name="DC.source" content="canlab_help_7_multivariate_prediction_basics.m"><style type="text/css">
+      --><title>Multivariate prediction of a continuous outcome</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-01-13"><meta name="DC.source" content="canlab_help_7_multivariate_prediction_basics.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
-html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
 html body td { vertical-align:top; text-align:left; }
 
-h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
-h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
-h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.8em; color:#2C2D92; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.4em; color:#363538; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#363538; font-weight:bold; line-height:140%; }
 
-a { color:#005fce; text-decoration:none; }
-a:hover { color:#005fce; text-decoration:underline; }
-a:visited { color:#004aa0; text-decoration:none; }
+a { color:#4B4BA8; text-decoration:none; }
+a:hover { color:#2AAFDF; text-decoration:underline; }
+a:visited { color:#4B4BA8; text-decoration:none; }
 
 p { padding:0px; margin:0px 0px 20px; }
 img { padding:0px; margin:0px 0px 20px; border:none; }
@@ -38,7 +38,7 @@ ol li ul li { list-style:square; }
 
 .content { font-size:1.2em; line-height:140%; padding: 20px; }
 
-pre, code { font-size:12px; }
+pre, code { font-size:14px; }
 tt { font-size: 1.2em; }
 pre { margin:0px 0px 20px; }
 pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
@@ -66,27 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Load dataset with images and print descriptives</a></li><li><a href="#3">Collect some variables we need</a></li><li><a href="#4">Plot the ratings</a></li><li><a href="#5">Prediction</a></li><li><a href="#6">Run the Base model</a></li><li><a href="#7">Plot the results</a></li><li><a href="#8">Summarize within-person classification accuracy</a></li><li><a href="#9">Visualize weight map</a></li><li><a href="#10">Bootstrap weights: Get most reliable weights and p-values for voxels</a></li><li><a href="#11">Try normalizing/scaling data</a></li><li><a href="#12">Try selecting an a priori 'network of interest'</a></li><li><a href="#13">re-run prediction and plot</a></li><li><a href="#14">Other ideas</a></li></ul></div><pre class="codeinput"><span class="comment">% About this dataset</span>
-<span class="comment">% -------------------------------------------------------------------------</span>
-<span class="comment">%</span>
-<span class="comment">% This dataset includes 33 participants, with brain responses to six levels</span>
-<span class="comment">% of heat (non-painful and painful).</span>
-<span class="comment">%</span>
-<span class="comment">% Aspects of this data appear in these papers:</span>
-<span class="comment">% Wager, T.D., Atlas, L.T., Lindquist, M.A., Roy, M., Choong-Wan, W., Kross, E. (2013).</span>
-<span class="comment">% An fMRI-Based Neurologic Signature of Physical Pain. The New England Journal of Medicine. 368:1388-1397</span>
-<span class="comment">% (Study 2)</span>
-<span class="comment">%</span>
-<span class="comment">% Woo, C. -W., Roy, M., Buhle, J. T. &amp; Wager, T. D. (2015). Distinct brain systems</span>
-<span class="comment">% mediate the effects of nociceptive input and self-regulation on pain. PLOS Biology. 13(1):</span>
-<span class="comment">% e1002036. doi:10.1371/journal.pbio.1002036</span>
-<span class="comment">%</span>
-<span class="comment">% Lindquist, Martin A., Anjali Krishnan, Marina L&oacute;pez-Sol&agrave;, Marieke Jepma, Choong-Wan Woo,</span>
-<span class="comment">% Leonie Koban, Mathieu Roy, et al. 2015. ?Group-Regularized Individual Prediction:</span>
-<span class="comment">% Theory and Application to Pain.? NeuroImage.</span>
-<span class="comment">% http://www.sciencedirect.com/science/article/pii/S1053811915009982.</span>
-<span class="comment">%</span>
-</pre><h2 id="2">Load dataset with images and print descriptives</h2><p>This dataset is shared on figshare.com, under this link: https://figshare.com/s/ca23e5974a310c44ca93</p><p>Here is a direct link to the dataset file with the fmri_data object: https://ndownloader.figshare.com/files/12708989</p><p>The key variable is image_obj This is an fmri_data object from the CANlab Core Tools repository for neuroimaging data analysis. See https://canlab.github.io/</p><p>image_obj.dat contains brain data for each image (average across trials) image_obj.Y contains pain ratings (one average rating per image)</p><p>image_obj.additional_info.subject_id contains integers coding for which Load the data file, downloading from figshare if needed</p><pre class="codeinput">fmri_data_file = which(<span class="string">'bmrk3_6levels_pain_dataset.mat'</span>);
+  </style></head><body><div class="content"><h1>Multivariate prediction of a continuous outcome</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">About the pain dataset</a></li><li><a href="#3">Load dataset with images and print descriptives</a></li><li><a href="#4">Collect some variables we need</a></li><li><a href="#5">Plot the ratings</a></li><li><a href="#6">Prediction options and choices</a></li><li><a href="#7">Run the Base model</a></li><li><a href="#10">Plot cross-validated predicted vs. actual outcomes</a></li><li><a href="#11">Summarize within-person classification accuracy</a></li><li><a href="#12">Visualize the classifier weight map</a></li><li><a href="#13">Bootstrap weights: Get most reliable weights and p-values for voxels</a></li><li><a href="#14">Try normalizing/scaling data</a></li><li><a href="#15">Try selecting an a priori 'network of interest'</a></li><li><a href="#16">re-run prediction and plot</a></li><li><a href="#17">Other ideas</a></li></ul></div><p>This walkthrough uses the <tt>predict()</tt> method for fmri_data objects to predict a continuous outcome using cross-validated principal component regression (PCR / LASSO-PCR).</p><p>The <tt>predict()</tt> method can run multiple algorithms with a range of options. The main ones used in the CANlab are SVM for two-choice classification and PCR for regression.</p><h2 id="2">About the pain dataset</h2><p>-------------------------------------------------------------------------</p><p>The dataset contains data from 33 participants, with brain responses to six levels of heat (non-painful and painful). Each image is the average over several (4-8) trials of heat delivered at a single stimulus intensity, ranging from 44.3 - 49.3 degrees C in one-degree increments. Each image is also paired with an average reported pain value for that set of trials, rated immmediately after heat experience.</p><p>This dataset is interesting for mixed-effects and predictive analyses, as it has both within-person and between-person sources of variance.</p><p>Aspects of this data appear in these papers: Wager, T.D., Atlas, L.T., Lindquist, M.A., Roy, M., Choong-Wan, W., Kross, E. (2013). An fMRI-Based Neurologic Signature of Physical Pain. The New England Journal of Medicine. 368:1388-1397 (Study 2)</p><p>Woo, C. -W., Roy, M., Buhle, J. T. &amp; Wager, T. D. (2015). Distinct brain systems mediate the effects of nociceptive input and self-regulation on pain. PLOS Biology. 13(1): e1002036. doi:10.1371/journal.pbio.1002036</p><p>Lindquist, Martin A., Anjali Krishnan, Marina L&oacute;pez-Sol&agrave;, Marieke Jepma, Choong-Wan Woo, Leonie Koban, Mathieu Roy, et al. 2015. ?Group-Regularized Individual Prediction: Theory and Application to Pain.? NeuroImage. <a href="http://www.sciencedirect.com/science/article/pii/S1053811915009982">http://www.sciencedirect.com/science/article/pii/S1053811915009982</a>.</p><h2 id="3">Load dataset with images and print descriptives</h2><p>This dataset is shared on figshare.com, under this link: https://figshare.com/s/ca23e5974a310c44ca93</p><p>Here is a direct link to the dataset file with the fmri_data object: https://ndownloader.figshare.com/files/12708989</p><p>The key variable is image_obj This is an fmri_data object from the CANlab Core Tools repository for neuroimaging data analysis. See https://canlab.github.io/</p><p>image_obj.dat contains brain data for each image (average across trials) image_obj.Y contains pain ratings (one average rating per image)</p><p>image_obj.additional_info.subject_id contains integers coding for which Load the data file, downloading from figshare if needed</p><pre class="codeinput">fmri_data_file = which(<span class="string">'bmrk3_6levels_pain_dataset.mat'</span>);
 
 <span class="keyword">if</span> isempty(fmri_data_file)
 
@@ -142,7 +122,7 @@ Min: -11.529	Max: 7.862	Mean: -0.004	Std: 0.227
        99.9            1.3177
 
  
-</pre><h2 id="3">Collect some variables we need</h2><pre class="codeinput"><span class="comment">% subject_id is useful for cross-validation</span>
+</pre><h2 id="4">Collect some variables we need</h2><pre class="codeinput"><span class="comment">% subject_id is useful for cross-validation</span>
 <span class="comment">%</span>
 <span class="comment">% this used as a custom holdout set in fmri_data.predict() below will</span>
 <span class="comment">% implement leave-one-subject-out cross-validation</span>
@@ -160,43 +140,13 @@ ratings = reshape(image_obj.Y, 6, 33)';
 <span class="comment">% temperatures are 44 - 49 (actually 44.3 - 49.3) in order for each person.</span>
 
 temperatures = image_obj.additional_info.temperatures;
-</pre><h2 id="4">Plot the ratings</h2><p>-------------------------------------------------------------------------</p><pre class="codeinput">create_figure(<span class="string">'ratings'</span>);
-lineplot_columns(bmrkdata.ratings, <span class="string">'color'</span>, [.7 .3 .3], <span class="string">'markerfacecolor'</span>, [1 .5 0]);
+</pre><h2 id="5">Plot the ratings</h2><p>-------------------------------------------------------------------------</p><pre class="codeinput">create_figure(<span class="string">'ratings'</span>);
+hold <span class="string">on</span>; plot(ratings', <span class="string">'-'</span>, <span class="string">'Color'</span>, [.7 .7 .7], <span class="string">'LineWidth'</span>, .5);
+lineplot_columns(ratings, <span class="string">'color'</span>, [.7 .3 .3], <span class="string">'markerfacecolor'</span>, [1 .5 0]);
 xlabel(<span class="string">'Temperature'</span>);
 ylabel(<span class="string">'Rating'</span>);
-</pre><img vspace="5" hspace="5" src="canlab_help_7_multivariate_prediction_basics_01.png" alt=""> <h2 id="5">Prediction</h2><p>There are many options</p><pre class="codeinput"><span class="comment">% Base model: Linear, whole brain prediction</span>
-<span class="comment">%</span>
-<span class="comment">% Outcome distribution:</span>
-<span class="comment">% Continuous: Regression (LASSO-PCR) Categorical/2 choice: SVM, logistic regression</span>
-<span class="comment">%</span>
-<span class="comment">% Model Options:</span>
-<span class="comment">% - Feature selection (part of the brain)</span>
-<span class="comment">% - Feature integration (new features)</span>
-<span class="comment">%</span>
-<span class="comment">% Testing options:</span>
-<span class="comment">% - Input data (what level)</span>
-<span class="comment">% - Cross-validation</span>
-<span class="comment">% - What testing metric (classification accuracy? RMSE?) and at what level</span>
-<span class="comment">% (single-trial, condition averages, one-map-per-subject)</span>
-<span class="comment">%</span>
-<span class="comment">% Inference options:</span>
-<span class="comment">% - Component maps, voxel-wise maps</span>
-<span class="comment">% - Thresholding (Bootstrapping, Permutation)</span>
-<span class="comment">% - Global null hypothesis testing / sanity checks (Permutation)</span>
-</pre><h2 id="6">Run the Base model</h2><pre class="codeinput"><span class="comment">% relevant functions:</span>
-<span class="comment">% predict method (fmri_data)</span>
-<span class="comment">% predict_test_suite method (fmri_data)</span>
-
-<span class="comment">% Define custom holdout set.  If we use subject_id, which is a vector of</span>
-<span class="comment">% integers with a unique integer per subject, then we are doing</span>
-<span class="comment">% leave-one-subject-out cross-validation.</span>
-
-<span class="comment">% let's build five-fold cross-validation set that leaves out ALL the images</span>
-<span class="comment">% from a subject together. That way, we are always predicting out-of-sample</span>
-<span class="comment">% (new individuals). If not, dependence across images from the same</span>
-<span class="comment">% subjects may invalidate the estimate of predictive accuracy.</span>
-
-holdout_set = zeros(size(subject_id));      <span class="comment">% holdout set membership for each image</span>
+set(gca, <span class="string">'XTickLabel'</span>, [44.3:49.3], <span class="string">'FontSize'</span>, 18);
+</pre><img vspace="5" hspace="5" src="canlab_help_7_multivariate_prediction_basics_01.png" alt=""> <h2 id="6">Prediction options and choices</h2><p>There are many choices for algorithm and process/parameter tuning Here, we describe a constrained set of some of the most common choices</p><p>Base model: Linear, whole brain prediction</p><p>Outcome distribution: Continuous: Regression (LASSO-PCR) Categorical/2 choice: SVM, logistic regression</p><p>Model Options: - Feature selection (part of the brain) - Feature integration (new features)</p><p>Testing options: - Input data (what level) - Cross-validation - What testing metric (classification accuracy? RMSE?) and at what level (single-trial, condition averages, one-map-per-subject)</p><p>Inference options: - Component maps, voxel-wise maps - Thresholding (Bootstrapping, Permutation) - Global null hypothesis testing / sanity checks (Permutation)</p><h2 id="7">Run the Base model</h2><p><b>relevant functions:</b> predict method (fmri_data) predict_test_suite method (fmri_data)</p><p><b>Define the holdout set for cross-validation</b> We want to define custom holdout set.  If we use subject_id, which is a vector of integers with a unique integer per subject, then we are doing leave-one-subject-out cross-validation.</p><p>Let's build five-fold cross-validation set that leaves out ALL the images from a subject together. That way, we are always predicting out-of-sample (new individuals). If not, dependence across images from the same subjects may invalidate the estimate of predictive accuracy.</p><pre class="codeinput">holdout_set = zeros(size(subject_id));      <span class="comment">% holdout set membership for each image</span>
 n_subjects = length(unique(subject_id));
 C = cvpartition(n_subjects, <span class="string">'KFold'</span>, 5);
 <span class="keyword">for</span> i = 1:5
@@ -204,29 +154,20 @@ C = cvpartition(n_subjects, <span class="string">'KFold'</span>, 5);
     imgidx = ismember(subject_id, find(teidx)); <span class="comment">% all images for these subjects</span>
     holdout_set(imgidx) = i;
 <span class="keyword">end</span>
-
-algoname = <span class="string">'cv_lassopcr'</span>; <span class="comment">% cross-validated penalized regression. Predict pain ratings</span>
+</pre><p><b>Run the prediction</b></p><pre class="codeinput">algoname = <span class="string">'cv_lassopcr'</span>; <span class="comment">% cross-validated penalized regression. Predict pain ratings</span>
 
 [cverr, stats, optout] = predict(image_obj, <span class="string">'algorithm_name'</span>, algoname, <span class="string">'nfolds'</span>, holdout_set);
 </pre><pre class="codeoutput">Cross-validated prediction with algorithm cv_lassopcr,   5 folds
 
 Completed fit for all data in:   0 hours   0 min  5 secs 
 Fold 1/5 done in:   0 hours   0 min  4 sec
-Fold 2/5 done in:   0 hours   0 min  4 sec
-Fold 3/5 done in:   0 hours   0 min  4 sec
-Fold 4/5 done in:   0 hours   0 min  4 sec
+Fold 2/5 done in:   0 hours   0 min  3 sec
+Fold 3/5 done in:   0 hours   0 min  3 sec
+Fold 4/5 done in:   0 hours   0 min  3 sec
 Fold 5/5 done in:   0 hours   0 min  4 sec
 
-Total Elapsed Time =   0 hours   0 min 24 sec
-</pre><h2 id="7">Plot the results</h2><pre class="codeinput"><span class="comment">% Plot cross-validated predicted outcomes vs. actual</span>
-
-<span class="comment">% Critical fields in stats output structure:</span>
-<span class="comment">% stats.Y = actual outcomes</span>
-<span class="comment">% stats.yfit = cross-val predicted outcomes</span>
-<span class="comment">% pred_outcome_r: Correlation between .yfit and .Y</span>
-<span class="comment">% weight_obj: Weight map used for prediction (across all subjects).</span>
-
-<span class="comment">% Continuous outcomes:</span>
+Total Elapsed Time =   0 hours   0 min 23 sec
+</pre><h2 id="10">Plot cross-validated predicted vs. actual outcomes</h2><p>Critical fields in stats output structure: stats.Y = actual outcomes stats.yfit = cross-val predicted outcomes pred_outcome_r: Correlation between .yfit and .Y weight_obj: Weight map used for prediction (across all subjects).</p><pre class="codeinput"><span class="comment">% Continuous outcomes:</span>
 
 create_figure(<span class="string">'scatterplots'</span>, 1, 2);
 plot(stats.yfit, stats.Y, <span class="string">'o'</span>)
@@ -235,7 +176,11 @@ refline
 xlabel(<span class="string">'Predicted pain'</span>);
 ylabel(<span class="string">'Observed pain'</span>);
 
-<span class="comment">% Consider that each subject has their own line:</span>
+<span class="comment">% Consider that each subject has their own series of multiple observations.</span>
+<span class="comment">% Separate subjects into multiple cells, which will be plotted as separate</span>
+<span class="comment">% individual lines:</span>
+
+n = max(subject_id);
 
 <span class="keyword">for</span> i = 1:n
     YY{i} = stats.Y(subject_id == i);
@@ -249,8 +194,26 @@ ylabel(<span class="string">'Observed pain'</span>);
 axis <span class="string">tight</span>
 
 <span class="comment">% Yfit is a cell array, one cell per subject, with fitted values for that subject</span>
-</pre><pre class="codeoutput">average within-person r = 0.61, t( 32) = 10.76, p = 0.000000, num. missing:   0
-</pre><img vspace="5" hspace="5" src="canlab_help_7_multivariate_prediction_basics_02.png" alt=""> <h2 id="8">Summarize within-person classification accuracy</h2><p>Turn into classification:</p><pre class="codeinput"><span class="comment">% If the stim intensity increases by 1 degree, how often do we correctly</span>
+</pre><pre class="codeoutput">
+____________________________________________________________________________________________________________________________________________
+Input data:
+X scaling: No centering or z-scoring
+Y scaling: No centering or z-scoring
+                
+Transformations:
+No data transformations before plot
+                                                                   
+Correlations:                                                      
+r = 0.54 across all observations, based on untransformed input data
+                                                               
+Stats on slopes after transormation, subject is random effect: 
+Mean b = 1.24, t( 32) = 6.93, p = 0.000000, num. missing:   0  
+                                                               
+Average within-person r = 0.83 +- 0.31 (std)
+ 
+Between-person r (across subject means) = 0.11
+____________________________________________________________________________________________________________________________________________
+</pre><img vspace="5" hspace="5" src="canlab_help_7_multivariate_prediction_basics_02.png" alt=""> <h2 id="11">Summarize within-person classification accuracy</h2><p>Classification can turn a continuous outcome, such as the magnitude of activity in an integrated model/pattern, into a binary choice (Type A or B, Yes/No, Pain/No pain). Classification accuracy is an easy-to-interpret metric, which makes it appealing to report.</p><p>But though it seems easy to understand, it is perhaps tricker to interpret than we might think.</p><p>Classification accuracy is not one metric, but a family of them. The accuracy you obtain depends on what type of classification you're doing, and what the units of analysis are. For example, is your model based on a single person (individualized for that person), or based on other participants' data? Are you classifying images corresponding to a single trial, or an average across a group of trials? Do you have knowledge about which conditions/images belong to the same person, or not? Here, we will: (a) use a model based on other people's data (cross-validated across participants) (b) classify images summarizing a group of trials, and (c) assume we have 2 images belonging to the same person, and we classify which is which</p><p>On this last point, there are two basic senses of classification, which assume different levels of background knowledge: - In <i>single-interval classification</i>, we do not know which images belong to which participants,   and we are classifying a single image as Type A or B based on whether   the response in the model is above or below a threshold. - In <i>forced-choice</i> classification, we have two images that we know come   from the same person, and we know one is Type A and one is Type B...or,   equivalently, that one is "more A" than the other (e.g., more painful).   The classifier tries to pick out which is the best answer.</p><p>Forced-choice classification is an inherently easier problem, with higher resulting accuracy, because (a) each participant serves as their own control (many sources of noise are canceled out), and (b) you assume more background knowledge, conferring an advantage.</p><p>In this case, we want to summarize each subject with two images: One high pain, and one low pain. We'll use stimulus intensity as the variable to classify here, and ask if we can predict which intensity is highest given pairs of images one degree apart for each participant.</p><pre class="codeinput"><span class="comment">% If the stim intensity increases by 1 degree, how often do we correctly</span>
 <span class="comment">% predict an increase?</span>
 diffs = cellfun(@diff, Yfit, <span class="string">'UniformOutput'</span>, false); <span class="comment">% successive increases in predicted values with increases in stim intensity</span>
 
@@ -270,28 +233,24 @@ results_table = table(comparison, acc_per_comparison, cohens_d_per_comparison);
 disp(results_table)
 
 <span class="comment">% 45-44 degrees, 46-45, 47-46, etc.</span>
-</pre><pre class="codeoutput">Mean acc is : 72.12% across all successive 1 degree increments
+</pre><pre class="codeoutput">Mean acc is : 74.55% across all successive 1 degree increments
     comparison    acc_per_comparison    cohens_d_per_comparison
     __________    __________________    _______________________
 
-     '45-44'           0.51515                 -0.10353        
-     '46-45'           0.72727                  0.65637        
-     '47-46'           0.78788                  0.88565        
-     '48-47'           0.87879                    1.174        
-     '49-48'           0.69697                  0.44796        
+     '45-44'           0.60606                 0.041851        
+     '46-45'           0.72727                  0.63584        
+     '47-46'           0.84848                  0.91783        
+     '48-47'           0.87879                   1.1669        
+     '49-48'           0.66667                  0.43536        
 
-</pre><h2 id="9">Visualize weight map</h2><pre class="codeinput">w = stats.weight_obj;  <span class="comment">% This is an image object that we can view, etc.</span>
+</pre><h2 id="12">Visualize the classifier weight map</h2><p>The weight map is stored in <tt>stats.weight_obj</tt>, as a statistic_image class object. If we have requested bootstrapping, the image will be thresholded (0.05 uncorrected by default). Otherwise, it will be unthresholded, and we'll see weights everywhere within the analysis mask.</p><pre class="codeinput">w = stats.weight_obj;  <span class="comment">% This is an image object that we can view, etc.</span>
 
 orthviews(w)
 
 create_figure(<span class="string">'montage'</span>);
 o2 = montage(w);
 o2 = title_montage(o2, 5, <span class="string">'Predictive model weights'</span>);
-</pre><pre class="codeoutput">
-SPM12: spm_check_registration (v6245)              23:52:16 - 04/08/2018
-========================================================================
-Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
-Grouping contiguous voxels:   3 regions
+</pre><pre class="codeoutput">Grouping contiguous voxels:   3 regions
 
 ans =
 
@@ -307,12 +266,7 @@ sagittal montage: 4292 voxels displayed, 219415 not displayed on these slices
 sagittal montage: 3990 voxels displayed, 219717 not displayed on these slices
 axial montage: 32223 voxels displayed, 191484 not displayed on these slices
 axial montage: 34538 voxels displayed, 189169 not displayed on these slices
-</pre><img vspace="5" hspace="5" src="canlab_help_7_multivariate_prediction_basics_03.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_7_multivariate_prediction_basics_04.png" alt=""> <h2 id="10">Bootstrap weights: Get most reliable weights and p-values for voxels</h2><pre class="codeinput"><span class="comment">% Re-run prediction, adding a 'bootstrap' flag.</span>
-<span class="comment">% For a final analysis, at least 5K bootstrap samples is a good idea</span>
-
-<span class="comment">% (This is not run in the example; see help fmri_data.predict for how to</span>
-<span class="comment">% run bootstrapping)</span>
-</pre><h2 id="11">Try normalizing/scaling data</h2><pre class="codeinput"><span class="comment">% z-score every image, removing the mean and dividing by the std.</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_7_multivariate_prediction_basics_03.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_7_multivariate_prediction_basics_04.png" alt=""> <h2 id="13">Bootstrap weights: Get most reliable weights and p-values for voxels</h2><p>Here is an exercise: Re-run the predictive model, adding a 'bootstrap' flag. For a final analysis, at least 5K bootstrap samples is a good idea. For now, try it with just 1,000 bootstrap samples (and be prepared to wait a bit). What does the resulting weight map look like?</p><p>(This is not run in the example; see <tt>help fmri_data.predict</tt> for how to add the bootstrap option.)</p><h2 id="14">Try normalizing/scaling data</h2><p>One of the biggest sources of noise can be whole-image (or large-spatial-scale shifts) in image values across participants. These can be apparent even in contrast or "subtraction" images where various sources of noise and artifacts are supposed to have been "subtracted out". This may result from different chance correlations between task regressors and physiological noise or artifacts/outliers across individuals.</p><p>Rescaling the data can remove whole-brain signal. This should be used with caution, as you're also removing signal from the images, and the resulting weight maps should be interpreted as effects <b>relative</b> to the mean signal across the image. i.e., a task may be associated with whole-brain increases, and <b>relative</b> decreases in a local area that appear only after the global increase has been accounted for.</p><p>Another reason to rescale images is to ask whether the <b>pattern</b> of activity across the brain (or within a local area) is predictive of task state, after removing the overall intensity of activation. This relates to pattern information.</p><p>Here, we'll rescale the images and ask if this improves our cross-validated predictions or not. If it does, the global signal we've removed is likely more noise than signal. If not, the global signal may contain information about pain.</p><pre class="codeinput"><span class="comment">% z-score every image, removing the mean and dividing by the std.</span>
 <span class="comment">% Remove some scaling noise, but also some signal...</span>
  image_obj = rescale(image_obj, <span class="string">'zscoreimages'</span>);
 
@@ -338,16 +292,34 @@ figure; o2 = montage(stats.weight_obj);
 o2 = title_montage(o2, 5, <span class="string">'Predictive model weights'</span>);
 </pre><pre class="codeoutput">Cross-validated prediction with algorithm cv_lassopcr,   5 folds
 
-Completed fit for all data in:   0 hours   0 min  6 secs 
+Completed fit for all data in:   0 hours   0 min  5 secs 
 Fold 1/5 done in:   0 hours   0 min  4 sec
 Fold 2/5 done in:   0 hours   0 min  4 sec
-Fold 3/5 done in:   0 hours   0 min  3 sec
-Fold 4/5 done in:   0 hours   0 min  4 sec
+Fold 3/5 done in:   0 hours   0 min  4 sec
+Fold 4/5 done in:   0 hours   0 min  3 sec
 Fold 5/5 done in:   0 hours   0 min  4 sec
 
-Total Elapsed Time =   0 hours   0 min 24 sec
-average within-person r = 0.58, t( 32) = 13.32, p = 0.000000, num. missing:   0
-Overall prediction-outcome correlation is 0.58
+Total Elapsed Time =   0 hours   0 min 23 sec
+
+____________________________________________________________________________________________________________________________________________
+Input data:
+X scaling: No centering or z-scoring
+Y scaling: No centering or z-scoring
+                
+Transformations:
+No data transformations before plot
+                                                                   
+Correlations:                                                      
+r = 0.54 across all observations, based on untransformed input data
+                                                               
+Stats on slopes after transormation, subject is random effect: 
+Mean b = 1.00, t( 32) = 8.73, p = 0.000000, num. missing:   0  
+                                                               
+Average within-person r = 0.73 +- 0.32 (std)
+ 
+Between-person r (across subject means) = 0.03
+____________________________________________________________________________________________________________________________________________
+Overall prediction-outcome correlation is 0.54
 Setting up fmridisplay objects
 This takes a lot of memory, and can hang if you have too little.
 Grouping contiguous voxels:   3 regions
@@ -356,7 +328,7 @@ sagittal montage: 4292 voxels displayed, 219415 not displayed on these slices
 sagittal montage: 3990 voxels displayed, 219717 not displayed on these slices
 axial montage: 32223 voxels displayed, 191484 not displayed on these slices
 axial montage: 34538 voxels displayed, 189169 not displayed on these slices
-</pre><img vspace="5" hspace="5" src="canlab_help_7_multivariate_prediction_basics_05.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_7_multivariate_prediction_basics_06.png" alt=""> <h2 id="12">Try selecting an a priori 'network of interest'</h2><pre class="codeinput"><span class="comment">% re-load</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_7_multivariate_prediction_basics_05.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_7_multivariate_prediction_basics_06.png" alt=""> <h2 id="15">Try selecting an a priori 'network of interest'</h2><pre class="codeinput"><span class="comment">% re-load</span>
 load(<span class="string">'bmrk3_6levels_pain_dataset.mat'</span>, <span class="string">'image_obj'</span>)
 
 <span class="comment">% load an a priori pain-related mask and apply it</span>
@@ -374,7 +346,7 @@ loading mask. mapping volumes.
 checking that dimensions and voxel sizes of volumes are the same. 
 Pre-allocating data array. Needed: 1409312 bytes
 Loading image number:     1
-Elapsed time is 0.027483 seconds.
+Elapsed time is 0.023690 seconds.
 Image names entered, but fullpath attribute is empty. Getting path info.
 Setting up fmridisplay objects
 This takes a lot of memory, and can hang if you have too little.
@@ -384,7 +356,7 @@ sagittal montage: 1171 voxels displayed, 47812 not displayed on these slices
 sagittal montage: 980 voxels displayed, 48003 not displayed on these slices
 axial montage: 7496 voxels displayed, 41487 not displayed on these slices
 axial montage: 7950 voxels displayed, 41033 not displayed on these slices
-</pre><img vspace="5" hspace="5" src="canlab_help_7_multivariate_prediction_basics_07.png" alt=""> <h2 id="13">re-run prediction and plot</h2><pre class="codeinput">[cverr, stats, optout] = predict(image_obj, <span class="string">'algorithm_name'</span>, algoname, <span class="string">'nfolds'</span>, holdout_set);
+</pre><img vspace="5" hspace="5" src="canlab_help_7_multivariate_prediction_basics_07.png" alt=""> <h2 id="16">re-run prediction and plot</h2><pre class="codeinput">[cverr, stats, optout] = predict(image_obj, <span class="string">'algorithm_name'</span>, algoname, <span class="string">'nfolds'</span>, holdout_set);
 
 create_figure(<span class="string">'scatterplots'</span>);
 
@@ -412,8 +384,26 @@ Fold 4/5 done in:   0 hours   0 min  1 sec
 Fold 5/5 done in:   0 hours   0 min  1 sec
 
 Total Elapsed Time =   0 hours   0 min  4 sec
-average within-person r = 0.58, t( 32) = 7.17, p = 0.000000, num. missing:   0
-Overall prediction-outcome correlation is 0.58
+
+____________________________________________________________________________________________________________________________________________
+Input data:
+X scaling: No centering or z-scoring
+Y scaling: No centering or z-scoring
+                
+Transformations:
+No data transformations before plot
+                                                                   
+Correlations:                                                      
+r = 0.55 across all observations, based on untransformed input data
+                                                               
+Stats on slopes after transormation, subject is random effect: 
+Mean b = 1.07, t( 32) = 10.41, p = 0.000000, num. missing:   0 
+                                                               
+Average within-person r = 0.82 +- 0.26 (std)
+ 
+Between-person r (across subject means) = 0.17
+____________________________________________________________________________________________________________________________________________
+Overall prediction-outcome correlation is 0.55
 Setting up fmridisplay objects
 This takes a lot of memory, and can hang if you have too little.
 Grouping contiguous voxels:  27 regions
@@ -422,7 +412,7 @@ sagittal montage: 1171 voxels displayed, 47812 not displayed on these slices
 sagittal montage: 980 voxels displayed, 48003 not displayed on these slices
 axial montage: 7496 voxels displayed, 41487 not displayed on these slices
 axial montage: 7950 voxels displayed, 41033 not displayed on these slices
-</pre><img vspace="5" hspace="5" src="canlab_help_7_multivariate_prediction_basics_08.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_7_multivariate_prediction_basics_09.png" alt=""> <h2 id="14">Other ideas</h2><p>There are many ways to build from this basic analysis.</p><pre class="codeinput"><span class="comment">% Data</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_7_multivariate_prediction_basics_08.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_7_multivariate_prediction_basics_09.png" alt=""> <h2 id="17">Other ideas</h2><p>There are many ways to build from this basic analysis.</p><pre class="codeinput"><span class="comment">% Data</span>
 <span class="comment">% ------------</span>
 <span class="comment">% Examine/clean outliers</span>
 <span class="comment">% Transformations of data: Scaling/centering to remove global mean,</span>
@@ -436,12 +426,29 @@ axial montage: 7950 voxels displayed, 41033 not displayed on these slices
 <span class="comment">% Feature selection in cross-val loop: Univariate, recursive feature elim</span>
 </pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
+%% Multivariate prediction of a continuous outcome
 
-% About this dataset
+%%
+% This walkthrough uses the |predict()| method for fmri_data objects to
+% predict a continuous outcome using cross-validated principal component
+% regression (PCR / LASSO-PCR). 
+%
+% The |predict()| method can run multiple algorithms with a range of options.
+% The main ones used in the CANlab are SVM for two-choice classification and PCR for
+% regression.
+
+%% About the pain dataset
 % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
 %
-% This dataset includes 33 participants, with brain responses to six levels
-% of heat (non-painful and painful).  
+% The dataset contains data from 33 participants, with brain responses to six levels
+% of heat (non-painful and painful). Each image is the average over several
+% (4-8) trials of heat delivered at a single stimulus intensity, ranging
+% from 44.3 - 49.3 degrees C in one-degree increments. Each image is also
+% paired with an average reported pain value for that set of trials, rated
+% immmediately after heat experience. 
+%
+% This dataset is interesting for mixed-effects and predictive analyses, as
+% it has both within-person and between-person sources of variance.  
 % 
 % Aspects of this data appear in these papers:
 % Wager, T.D., Atlas, L.T., Lindquist, M.A., Roy, M., Choong-Wan, W., Kross, E. (2013). 
@@ -514,14 +521,16 @@ temperatures = image_obj.additional_info.temperatures;
 % REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-  
 
 create_figure('ratings');
-lineplot_columns(bmrkdata.ratings, 'color', [.7 .3 .3], 'markerfacecolor', [1 .5 0]);
+hold on; plot(ratings', '-', 'Color', [.7 .7 .7], 'LineWidth', .5);
+lineplot_columns(ratings, 'color', [.7 .3 .3], 'markerfacecolor', [1 .5 0]);
 xlabel('Temperature');
 ylabel('Rating');
+set(gca, 'XTickLabel', [44.3:49.3], 'FontSize', 18);
 
-
-%% Prediction
-% There are many options
-
+%% Prediction options and choices
+% There are many choices for algorithm and process/parameter tuning 
+% Here, we describe a constrained set of some of the most common choices
+%
 % Base model: Linear, whole brain prediction
 % 
 % Outcome distribution:
@@ -543,16 +552,19 @@ ylabel('Rating');
 % - Global null hypothesis testing / sanity checks (Permutation)
 
 %% Run the Base model
-
-% relevant functions:
+%
+% *relevant functions:*
 % predict method (fmri_data)                            
 % predict_test_suite method (fmri_data) 
+%
 
-% Define custom holdout set.  If we use subject_id, which is a vector of
+%% 
+% *Define the holdout set for cross-validation*
+% We want to define custom holdout set.  If we use subject_id, which is a vector of
 % integers with a unique integer per subject, then we are doing
 % leave-one-subject-out cross-validation. 
-
-% let's build five-fold cross-validation set that leaves out ALL the images
+%
+% Let's build five-fold cross-validation set that leaves out ALL the images
 % from a subject together. That way, we are always predicting out-of-sample
 % (new individuals). If not, dependence across images from the same
 % subjects may invalidate the estimate of predictive accuracy.
@@ -566,14 +578,15 @@ for i = 1:5
     holdout_set(imgidx) = i;
 end
 
+%% 
+% *Run the prediction*
+
 algoname = 'cv_lassopcr'; % cross-validated penalized regression. Predict pain ratings
 
 [cverr, stats, optout] = predict(image_obj, 'algorithm_name', algoname, 'nfolds', holdout_set);
 
-%% Plot the results
-
-% Plot cross-validated predicted outcomes vs. actual
-
+%% Plot cross-validated predicted vs. actual outcomes
+%
 % Critical fields in stats output structure:
 % stats.Y = actual outcomes
 % stats.yfit = cross-val predicted outcomes
@@ -589,7 +602,11 @@ refline
 xlabel('Predicted pain');
 ylabel('Observed pain');
 
-% Consider that each subject has their own line:
+% Consider that each subject has their own series of multiple observations.
+% Separate subjects into multiple cells, which will be plotted as separate
+% individual lines:
+
+n = max(subject_id);
 
 for i = 1:n
     YY{i} = stats.Y(subject_id == i);
@@ -606,7 +623,45 @@ axis tight
 
 %% Summarize within-person classification accuracy
 % 
-% Turn into classification:
+% Classification can turn a continuous outcome, such as the magnitude of
+% activity in an integrated model/pattern, into a binary choice (Type A or
+% B, Yes/No, Pain/No pain). Classification accuracy is an easy-to-interpret
+% metric, which makes it appealing to report. 
+% 
+% But though it seems easy to understand, it is perhaps tricker to
+% interpret than we might think.
+%
+% Classification accuracy is not one metric, but a family of them. The accuracy
+% you obtain depends on what type of classification you're doing, and what the
+% units of analysis are. For example, is your model based on a single person 
+% (individualized for that person), or based on other participants' data? 
+% Are you classifying images corresponding to a single trial, or an average across a group of trials? 
+% Do you have knowledge about which conditions/images belong to the same person, or not?
+% Here, we will:
+% (a) use a model based on other people's data (cross-validated across participants)
+% (b) classify images summarizing a group of trials, and
+% (c) assume we have 2 images belonging to the same person, and we classify
+% which is which
+%
+% On this last point, there are two basic senses of classification, which assume different 
+% levels of background knowledge:
+% - In _single-interval classification_, we do not know which images belong to which participants,
+%   and we are classifying a single image as Type A or B based on whether
+%   the response in the model is above or below a threshold. 
+% - In _forced-choice_ classification, we have two images that we know come
+%   from the same person, and we know one is Type A and one is Type B...or,
+%   equivalently, that one is "more A" than the other (e.g., more painful).
+%   The classifier tries to pick out which is the best answer.
+%
+% Forced-choice classification is an inherently easier problem, with higher
+% resulting accuracy, because (a) each participant serves as their own control
+% (many sources of noise are canceled out), and (b) you assume more
+% background knowledge, conferring an advantage. 
+%
+% In this case, we want to summarize each subject with two images: One high
+% pain, and one low pain. We'll use stimulus intensity as the variable to
+% classify here, and ask if we can predict which intensity is highest given
+% pairs of images one degree apart for each participant.
 
 % If the stim intensity increases by 1 degree, how often do we correctly
 % predict an increase?
@@ -629,7 +684,12 @@ disp(results_table)
 
 % 45-44 degrees, 46-45, 47-46, etc.
 
-%% Visualize weight map
+%% Visualize the classifier weight map
+%
+% The weight map is stored in |stats.weight_obj|, as a statistic_image
+% class object. If we have requested bootstrapping, the image will be
+% thresholded (0.05 uncorrected by default). Otherwise, it will be unthresholded,
+% and we'll see weights everywhere within the analysis mask.
 
 w = stats.weight_obj;  % This is an image object that we can view, etc.
 
@@ -641,14 +701,42 @@ o2 = title_montage(o2, 5, 'Predictive model weights');
 
 
 %% Bootstrap weights: Get most reliable weights and p-values for voxels
-
-% Re-run prediction, adding a 'bootstrap' flag. 
-% For a final analysis, at least 5K bootstrap samples is a good idea
-
-% (This is not run in the example; see help fmri_data.predict for how to
-% run bootstrapping)
+%
+% Here is an exercise: 
+% Re-run the predictive model, adding a 'bootstrap' flag. 
+% For a final analysis, at least 5K bootstrap samples is a good idea.
+% For now, try it with just 1,000 bootstrap samples (and be prepared to
+% wait a bit). What does the resulting weight map look like?
+%
+% (This is not run in the example; see |help fmri_data.predict| for how to
+% add the bootstrap option.)
 
 %% Try normalizing/scaling data
+%
+% One of the biggest sources of noise can be whole-image (or
+% large-spatial-scale shifts) in image values across participants. These can
+% be apparent even in contrast or "subtraction" images where various
+% sources of noise and artifacts are supposed to have been "subtracted
+% out". This may result from different chance correlations between task
+% regressors and physiological noise or artifacts/outliers across
+% individuals. 
+%
+% Rescaling the data can remove whole-brain signal. This should be used
+% with caution, as you're also removing signal from the images, and the
+% resulting weight maps should be interpreted as effects *relative* to the mean
+% signal across the image. i.e., a task may be associated with whole-brain
+% increases, and *relative* decreases in a local area that appear only
+% after the global increase has been accounted for.
+%
+% Another reason to rescale images is to ask whether the *pattern* of
+% activity across the brain (or within a local area) is predictive of task
+% state, after removing the overall intensity of activation. This relates
+% to pattern information.
+%
+% Here, we'll rescale the images and ask if this improves our
+% cross-validated predictions or not. If it does, the global signal we've
+% removed is likely more noise than signal. If not, the global signal may
+% contain information about pain.
 
 % z-score every image, removing the mean and dividing by the std.
 % Remove some scaling noise, but also some signal...

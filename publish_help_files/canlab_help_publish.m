@@ -19,9 +19,9 @@ if ~exist(pubdir, 'dir'), mkdir(pubdir), end
 % ------------------------------------------------------------------------
 %pubfilename = fullfile(pubdir,
 
-p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 1600, ...
+p = struct('useNewFigure', false, 'maxHeight', 800, 'maxWidth', 800, ...
     'format', 'html', 'outputDir', pubdir, ...
-    'showCode', true);
+    'showCode', true, 'stylesheet', which('mxdom2simplehtml_CANlab.xsl'));
 
 publish(pubfilename, p)
 

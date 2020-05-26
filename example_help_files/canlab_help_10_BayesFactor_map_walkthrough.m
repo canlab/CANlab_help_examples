@@ -113,40 +113,6 @@ montage(BF_tstat_th);
 
 drawnow, snapnow
 
-%% Display areas of ambiguity
-% Often, there is not enough evidence to provide strong evidence either for
-% or against the null hypothesis. It is important to know whether we can
-% interpret non-significant regions, even cautiously, as showing no
-% effects.
-%
-% Failure to strong evidence either in favor of or against the null will
-% typically happen with small sample sizes. It will also happen when there
-% are large-scale shifts in statistic images, e.g., whole-brain activation
-% and/or contamination of contrast values with artifacts.
-%
-% Here, we show results with positive values in hot colors, evidence in
-% favor of the null in no color (just the underlay anatomical), and
-% ambiguous regions in gray shading.
-%
-% Here we see that we cannot really say that the data in any region supports the null
-% at a threshold of about 20:1 in favor of the null.
-
-BF_tstat_th = threshold(BF_tstat, [6 Inf], 'raw-between');
-
-r = region(BF_tstat_th); % Positive evidence
-o2 = montage(r, 'colormap');
-
-BF_tstat_th = threshold(BF_tstat, [-6 6], 'raw-between');
-r_ambiguous = region(BF_tstat_th); % Positive evidence
-
-o2 = addblobs(o2, r_ambiguous, 'color', [.2 .2 .2]);
-
-drawnow, snapnow
-
-
-
-%% Examples of Bayes Factor maps for other data types
-
 %% Compute correlations between regulate vs look and behavioral measure
 r=t; %initialize stats object from t-test output
 r.dat=corr(image_obj.dat',image_obj.Y); %replace data with simple correlation

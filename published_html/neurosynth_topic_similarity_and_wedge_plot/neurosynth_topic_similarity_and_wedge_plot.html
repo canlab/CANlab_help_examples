@@ -6,20 +6,20 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>neurosynth_topic_similarity_and_wedge_plot</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-08-02"><meta name="DC.source" content="neurosynth_topic_similarity_and_wedge_plot.m"><style type="text/css">
+      --><title>neurosynth_topic_similarity_and_wedge_plot</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-03-04"><meta name="DC.source" content="neurosynth_topic_similarity_and_wedge_plot.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
-html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
 html body td { vertical-align:top; text-align:left; }
 
-h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
-h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
-h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.8em; color:#2C2D92; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.4em; color:#363538; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#363538; font-weight:bold; line-height:140%; }
 
-a { color:#005fce; text-decoration:none; }
-a:hover { color:#005fce; text-decoration:underline; }
-a:visited { color:#004aa0; text-decoration:none; }
+a { color:#4B4BA8; text-decoration:none; }
+a:hover { color:#2AAFDF; text-decoration:underline; }
+a:visited { color:#4B4BA8; text-decoration:none; }
 
 p { padding:0px; margin:0px 0px 20px; }
 img { padding:0px; margin:0px 0px 20px; border:none; }
@@ -38,7 +38,7 @@ ol li ul li { list-style:square; }
 
 .content { font-size:1.2em; line-height:140%; padding: 20px; }
 
-pre, code { font-size:12px; }
+pre, code { font-size:14px; }
 tt { font-size: 1.2em; }
 pre { margin:0px 0px 20px; }
 pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
@@ -69,14 +69,28 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
   </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Run neurosynth similarity</a></li><li><a href="#3">Aggregate results for plot</a></li></ul></div><pre class="codeinput"><span class="comment">% test_dat = load_image_set('npsplus', 'noverbose');</span>
 <span class="comment">%  image_obj = get_wh_image(test_dat, 1);</span>
 
-test_dat = load_image_set(<span class="string">'emotionreg'</span>, <span class="string">'noverbose'</span>);
- image_obj = mean(test_dat);
+<span class="comment">% test_dat = load_image_set('emotionreg', 'noverbose');</span>
+<span class="comment">%  image_obj = mean(test_dat);</span>
 
+test_dat = load_image_set(<span class="string">'pain_pdm'</span>);
+image_obj = test_dat.get_wh_image(1);
 
-<span class="comment">% If data file is not found:</span>
+<span class="comment">% Note: You need the Neurosynth Feature Set 1 file</span>
+<span class="comment">% It can be found on Dropbox here. You need to add it to your matlab path</span>
+<span class="comment">% before you run this script.</span>
+<span class="comment">% https://www.dropbox.com/s/rgfymakk6whr06o/Yarkoni_2013_Neurosynth_featureset1.mat?dl=0</span>
+<span class="comment">% Download the linked file and put it in a folder on your Matlab path.</span>
+
+<span class="comment">% ALTERNATIVE:</span>
+<span class="comment">% If you have access to the CANLab data reposity google drive folder, the file is also here:</span>
 <span class="comment">% cd('/Users/tor/Google_Drive/CanlabDataRepository/Neuroimaging_Autolabeler')</span>
 <span class="comment">% g =genpath(pwd); addpath(g); savepath</span>
-</pre><h2 id="2">Run neurosynth similarity</h2><pre class="codeinput">[image_by_feature_correlations, top_feature_tables] = neurosynth_feature_labels( image_obj, <span class="string">'images_are_replicates'</span>, false, <span class="string">'noverbose'</span>);
+</pre><pre class="codeoutput">Direct calls to spm_defauts are deprecated.
+Please use spm('Defaults',modality) or spm_get_defaults instead.
+Loaded images:
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2020_Geuter_pain_multivariate_mediation_PDM/Geuter_2020_cPDM_combined_pain_map.nii
+/Users/torwager/Documents/GitHub/Neuroimaging_Pattern_Masks/Multivariate_signature_patterns/2020_Geuter_pain_multivariate_mediation_PDM/All_PDM10_unthresholded.nii
+</pre><h2 id="2">Run neurosynth similarity</h2><pre class="codeinput">[image_by_feature_correlations, top_feature_tables] = neurosynth_feature_labels(image_obj, <span class="string">'images_are_replicates'</span>, false, <span class="string">'noverbose'</span>);
 
 <span class="comment">% Example for NPS:</span>
 <span class="comment">%     testr_low      words_low      testr_high      words_high</span>
@@ -92,22 +106,51 @@ test_dat = load_image_set(<span class="string">'emotionreg'</span>, <span class=
 <span class="comment">%     -0.19202     'read'           0.23043       'somatosensory'</span>
 <span class="comment">%     -0.18744     'semantic'       0.22025       'temperature'</span>
 <span class="comment">%     -0.18732     'memory'         0.20817       'sensory'</span>
-</pre><pre class="codeoutput">Input image 1
-fullpath_was_empty
-_____________________________________________________________________
-    testr_low       words_low       testr_high     words_high 
-    _________    _______________    __________    ____________
 
-    -0.23326     'stimulation'        0.2495      'monitoring'
-    -0.19523     'frequency'         0.24703      'control'   
-    -0.17128     'noise'             0.24036      'memory'    
-    -0.16888     'male'              0.23539      'working'   
-    -0.15396     'adaptation'        0.22153      'demand'    
-    -0.15345     'female'            0.22031      'demands'   
-    -0.15209     'somatosensory'     0.21877      'executive' 
-    -0.15023     'images'            0.21601      'correct'   
-    -0.14991     'animal'            0.21213      'knowledge' 
-    -0.13918     'sensory'           0.19795      'conflict'  
+<span class="comment">% Example for cPDM:</span>
+<span class="comment">%     testr_low      words_low      testr_high      words_high</span>
+<span class="comment">%     _________    _____________    __________    _______________</span>
+<span class="comment">%</span>
+<span class="comment">%     -0.24189     'objects'         0.39314      'pain'</span>
+<span class="comment">%     -0.24171     'object'          0.37668      'sensation'</span>
+<span class="comment">%     -0.23679     'recognition'     0.36646      'painful'</span>
+<span class="comment">%     -0.23183     'memory'          0.36146      'stimulation'</span>
+<span class="comment">%     -0.20987     'intention'       0.34066      'heat'</span>
+<span class="comment">%     -0.19942     'judgment'          0.339      'noxious'</span>
+<span class="comment">%     -0.19696     'mental'          0.32824      'somatosensory'</span>
+<span class="comment">%     -0.18262     'familiar'        0.29334      'sensory'</span>
+<span class="comment">%      -0.1684     'grasping'         0.2716      'foot'</span>
+<span class="comment">%     -0.16751     'semantic'        0.26118      'muscle'</span>
+
+<span class="comment">%     testr_low       words_low       testr_high     words_high</span>
+<span class="comment">%     _________    _______________    __________    ____________</span>
+<span class="comment">%</span>
+<span class="comment">%     -0.23326     'stimulation'        0.2495      'monitoring'</span>
+<span class="comment">%     -0.19523     'frequency'         0.24703      'control'</span>
+<span class="comment">%     -0.17128     'noise'             0.24036      'memory'</span>
+<span class="comment">%     -0.16888     'male'              0.23539      'working'</span>
+<span class="comment">%     -0.15396     'adaptation'        0.22153      'demand'</span>
+<span class="comment">%     -0.15345     'female'            0.22031      'demands'</span>
+<span class="comment">%     -0.15209     'somatosensory'     0.21877      'executive'</span>
+<span class="comment">%     -0.15023     'images'            0.21601      'correct'</span>
+<span class="comment">%     -0.14991     'animal'            0.21213      'knowledge'</span>
+<span class="comment">%     -0.13918     'sensory'           0.19795      'conflict'</span>
+</pre><pre class="codeoutput">Input image 1
+./Geuter_2020_cPDM_combined_pain_map.nii,1
+_____________________________________________________________________
+    testr_low      words_low      testr_high      words_high   
+    _________    _____________    __________    _______________
+
+     -0.2431     'objects'         0.39582      'pain'         
+    -0.24298     'object'          0.37891      'sensation'    
+    -0.23797     'recognition'     0.36938      'painful'      
+    -0.23282     'memory'          0.36334      'stimulation'  
+    -0.21085     'intention'       0.34454      'heat'         
+     -0.2008     'judgment'        0.34224      'noxious'      
+    -0.19776     'mental'          0.33074      'somatosensory'
+    -0.18337     'familiar'        0.29565      'sensory'      
+    -0.16887     'grasping'        0.27363      'foot'         
+    -0.16822     'semantic'        0.26277      'muscle'       
 
 </pre><h2 id="3">Aggregate results for plot</h2><pre class="codeinput">lowwords = [top_feature_tables{1}.words_low(:)]';
 disp(lowwords)
@@ -122,19 +165,19 @@ r_to_plot = [r_high; r_low];
 textlabels = [ highwords lowwords];
 </pre><pre class="codeoutput">  Columns 1 through 5
 
-    'stimulation'    'frequency'    'noise'    'male'    'adaptation'
+    'objects'    'object'    'recognition'    'memory'    'intention'
 
   Columns 6 through 10
 
-    'female'    'somatosensory'    'images'    'animal'    'sensory'
+    'judgment'    'mental'    'familiar'    'grasping'    'semantic'
 
   Columns 1 through 6
 
-    'monitoring'    'control'    'memory'    'working'    'demand'    'demands'
+    'pain'    'sensation'    'painful'    'stimulation'    'heat'    'noxious'
 
   Columns 7 through 10
 
-    'executive'    'correct'    'knowledge'    'conflict'
+    'somatosensory'    'sensory'    'foot'    'muscle'
 
 </pre><pre class="codeinput">create_figure(<span class="string">'wedge_plot'</span>);
 
@@ -146,17 +189,27 @@ hh = tor_wedge_plot(r_to_plot, textlabels, <span class="string">'outer_circle_ra
 % test_dat = load_image_set('npsplus', 'noverbose');
 %  image_obj = get_wh_image(test_dat, 1);
 
-test_dat = load_image_set('emotionreg', 'noverbose');
- image_obj = mean(test_dat);
+% test_dat = load_image_set('emotionreg', 'noverbose');
+%  image_obj = mean(test_dat);
+ 
+test_dat = load_image_set('pain_pdm');
+image_obj = test_dat.get_wh_image(1);
 
+% Note: You need the Neurosynth Feature Set 1 file
+% It can be found on Dropbox here. You need to add it to your matlab path
+% before you run this script.
+% https://www.dropbox.com/s/rgfymakk6whr06o/Yarkoni_2013_Neurosynth_featureset1.mat?dl=0
+% Download the linked file and put it in a folder on your Matlab path.
 
-% If data file is not found:
+% ALTERNATIVE:
+% If you have access to the CANLab data reposity google drive folder, the file is also here:
 % cd('/Users/tor/Google_Drive/CanlabDataRepository/Neuroimaging_Autolabeler')
 % g =genpath(pwd); addpath(g); savepath
 
+
 %% Run neurosynth similarity
 
-[image_by_feature_correlations, top_feature_tables] = neurosynth_feature_labels( image_obj, 'images_are_replicates', false, 'noverbose');
+[image_by_feature_correlations, top_feature_tables] = neurosynth_feature_labels(image_obj, 'images_are_replicates', false, 'noverbose');
 
 % Example for NPS: 
 %     testr_low      words_low      testr_high      words_high   
@@ -172,6 +225,36 @@ test_dat = load_image_set('emotionreg', 'noverbose');
 %     -0.19202     'read'           0.23043       'somatosensory'
 %     -0.18744     'semantic'       0.22025       'temperature'  
 %     -0.18732     'memory'         0.20817       'sensory'      
+
+% Example for cPDM:
+%     testr_low      words_low      testr_high      words_high   
+%     _________    _____________    __________    _______________
+% 
+%     -0.24189     'objects'         0.39314      'pain'         
+%     -0.24171     'object'          0.37668      'sensation'    
+%     -0.23679     'recognition'     0.36646      'painful'      
+%     -0.23183     'memory'          0.36146      'stimulation'  
+%     -0.20987     'intention'       0.34066      'heat'         
+%     -0.19942     'judgment'          0.339      'noxious'      
+%     -0.19696     'mental'          0.32824      'somatosensory'
+%     -0.18262     'familiar'        0.29334      'sensory'      
+%      -0.1684     'grasping'         0.2716      'foot'         
+%     -0.16751     'semantic'        0.26118      'muscle'  
+    
+%     testr_low       words_low       testr_high     words_high 
+%     _________    _______________    __________    ____________
+% 
+%     -0.23326     'stimulation'        0.2495      'monitoring'
+%     -0.19523     'frequency'         0.24703      'control'   
+%     -0.17128     'noise'             0.24036      'memory'    
+%     -0.16888     'male'              0.23539      'working'   
+%     -0.15396     'adaptation'        0.22153      'demand'    
+%     -0.15345     'female'            0.22031      'demands'   
+%     -0.15209     'somatosensory'     0.21877      'executive' 
+%     -0.15023     'images'            0.21601      'correct'   
+%     -0.14991     'animal'            0.21213      'knowledge' 
+%     -0.13918     'sensory'           0.19795      'conflict' 
+
 
 %% Aggregate results for plot
 

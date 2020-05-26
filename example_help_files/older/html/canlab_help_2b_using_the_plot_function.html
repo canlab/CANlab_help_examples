@@ -1,0 +1,370 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>canlab_help_2b_using_the_plot_function</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-01-11"><meta name="DC.source" content="canlab_help_2b_using_the_plot_function.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Using the Plot and Orthviews Functions to Examine a Dataset</a></li><li><a href="#3">Explaining the output</a></li><li><a href="#4">Use Orthviews to visualize the mean image</a></li><li><a href="#5">Use montage to visualize the mean image</a></li><li><a href="#6">Explore on your own</a></li></ul></div><h2 id="1">Using the Plot and Orthviews Functions to Examine a Dataset</h2><p>Objects can have methods with intuitive names, some of which overlap with names of functions in Matlab or other toolboxes. fmri_data.plot() is one of these. When you call plot() and pass in an fmri_data object, you invoke the fmri_data object method, and a special plot for fmri_data objects is produced.</p><p>You can list methods for an object class (e.g., fmri_data) by typing:</p><p><tt>methods(fmri_data)</tt></p><p>You can get help for a method by typing <tt>help <a href="object">class name</a>.&lt;method name&gt;</tt> e.g., <tt>help fmri_data.plot</tt></p><p>The plot() method takes an fMRI data object as a parameter and produces an SPM Orthview presentation along with 6 plots of the data.</p><p>The plot method expects an fMRI data object to be passed in. We can create an fMRI data object using the emotion regulation dataset via the following code:</p><pre class="codeinput">[image_obj, networknames, imagenames] = load_image_set(<span class="string">'emotionreg'</span>, <span class="string">'noverbose'</span>);
+</pre><p>Once created, we can pass this data object to the plot function to get the entire set of outputs, including Matlab console output regarding outliers and corresponding data visualizations, using the simple command:</p><pre class="codeinput">plot(image_obj);
+</pre><pre class="codeoutput">Calculating mahalanobis distances to identify extreme-valued images
+Retained 8 components for mahalanobis distance
+Expected 50% of points within 50% normal ellipsoid, found 46.67%
+Expected 1.50 outside 95% ellipsoid, found   1
+
+Potential outliers based on mahalanobis distance:
+Bonferroni corrected: 0 images		Cases  
+Uncorrected: 1 images		Cases 27 
+
+Outliers:
+Outliers after p-value correction:
+Image numbers:  
+
+Image numbers, uncorrected: 27 
+Warning: Ignoring extra legend entries. 
+Grouping contiguous voxels:   1 regions
+Grouping contiguous voxels:   1 regions
+Grouping contiguous voxels:   1 regions
+</pre><img vspace="5" hspace="5" src="canlab_help_2b_using_the_plot_function_01.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_2b_using_the_plot_function_02.png" alt=""> <h2 id="3">Explaining the output</h2><p>The help file for fmri_data.plot did object has more information about the plots:</p><p>e.g., <tt>help fmri_data.plot</tt></p><p>e.g., <tt>help image_obj.plot</tt></p><pre class="codeinput">help <span class="string">fmri_data.plot</span>
+</pre><pre class="codeoutput">  Plot means by condition
+  plot(fmri_data_object, 'means_for_unique_Y')
+ 
+  :Inputs:
+      Plot methods:
+         - plot data matrix
+         - plot(fmri_data_object)
+ 
+  :Usage:
+  ::
+ 
+     plot(fmridat, [plotmethod])
+ 
+  :Outputs:
+ 
+  6 plots and an SPM orthviews presentation of the data.  In the below
+  and elsewhere, "image" connotes a 3D brain volume captured every TR.
+ 
+    **subplot 1:**
+          Data matrix (top left). Also called a "carpet plot" in neuroimaging.
+          The color reflects the intensity of signal in each voxel (column)
+          for each image (row). 
+          Here you can look for images that are bright or dark across 
+          the image, which would indicate a global shift in values or difference
+          in scale across the images (rows).  
+          These can be produced by artifacts that are broadly spatially distributed,
+          or by scanner drift. Most datasets have some of these. 
+          This plot can also show that the pattern across voxels in one row (image)
+          may be different than another, highlighting a difference in the spatial pattern.
+          If you are plotting a time series dataset from one participant, unusual images
+          could result from physiological noise, head movement, or other
+          scanner artifacts. They could reflect after-effects of non-linear
+          interactions across these, or a change in the images after a
+          participant has moved their head to a new position.
+          If you are plotting a group dataset with one contrast image per
+          participant (i.e., what you would subject to a group analysis),
+          standard statistical assumptions include that observations
+          (participants) are all on the same scale, with the same variance.
+          It is common for these assumptions to be violated, and you can
+          sometimes see these violations here.
+          Lastly, the range shown in the color bar on the right side of this plot 
+          will be quite large if there are large outliers in the data. 
+          The units are in contrast unit values, but it is important to check if a 
+          few extreme values are forcing all other values to be in the middle of the scale. 
+          In this case, there will be very little color variation in the plot, which is a 
+          "red flag" indicating outliers or extreme values.
+          Other plots show you different representations of this dataset,
+          in ways that make it easier to see some of its properties.
+ 
+    **subplots 2 and 3:**
+          Covariance and Correlation Matrices (Top Middle/Top Left): 
+          These plots both show similarity across images. Both should show bright main 
+          diagonals and off-diagonals that are non zero or generally positive, depending 
+          on the dataset.
+        
+          Covariance Matrix:   $\frac{{X}'X}{n-1}$, X is mean-centered, n is number of rows in X
+          The diagonal reflects the image variance, shows whether the variances 
+          of each image are equal. If the variances are all of approximately the same scale, 
+          the diagonal will be a single color. 
+ 
+         Correlation Matrix $\frac{{X}'X}{n-1}$, colums of X are Z-scored, n is number of rows in X
+         This plot shows the correlation between each image and the others. 
+         Now, the main diagonal will always be one because each image is 
+         perfectly correlated with itself. The off-diagonals should be positive 
+         if the images are similar to one another.
+ 
+    **subplot 4:**
+          Histogram (Bottom Left): A histogram of values across all images and voxels. 
+          Depending on your input images, low values could reflect out-of-brain voxels, 
+          as there is no signal there. Values of exactly 0 are excluded as missing data
+          in all image operations.
+          For a group dataset (e.g., contrast images), it is expected that 
+          the distribution of contrast values will have roughly mean 0. 
+          There are other tools for looking at this distribution for each individual
+          image in the dataset, and each image x tissue type (assuming
+          MNI-space images). See help fmri_data.histogram.
+ 
+    **subplot 5:**
+          The Global Mean Values (Bottom Middle) for each image. 
+          The means ought to be similar to one another. Ideally, these means 
+          will all be in a similar range. The error bars show one standard deviation.
+          each point is an image.  The point's X value is the mean
+          intensity of every voxel in that image, and the Y value is the
+          stdev of intensities for all voxels in that image.
+ 
+    **subplot 6:**
+          Mahalanobis Distance (Bottom Right) is a measure of how far away each 
+          image is from the rest in the sample. This a standard measure of multivariate
+          distance for each of a set of multivariate observations (here, images).
+          The larger the distance, the more dissimilar it is from other images. 
+          High values generally indicate extreme values/potential outliers, but 
+          in any normally distributed dataset, there are going to be some values 
+          that lie farther out. Also note that what to do about extreme values
+          can be complex, and there is much discussion about how to handle
+          them.
+ 
+          Potential outliers are identified using fmri_data.mahal.
+          To identify outliers, we assume that the points are distributed according 
+          to a chi-square distribution. The expected distance is based on multivariate 
+          normally distributed data for the percentile of the dataset that corresponds 
+          to each image. even the most extreme values may not be greater than what 
+          one expects by chance. The analysis produces p-values at uncorrected and 
+          Bonferroni-corrected levels, and any image that is marked as an outlier 
+          is one that exceeds the expected value with a p-value of less than 0.05. 
+          Those will be marked in darker red. Anything considered to be an outlier with 
+          p &lt; 0.05 Bonferroni corrected will be marked with an even darker red. 
+          The outliers from this plot are returned to the workspace as output.
+          Note: Outlier identification here does not use global values, only Mahalanobis distance.   
+ 
+    **Orthviews:**
+         SPM Orthviews: These use the spm_orthviews function from SPM software.  
+         The X,Y, and Z coordinates correspond to the distance in millimeters 
+         from the set origin. Three images are shown:
+         - The mean image is the voxel-wise average across images in the dataset
+         - The STD image is the voxel-wise standard deviation across images in the dataset
+         - The mean/STD image is a simple estimate of effect size (Cohen's D) for every voxel. 
+           If a contrast with one image per person is passed to plot(), this plot gives you 
+           the effect size in a simple group analysis (e.g., one-sample t-test) across 
+           the brain. It is reasonable to use this plot to look for distortions such as high values for means and mean/STDs in the ventricles.
+
+</pre><h2 id="4">Use Orthviews to visualize the mean image</h2><p>Some other commonly used methods to display images are the orthviews() and montage() methods. fmri_data objects have these methods, and other object classes do to, like the statistic_image, atlas, and region classes.</p><p>First, let's create a mean image for the dataset:</p><pre class="codeinput">m = mean(image_obj);
+orthviews(m)
+
+<span class="comment">% Now, let's threshold it using the threshold() method.</span>
+<span class="comment">% Here we'll exclude values between -1 and 1 and view the extreme values:</span>
+
+m = threshold(m, [-1 1], <span class="string">'raw-outside'</span>);
+orthviews(m)
+
+<span class="comment">% We can create a region class object, another type of object, from the</span>
+<span class="comment">% thresholded image. This has additional info and options about each</span>
+<span class="comment">% contiguous 'blob' in the suprathreshold map:</span>
+
+r = region(m);
+orthviews(r)
+</pre><pre class="codeoutput">Grouping contiguous voxels:   1 regions
+
+ans =
+
+  1&times;1 cell array
+
+    {1&times;1 region}
+
+Keeping vals outside of -1.000 to 1.000: 1428 elements remain
+Grouping contiguous voxels:  22 regions
+
+ans =
+
+  1&times;1 cell array
+
+    {1&times;22 region}
+
+Grouping contiguous voxels:  22 regions
+</pre><img vspace="5" hspace="5" src="canlab_help_2b_using_the_plot_function_03.png" alt=""> <h2 id="5">Use montage to visualize the mean image</h2><p>Sometimes, we want to view map that shows a canonical range of slices. This is really useful for producing standard output for papers Arguably, one should <b>always</b> view and publish montage maps showing all slices, so as to show the "whole picture" and not omit any results.</p><p>You can customize this a lot, as it uses the fmridisplay() object class, which allows you to add custom montages (in axial, saggital, and coronal orientations, add blobs of various types, and remove them and re-plot. See <tt>help fmridisplay</tt> and <tt>help fmridisplay.addblobs</tt> for more details.</p><p>For now, we'll just stick to a basic plot:</p><pre class="codeinput">montage(m)
+
+<span class="comment">% We've already thresholded it, so it'll use the previous threshold.</span>
+<span class="comment">% however, we can re-threshold the image and redisplay it as well.</span>
+</pre><pre class="codeoutput">Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
+Grouping contiguous voxels:  22 regions
+sagittal montage:  64 voxels displayed, 1364 not displayed on these slices
+sagittal montage: 120 voxels displayed, 1308 not displayed on these slices
+sagittal montage: 145 voxels displayed, 1283 not displayed on these slices
+axial montage: 346 voxels displayed, 1082 not displayed on these slices
+axial montage: 470 voxels displayed, 958 not displayed on these slices
+
+ans = 
+
+  fmridisplay with properties:
+
+            overlay: '/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img'
+              SPACE: [1&times;1 struct]
+    activation_maps: {[1&times;1 struct]}
+            montage: {1&times;5 cell}
+            surface: {}
+          orthviews: {}
+            history: {}
+    history_descrip: []
+    additional_info: ''
+
+</pre><img vspace="5" hspace="5" src="canlab_help_2b_using_the_plot_function_04.png" alt=""> <h2 id="6">Explore on your own</h2><p>1. Try to create a  Look at the help for more info. What do you see? Can you return any meaningful output, and if so, what did the method do?</p><pre class="codeinput"><span class="comment">% That's it for this section!!</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Using the Plot and Orthviews Functions to Examine a Dataset
+%
+% Objects can have methods with intuitive names, some of which overlap
+% with names of functions in Matlab or other toolboxes. fmri_data.plot()
+% is one of these. When you call plot() and pass in an fmri_data object, 
+% you invoke the fmri_data object method, and a special plot for fmri_data
+% objects is produced. 
+%
+% You can list methods for an object class (e.g., fmri_data) by typing:
+%
+% |methods(fmri_data)|
+%
+% You can get help for a method by typing
+% |help <object class name>.<method name>| 
+% e.g., |help fmri_data.plot|
+%
+% The plot() method takes an fMRI data object as a parameter and produces 
+% an SPM Orthview presentation along with 6 plots of the data.
+%
+% The plot method expects an fMRI data object to be passed in. We can
+% create an fMRI data object using the emotion regulation dataset
+% via the following code:
+
+[image_obj, networknames, imagenames] = load_image_set('emotionreg', 'noverbose');
+
+%%
+% Once created, we can pass this data object to the plot function to get
+% the entire set of outputs, including Matlab console output regarding
+% outliers and corresponding data visualizations, using the simple command:
+
+plot(image_obj);
+
+%% Explaining the output
+% 
+% The help file for fmri_data.plot did object has more information about the plots:
+%
+% e.g., |help fmri_data.plot|
+%
+% e.g., |help image_obj.plot|
+
+help fmri_data.plot
+
+%% Use Orthviews to visualize the mean image
+%
+% Some other commonly used methods to display images are the orthviews()
+% and montage() methods. fmri_data objects have these methods, and other
+% object classes do to, like the statistic_image, atlas, and region
+% classes.
+%
+% First, let's create a mean image for the dataset:
+
+m = mean(image_obj);
+orthviews(m)
+
+% Now, let's threshold it using the threshold() method.
+% Here we'll exclude values between -1 and 1 and view the extreme values:
+
+m = threshold(m, [-1 1], 'raw-outside');
+orthviews(m)
+
+% We can create a region class object, another type of object, from the
+% thresholded image. This has additional info and options about each
+% contiguous 'blob' in the suprathreshold map:
+
+r = region(m);
+orthviews(r)
+
+
+%% Use montage to visualize the mean image
+% 
+% Sometimes, we want to view map that shows a canonical range of slices.
+% This is really useful for producing standard output for papers
+% Arguably, one should *always* view and publish montage maps showing all
+% slices, so as to show the "whole picture" and not omit any results.
+%
+% You can customize this a lot, as it uses the fmridisplay() object class,
+% which allows you to add custom montages (in axial, saggital, and coronal 
+% orientations, add blobs of various types, and remove them and re-plot.
+% See |help fmridisplay| and |help fmridisplay.addblobs| for more details.
+%
+% For now, we'll just stick to a basic plot:
+
+montage(m)
+
+% We've already thresholded it, so it'll use the previous threshold.
+% however, we can re-threshold the image and redisplay it as well.
+
+
+%% Explore on your own
+%
+% 1. Try to create a  Look at the help for more
+% info. What do you see? Can you return any meaningful output, and if so,
+% what did the method do?
+% 
+
+% That's it for this section!!
+##### SOURCE END #####
+--></body></html>

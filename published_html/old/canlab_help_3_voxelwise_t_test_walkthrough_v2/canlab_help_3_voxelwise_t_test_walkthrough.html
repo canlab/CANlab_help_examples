@@ -6,20 +6,20 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Perform a voxel-wise t-test</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-02-12"><meta name="DC.source" content="canlab_help_3_voxelwise_t_test_walkthrough.m"><style type="text/css">
+      --><title>Perform a voxel-wise t-test</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-08-02"><meta name="DC.source" content="canlab_help_3_voxelwise_t_test_walkthrough.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
-html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
 html body td { vertical-align:top; text-align:left; }
 
-h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.8em; color:#2C2D92; line-height:100%; font-weight:normal; }
-h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.4em; color:#363538; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
-h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#363538; font-weight:bold; line-height:140%; }
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
 
-a { color:#4B4BA8; text-decoration:none; }
-a:hover { color:#2AAFDF; text-decoration:underline; }
-a:visited { color:#4B4BA8; text-decoration:none; }
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
 
 p { padding:0px; margin:0px 0px 20px; }
 img { padding:0px; margin:0px 0px 20px; border:none; }
@@ -38,7 +38,7 @@ ol li ul li { list-style:square; }
 
 .content { font-size:1.2em; line-height:140%; padding: 20px; }
 
-pre, code { font-size:14px; }
+pre, code { font-size:12px; }
 tt { font-size: 1.2em; }
 pre { margin:0px 0px 20px; }
 pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
@@ -66,14 +66,14 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Perform a voxel-wise t-test</h1><!--introduction--><p>In this example we perform a second level analysis on first level statistical parametric maps. Specifically we use a t-test to obtain an ordinary least squares estimate for the group level parameter.</p><p>The example uses the emotion regulation data provided with CANlab_Core_Tools. This dataset consists of a set of contrast images for 30 subjects from a first level analysis. The contrast is [reappraise neg vs. look neg], reappraisal of negative images vs. looking at matched negative images.</p><p>These data were published in: Wager, T. D., Davidson, M. L., Hughes, B. L., Lindquist, M. A., Ochsner, K. N.. (2008). Prefrontal-subcortical pathways mediating successful emotion regulation. Neuron, 59, 1037-50.</p><p>By the end of this example we will have regenerated the results of figure 2A of this paper.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Executive summary of the whole analysis</a></li><li><a href="#2">Load sample data</a></li><li><a href="#3">Do a t-test</a></li><li><a href="#4">Visualize the results</a></li><li><a href="#5">Print a table of results</a></li><li><a href="#6">More on getting help</a></li><li><a href="#7">Write the t-map to disk</a></li><li><a href="#8">Explore on your own</a></li><li><a href="#9">Explore More: CANlab Toolboxes</a></li></ul></div><h2 id="1">Executive summary of the whole analysis</h2><p>As a summary, here is a complete set of commands to load the data and run the entire analysis:</p><pre>   img_obj = load_image_set('emotionreg');         % Load a dataset
+  </style></head><body><div class="content"><h1>Perform a voxel-wise t-test</h1><!--introduction--><p>Edited/commented by Bogdan Petre on 9/14/2016, Tor Wager July 2018</p><p>In this example we perform a second level analysis on first level statistical parametric maps. Specifically we use a t-test to obtain an ordinary least squares estimate for the group level parameter.</p><p>The example uses the emotion regulation data provided with CANlab_Core_Tools. This dataset consists of a set of contrast images for 30 subjects from a first level analysis. The contrast is [reappraise neg vs. look neg], reappraisal of negative images vs. looking at matched negative images.</p><p>These data were published in: Wager, T. D., Davidson, M. L., Hughes, B. L., Lindquist, M. A., Ochsner, K. N.. (2008). Prefrontal-subcortical pathways mediating successful emotion regulation. Neuron, 59, 1037-50.</p><p>By the end of this example we will have regenerated the results of figure 2A of this paper.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Executive summary of the whole analysis</a></li><li><a href="#2">Load sample data</a></li><li><a href="#3">Do a t-test</a></li><li><a href="#4">Visualize the results</a></li><li><a href="#5">Print a table of results</a></li><li><a href="#6">Write the t-map to disk</a></li></ul></div><h2 id="1">Executive summary of the whole analysis</h2><p>As a summary, here is a complete set of commands to load the data and run the entire analysis:</p><pre>   img_obj = load_image_set('emotionreg');         % Load a dataset
    t = ttest(img_obj);                             % Do a group t-test
    t = threshold(t, .05, 'fdr', 'k', 10);          % Threshold with FDR q &lt; .05 and extent threshold of 10 contiguous voxels</pre><pre>   % Show regions and print a table with labeled regions:
    montage(t);  drawnow, snapnow;                  % Show results on a slice display
    r = region(t);                                  % Turn t-map into a region object with one element per contig region
-   table(r);                                       % Print a table of results using new region names</pre><p>Here a graphical description of what it does:</p><p><img vspace="5" hspace="5" src="CANlab_ttest_flowchart.png" alt=""> </p><p>Now, let's walk through it step by step, with a few minor additions.</p><h2 id="2">Load sample data</h2><pre class="codeinput"><span class="comment">% We can load this data using load_image_set(), which produces an fmri_data</span>
+   table(r);                                       % Print a table of results using new region names</pre><p>Now, let's walk through it step by step.</p><h2 id="2">Load sample data</h2><pre class="codeinput"><span class="comment">% We can load this data using load_image_set(), which produces an fmri_data</span>
 <span class="comment">% object. Data loading exceeds the scope of this tutorial, but a more</span>
-<span class="comment">% indepth demonstration may be provided by load_a_sample_dataset.m</span>
+<span class="comment">% indepth demosntration may be provided by load_a_sample_dataset.m</span>
 
 [image_obj, networknames, imagenames] = load_image_set(<span class="string">'emotionreg'</span>);
 </pre><pre class="codeoutput">Loaded images:
@@ -150,6 +150,10 @@ create_figure(<span class="string">'montage'</span>); axis <span class="string">
 montage(t)
 drawnow, snapnow;
 </pre><pre class="codeoutput">
+SPM12: spm_check_registration (v6245)              23:49:08 - 02/08/2018
+========================================================================
+Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
+
 ans =
 
   1&times;1 cell array
@@ -162,6 +166,10 @@ Image   1
  27 contig. clusters, sizes   1 to 1472
 Positive effect: 2502 voxels, min p-value: 0.00000000
 Negative effect:  37 voxels, min p-value: 0.00022793
+
+SPM12: spm_check_registration (v6245)              23:49:11 - 02/08/2018
+========================================================================
+Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
 
 ans =
 
@@ -176,6 +184,10 @@ Image   1
 Positive effect: 2460 voxels, min p-value: 0.00000000
 Negative effect:  32 voxels, min p-value: 0.00022793
 
+SPM12: spm_check_registration (v6245)              23:49:13 - 02/08/2018
+========================================================================
+Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
+
 ans =
 
   1&times;1 cell array
@@ -183,6 +195,7 @@ ans =
     {1&times;9 struct}
 
 </pre><img vspace="5" hspace="5" src="canlab_help_3_voxelwise_t_test_walkthrough_03.png" alt=""> <pre class="codeoutput">Setting up fmridisplay objects
+This takes a lot of memory, and can hang if you have too little.
 Grouping contiguous voxels:   9 regions
 sagittal montage:  31 voxels displayed, 2461 not displayed on these slices
 sagittal montage:  97 voxels displayed, 2395 not displayed on these slices
@@ -209,7 +222,7 @@ ans =
 <span class="comment">% voxels). It does many things that other object types do, and inter-operates</span>
 <span class="comment">% with them closely.  See methods(region) for more info.</span>
 
-<span class="comment">% Create a region object called "r", with contiguous blobs from the</span>
+<span class="comment">% Create a region objecft called "r", with contiguous blobs from the</span>
 <span class="comment">% thresholded t-map:</span>
 
 r = region(t);
@@ -217,6 +230,13 @@ r = region(t);
 <span class="comment">% Print the table:</span>
 
 table(r);
+
+<span class="comment">% You can get help and options for any object method, like "table". But</span>
+<span class="comment">% because the method names are simple and often overlap with other Matlab functions</span>
+<span class="comment">% and toolboxes (this is OK for objects!), you will often want to specify</span>
+<span class="comment">% the object type as well, as follows:</span>
+
+help <span class="string">region.table</span>
 </pre><pre class="codeoutput">Grouping contiguous voxels:   9 regions
 
 ____________________________________________________________________________________________________________________________________________
@@ -298,21 +318,74 @@ Humans. Evidence from Functional Magnetic Resonance Imaging.? Pain 114 (3):397?4
                                                                                                      
 Note: Region object r(i).title contains full list of reference atlas regions covered by each cluster.
 ____________________________________________________________________________________________________________________________________________
-</pre><h2 id="6">More on getting help</h2><pre class="codeinput"><span class="comment">% Help info is available on https://canlab.github.io/</span>
-<span class="comment">% and in the CANlab help examples repository: https://github.com/canlab/CANlab_help_examples</span>
-<span class="comment">% This contains a series of walkthroughs, including this one.</span>
+  Print a table of all regions in a region object (cl). Return labeled
+  clusters (separated by those with positive and negative peak values) and
+  a Matlab table object with the relevant information.
+ 
+  :Usage:
+  ::
+ 
+     [poscl, negcl] = table(cl, [optional inputs])
+ 
+  :Optional inputs:
+ 
+    **k:**
+         Print only regions with k or more contiguous voxels
+ 
+    **nosep:**
+         do not separate cl with pos and neg effects based on peak in .val
+ 
+    **names:**
+         name clusters manually before printing to table and output; saves in .shorttitle field
+ 
+    **forcenames:**
+         force manual naming of cl by removing existing names in .shorttitle field
+ 
+  :Outputs:
+ 
+    Returns region objects for cl with pos and neg effects
+    - autolabeled if Neuroimaging_Pattern_Masks and atlas tools are available on Matlab path
+    - limited by size if entered
+    - manually named if requested (see optional inputs)
+ 
+  ..
+      Author and copyright information:
+ 
+      Copyright (C) 2011  Tor Wager
+ 
+      This program is free software: you can redistribute it and/or modify
+      it under the terms of the GNU General Public License as published by
+      the Free Software Foundation, either version 3 of the License, or
+      (at your option) any later version.
+ 
+      This program is distributed in the hope that it will be useful,
+      but WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      GNU General Public License for more details.
+ 
+      You should have received a copy of the GNU General Public License
+      along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+  ..
+  :Examples:
+  -------------------------------------------------------------------------
+  ::
+  Example 1:
+  % Complete group analysis of a standard dataset
+  % Do analysis and prep results region object:
+ 
+    img_obj = load_image_set('emotionreg');         % Load a dataset
+    t = ttest(img_obj, .005, 'unc');                % Do a group t-test
+    t = threshold(t, .005, 'unc', 'k', 10);         % Re-threshold with extent threshold of 10 contiguous voxels
+    r = region(t);                                  % Turn t-map into a region object with one element per contig region
+ 
+    Label regions and print a table:
+    [r, region_table, table_legend_text] = autolabel_regions_using_atlas(r);  
+                                                    % Label regions. Can be skipped because 'table' below attempts to do this automatically
+    table(r);                                       % Print a table of results using new region names
+ 
+    [rpos, rneg] = table(r);                        % Print and table and return region object separated into regions with positive vs. negative statistic values (from .Z field)
 
-<span class="comment">% You can get help for the main object types by typing this in Matlab:</span>
-<span class="comment">% doc fmri_data (or doc any other object types)</span>
-
-<span class="comment">% Also, more detailed help is available for each function using the "help" command.</span>
-<span class="comment">% You can get help and options for any object method, like "table". But</span>
-<span class="comment">% because the method names are simple and often overlap with other Matlab functions</span>
-<span class="comment">% and toolboxes (this is OK for objects!), you will often want to specify</span>
-<span class="comment">% the object type as well, as follows:</span>
-
-<span class="comment">% help region.table</span>
-</pre><h2 id="7">Write the t-map to disk</h2><pre class="codeinput"><span class="comment">% Now we need to save our results. You can save the objects in your</span>
+</pre><h2 id="6">Write the t-map to disk</h2><pre class="codeinput"><span class="comment">% Now we need to save our results. You can save the objects in your</span>
 <span class="comment">% workspace or you can write your resulting thresholded map to an analyze</span>
 <span class="comment">% file. The latter may be useful for generating surface projections using</span>
 <span class="comment">% Caret or FreeSurfer for instance.</span>
@@ -330,59 +403,27 @@ write(t, <span class="string">'thresh'</span>)
 t_reloaded = statistic_image(t.fullpath, <span class="string">'type'</span>, <span class="string">'generic'</span>);
 orthviews(t_reloaded)
 </pre><pre class="codeoutput">Writing: 
-/Users/torwager/Dropbox (Dartmouth College)/A2_IN_PREP/2020_Ceko_MPA1_MPA2_PainMem_B_AVERSIVE/Analysis/MPA2_EXP/example_t_image.nii
-</pre><pre class="codeoutput error">Error using image_vector/write (line 79)
-write() error: File already exists. Use 'overwrite' option to force overwrite.
+/Users/torwager/Documents/GitHub/Test_mediation/example_t_image.nii
+Writing thresholded statistic image.
+Writing: 
+/Users/torwager/Documents/GitHub/Test_mediation/example_t_image.nii
 
-Error in canlab_help_3_voxelwise_t_test_walkthrough (line 143)
-write(t, 'thresh')
+SPM12: spm_check_registration (v6245)              23:49:26 - 02/08/2018
+========================================================================
+Display &lt;a href="matlab:spm_image('display','/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1');"&gt;/Users/torwager/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/keuken_2014_enhanced_for_underlay.img,1&lt;/a&gt;
+Displaying image   1, 2492 voxels: example_t_image.nii
 
-Error in evalmxdom&gt;instrumentAndRun (line 115)
-text = evalc(evalstr);
+ans =
 
-Error in evalmxdom (line 21)
-[data,text,laste] = instrumentAndRun(file,cellBoundaries,imageDir,imagePrefix,options);
+  1&times;1 cell array
 
-Error in publish
+    {1&times;9 struct}
 
-Error in canlab_help_publish (line 26)
-publish(pubfilename, p)
-
-Error in untitled3 (line 3)
-canlab_help_publish('canlab_help_3_voxelwise_t_test_walkthrough')
-</pre><h2 id="8">Explore on your own</h2><p>1. Click around the thresholded statistic image. What lobes of the brain are most of the results in? What can we say about areas that are not active, if anything?</p><p>2. Why might some of the results appear to be outside the brain? What does this mean for the validity of the analysis? Should we consider these areas in our interpretation, or should they be "masked out" (excluded)?</p><p>That's it for this section!!</p><h2 id="9">Explore More: CANlab Toolboxes</h2><p>Tutorials, overview, and help: <a href="https://canlab.github.io">https://canlab.github.io</a></p><p>Toolboxes and image repositories on github: <a href="https://github.com/canlab">https://github.com/canlab</a></p><p>
-<table border=1><tr>
-<td>CANlab Core Tools</td>
-<td><a href="https://github.com/canlab/CanlabCore">https://github.com/canlab/CanlabCore</a></td></tr>
-<td>CANlab Neuroimaging_Pattern_Masks repository</td>
-<td><a href="https://github.com/canlab/Neuroimaging_Pattern_Masks">https://github.com/canlab/Neuroimaging_Pattern_Masks</a></td></tr>
-<td>CANlab_help_examples</td>
-<td><a href="https://github.com/canlab/CANlab_help_examples">https://github.com/canlab/CANlab_help_examples</a></td></tr>
-<td>M3 Multilevel mediation toolbox</td>
-<td><a href="https://github.com/canlab/MediationToolbox">https://github.com/canlab/MediationToolbox</a></td></tr>
-<td>M3 CANlab robust regression toolbox</td>
-<td><a href="https://github.com/canlab/RobustToolbox">https://github.com/canlab/RobustToolbox</a></td></tr>
-<td>M3 MKDA coordinate-based meta-analysis toolbox</td>
-<td><a href="https://github.com/canlab/Canlab_MKDA_MetaAnalysis">https://github.com/canlab/Canlab_MKDA_MetaAnalysis</a></td></tr>
-</table>
-</p><p>Here are some other useful CANlab-associated resources:</p><p>
-<table border=1><tr>
-<td>Paradigms_Public - CANlab experimental paradigms</td>
-<td><a href="https://github.com/canlab/Paradigms_Public">https://github.com/canlab/Paradigms_Public</a></td></tr>
-<td>FMRI_simulations - brain movies, effect size/power</td>
-<td><a href="https://github.com/canlab/FMRI_simulations">https://github.com/canlab/FMRI_simulations</a></td></tr>
-<td>CANlab_data_public - Published datasets</td>
-<td><a href="https://github.com/canlab/CANlab_data_public">https://github.com/canlab/CANlab_data_public</a></td></tr>
-<td>M3 Neurosynth: Tal Yarkoni</td>
-<td><a href="https://github.com/neurosynth/neurosynth">https://github.com/neurosynth/neurosynth</a></td></tr>
-<td>M3 DCC - Martin Lindquist's dynamic correlation tbx</td>
-<td><a href="https://github.com/canlab/Lindquist_Dynamic_Correlation">https://github.com/canlab/Lindquist_Dynamic_Correlation</a></td></tr>
-<td>M3 CanlabScripts - in-lab Matlab/python/bash</td>
-<td><a href="https://github.com/canlab/CanlabScripts">https://github.com/canlab/CanlabScripts</a></td></tr>
-</table>
-</p><p><b>Object-oriented, interactive approach</b> The core basis for interacting with CANlab tools is through object-oriented framework. A simple set of neuroimaging data-specific objects (or <i>classes</i>) allows you to perform <b>interactive analysis</b> using simple commands (called <i>methods</i>) that operate on objects.</p><p>Map of core object classes:</p><p><img vspace="5" hspace="5" src="CANlab_object_types_flowchart.png" alt=""> </p><p>% Bogdan Petre on 9/14/2016, updated by Tor Wager July 2018, Jan 2020</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+</pre><img vspace="5" hspace="5" src="canlab_help_3_voxelwise_t_test_walkthrough_05.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Perform a voxel-wise t-test
+%
+% Edited/commented by Bogdan Petre on 9/14/2016, Tor Wager July 2018 
 %
 % In this example we perform a second level analysis on first level
 % statistical parametric maps. Specifically we use a t-test to obtain an
@@ -415,17 +456,13 @@ canlab_help_publish('canlab_help_3_voxelwise_t_test_walkthrough')
 %     r = region(t);                                  % Turn t-map into a region object with one element per contig region
 %     table(r);                                       % Print a table of results using new region names
 %  
-% Here a graphical description of what it does:
-%
-% <<CANlab_ttest_flowchart.png>>
-%
-% Now, let's walk through it step by step, with a few minor additions.
+% Now, let's walk through it step by step.
 
 %% Load sample data
 
 % We can load this data using load_image_set(), which produces an fmri_data
 % object. Data loading exceeds the scope of this tutorial, but a more
-% indepth demonstration may be provided by load_a_sample_dataset.m
+% indepth demosntration may be provided by load_a_sample_dataset.m
 
 [image_obj, networknames, imagenames] = load_image_set('emotionreg');
 
@@ -483,7 +520,7 @@ drawnow, snapnow;
 % voxels). It does many things that other object types do, and inter-operates
 % with them closely.  See methods(region) for more info.
 
-% Create a region object called "r", with contiguous blobs from the
+% Create a region objecft called "r", with contiguous blobs from the
 % thresholded t-map:
 
 r = region(t);
@@ -492,22 +529,12 @@ r = region(t);
 
 table(r);
 
-%% More on getting help
-
-% Help info is available on https://canlab.github.io/
-% and in the CANlab help examples repository: https://github.com/canlab/CANlab_help_examples
-% This contains a series of walkthroughs, including this one.
-
-% You can get help for the main object types by typing this in Matlab:
-% doc fmri_data (or doc any other object types)
-
-% Also, more detailed help is available for each function using the "help" command.
 % You can get help and options for any object method, like "table". But
 % because the method names are simple and often overlap with other Matlab functions 
 % and toolboxes (this is OK for objects!), you will often want to specify
 % the object type as well, as follows:
 
-% help region.table
+help region.table
 
 %% Write the t-map to disk
 
@@ -528,71 +555,5 @@ write(t, 'thresh')
 
 t_reloaded = statistic_image(t.fullpath, 'type', 'generic');
 orthviews(t_reloaded)
-
-%% Explore on your own
-%
-% 1. Click around the thresholded statistic image. What lobes of the brain
-% are most of the results in? What can we say about areas that are not
-% active, if anything?
-%
-% 2. Why might some of the results appear to be outside the brain? What
-% does this mean for the validity of the analysis? Should we consider these
-% areas in our interpretation, or should they be "masked out" (excluded)?
-%
-% That's it for this section!!
-
-%% Explore More: CANlab Toolboxes
-% Tutorials, overview, and help: <https://canlab.github.io>
-%
-% Toolboxes and image repositories on github: <https://github.com/canlab>
-%
-% <html>
-% <table border=1><tr>
-% <td>CANlab Core Tools</td>
-% <td><a href="https://github.com/canlab/CanlabCore">https://github.com/canlab/CanlabCore</a></td></tr>
-% <td>CANlab Neuroimaging_Pattern_Masks repository</td>
-% <td><a href="https://github.com/canlab/Neuroimaging_Pattern_Masks">https://github.com/canlab/Neuroimaging_Pattern_Masks</a></td></tr>
-% <td>CANlab_help_examples</td>
-% <td><a href="https://github.com/canlab/CANlab_help_examples">https://github.com/canlab/CANlab_help_examples</a></td></tr>
-% <td>M3 Multilevel mediation toolbox</td>
-% <td><a href="https://github.com/canlab/MediationToolbox">https://github.com/canlab/MediationToolbox</a></td></tr>
-% <td>M3 CANlab robust regression toolbox</td>
-% <td><a href="https://github.com/canlab/RobustToolbox">https://github.com/canlab/RobustToolbox</a></td></tr>
-% <td>M3 MKDA coordinate-based meta-analysis toolbox</td>
-% <td><a href="https://github.com/canlab/Canlab_MKDA_MetaAnalysis">https://github.com/canlab/Canlab_MKDA_MetaAnalysis</a></td></tr>
-% </table>
-% </html>
-% 
-% Here are some other useful CANlab-associated resources:
-%
-% <html>
-% <table border=1><tr>
-% <td>Paradigms_Public - CANlab experimental paradigms</td>
-% <td><a href="https://github.com/canlab/Paradigms_Public">https://github.com/canlab/Paradigms_Public</a></td></tr>
-% <td>FMRI_simulations - brain movies, effect size/power</td>
-% <td><a href="https://github.com/canlab/FMRI_simulations">https://github.com/canlab/FMRI_simulations</a></td></tr>
-% <td>CANlab_data_public - Published datasets</td>
-% <td><a href="https://github.com/canlab/CANlab_data_public">https://github.com/canlab/CANlab_data_public</a></td></tr>
-% <td>M3 Neurosynth: Tal Yarkoni</td>
-% <td><a href="https://github.com/neurosynth/neurosynth">https://github.com/neurosynth/neurosynth</a></td></tr>
-% <td>M3 DCC - Martin Lindquist's dynamic correlation tbx</td>
-% <td><a href="https://github.com/canlab/Lindquist_Dynamic_Correlation">https://github.com/canlab/Lindquist_Dynamic_Correlation</a></td></tr>
-% <td>M3 CanlabScripts - in-lab Matlab/python/bash</td>
-% <td><a href="https://github.com/canlab/CanlabScripts">https://github.com/canlab/CanlabScripts</a></td></tr>
-% </table>
-% </html>
-%
-% *Object-oriented, interactive approach*
-% The core basis for interacting with CANlab tools is through object-oriented framework.
-% A simple set of neuroimaging data-specific objects (or _classes_) allows you to perform
-% *interactive analysis* using simple commands (called _methods_) that
-% operate on objects. 
-%
-% Map of core object classes:
-%
-% <<CANlab_object_types_flowchart.png>>
-%%
-% % Bogdan Petre on 9/14/2016, updated by Tor Wager July 2018, Jan 2020
-%
 ##### SOURCE END #####
 --></body></html>
