@@ -1,3 +1,4 @@
+
 %% Multivariate prediction with Bayesian hyperparameter estimation
 % This tutorial addresses two distinct but complementary problems. The
 % first is on how to use the canlab multilevel PCR method for multivariate 
@@ -64,13 +65,21 @@
 % between subject differences by calibrating stimulus intensity for each
 % subject, so we expect all experimental effects to be at the within level,
 % meaning that being able to remove between effects selectively may give us
-% a superior multivariate outcome.
+% a superior multivariate outcome. In both cases the datasets we're working
+% with are "first level" statistical maps, estimated at the single stimulus
+% event level and quantify the mean BOLD response during that stimulus
+% event relative to the scan baseline. We begin by averaging results within
+% stimulus level, which results in statistical maps very similar to those
+% produced by a subject-level GLM analysis of mean BOLD response for each
+% stimulus level (maps obtained by this averaging are nearly 
+% indistinguishable from those produced by formally modeling the entire
+% stimulus level by a single contrast vector in a GLM).
 %
 % Neither of these data are publically available as of the time of this 
 % writing, but are available in the canlab single trials repository for 
 % members of the lab to work with. If following this tutorial without
 % access to these datasets you can try using the public bmrk3 dataset
-% available through canlabCore's by calling bmrk3 = load_image_set('bmrk3').
+% available through canlabCore by calling bmrk3 = load_image_set('bmrk3').
 % subject_id is then in bmrk3.additional_info.subject_id instead of in the
 % metadata_table fields used here.
 %
@@ -182,47 +191,6 @@ fprintf('Discarding %0.3f%% of outcome variance\n', varLost)
 
 bmrk5pain = newdat; clear newdat;
 
-%% load matched pain dataset
-nsf = load_image_set('nsf');
-
-% shouldn't be necessary if I'd done a better job cleaning this data for 
-% the single trials repository, but I left the job unfinished in this 
-% respect and data still has some nan voxels lingering as of this writing
-nsf.dat(isnan(nsf.dat)) = 0;
-
-% let's get rid of bad trials
-nsf = nsf.get_wh_image(~isnan(nsf.Y));
-
-% convert subjct_id to numeric
-[~,~,subject_id] = unique(nsf.metadata_table.subject_id,'stable');
-uniq_subject_id = unique(subject_id);
-n_subj = length(uniq_subject_id);
-
-% Lets average our data within stimulus level to speed up this tutorial by
-% fitting models to smaller datasets. In principle there's no reason this 
-% is necessary, and inflates our impression of how well our models do
-% (because we're throwing out all between trial variance at the
-% within-stimulus level).
-
-newdat = {};
-for i = 1:n_subj
-    this_idx = find(uniq_subject_id(i) == subject_id);
-    this_dat = nsf.get_wh_image(this_idx);
-    
-    T = this_dat.metadata_table.T;
-    lvls = unique(T);
-    n_lvls = length(lvls);
-    
-    for j = 1:n_lvls
-        newdat{end+1} = mean(this_dat.get_wh_image(lvls(j) == T));
-    end
-end
-newdat = cat(newdat{:});
-
-varLost = 1 - sum((newdat.Y - mean(newdat.Y)).^2) / sum((nsf.Y - mean(nsf.Y)).^2);
-fprintf('Discarding %0.3f%% of outcome variance\n', varLost)
-
-nsf = newdat; clear newdat;
 
 % zscore images if desired. We don't do it, but I mention this here to
 % emphasize that any data averaging should be performed BEFORE image 
@@ -324,61 +292,6 @@ subplot(1,2,2)
 line_plot_multisubject(bmrk5pain.Y, pred_wi, 'subjid', subject_id);
 xlabel({'Observed pain'}); ylabel('Within subject components'' prediction');
 axis square
-
-%% Illustrate within and between subject predictive patterns
-% while PCR and multilevel PCR can provide the same overall predictive
-% maps, multilevel PCR is able to distinguish parts of the map that predict
-% within subject variance from those that only predict between subject
-% variance.
-%
-% Visualizing these maps is facilitated by bootstrap correcting voxels so
-% that only stable model weights are illustratd. When making predictions on
-% movel data the entire model may be used, but when evaluating predictive
-% performance using cross validation, model weights will change across
-% cross validation folds. Therefore to understand what's driving estimates
-% of predictive performance it's helpful to look at bootstrap corrected 
-% maps since they illustrate the voxels most likely to be inolved in models
-% across cross validation folds.
-%
-% fmri_data/predict has a built in bootstrapping feature for data
-% prediction, but the results it gives us for multilevel PCR are invalid.
-% It uses matlab's bootstrp function which isn't block aware. It just
-% resamples individual images. But we don't want to resample images, we 
-% want to resample blocks (subjects), because our images are dependent 
-% within block, only our blocks are independent from one another, and 
-% bootstrap estimates assume independent data. Therefore we implement 
-% bootstrapping by hand.
-%
-% I also make some improvements on the predict bootstrapping model by
-% incorporating bias correction and acceleration into my bootstrap
-% estiamtes. The actual implementation exceeds the scope of this tutorial,
-% so I've included them as functions at the end of the file, sort of like
-% an appendix. For now we just have a function BCa that gives us a list of
-% significant voxels we need at each level of our model.
-
-if ~isempty(gcp('nocreate'))
-    delete(gcp('nocreate'));
-end
-parpool(16);
-
-% this is our bias corrected acclerated bootstrapping procedure using 500
-% bootstraps at an alpha = 0.05 voxel-wise level.
-sig = BCa(500, 0.05, bmrk5pain, subject_id, mlpcr_opts{:});
-
-map1 = bmrk5pain.get_wh_image(1);
-map1.dat = opt_mlpcr_optout{1}.*sig{1};
-map1.dat = map1.dat(:);
-
-map2 = bmrk5pain.get_wh_image(1);
-map2.dat = opt_mlpcr_optout{2}.*sig{2};
-map2.dat = map2.dat(:);
-
-map3 = bmrk5pain.get_wh_image(1);
-map3.dat = opt_mlpcr_optout{3}.*sig{3};
-map3.dat = map3.dat(:);
-
-map = cat(map1, map2, map3);
-map.montage('trans');
 
 %% Sensitivity and specificity of between and within subject patterns
 % above we've simply plotted the predictions on the within and between
@@ -519,6 +432,123 @@ end
 
 fprintf('Null model r=%0.3f\n', corr(pred_null, bmrk5pain.Y));
 
+
+%% Illustrate within and between subject predictive patterns
+% while PCR and multilevel PCR can provide the same overall predictive
+% maps, multilevel PCR is able to distinguish parts of the map that predict
+% within subject variance from those that only predict between subject
+% variance.
+%
+% Visualizing these maps is facilitated by bootstrap correcting voxels so
+% that only stable model weights are illustrated. When making predictions on
+% novel data the entire model will be used, but when evaluating predictive
+% performance using cross validation, model weights will change across
+% cross validation folds. Therefore to understand what's driving estimates
+% of predictive performance it's helpful to look at bootstrap corrected 
+% maps since they illustrate the voxels most likely to be inolved in models
+% across cross validation folds.
+%
+% fmri_data/predict has a built in bootstrapping feature for data
+% prediction, but the results it gives us for multilevel PCR are invalid.
+% It uses matlab's bootstrp function which isn't block aware. It just
+% resamples individual images. But we don't want to resample images, we 
+% want to resample blocks (subjects), because our images are dependent 
+% within block, only our blocks are independent from one another, and 
+% bootstrap estimates assume independent data. Therefore we implement 
+% bootstrapping by hand.
+%
+% I also make some improvements on the predict bootstrapping model by
+% incorporating bias correction and acceleration into my bootstrap
+% estiamtes. The actual implementation exceeds the scope of this tutorial,
+% so I've included them as functions at the end of the file, sort of like
+% an appendix. For now we just have a function BCa that gives us a list of
+% significant voxels we need at each level of our model.
+
+if ~isempty(gcp('nocreate'))
+    delete(gcp('nocreate'));
+end
+parpool(16);
+
+% this is our bias corrected acclerated bootstrapping procedure using 500
+% bootstraps at an alpha = 0.05 voxel-wise level.
+sig = BCa(500, 0.05, bmrk5pain, subject_id, 'verbose', 0);
+
+map1 = bmrk5pain.get_wh_image(1);
+map1.dat = mlpcr_optout{1}.*sig{1};
+map1.dat = map1.dat(:);
+
+map2 = bmrk5pain.get_wh_image(1);
+map2.dat = mlpcr_optout{2}.*sig{2};
+map2.dat = map2.dat(:);
+
+map3 = bmrk5pain.get_wh_image(1);
+map3.dat = mlpcr_optout{3}.*sig{3};
+map3.dat = map3.dat(:);
+
+map = cat(map1, map2, map3);
+map.montage('trans');
+
+%% Recovering source signals
+% Although model voxel patterns are informative for telling us how the
+% model is working, and assuring us that something sensible is happening,
+% they are difficult to interpret because they reflect a combination of
+% signal and noise, the idea being that predictive algorithms attempt to
+% retrieve models which are orthogonal to noise sources. This makes it
+% difficult to ascertain the biological origin of many of the signals of
+% interest we're looking at. We can recover the "generative model"
+% suggested by our PCR models (both multilevel and non-multilevel) by
+% looking at our data covariance with the PCA scores. We will show the
+% results from PCR and the results from multilevel PCR
+
+% Multilevel PCR gives us all the information we need in the optout
+% argument from predict
+[~,~,optout] = bmrk5pain.predict('algorithm_name', 'cv_mlpcr', 'nfolds',0,...
+    'subjIDs',subject_id, 'verbose', 0);
+
+sc_b = optout{6}; % between scores
+sc_w = optout{8}; % within scores
+b = optout{9};
+b(1) = []; % drop intercept
+b_b = b(1:size(sc_b,2));
+b_w = b(size(sc_b,2) + (1:size(sc_w,2)));
+sc = [sc_b, sc_w];
+
+% this only works because all components are orthogonal, otherwise formula
+% is more complex
+src_X = bmrk5pain.dat*(sc*b);
+bt_src_X = bmrk5pain.dat*(sc_b*b_b);
+wi_src_X = bmrk5pain.dat*(sc_w*b_w);
+
+src = bmrk5pain.get_wh_image(1:3);
+src.dat = [src_X, bt_src_X, wi_src_X];
+
+src.montage('trans');
+
+%% Interim Conlcusions
+% It looks like multilevel PCR is able to pick apart between and within
+% subject components. There area few lingering comments worth making
+%
+% Within subject pain predictions differ between subjects. This between
+% subject variance is likely noise, and there are concievable scenarios
+% where the only function of the between subject components are to correct
+% for this noise, rather than to tell us anything unique. In practice you
+% should check for this possibility by inspecting the correlation between
+% within and between subject components. The closer it is to zero, the
+% better. A negative correlation though would indicate this kind of 
+% compensatory behavior. The analysis was not performed here.
+%
+% Additionally, one might think that because these spurious between subject
+% predictions are noise in the within model and the within variance is
+% spurious in the between model, that perhaps you could take your model
+% predictive fractions (e.g. your within models predictions and your
+% between model's predictions) and simply denoise them by centering or
+% averaging within subject (respectively) and then adding the results.
+% Whether or not this will work is unclear, but I suspect for it to work
+% one would need to incorporate this procedure into their loss function
+% estimation during model dimensionality optimization (optimization, but 
+% not this specific centering/demeaning tactic, is discussed below). It's a
+% direction for future research.
+
 %% Gaussian process optimization of multilevel PCR hyperparameters
 % Better performing models may be obtained using optimized
 % hyperparameters. Hyperparameters control model regulizarization,  and 
@@ -608,9 +638,10 @@ hp_mlpcr = bayesopt(objfxn,[dims_bt,dims_wi],'XConstraintFcn',constraint,...
     'AcquisitionFunctionName','expected-improvement-plus','MaxObjectiveEvaluations',30,...
     'UseParallel',1);
 
-% now fit the final model using optimized hyperparameters. Note we don't
-% want cross validated estimates on here (see next section), so set
-% nfolds=0 (or maybe nfolds = 1)
+% we won't bother fitting the full model, since it's nothing new, but
+% commented out below is the code that would have done it. Note the way the
+% hyperparameters are retrieved from the hp_mlpcr variable.
+%{
 optDims = table2array(hp_mlpcr.XAtMinEstimatedObjective);
 
 mlpcr_opts = {'numcomponents', optDims, 'useparallel', 0};
@@ -618,6 +649,50 @@ mlpcr_opts = {'numcomponents', optDims, 'useparallel', 0};
 % get full optimized model
 [~, ~, opt_mlpcr_optout] = bmrk5pain.predict('algorithm_name','cv_mlpcr',...
     'nfolds', 0, 'subjIDs',subject_id, mlpcr_opts{:});
+%}
+
+%% load matched pain dataset
+clear all; close all;
+nsf = load_image_set('nsf');
+
+% shouldn't be necessary if I'd done a better job cleaning this data for 
+% the single trials repository, but I left the job unfinished in this 
+% respect and data still has some nan voxels lingering as of this writing
+nsf.dat(isnan(nsf.dat)) = 0;
+
+% let's get rid of bad trials
+nsf = nsf.get_wh_image(~isnan(nsf.Y));
+
+% convert subjct_id to numeric
+[~,~,subject_id] = unique(nsf.metadata_table.subject_id,'stable');
+uniq_subject_id = unique(subject_id);
+n_subj = length(uniq_subject_id);
+
+% Lets average our data within stimulus level to speed up this tutorial by
+% fitting models to smaller datasets. In principle there's no reason this 
+% is necessary, and inflates our impression of how well our models do
+% (because we're throwing out all between trial variance at the
+% within-stimulus level).
+
+newdat = {};
+for i = 1:n_subj
+    this_idx = find(uniq_subject_id(i) == subject_id);
+    this_dat = nsf.get_wh_image(this_idx);
+    
+    T = this_dat.metadata_table.T;
+    lvls = unique(T);
+    n_lvls = length(lvls);
+    
+    for j = 1:n_lvls
+        newdat{end+1} = mean(this_dat.get_wh_image(lvls(j) == T));
+    end
+end
+newdat = cat(newdat{:});
+
+varLost = 1 - sum((newdat.Y - mean(newdat.Y)).^2) / sum((nsf.Y - mean(nsf.Y)).^2);
+fprintf('Discarding %0.3f%% of outcome variance\n', varLost)
+
+nsf = newdat; clear newdat;
 
 %% optimized multilevel PCR model for matched pain dataset
 % Here we will fit an optimized PCR model to a matched pain dataset. We do
@@ -629,6 +704,7 @@ mlpcr_opts = {'numcomponents', optDims, 'useparallel', 0};
 % they're useful for determining what minimum fold size is, which we need
 % for establishing the boundaries of the search space since fold size
 % affects degrees of freedom and the maximum dimensions we can retain.
+
 [~,~,subject_id] = unique(nsf.metadata_table.subject_id,'stable');
 uniq_subject_id = unique(subject_id);
 n_subj = length(uniq_subject_id);
@@ -667,7 +743,7 @@ mlpcr_opts = {'numcomponents', optDims, 'useparallel', 0};
 % get full optimized model
 [~, ~, opt_mlpcr_optout] = nsf.predict('algorithm_name','cv_mlpcr',...
     'nfolds', 0, 'subjIDs',subject_id, mlpcr_opts{:});
-
+%{
 %% Illustration of bootstrap maps for optimized multilevel PCR models
 % Here we plot the bootstrap corrected maps again, as for the case where we
 % used all PCA dimensions, only now we've optimized our MVPA dimensiosn and
@@ -822,8 +898,9 @@ fprintf('Non-optimized multilevel PCR models r = %0.3f.\n', corr(nsf_stats.yfit,
 % multilevel PCR models. We will find that within subject pain prediction
 % explains both within and between subject pain, while between subject pain
 % ratings are not well predicted by the between subject signature, which
-% instead shows a borderline tendency to predict within subject pain. This
-% is consistent with a study designed to eliminate between subject
+% instead shows a borderline tendency to predict within subject pain. This 
+% prediction is negative, similar to a cross validated null model prediction. 
+% This is consistent with a study designed to eliminate between subject
 % differences in pain. 
 %
 % One might have hoped that the between subject
@@ -832,9 +909,7 @@ fprintf('Non-optimized multilevel PCR models r = %0.3f.\n', corr(nsf_stats.yfit,
 % loss function profile reveals two local minima, one of which involves no
 % between dimensions. This illustrates the limitations of Bayesian
 % optimization, namely that it is only an approximation of the loss
-% function and how well you approximate it will depend on how much time you
-% have to run the algorithm. 30 iterations is the default, and it works
-% well in most cases, but it may give you imperfect solutions at times.
+% function and is succeptible to noise in your loss estimation procedure.
 % Nevertheless it's notable that our overall prediction accuracy is still
 % improved in spite of this imperfection (see previous section).
 
@@ -943,7 +1018,7 @@ set(gcf,'Position',[pos(1:2), 1205, 785]);
 % others, and this tutorial didn't have a particularly high ambitions. It's
 % simply here to proide some convenient and accessible illustrations of a
 % toolkit, not to do rigorous science.
-
+%}
 %% APPENDIX A: loss function for mlPCR optimization
 
 function loss = lossEst(dim, dat)
@@ -968,6 +1043,11 @@ end
 
 
 %% APPENDIX B: bootstrapping functions
+% the code below is not thoroughly vetted. If you borrow it for any other
+% purposes you should check its results against a reference source.
+% Matlab's bootstrp function can also perform bias corrected accelerated
+% bootstraps. With some modifications you could set this up to provide
+% convergent results and check that you obtain them.
 
 % this bootstraps subjects while keeping trials within subject fixed. 
 % Bootstrapping both results in a very small effective dataset size and is
@@ -1032,7 +1112,7 @@ function [sig, w_bs] = BCa(n, alpha, dat, subject_id, varargin)
     
     w = optout(1:3);
         
-    fprintf('Compluting bootstrap models...\n ');
+    fprintf('Computing bootstrap models...\n ');
     w_bs = bootstrap(dat, subject_id, n, varargin{:});
     
     fprintf('Computing jackknife...\n');
@@ -1052,7 +1132,7 @@ function [sig, w_bs] = BCa(n, alpha, dat, subject_id, varargin)
         zL = z0 + icdf('norm',alpha/2,0,1);
         alpha1 = normcdf(z0 + zL./(1-a.*zL));
         zU = z0 + icdf('norm',1-alpha/2,0,1);
-        alpha2 = normcdf(z0 + zU./(1-a.*zL));
+        alpha2 = normcdf(z0 + zU./(1-a.*zU));
         CI = zeros(size(w_bs{i},1),2);
         parfor j = 1:size(w_bs{i},1)
             CI(j,:) = quantile(w_bs{i}(j,:), [alpha1(j), alpha2(j)]);
