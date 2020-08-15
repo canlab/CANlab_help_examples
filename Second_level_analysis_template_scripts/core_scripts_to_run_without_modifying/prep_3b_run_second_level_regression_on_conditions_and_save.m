@@ -50,7 +50,7 @@ plugin_get_options_for_analysis_script
 %% Check for required DAT fields. Skip analysis and print warnings if missing.
 % ---------------------------------------------------------------------
 % List required fields in DAT, in cell array:
-required_fields = {'BETWEENPERSON', 'contrastnames', 'contrasts' 'contrastcolors'};
+required_fields = {'BETWEENPERSON', 'conditions', 'colors'};
 
 ok_to_run = plugin_check_required_fields(DAT, required_fields); % Checks and prints warnings
 if ~ok_to_run
@@ -67,7 +67,7 @@ end
 % --------------------------------------------------------------------
 
 
-printhdr('Second-level regressions discriminate between-person contrasts');
+printhdr('Second-level univariate regressions on each condition');
 
 
 % --------------------------------------------------------------------
@@ -76,16 +76,16 @@ printhdr('Second-level regressions discriminate between-person contrasts');
 %
 % --------------------------------------------------------------------
 
-kc = size(DAT.contrasts, 1);
+k = length(DAT.conditions);
 
-regression_stats_results = cell(1, kc);
+regression_stats_results = cell(1, k);
 
-for c = 1:kc
+for c = 1:k
     
     % Get design matrix for this contrast
     % --------------------------------------------------------------------
     
-    mygroupnamefield = 'contrasts';  % 'conditions' or 'contrasts'
+    mygroupnamefield = 'X';  % X is design matrix
     
     switch design_matrix_type
         case 'custom'
@@ -110,23 +110,23 @@ for c = 1:kc
         otherwise error('Incorrect option specified for design_matrix_type');
     end
     
-    printstr(DAT.contrastnames{c});
+    printstr(DAT.conditions{c});
     printstr(dashes)
     
-    mycontrast = DAT.contrasts(c, :);
-    wh = find(mycontrast);
-    
-    % Select data for this contrast
+%     mycontrast = DAT.contrasts(c, :);
+%     wh = find(mycontrast);
+     
+    % Select data for this cpndition
     % --------------------------------------------------------------------
     
     switch myscaling
         case 'raw'
             printstr('Raw (unscaled) images used in between-person SVM');
-            cat_obj = DATA_OBJ_CON{c};
+            cat_obj = DATA_OBJ{c};
             
         case 'scaled'
             printstr('Scaled images used in between-person SVM');
-            cat_obj = DATA_OBJ_CON{c};
+            cat_obj = DATA_OBJ{c};
             
         otherwise
             error('myscaling must be ''raw'' or ''scaled''');
@@ -199,7 +199,7 @@ for c = 1:kc
     end
     
     % out.t has t maps for all regressors, intercept is last
-    regression_stats = regress(cat_obj, .05, 'unc', robuststring, 'analysis_name', DAT.contrastnames{c}, 'variable_names', groupnames);
+    regression_stats = regress(cat_obj, .05, 'unc', robuststring, 'analysis_name', DAT.conditions{c}, 'variable_names', groupnames);
     
 
     % Make sure variable types are right data formats
@@ -210,11 +210,11 @@ for c = 1:kc
     regression_stats.sigma = enforce_variable_types(regression_stats.sigma);
 
     % add regressor names and other meta-data
-    regression_stats.contrastname = DAT.contrastnames{c};
-    regression_stats.contrast = DAT.contrasts(c, :);
+    regression_stats.condition = DAT.conditions{c};
+%     regression_stats.contrast = DAT.contrasts(c, :);
     
     % add names for analyses and variables: 
-    regression_stats.analysis_name = DAT.contrastnames{c};
+    regression_stats.analysis_name = DAT.conditions{c};
     regression_stats.variable_names = [groupnames {'Intercept'}];
     
     % prints output automatically - name axis
@@ -234,7 +234,7 @@ end  % between-person contrast
 
 % Save
 % --------------------------------------------------------------------
-savefilenamedata = fullfile(resultsdir, 'regression_stats_and_maps.mat');
+savefilenamedata = fullfile(resultsdir, 'regression_stats_and_maps_on_conditions.mat');
 
 save(savefilenamedata, 'regression_stats_results', '-v7.3');
 printhdr('Saved regression_stats_results for contrasts');

@@ -34,10 +34,17 @@ kc = size(DAT.contrasts, 1);
 if dobootstrap, svmtime = tic; end
 
 %% Get mask
+% --------------------------------------------------------------------
+
 if exist('maskname', 'var') && ~isempty(maskname)
     
-    svmmask = fmri_data(maskname);
+    disp('Masking data')
+    svmmask = fmri_data(maskname, 'noverbose');
     
+else
+    
+    disp('No mask found; using full original image data');
+
 end
 
 %% Train all models
@@ -83,10 +90,14 @@ for c = 1:kc
     end
     
     % Apply mask
-    
     if exist('svmmask', 'var')
         
+        disp('Masking data')
         cat_obj = apply_mask(cat_obj, svmmask);
+        
+    else
+        
+        disp('No mask found; using full existing image data');
         
     end
     

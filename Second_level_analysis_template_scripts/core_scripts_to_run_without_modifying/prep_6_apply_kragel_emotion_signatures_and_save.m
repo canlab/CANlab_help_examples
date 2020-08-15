@@ -23,11 +23,9 @@ printhdr('Extracting Emotion-Category Models, adding to DAT')
 
 % Dot product metric
 DAT.EMO_CAT_SIG_conditions.raw.dotproduct = apply_all_signatures(DATA_OBJ, 'conditionnames', DAT.conditions,'image_set','kragelemotion');
-DAT.EMO_CAT_SIG_contrasts.raw.dotproduct = apply_all_signatures(DATA_OBJ_CON, 'conditionnames', DAT.contrastnames,'image_set','kragelemotion');
 
 % Cosine similarity
 DAT.EMO_CAT_SIG_conditions.raw.cosine_sim = apply_all_signatures(DATA_OBJ, 'conditionnames', DAT.conditions, 'similarity_metric', 'cosine_similarity','image_set','kragelemotion');
-DAT.EMO_CAT_SIG_contrasts.raw.cosine_sim = apply_all_signatures(DATA_OBJ_CON, 'conditionnames', DAT.contrastnames, 'similarity_metric', 'cosine_similarity','image_set','kragelemotion');
 
 % Scaled images.  
 % apply_all_signatures will do scaling as well, but we did this in image
@@ -35,12 +33,19 @@ DAT.EMO_CAT_SIG_contrasts.raw.cosine_sim = apply_all_signatures(DATA_OBJ_CON, 'c
 
 % Dot product metric
 DAT.EMO_CAT_SIG_conditions.scaled.dotproduct = apply_all_signatures(DATA_OBJsc, 'conditionnames', DAT.conditions,'image_set','kragelemotion');
-DAT.EMO_CAT_SIG_contrasts.scaled.dotproduct = apply_all_signatures(DATA_OBJ_CONsc, 'conditionnames', DAT.contrastnames,'image_set','kragelemotion');
 
 % Cosine similarity
 DAT.EMO_CAT_SIG_conditions.scaled.cosine_sim = apply_all_signatures(DATA_OBJsc, 'conditionnames', DAT.conditions, 'similarity_metric', 'cosine_similarity','image_set','kragelemotion');
-DAT.EMO_CAT_SIG_contrasts.scaled.cosine_sim = apply_all_signatures(DATA_OBJ_CONsc, 'conditionnames', DAT.contrastnames, 'similarity_metric', 'cosine_similarity','image_set','kragelemotion');
 
+
+if exist('DATA_OBJ_CON', 'var') && iscell(DATA_OBJ_CON) && ~isempty(DATA_OBJ_CON{1})
+    
+    DAT.EMO_CAT_SIG_contrasts.raw.dotproduct = apply_all_signatures(DATA_OBJ_CON, 'conditionnames', DAT.contrastnames,'image_set','kragelemotion');
+    DAT.EMO_CAT_SIG_contrasts.raw.cosine_sim = apply_all_signatures(DATA_OBJ_CON, 'conditionnames', DAT.contrastnames, 'similarity_metric', 'cosine_similarity','image_set','kragelemotion');
+    DAT.EMO_CAT_SIG_contrasts.scaled.dotproduct = apply_all_signatures(DATA_OBJ_CONsc, 'conditionnames', DAT.contrastnames,'image_set','kragelemotion');
+    DAT.EMO_CAT_SIG_contrasts.scaled.cosine_sim = apply_all_signatures(DATA_OBJ_CONsc, 'conditionnames', DAT.contrastnames, 'similarity_metric', 'cosine_similarity','image_set','kragelemotion');
+    
+end
 
 
 %% Save

@@ -148,6 +148,10 @@ for i = 1:length(DAT.conditions)
         
         if ~omit_histograms
             
+            hist_han = histogram(DATA_OBJ{i}, 'byimage', 'singleaxis');
+            title([DAT.conditions{i} ' histograms for each image']);
+            drawnow; snapnow
+            
             hist_han = histogram(DATA_OBJ{i}, 'byimage', 'by_tissue_type');
             drawnow; snapnow
             
@@ -189,7 +193,11 @@ DATA_CAT = rescale(DATA_CAT, 'l2norm_images');     % scaling sensitive to mean a
 
 DATA_CAT = preprocess(DATA_CAT, 'windsorize'); % entire data matrix
 
-DATA_OBJsc = split(DATA_CAT);
+if length(DAT.conditions) > 1
+    DATA_OBJsc = split(DATA_CAT);
+else
+    DATA_OBJsc = {DATA_CAT};
+end
 
 % Enforce variable types in objects to save space
 for i = 1:length(DATA_OBJsc), DATA_OBJsc{i} = enforce_variable_types(DATA_OBJsc{i}); end

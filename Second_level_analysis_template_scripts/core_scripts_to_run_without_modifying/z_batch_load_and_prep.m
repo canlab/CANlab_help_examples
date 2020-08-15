@@ -10,7 +10,7 @@ a2_set_default_options
 printhdr('BEHAVIORAL DATA - BETWEEN-PERSON DESIGN')
 
 try
-    prep1b_prep_behavioral_data
+    prep_1b_prep_behavioral_data
 catch
     printhdr('Behavioral data not included.');
     disp('prep1b_prep_behavioral_data.m did not run correctly. Either configure and test this or omit this script.');
@@ -38,6 +38,8 @@ prep_3_calc_univariate_contrast_maps_and_save
 printhdr('REGRESSIONS')
 prep_3a_run_second_level_regression_and_save
 
+prep_3b_run_second_level_regression_on_conditions_and_save
+
 %% SVMs with optional bootstrapping
 
 printhdr('CONTRAST SUPPORT VECTOR MACHINES')
@@ -46,6 +48,8 @@ prep_3b_run_SVMs_on_contrasts_and_save
 prep_3c_run_SVMs_on_contrasts_masked
 
 prep_3d_run_SVM_betweenperson_contrasts
+
+prep_3e_run_SVM_betweenperson_contrasts_on_conditions
 
 % You can also run z_batch_publish_image_prep_and_qc to run these and
 % create an .html file with the output.
