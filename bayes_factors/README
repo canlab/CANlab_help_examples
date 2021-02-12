@@ -21,7 +21,8 @@ time. Easiest way to do this is to increase the iter parameter when running stan
 2) Are your parameter estimates stable? Check rhat values from summary(stan_lmer(...)). These
 should be 1 or at least very close to 1.
 3) Do your parameter estimates agree with those estimated using frequentist methods? Bayesian
-models have a lot of power in that you can specify sensible priors, but if you're doing a null hypothesis test then you're likely operating within a frequentist hypothesis testing framework and
+models have a lot of power in that you can specify sensible priors, but if you're doing a null
+hypothesis test then you're likely operating within a frequentist hypothesis testing framework and
 aren't interested in having the priors influence your parameter estimates. The priors used by
 rstanarm are vaguely informative (e.g. a wide cauchy distribution) to facilitate efficient MCMC
 computation and faster convergence, but if your posterior parameter estimates do not agree with
@@ -35,8 +36,11 @@ On the topic of priors, if you find that you test a model both with Morey's pack
 model is simple enough to make that possible), and the approach described here, you will find
 divergent results due to different choices in priors. To obtain results with the current approach
 similar to Morey's you will need to specify a narrower prior in your stan models. The default is a
-normal(0,2.5*s_x/s_y) prior on coefficients, but for results more comparable to Morey's it seems a normal(0,sqrt(2)/2*s_x/s_y) prior is more appropriate. The former can be specified by supplying
-prior=normal(0,sqrt(2)/2,autoscale=TRUE) to stan_lmer calls. rstanarm 'autoscales' priors, while Morey's package places a prior on effect sizes. I'm not sure if these are equivalent, and while Morey's prior on the scale of the effect size is sqrt(2)/2 I don't want to give the impression
+normal(0,2.5*s_x/s_y) prior on coefficients, but for results more comparable to Morey's it seems a
+normal(0,sqrt(2)/2*s_x/s_y) prior is more appropriate. The former can be specified by supplying
+prior=normal(0,sqrt(2)/2,autoscale=TRUE) to stan_lmer calls. rstanarm 'autoscales' priors, while
+Morey's package places a prior on effect sizes. I'm not sure if these are equivalent, and while
+Morey's prior on the scale of the effect size is sqrt(2)/2 I don't want to give the impression
 that this necessarily corresponds to a prior on the coefficients of 2.5*s_x/s_y in rstanarm. The
 equivalence is purely anecdotal. That said, setting an rscale=2.5 prior in Morey's package does
 seem to provide results that agree with the rstanarm + bridgesampling defaults, so maybe 
@@ -58,10 +62,17 @@ bayes factors).
 
 File descriptions ::
 
-bayes_factor_test_with_rstanarm.r - main script. Performs Bayes Factor tests using the the STAN statistical programming language (implemented in a userfriendly way by rstanarm) and bridgesampling
+bayes_factor_test_with_rstanarm.r - main script. Performs Bayes Factor tests using the the STAN
+statistical programming language (implemented in a userfriendly way by rstanarm) and
+bridgesampling
 
-contrast_validation_data.csv - this is data from a machine learning study where six different models (aka MVPA patterns) were developed in a hierarchical training. Cross validated prediction metrics are saved and were used to make inferential claims about which model was best. The models were then applied to novel data to validate the inferential claims made in the cross validated data. The data includes several columns
-zr - z-fisher r-values. r-values represent within subject predicted vs. observed pain. One value per subject per model.
+contrast_validation_data.csv - this is data from a machine learning study where six different
+models (aka MVPA patterns) were developed in a hierarchical training. Cross validated prediction
+metrics are saved and were used to make inferential claims about which model was best. The models
+were then applied to novel data to validate the inferential claims made in the cross validated
+data. The data includes several columns
+zr - z-fisher r-values. r-values represent within subject predicted vs. observed pain. One value
+per subject per model.
 dist_gt_loc - planned contrast: models 1,2,3 vs. 4,5,6.
 roi_gt_net - planned contrast: models 1 vs 2,3
 brain_gt_ns - planned contrast: models 5 vs 6
@@ -77,18 +88,25 @@ train - contrast variable. 0.5 indicates training data. -0.5 indicates validatio
 problem_space.png - visual illustration of the problem.
 top left: ANOVA illustrated planned and post-hoc contrasts in training data.
 top right: contrasts and standard errors (REML estimated) in training data.
-bottom left: violin plots indicate predicted random study effect distributions for each model. dots indicate validation data study mean prediction accuracy for each model with standard errors (estimated by REML).
-bottom center: violin plots indicate predicted random effect distributions for contrasts found to be statistically significant in the training data (top row).
-bottom right: training and validation data mean contrast estimates. Bayes factors provide a quantitative way of determining if these the same or different, providing a formal framework for evaluating whether our validation data in fact validates our inferential and MVPA models.
+bottom left: violin plots indicate predicted random study effect distributions for each model.
+dots indicate validation data study mean prediction accuracy for each model with standard errors
+(estimated by REML).
+bottom center: violin plots indicate predicted random effect distributions for contrasts found to
+be statistically significant in the training data (top row).
+bottom right: training and validation data mean contrast estimates. Bayes factors provide a
+quantitative way of determining if these the same or different, providing a formal framework for
+evaluating whether our validation data in fact validates our inferential and MVPA models.
 
 
 Additional Reading ::
 
 Two sources in particular might provide helpful reading
 
-The documentation for stan is technical but helpful (for instance the procedure for obtaining posterior point estimates is different from that for obtaining posterior samples).
+The documentation for stan is technical but helpful (for instance the procedure for obtaining
+posterior point estimates is different from that for obtaining posterior samples).
 https://mc-stan.org/users/documentation/
 
-Andrew Gelman's "Bayesian Data Analysis" textbook is also quite good, but presupposes a certain level of mathematical abilities and statistical knowledge.
+Andrew Gelman's "Bayesian Data Analysis" textbook is also quite good, but presupposes a certain
+level of mathematical abilities and statistical knowledge.
 
 Example provided by Bogdan Petre, 9/18/20
