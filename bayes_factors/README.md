@@ -43,14 +43,15 @@ normal(0,sqrt(2)/2*s_x/s_y) prior is more appropriate. The former can be specifi
 prior=normal(0,sqrt(2)/2,autoscale=TRUE) to stan_lmer calls. rstanarm 'autoscales' priors, while
 Morey's package places a prior on effect sizes. I'm not sure if these are equivalent, and while
 Morey's prior on the scale of the effect size is sqrt(2)/2 I don't want to give the impression
-that this necessarily corresponds to a prior on the coefficients of 2.5*s_x/s_y in rstanarm. The
+that this necessarily corresponds to a prior on the coefficients of 2.5 * s_x/s_y in rstanarm. The
 equivalence is purely anecdotal. That said, setting an rscale=2.5 prior in Morey's package does
 seem to provide results that agree with the rstanarm + bridgesampling defaults, so maybe 
 autoscaling and priors on the effect size are the same thing. At any rate, the consequence of a 
 wider scale prior seems to be to increase the odds in favor of the null. Morey justifies narrower
-priors on the grounds that psychology research tends to have small effect sizes. Perhaps, but 
-another way to say that is that psychology is a field happy to entertain belief in things without
-much evidence. So narrow your priors according to the strength of your faith I suppose.
+priors on the grounds that psychology research tends to have small effect sizes. I've personally
+considered normal(0,1) priors when testing effects on z-fisher transformed Pearson r-values because
+they're standard normal by design. You will need to make your own choices, but are encouraged to
+consider justification of your priors and pick something appropriate to your use case.
 
 Finally, just because you have a correct bayes factor doesn't mean that bayes factors are right
 for your application, or that they're good for any application at all. Model comparison is a hotly
