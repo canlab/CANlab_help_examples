@@ -2,6 +2,8 @@ This package describes how to compute Bayes Factors for complex models using MCM
 simpler models you may wish to consider simpler approaches such as Richard D. Morey's package
 available here:
 https://cran.r-project.org/web/packages/BayesFactor/index.html
+See below for a discussion comparing the approach in Morey's BayesFactor approach with the 
+approach described here.
 
 The contents of this folder provide an example of using bayes factors to test whether or not an
 estimate in a validation dataset is the same as an estimate in a training dataset. This is a null
