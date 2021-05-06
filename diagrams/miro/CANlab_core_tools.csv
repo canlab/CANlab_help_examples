@@ -1,0 +1,15 @@
+﻿Display_options
+"4-D or 3-D Nifti or Analyze image files"
+"imgs = load_image_set('emotionreg');"
+"fmri_data object"
+"statistic_image object"
+"statistic_image object (thresholded)"
+"t = ttest(imgs);"
+"t = threshold(t, .005, 'unc');"
+"'surfable' interative slice views"
+"quick view of all slices"
+"Plots of slices spanning the brain"
+"diagnostic plots and orthviews slice views"
+"Table with auto-labeled regions from atlas"
+
+"[hh, output_values_by_region, labels, atlas_obj, colorband_colors] = wedge_plot_by_atlas(t, 'atlases', {'yeo17networks'}); [image_by_feature_correlations, top_feature_tables] = neurosynth_feature_labels(imgs, 'images_are_replicates', false, 'noverbose');"
