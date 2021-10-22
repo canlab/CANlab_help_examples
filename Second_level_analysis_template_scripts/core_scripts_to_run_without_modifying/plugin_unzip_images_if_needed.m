@@ -11,7 +11,17 @@ function image_cell_str = plugin_unzip_images_if_needed(str)
 image_cell_str = [];
 
 % Check if images already exist
-image_cell_str = filenames(str, 'absolute');
+% image_cell_str = filenames(str, 'absolute');
+
+% If passing in a traditional wildcard: % Edit by Michael Sun 10/22/2021
+if ischar(str)
+    image_cell_str = filenames(str);
+% If passing in a cell string of absolute filenames:    % Edit by Michael Sun 10/22/2021
+elseif iscellstr(str)
+    image_cell_str = fullfile(str)';
+elseif isstring(str)
+    image_cell_str = cellstr(fullfile(str)')
+end
 
 image_string_matrix = char(image_cell_str);
 image_string_matrix = check_valid_imagename(image_string_matrix, 0);  % Return empty if not found
