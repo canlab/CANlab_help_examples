@@ -246,7 +246,7 @@ function ptsize = get_point_size(n, k)
 
 ptsize = 12 ./ (.5*n*log(1 + k));
 
-ptsize = ptsize .* 10; % not sure why, but these are very small....
+%ptsize = ptsize .* 10; % not sure why, but these are very small....
 % I think scatterplot SizeData property is now used, which makes them
 % very different from MarkerSize property.
 

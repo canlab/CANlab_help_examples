@@ -1,0 +1,242 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>plotting_parcellations</title><meta name="generator" content="MATLAB 9.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-05-28"><meta name="DC.source" content="plotting_parcellations.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Plotting Parcellations</a></li><li><a href="#3">old method</a></li><li><a href="#4">new method</a></li><li><a href="#5">variations on the new method</a></li></ul></div><pre class="codeinput">addpath(<span class="string">'/dartfs-hpc/rc/home/m/f0042vm/software/spm12'</span>);
+addpath(genpath(<span class="string">'/dartfs-hpc/rc/home/m/f0042vm/software/canlab/CanlabCore/CanlabCore/'</span>))
+addpath(genpath(<span class="string">'/dartfs-hpc/rc/home/m/f0042vm/software/canlab/Neuroimaging_Pattern_Masks/'</span>));
+</pre><h2 id="2">Plotting Parcellations</h2><p>There are two ways to plot parcellations. One is by defining an atlas and then invoking atlas2region to produce independent regions. These are then mapped one at a time. This is the old method</p><p>Another way is to define an indexed fmri_data object, where each voxel corresponds to an index of a colormap. A colormap is then specified by an n x 3 matrix of RGB colors. So for instance a voxel of value 3 would map to row 3 of the colormap. Plotting the indexed fmri_data object with the desired colormap then achieves a similar result. This is the new way I've just introduced</p><p>Thee are two important differences between these methods. The old method invokes the plotting functions n times, once for every region being plotted. The new method invokes the plotting functions only once. This means the new method runs (approximately) n times faster. The other major difference is that with the old method the boundaries of different adjacent regions may not perfectly align due to how the plotting functions interpolate fmri_data objects to image patches and surfaces. With the new method perfectly aligned boundaries are guaranteed.</p><p>I will demonstrate this using the buckner 7 networks atlas using the Discovery compute cluster. Note that on compute clusters for whatever reason plotting is excruciatingly slow. Don't take the absolute timestamps below as an indicator of how fast these will run on your system, but for those using similar distributing computing environments the speedups of the new method will be especially valuable.</p><p>some variations of the plotting functions may not work neatly with the indexing option, I haven't tested it extensively. if they don't though, just go back to the old method.</p><pre class="codeinput">buckner = load_atlas(<span class="string">'buckner'</span>);
+
+cmap = colormap(<span class="string">'lines'</span>);
+</pre><pre class="codeoutput">Loading atlas: buckner_networks_atlas_object.mat
+</pre><img vspace="5" hspace="5" src="plotting_parcellations_01.png" alt=""> <h2 id="3">old method</h2><p>we will invoke atlas/montage which internally implements atlas2region(). atlas2region() splits buckner into it's constituent components so the result is an array of regions. A similar result can be obtained by, region(fmri_data(bucker),'unique_mask_values') region/montage is then invoked by atlas/montage. The default obehavior of region/montage is to plot distinct elements of an input array one at a time with one unique color per region. In other words, under the default behavior of atlas/montage, the role of the voxel values of the atlas only matter until region/montage is called, but after that they aren't used again. region/montage will use default colors, or whatever is passed with 'colors'. Here I pass some colors of my own just to match what I get using then new method later, but the results will be essentially the same without the {'colors', cmap} arguments. Note also that I'm being lazy and misformating cmap, but it gets handled internally after some complaining. by region/montage. This would appear to do what we want: each atlas region is plotted with a unique color, except by plotting each region one at a time we get some slight overlap among adjacent atlas regions because of how the boundaries are interpolated into the image space. This results in 'earlier' regions being slightly obscured by later regions. This bias is especially problematic as regions become smaller (e.g. in canlab2018).</p><pre class="codeinput">orig_t0 = tic;
+buckner.montage(<span class="string">'full'</span>,<span class="string">'colors'</span>,cmap);
+fprintf(<span class="string">'Runtime %0.2f\n'</span>,toc(orig_t0));
+</pre><pre class="codeoutput">Warning: 'colors' supplied as matrix, assuming this is a colormap n x 3 matrix,
+and converting accordingly 
+    48
+
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Warning: Unknown input string option:full 
+Runtime 2037.66
+</pre><img vspace="5" hspace="5" src="plotting_parcellations_02.png" alt=""> <img vspace="5" hspace="5" src="plotting_parcellations_03.png" alt=""> <h2 id="4">new method</h2><p>Note that our results here occupy less area than above. When 'indexmap' is supplied it changes the plotting style from one region at a time to all regions at once. While region/montage ignores the voxel values it gets from atlas/region when invoked with {'colors', cmap} (or with no params), region/montage instead does use the voxel values when invoked with {'indexmap', cmap}. Rather than plotting each region one at a time, all are plotted as a single object, and the coloring is determined by voxel values. This approach has the advantage of more precise area boundaries but precludes the use of certain decorations like area boundaries.</p><pre class="codeinput">figure;
+new_t0 = tic;
+buckner.montage(<span class="string">'full'</span>,<span class="string">'indexmap'</span>,cmap);
+fprintf(<span class="string">'Runtime %0.2fs\n'</span>,toc(new_t0));
+</pre><pre class="codeoutput">    48
+
+Warning: Unknown input string option:full 
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+sagittal montage: 77940 voxels displayed, 977404 not displayed on these slices
+Warning: Unknown input string option:full 
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+coronal montage: 81144 voxels displayed, 974200 not displayed on these slices
+Warning: Unknown input string option:full 
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+axial montage: 113152 voxels displayed, 942192 not displayed on these slices
+Warning: Unknown input string option:full 
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+axial montage: 110168 voxels displayed, 945176 not displayed on these slices
+Runtime 204.54s
+</pre><img vspace="5" hspace="5" src="plotting_parcellations_04.png" alt=""> <img vspace="5" hspace="5" src="plotting_parcellations_05.png" alt=""> <img vspace="5" hspace="5" src="plotting_parcellations_06.png" alt=""> <h2 id="5">variations on the new method</h2><pre class="codeinput">o2 = fmridisplay();
+o2 = canlab_results_fmridisplay(region(),<span class="string">'noverbose'</span>,<span class="string">'full'</span>, <span class="string">'noblobs'</span>, <span class="string">'nooutline'</span>);
+o2 = addblobs(o2,region(fmri_data(buckner)),<span class="string">'interp'</span>,<span class="string">'nearest'</span>,<span class="string">'indexmap'</span>,cmap);
+</pre><pre class="codeoutput">    48
+
+Number of unique values in dataset: 7  Bit rate: 2.81 bits
+Warning: Number of unique values in dataset is low, indicating possible restriction of bit rate. For comparison, Int16 has 65,536 unique values
+Grouping contiguous voxels:   1 regions
+Warning: Unknown input string option:nearest 
+sagittal montage: 77940 voxels displayed, 977404 not displayed on these slices
+Warning: Unknown input string option:nearest 
+coronal montage: 81144 voxels displayed, 974200 not displayed on these slices
+Warning: Unknown input string option:nearest 
+axial montage: 113152 voxels displayed, 942192 not displayed on these slices
+Warning: Unknown input string option:nearest 
+axial montage: 110168 voxels displayed, 945176 not displayed on these slices
+</pre><img vspace="5" hspace="5" src="plotting_parcellations_07.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+addpath('/dartfs-hpc/rc/home/m/f0042vm/software/spm12');
+addpath(genpath('/dartfs-hpc/rc/home/m/f0042vm/software/canlab/CanlabCore/CanlabCore/'))
+addpath(genpath('/dartfs-hpc/rc/home/m/f0042vm/software/canlab/Neuroimaging_Pattern_Masks/'));
+
+%% Plotting Parcellations
+% There are two ways to plot parcellations. One is by defining an atlas and
+% then invoking atlas2region to produce independent regions. These are then
+% mapped one at a time. This is the old method
+%
+% Another way is to define an indexed fmri_data object, where each voxel
+% corresponds to an index of a colormap. A colormap is then specified by an
+% n x 3 matrix of RGB colors. So for instance a voxel of value 3 would map
+% to row 3 of the colormap. Plotting the indexed fmri_data object with the
+% desired colormap then achieves a similar result. This is the new way I've
+% just introduced
+%
+% Thee are two important differences between these methods. The old method
+% invokes the plotting functions n times, once for every region being
+% plotted. The new method invokes the plotting functions only once. This
+% means the new method runs (approximately) n times faster. The other major
+% difference is that with the old method the boundaries of different
+% adjacent regions may not perfectly align due to how the plotting 
+% functions interpolate fmri_data objects to image patches and surfaces. 
+% With the new method perfectly aligned boundaries are guaranteed.
+%
+% I will demonstrate this using the buckner 7 networks atlas using the
+% Discovery compute cluster. Note that on compute clusters for whatever
+% reason plotting is excruciatingly slow. Don't take the absolute
+% timestamps below as an indicator of how fast these will run on your
+% system, but for those using similar distributing computing environments
+% the speedups of the new method will be especially valuable.
+%
+% some variations of the plotting functions may not work neatly with the 
+% indexing option, I haven't tested it extensively. if they don't though, 
+% just go back to the old method.
+
+buckner = load_atlas('buckner');
+
+cmap = colormap('lines');
+
+%% old method
+% we will invoke atlas/montage which internally implements atlas2region().
+% atlas2region() splits buckner into it's constituent components so the
+% result is an array of regions. A similar result can be obtained by,
+% region(fmri_data(bucker),'unique_mask_values')
+% region/montage is then invoked by atlas/montage. The default obehavior of
+% region/montage is to plot distinct elements of an input array one at a
+% time with one unique color per region. In other words, under the default
+% behavior of atlas/montage, the role of the voxel values of the atlas only
+% matter until region/montage is called, but after that they aren't used
+% again.
+% region/montage will use default colors, or whatever is passed with 
+% 'colors'. Here I pass some colors of my own just to match what I get
+% using then new method later, but the results will be essentially the same
+% without the {'colors', cmap} arguments. Note also that I'm being lazy and
+% misformating cmap, but it gets handled internally after some complaining.
+% by region/montage.
+% This would appear to do what we want: each atlas region is plotted with
+% a unique color, except by plotting each region one at a time we get some 
+% slight overlap among adjacent atlas regions because of how the boundaries 
+% are interpolated into the image space. This results in 'earlier' regions
+% being slightly obscured by later regions. This bias is especially
+% problematic as regions become smaller (e.g. in canlab2018).
+orig_t0 = tic;
+buckner.montage('full','colors',cmap);
+fprintf('Runtime %0.2f\n',toc(orig_t0));
+
+%% new method
+% Note that our results here occupy less area than above. When 'indexmap'
+% is supplied it changes the plotting style from one region at a time to
+% all regions at once. While region/montage ignores the voxel values it 
+% gets from atlas/region when invoked with {'colors', cmap} (or with no 
+% params), region/montage instead does use the voxel values when invoked 
+% with {'indexmap', cmap}. Rather than plotting each region one at a time, 
+% all are plotted as a single object, and the coloring is determined by 
+% voxel values.
+% This approach has the advantage of more precise area boundaries but
+% precludes the use of certain decorations like area boundaries.
+figure;
+new_t0 = tic;
+buckner.montage('full','indexmap',cmap);
+fprintf('Runtime %0.2fs\n',toc(new_t0));
+
+%% variations on the new method
+o2 = fmridisplay();
+o2 = canlab_results_fmridisplay(region(),'noverbose','full', 'noblobs', 'nooutline');
+o2 = addblobs(o2,region(fmri_data(buckner)),'interp','nearest','indexmap',cmap);
+
+##### SOURCE END #####
+--></body></html>
