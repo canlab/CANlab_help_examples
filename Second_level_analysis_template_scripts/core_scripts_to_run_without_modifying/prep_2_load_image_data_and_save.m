@@ -16,7 +16,7 @@
 
 % Now set in a2_set_default_options
 options_needed = {'dofullplot', 'omit_histograms' 'dozipimages'};  % Options we are looking for. Set in a2_set_default_options
-options_exist = cellfun(@exist, options_needed); 
+options_exist = cellfun(@exist, options_needed);        % initializing this means a2_set_defaults_options will never run
 
 option_default_values = {true false true};          % defaults if we cannot find info in a2_set_default_options at all 
 
@@ -50,6 +50,7 @@ for i = 1:length(DAT.conditions)
         cimgs{i} = plugin_unzip_images_if_needed(str);
         
     else
+        % 
         
         str = fullfile(datadir, DAT.functional_wildcard{i});
         
@@ -141,16 +142,17 @@ for i = 1:length(DAT.conditions)
     % -------------------------------------------------------------------
     
     if dofullplot
-        fprintf('%s\nPlot of images: %s\n%s\n', dashes, DAT.functional_wildcard{i}, dashes);
+        if ischar(DAT.functional_wildcard{i})
+            fprintf('%s\nPlot of images: %s\n%s\n', dashes, DAT.functional_wildcard{i}, dashes);  % This fails when trying to pass in a cell array of wildcards - Michael Sun 10/22/2021
+        elseif iscellstr(DAT.functional_wildcard{i}) || isstring(DAT.functional_wildcard{i})
+            fprintf('%s\nPlot of images: %s\n%s\n', dashes, DAT.conditions{i}, dashes);
+        end
         disp(DATA_OBJ{i}.fullpath)
+
         
         plot(DATA_OBJ{i}); drawnow; snapnow
         
         if ~omit_histograms
-            
-            hist_han = histogram(DATA_OBJ{i}, 'byimage', 'singleaxis');
-            title([DAT.conditions{i} ' histograms for each image']);
-            drawnow; snapnow
             
             hist_han = histogram(DATA_OBJ{i}, 'byimage', 'by_tissue_type');
             drawnow; snapnow
@@ -193,11 +195,7 @@ DATA_CAT = rescale(DATA_CAT, 'l2norm_images');     % scaling sensitive to mean a
 
 DATA_CAT = preprocess(DATA_CAT, 'windsorize'); % entire data matrix
 
-if length(DAT.conditions) > 1
-    DATA_OBJsc = split(DATA_CAT);
-else
-    DATA_OBJsc = {DATA_CAT};
-end
+DATA_OBJsc = split(DATA_CAT);
 
 % Enforce variable types in objects to save space
 for i = 1:length(DATA_OBJsc), DATA_OBJsc{i} = enforce_variable_types(DATA_OBJsc{i}); end

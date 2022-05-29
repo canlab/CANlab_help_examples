@@ -1,4 +1,8 @@
 %% Datasets used in CANlab tutorials
+%
+% Note: this report was generated from |canlab_help_2c_loading_datasets.m|
+% in the repository <https://github.com/canlab/CANlab_help_examples>
+%
 
 %% The Neuroimaging_pattern_masks Github repository and website
 %
@@ -98,7 +102,10 @@ drawnow, snapnow
 [test_images, names] = load_image_set('kragel18_alldata', 'noverbose');
 
 % This field contains a table object with metadata for each image:
-metadata = test_images.dat_descrip;
+metadata = test_images.metadata_table;
+
+disp('Metadata available in test_images.metadata_table:')
+metadata(1:5, :)
 
 % Make a plot of the spatial correlation of the average image for each study
 
@@ -114,6 +121,8 @@ for i = 1:length(names)
     m.dat(:, i) = studymean.dat;
     
 end
+
+disp('Map of spatial correlations across the mean images for each study');
 
 plot_correlation_matrix(m.dat, 'names', names, 'partitions', [ones(1, 6) 2*ones(1, 6) 3*ones(1, 6)], 'partitionlabels', {'Pain', 'Cognition', 'Emotion'});
 drawnow, snapnow
@@ -178,10 +187,10 @@ subject_id = image_obj.additional_info.subject_id;
 ratings = reshape(image_obj.Y, 6, 33)';
 temperatures = image_obj.additional_info.temperatures;
 
-%%
 % Plot the ratings
 
 create_figure('ratings');
+title('Pain ratings by stimulus intensity in BMRK3 dataset')
 hold on; plot(ratings', '-', 'Color', [.7 .7 .7], 'LineWidth', .5);
 lineplot_columns(ratings, 'color', [.7 .3 .3], 'markerfacecolor', [1 .5 0]);
 xlabel('Temperature');

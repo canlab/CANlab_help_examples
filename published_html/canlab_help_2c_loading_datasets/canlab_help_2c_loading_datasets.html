@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Datasets used in CANlab tutorials</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-01-13"><meta name="DC.source" content="canlab_help_2c_loading_datasets.m"><style type="text/css">
+      --><title>Datasets used in CANlab tutorials</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-04-16"><meta name="DC.source" content="canlab_help_2c_loading_datasets.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Datasets used in CANlab tutorials</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">The Neuroimaging_pattern_masks Github repository and website</a></li><li><a href="#2">Registries for easy loading</a></li><li><a href="#3">Emotion regulation dataset</a></li><li><a href="#4">Buckner lab resting-state connectivity maps</a></li><li><a href="#5">Pain, Cognition, Emotion balanced N = 270 dataset</a></li><li><a href="#6">Pain across six intensity levels per person (BMRK3)</a></li><li><a href="#8">CANlab 2018 Combined Atlas object</a></li><li><a href="#9">Kragel 2015 emotion category-predictive patterns</a></li><li><a href="#10">Subcortical and brainstem regions</a></li></ul></div><h2 id="1">The Neuroimaging_pattern_masks Github repository and website</h2><p>For these walkthroughs, we'll load several image datasets. Some are stored in Github, if the files are small enough. The Wager 2008 emotion regulation dataset, for example, is in the CANlab Core repository. Others are on figshare or Neurovault.</p><p>Many tutorials apply pre-trained patterns and masks. These are stored in this Github repository:</p><p><a href="https://github.com/canlab/Neuroimaging_Pattern_Masks">https://github.com/canlab/Neuroimaging_Pattern_Masks</a></p><p>In addition, you can explore these and find more information here: <a href="https://sites.google.com/dartmouth.edu/canlab-brainpatterns/home">https://sites.google.com/dartmouth.edu/canlab-brainpatterns/home</a></p><p>To run this tutorial and many others in this series, you'll need to download the Neuroimaging_Pattern_Masks Github repository and add it to your Matlab path with subfolders. The Github site has three main types of datasets, shown here:</p><p><img vspace="5" hspace="5" src="Neuroimaging_pattern_masks_site.png" alt=""> </p><h2 id="2">Registries for easy loading</h2><p>There are several functions that contain sets of images that you can load by name. For example:</p><p><tt>load_image_set()</tt> includes a registry of datasets that you can access by name. Try <tt>help load_image|set</tt> for a list of images you can load by keyword.</p><p><tt>load_atlas()</tt> also has a named set of atlases/brain parcellations you can load.</p><p><tt>canlab_load_ROI</tt> has a registry of many named regions derived from previous studies. This is particularly useful for loading a subcortical ROI and visualizing it or applying it to data.</p><h2 id="3">Emotion regulation dataset</h2><p>"Wager_et_al_2008_Neuron_EmotionReg" The dataset is a series of contrast images from N = 30 participants. Each image is a contrast image for [reappraise neg vs. look neg]</p><p>These data were published in: Wager, T. D., Davidson, M. L., Hughes, B. L., Lindquist, M. A., Ochsner, K. N.. (2008). Prefrontal-subcortical pathways mediating successful emotion regulation. Neuron, 59, 1037-50.</p><p>To load, try the following:</p><pre class="codeinput">[data_obj, subject_names, image_names] = load_image_set(<span class="string">'emotionreg'</span>, <span class="string">'noverbose'</span>);
+  </style></head><body><div class="content"><h1>Datasets used in CANlab tutorials</h1><!--introduction--><p>Note: this report was generated from <tt>canlab_help_2c_loading_datasets.m</tt> in the repository <a href="https://github.com/canlab/CANlab_help_examples">https://github.com/canlab/CANlab_help_examples</a></p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">The Neuroimaging_pattern_masks Github repository and website</a></li><li><a href="#2">Registries for easy loading</a></li><li><a href="#3">Emotion regulation dataset</a></li><li><a href="#4">Buckner lab resting-state connectivity maps</a></li><li><a href="#5">Pain, Cognition, Emotion balanced N = 270 dataset</a></li><li><a href="#6">Pain across six intensity levels per person (BMRK3)</a></li><li><a href="#7">CANlab 2018 Combined Atlas object</a></li><li><a href="#8">Kragel 2015 emotion category-predictive patterns</a></li><li><a href="#9">Subcortical and brainstem regions</a></li></ul></div><h2 id="1">The Neuroimaging_pattern_masks Github repository and website</h2><p>For these walkthroughs, we'll load several image datasets. Some are stored in Github, if the files are small enough. The Wager 2008 emotion regulation dataset, for example, is in the CANlab Core repository. Others are on figshare or Neurovault.</p><p>Many tutorials apply pre-trained patterns and masks. These are stored in this Github repository:</p><p><a href="https://github.com/canlab/Neuroimaging_Pattern_Masks">https://github.com/canlab/Neuroimaging_Pattern_Masks</a></p><p>In addition, you can explore these and find more information here: <a href="https://sites.google.com/dartmouth.edu/canlab-brainpatterns/home">https://sites.google.com/dartmouth.edu/canlab-brainpatterns/home</a></p><p>To run this tutorial and many others in this series, you'll need to download the Neuroimaging_Pattern_Masks Github repository and add it to your Matlab path with subfolders. The Github site has three main types of datasets, shown here:</p><p><img vspace="5" hspace="5" src="Neuroimaging_pattern_masks_site.png" alt=""> </p><h2 id="2">Registries for easy loading</h2><p>There are several functions that contain sets of images that you can load by name. For example:</p><p><tt>load_image_set()</tt> includes a registry of datasets that you can access by name. Try <tt>help load_image|set</tt> for a list of images you can load by keyword.</p><p><tt>load_atlas()</tt> also has a named set of atlases/brain parcellations you can load.</p><p><tt>canlab_load_ROI</tt> has a registry of many named regions derived from previous studies. This is particularly useful for loading a subcortical ROI and visualizing it or applying it to data.</p><h2 id="3">Emotion regulation dataset</h2><p>"Wager_et_al_2008_Neuron_EmotionReg" The dataset is a series of contrast images from N = 30 participants. Each image is a contrast image for [reappraise neg vs. look neg]</p><p>These data were published in: Wager, T. D., Davidson, M. L., Hughes, B. L., Lindquist, M. A., Ochsner, K. N.. (2008). Prefrontal-subcortical pathways mediating successful emotion regulation. Neuron, 59, 1037-50.</p><p>To load, try the following:</p><pre class="codeinput">[data_obj, subject_names, image_names] = load_image_set(<span class="string">'emotionreg'</span>, <span class="string">'noverbose'</span>);
 
 montage(mean(data_obj), <span class="string">'trans'</span>, <span class="string">'compact2'</span>);
 drawnow, snapnow
@@ -74,11 +74,11 @@ drawnow, snapnow
 <span class="comment">% data_obj is an fmri_data object containing all 30 images.</span>
 <span class="comment">% subject_names is a list of short names for each image.</span>
 <span class="comment">% image_names is a list of the full image names with their path.</span>
-</pre><pre class="codeoutput">Setting up fmridisplay objects
-This takes a lot of memory, and can hang if you have too little.
-Grouping contiguous voxels:   1 regions
-axial montage: 21561 voxels displayed, 28231 not displayed on these slices
-sagittal montage: 2885 voxels displayed, 46907 not displayed on these slices
+</pre><pre class="codeoutput">Direct calls to spm_defauts are deprecated.
+Please use spm('Defaults',modality) or spm_get_defaults instead.
+Setting up fmridisplay objects
+axial montage: 16574 voxels displayed, 19102 not displayed on these slices
+sagittal montage: 2230 voxels displayed, 33446 not displayed on these slices
 </pre><img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_01.png" alt=""> <h2 id="4">Buckner lab resting-state connectivity maps</h2><p>A popular series of masks is a set of "networks" developed from resting-state fMRI connectivity in 1,000 people. For our purposes, the "network" maps consist of a set of voxels that load most highly on each of 7 ICA components from the 1,000 Functional Connectomes project. These were published by Randy Buckner's lab in 2011 in three papers: Choi et al., Buckner et al., and Yeo et al.  We'll use the cortical networks from Yeo et al. here.</p><pre class="codeinput">[bucknermaps, mapnames] = load_image_set(<span class="string">'bucknerlab'</span>, <span class="string">'noverbose'</span>); <span class="comment">% loads 7 masks from Yeo et al.</span>
 disp(char(mapnames))
 
@@ -93,32 +93,35 @@ vAttention
 Limbic        
 Frontoparietal
 Default       
-Warning: Unknown input string option:color 
 Setting up fmridisplay objects
-This takes a lot of memory, and can hang if you have too little.
-Grouping contiguous voxels:   3 regions
-axial montage: 5688 voxels displayed, 16594 not displayed on these slices
-sagittal montage: 658 voxels displayed, 21624 not displayed on these slices
+axial montage: 5637 voxels displayed, 16451 not displayed on these slices
+sagittal montage: 658 voxels displayed, 21430 not displayed on these slices
 No variability in mapped values. Not plotting legend.
 Grouping contiguous voxels:   1 regions
-axial montage: 2819 voxels displayed, 16657 not displayed on these slices
-sagittal montage: 498 voxels displayed, 18978 not displayed on these slices
+axial montage: 2819 voxels displayed, 16654 not displayed on these slices
+sagittal montage: 498 voxels displayed, 18975 not displayed on these slices
 Grouping contiguous voxels:   7 regions
-axial montage: 2410 voxels displayed, 12882 not displayed on these slices
-sagittal montage: 132 voxels displayed, 15160 not displayed on these slices
+axial montage: 2403 voxels displayed, 12844 not displayed on these slices
+sagittal montage: 132 voxels displayed, 15115 not displayed on these slices
 Grouping contiguous voxels:  11 regions
-axial montage: 3139 voxels displayed, 10523 not displayed on these slices
-sagittal montage: 521 voxels displayed, 13141 not displayed on these slices
+axial montage: 3137 voxels displayed, 10511 not displayed on these slices
+sagittal montage: 521 voxels displayed, 13127 not displayed on these slices
 Grouping contiguous voxels:   1 regions
-axial montage: 2177 voxels displayed, 9370 not displayed on these slices
-sagittal montage: 338 voxels displayed, 11209 not displayed on these slices
+axial montage: 2174 voxels displayed, 9345 not displayed on these slices
+sagittal montage: 338 voxels displayed, 11181 not displayed on these slices
 Grouping contiguous voxels:  16 regions
-axial montage: 4383 voxels displayed, 15149 not displayed on these slices
-sagittal montage: 487 voxels displayed, 19045 not displayed on these slices
+axial montage: 4378 voxels displayed, 15124 not displayed on these slices
+sagittal montage: 487 voxels displayed, 19015 not displayed on these slices
 Grouping contiguous voxels:  10 regions
-axial montage: 7153 voxels displayed, 22974 not displayed on these slices
-sagittal montage: 1583 voxels displayed, 28544 not displayed on these slices
+axial montage: 7133 voxels displayed, 22886 not displayed on these slices
+sagittal montage: 1583 voxels displayed, 28436 not displayed on these slices
 </pre><img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_02.png" alt=""> <h2 id="5">Pain, Cognition, Emotion balanced N = 270 dataset</h2><p>This Dataset is from Kragel et al. 2018, Nature Neuroscience. We thought it was too large for Github, and it's stored on Neurovault.org as collection #504. You could get it using:</p><p><tt>[files_on_disk, url_on_neurovault, mycollection, myimages] = retrieve_neurovault_collection(504);</tt></p><p>However, this may take a while to download, and you'd have to add metadata for the study category labels to use it. Therefore, we suggest you use the function below. It saves a file on your hard drive the first time you run it:</p><p><tt>kragel_2018_nat_neurosci_270_subjects_test_images.mat</tt></p><p>This file also has metadata that is not necessarily on Neurovault. If you save this file somewhere on your Matlab path, you'll be able to reload and reuse the dataset easily.</p><pre class="codeinput">[test_images, names] = load_image_set(<span class="string">'kragel18_alldata'</span>, <span class="string">'noverbose'</span>);
+
+<span class="comment">% This field contains a table object with metadata for each image:</span>
+metadata = test_images.metadata_table;
+
+disp(<span class="string">'Metadata available in test_images.metadata_table:'</span>)
+metadata(1:5, :)
 
 <span class="comment">% Make a plot of the spatial correlation of the average image for each study</span>
 
@@ -127,16 +130,36 @@ m = mean(test_images);
 
 <span class="keyword">for</span> i = 1:length(names)
 
-    wh = ~cellfun(@isempty, strfind(imgs, sprintf(<span class="string">'Study%dS'</span>, i)));
+    <span class="comment">% Create a mean image for each study and store in "m" object.</span>
+
+    wh = metadata.Studynumber == i;
     studymean = mean(get_wh_image(test_images, find(wh)));
     m.dat(:, i) = studymean.dat;
 
 <span class="keyword">end</span>
 
+disp(<span class="string">'Map of spatial correlations across the mean images for each study'</span>);
+
 plot_correlation_matrix(m.dat, <span class="string">'names'</span>, names, <span class="string">'partitions'</span>, [ones(1, 6) 2*ones(1, 6) 3*ones(1, 6)], <span class="string">'partitionlabels'</span>, {<span class="string">'Pain'</span>, <span class="string">'Cognition'</span>, <span class="string">'Emotion'</span>});
 drawnow, snapnow
-</pre><pre class="codeoutput">Loading /Users/torwager/Google Drive/CanlabDataRepository/Study_Subject_Level_Maps/2018_Kragel_Generalizability/kragel_2018_nat_neurosci_270_subjects_test_images.mat
-</pre><img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_03.png" alt=""> <h2 id="6">Pain across six intensity levels per person (BMRK3)</h2><p>The dataset contains data from 33 participants, with brain responses to six levels of heat (non-painful and painful). Each image is the average over several (4-8) trials of heat delivered at a single stimulus intensity, ranging from 44.3 - 49.3 degrees C in one-degree increments. Each image is also paired with an average reported pain value for that set of trials, rated immmediately after heat experience.</p><p>This dataset is interesting for mixed-effects and predictive analyses, as it has both within-person and between-person sources of variance.</p><p>Aspects of this data appear in these papers: Wager, T.D., Atlas, L.T., Lindquist, M.A., Roy, M., Choong-Wan, W., Kross, E. (2013). An fMRI-Based Neurologic Signature of Physical Pain. The New England Journal of Medicine. 368:1388-1397 (Study 2)</p><p>Woo, C. -W., Roy, M., Buhle, J. T. &amp; Wager, T. D. (2015). Distinct brain systems mediate the effects of nociceptive input and self-regulation on pain. PLOS Biology. 13(1): e1002036. doi:10.1371/journal.pbio.1002036</p><p>Lindquist, Martin A., Anjali Krishnan, Marina L&oacute;pez-Sol&agrave;, Marieke Jepma, Choong-Wan Woo, Leonie Koban, Mathieu Roy, et al. 2015. ?Group-Regularized Individual Prediction: Theory and Application to Pain.? NeuroImage. <a href="http://www.sciencedirect.com/science/article/pii/S1053811915009982">http://www.sciencedirect.com/science/article/pii/S1053811915009982</a>.</p><p>This dataset is shared on figshare.com, under this link: https://figshare.com/s/ca23e5974a310c44ca93</p><p>Here is a direct link to the dataset file with the fmri_data object: https://ndownloader.figshare.com/files/12708989</p><p>The key variable is image_obj, an fmri_data class object. See https://canlab.github.io/</p><p>image_obj.dat contains brain data for each image (average across trials) image_obj.Y contains pain ratings (one average rating per image)</p><p>image_obj.additional_info.subject_id contains integers coding for which Load the data file, downloading from figshare if needed</p><pre class="codeinput">fmri_data_file = which(<span class="string">'bmrk3_6levels_pain_dataset.mat'</span>);
+</pre><pre class="codeoutput">Loading /Users/torwager/Dropbox (Dartmouth College)/COURSES/Courses_Dartmouth/2021_3_Spring_fMRI_Class/PSYC60_Shared_resources_for_students/datasets/kragel_2018_nat_neurosci_270_subjects_test_images.mat
+Metadata available in test_images.metadata_table:
+
+ans =
+
+  5&times;6 table
+
+     Domain      Subdomain        imagenames       Studynumber    Orig_Studynumber        StudyCodes    
+    ________    ___________    ________________    ___________    ________________    __________________
+
+    {'Pain'}    {'Thermal'}    {'ThermalPain1'}         1                10           {'Atlas_2010_EXP'}
+    {'Pain'}    {'Thermal'}    {'ThermalPain1'}         1                10           {'Atlas_2010_EXP'}
+    {'Pain'}    {'Thermal'}    {'ThermalPain1'}         1                10           {'Atlas_2010_EXP'}
+    {'Pain'}    {'Thermal'}    {'ThermalPain1'}         1                10           {'Atlas_2010_EXP'}
+    {'Pain'}    {'Thermal'}    {'ThermalPain1'}         1                10           {'Atlas_2010_EXP'}
+
+Map of spatial correlations across the mean images for each study
+</pre><img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_03.png" alt=""> <h2 id="6">Pain across six intensity levels per person (BMRK3)</h2><p>The dataset contains data from 33 participants, with brain responses to six levels of heat (non-painful and painful). Each image is the average over several (4-8) trials of heat delivered at a single stimulus intensity, ranging from 44.3 - 49.3 degrees C in one-degree increments. Each image is also paired with an average reported pain value for that set of trials, rated immmediately after heat experience.</p><p>This dataset is interesting for mixed-effects and predictive analyses, as it has both within-person and between-person sources of variance.</p><p>Aspects of this data appear in these papers: Wager, T.D., Atlas, L.T., Lindquist, M.A., Roy, M., Choong-Wan, W., Kross, E. (2013). An fMRI-Based Neurologic Signature of Physical Pain. The New England Journal of Medicine. 368:1388-1397 (Study 2)</p><p>Woo, C. -W., Roy, M., Buhle, J. T. &amp; Wager, T. D. (2015). Distinct brain systems mediate the effects of nociceptive input and self-regulation on pain. PLOS Biology. 13(1): e1002036. doi:10.1371/journal.pbio.1002036</p><p>Lindquist, Martin A., Anjali Krishnan, Marina L&oacute;pez-Sol&agrave;, Marieke Jepma, Choong-Wan Woo, Leonie Koban, Mathieu Roy, et al. 2015. ?Group-Regularized Individual Prediction: Theory and Application to Pain.? NeuroImage. <a href="http://www.sciencedirect.com/science/article/pii/S1053811915009982">http://www.sciencedirect.com/science/article/pii/S1053811915009982</a>.</p><p>This dataset is shared on figshare.com, under this link: <a href="https://figshare.com/s/ca23e5974a310c44ca93">https://figshare.com/s/ca23e5974a310c44ca93</a></p><p>Here is a direct link to the dataset file with the fmri_data object: <a href="https://ndownloader.figshare.com/files/12708989">https://ndownloader.figshare.com/files/12708989</a></p><p>The key variable is image_obj, an fmri_data class object. See <a href="https://canlab.github.io/">https://canlab.github.io/</a></p><p>image_obj.dat contains brain data for each image (average across trials) image_obj.Y contains pain ratings (one average rating per image)</p><p>image_obj.additional_info.subject_id contains integers coding for which Load the data file, downloading from figshare if needed</p><pre class="codeinput">fmri_data_file = which(<span class="string">'bmrk3_6levels_pain_dataset.mat'</span>);
 
 <span class="keyword">if</span> isempty(fmri_data_file)
 
@@ -154,6 +177,17 @@ descriptives(image_obj);
 subject_id = image_obj.additional_info.subject_id;
 ratings = reshape(image_obj.Y, 6, 33)';
 temperatures = image_obj.additional_info.temperatures;
+
+<span class="comment">% Plot the ratings</span>
+
+create_figure(<span class="string">'ratings'</span>);
+title(<span class="string">'Pain ratings by stimulus intensity in BMRK3 dataset'</span>)
+hold <span class="string">on</span>; plot(ratings', <span class="string">'-'</span>, <span class="string">'Color'</span>, [.7 .7 .7], <span class="string">'LineWidth'</span>, .5);
+lineplot_columns(ratings, <span class="string">'color'</span>, [.7 .3 .3], <span class="string">'markerfacecolor'</span>, [1 .5 0]);
+xlabel(<span class="string">'Temperature'</span>);
+ylabel(<span class="string">'Rating'</span>);
+set(gca, <span class="string">'XTickLabel'</span>, [44.3:49.3], <span class="string">'FontSize'</span>, 18);
+drawnow, snapnow
 </pre><pre class="codeoutput"> 
 Source: BMRK3 dataset from CANlab, PI Tor Wager
 Data: .dat contains 6 images per participant, activation estimates during heat on L arm from level 1(44.3 degrees C) to level 6(49.3), in 1 degree increments.
@@ -196,14 +230,7 @@ Min: -11.529	Max: 7.862	Mean: -0.004	Std: 0.227
        99.9            1.3177
 
  
-</pre><p>Plot the ratings</p><pre class="codeinput">create_figure(<span class="string">'ratings'</span>);
-hold <span class="string">on</span>; plot(ratings', <span class="string">'-'</span>, <span class="string">'Color'</span>, [.7 .7 .7], <span class="string">'LineWidth'</span>, .5);
-lineplot_columns(ratings, <span class="string">'color'</span>, [.7 .3 .3], <span class="string">'markerfacecolor'</span>, [1 .5 0]);
-xlabel(<span class="string">'Temperature'</span>);
-ylabel(<span class="string">'Rating'</span>);
-set(gca, <span class="string">'XTickLabel'</span>, [44.3:49.3], <span class="string">'FontSize'</span>, 18);
-drawnow, snapnow
-</pre><img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_04.png" alt=""> <h2 id="8">CANlab 2018 Combined Atlas object</h2><p>An atlas-class object is a specialized subclass of fmri_data that stores information about a series of parcels, or pre-defined regions, and in some cases the probalistic maps that underlie the final parcellation.</p><p>A list of pre-defined atlases is contained in the function <tt>load_atlas</tt>. The default atlas for some CANlab functions is the "CANlab combined 2018" This was created by Tor Wager from other published atlases. It includes:</p><div><ul><li>Glasser 2016 Nature 180-region cortical parcellation (in MNI space, not indivdidualized)</li><li>Pauli 2016 PNAS basal ganglia subregions</li><li>Amygdala/hippocampal and basal forebrain regions from SPM Anatomy Toolbox</li><li>Thalamus regions from the Morel thalamus atlas</li><li>Subthalamus/Basal forebrain regions from Pauli "reinforcement learning" HCP atlas</li><li>Diedrichsen cerebellar atlas regions</li><li>Multiple named brainstem nuclei localized based on individual papers</li><li>Additional Shen atlas parcels to cover areas (esp. brainstem) not otherwise named</li></ul></div><p>References for the corresponding papers are stored in the atlas object, and printed in tables generated with the region.table() method.</p><pre class="codeinput">atlas_obj = load_atlas(<span class="string">'canlab2018'</span>);
+</pre><img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_04.png" alt=""> <h2 id="7">CANlab 2018 Combined Atlas object</h2><p>An atlas-class object is a specialized subclass of fmri_data that stores information about a series of parcels, or pre-defined regions, and in some cases the probalistic maps that underlie the final parcellation.</p><p>A list of pre-defined atlases is contained in the function <tt>load_atlas</tt>. The default atlas for some CANlab functions is the "CANlab combined 2018" This was created by Tor Wager from other published atlases. It includes:</p><div><ul><li>Glasser 2016 Nature 180-region cortical parcellation (in MNI space, not indivdidualized)</li><li>Pauli 2016 PNAS basal ganglia subregions</li><li>Amygdala/hippocampal and basal forebrain regions from SPM Anatomy Toolbox</li><li>Thalamus regions from the Morel thalamus atlas</li><li>Subthalamus/Basal forebrain regions from Pauli "reinforcement learning" HCP atlas</li><li>Diedrichsen cerebellar atlas regions</li><li>Multiple named brainstem nuclei localized based on individual papers</li><li>Additional Shen atlas parcels to cover areas (esp. brainstem) not otherwise named</li></ul></div><p>References for the corresponding papers are stored in the atlas object, and printed in tables generated with the region.table() method.</p><pre class="codeinput">atlas_obj = load_atlas(<span class="string">'canlab2018'</span>);
 
 <span class="comment">% Create a figure showing cortical parcels</span>
 create_figure(<span class="string">'iso'</span>); isosurface(atlas_obj, <span class="string">'alpha'</span>, .5);
@@ -217,7 +244,7 @@ set(hh, <span class="string">'FaceAlpha'</span>, 0.05);
 set(gca, <span class="string">'XLim'</span>, [-40 40], <span class="string">'YLim'</span>, [-40 20]);
 drawnow, snapnow
 </pre><pre class="codeoutput">Loading atlas: CANlab_combined_atlas_object_2018.mat
-</pre><img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_05.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_06.png" alt=""> <h2 id="9">Kragel 2015 emotion category-predictive patterns</h2><p>This loads a series of 7 multivariate patterns from Kragel et al. 2015. These patterns were developed to predict emotion categories. For our purposes here, we'll just treat them as data images.</p><pre class="codeinput">[test_dat, names] = load_image_set(<span class="string">'kragelemotion'</span>, <span class="string">'noverbose'</span>); <span class="comment">% loads 7 masks from Kragel et al.</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_05.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_06.png" alt=""> <h2 id="8">Kragel 2015 emotion category-predictive patterns</h2><p>This loads a series of 7 multivariate patterns from Kragel et al. 2015. These patterns were developed to predict emotion categories. For our purposes here, we'll just treat them as data images.</p><pre class="codeinput">[test_dat, names] = load_image_set(<span class="string">'kragelemotion'</span>, <span class="string">'noverbose'</span>); <span class="comment">% loads 7 masks from Kragel et al.</span>
 disp(char(names))
 
 <span class="comment">% Plot spatial correlations</span>
@@ -230,7 +257,7 @@ Fearful
 Neutral  
 Sad      
 Surprised
-</pre><img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_07.png" alt=""> <h2 id="10">Subcortical and brainstem regions</h2><p><tt>canlab_load_ROI</tt> has a registry of many named regions derived from previous studies. This is particularly useful for loading a subcortical ROI and visualizing it or applying it to data.</p><pre class="codeinput">help <span class="string">canlab_load_ROI</span>
+</pre><img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_07.png" alt=""> <h2 id="9">Subcortical and brainstem regions</h2><p><tt>canlab_load_ROI</tt> has a registry of many named regions derived from previous studies. This is particularly useful for loading a subcortical ROI and visualizing it or applying it to data.</p><pre class="codeinput">help <span class="string">canlab_load_ROI</span>
 
 vmpfc = canlab_load_ROI(<span class="string">'vmpfc'</span>);
 nac =  canlab_load_ROI(<span class="string">'nac'</span>);
@@ -339,9 +366,13 @@ drawnow, snapnow
   r = canlab_load_ROI('habenula', 'noatlas'); orthviews(r)
 
 Grouping contiguous voxels:   2 regions
-</pre><img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_08.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+</pre><img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_08.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Datasets used in CANlab tutorials
+%
+% Note: this report was generated from |canlab_help_2c_loading_datasets.m|
+% in the repository <https://github.com/canlab/CANlab_help_examples>
+%
 
 %% The Neuroimaging_pattern_masks Github repository and website
 %
@@ -440,6 +471,12 @@ drawnow, snapnow
 
 [test_images, names] = load_image_set('kragel18_alldata', 'noverbose');
 
+% This field contains a table object with metadata for each image:
+metadata = test_images.metadata_table;
+
+disp('Metadata available in test_images.metadata_table:')
+metadata(1:5, :)
+
 % Make a plot of the spatial correlation of the average image for each study
 
 imgs = cellstr(test_images.image_names);
@@ -447,11 +484,15 @@ m = mean(test_images);
 
 for i = 1:length(names)
     
-    wh = ~cellfun(@isempty, strfind(imgs, sprintf('Study%dS', i)));
+    % Create a mean image for each study and store in "m" object.
+    
+    wh = metadata.Studynumber == i;
     studymean = mean(get_wh_image(test_images, find(wh)));
     m.dat(:, i) = studymean.dat;
     
 end
+
+disp('Map of spatial correlations across the mean images for each study');
 
 plot_correlation_matrix(m.dat, 'names', names, 'partitions', [ones(1, 6) 2*ones(1, 6) 3*ones(1, 6)], 'partitionlabels', {'Pain', 'Cognition', 'Emotion'});
 drawnow, snapnow
@@ -516,10 +557,10 @@ subject_id = image_obj.additional_info.subject_id;
 ratings = reshape(image_obj.Y, 6, 33)';
 temperatures = image_obj.additional_info.temperatures;
 
-%%
 % Plot the ratings
 
 create_figure('ratings');
+title('Pain ratings by stimulus intensity in BMRK3 dataset')
 hold on; plot(ratings', '-', 'Color', [.7 .7 .7], 'LineWidth', .5);
 lineplot_columns(ratings, 'color', [.7 .3 .3], 'markerfacecolor', [1 .5 0]);
 xlabel('Temperature');
