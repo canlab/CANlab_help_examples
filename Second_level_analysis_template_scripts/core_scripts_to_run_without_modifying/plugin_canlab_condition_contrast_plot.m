@@ -81,7 +81,8 @@ nplots = 3;
 
 myfontsize = get_font_size(k);
 myaxislabels = format_strings_for_legend(DAT.conditions);
-mypointsize = get_point_size(nplots, k);
+%mypointsize = get_point_size(nplots, k);
+mypointsize = 3;
 
 %% Signature Response - conditions
 % ------------------------------------------------------------------------
@@ -151,7 +152,8 @@ printhdr([analysis_name ': Contrasts']);
 kc = size(DAT.contrasts, 1);        % number of contrasts
 myfontsize = get_font_size(kc);
 myaxislabels = format_strings_for_legend(DAT.contrastnames);
-mypointsize = get_point_size(nplots, kc);
+%mypointsize = get_point_size(nplots, kc);
+mypointsize=3
 
 for n = 3 % Legacy
     
