@@ -20,7 +20,7 @@ a_set_up_paths_always_run_first
 prep_1_set_conditions_contrasts_colors
 
 % Other scripts you can copy over and edit if you want to:
-prep1b_prep_behavioral_data
+prep_1b_prep_behavioral_data
 prep_2_load_image_data_and_save
 prep_3_calc_univariate_contrast_maps_and_save
 prep_4_apply_signatures_and_save
