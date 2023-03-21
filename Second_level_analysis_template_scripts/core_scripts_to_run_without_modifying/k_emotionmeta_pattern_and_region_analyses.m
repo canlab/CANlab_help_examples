@@ -1,11 +1,11 @@
 roimask_imagename = 'Buhle_Silvers_2014_Emotion_Regulation_Meta_thresh.img';
 
+roimask = which(roimask_imagename); % not 1/0
+
 %% Add this to access the roimask
 if isempty(which(roimask))
     gunzip(which([roimask_imagename, '.gz']))
 end
-
-roimask = which(roimask_imagename); % not 1/0
 
 roimask_shortname = 'EmoMetaMask'; % this is a short, unique name identifying this map in saved output
 
