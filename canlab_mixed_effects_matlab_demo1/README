@@ -1,6 +1,1 @@
-The data here was provided from paingen, but we don't want references to
-paingen in the filenames or code because those go into a public web page on
-canlab.github.io where participants in the study might see that paingen
-is a placebo study. Instead this README is here to inform future users, but
-this repo is much less likely to be identified by participants than something
-that's posted as a page on the web
+The data here was provided from paingen. This README is here to inform future users.
