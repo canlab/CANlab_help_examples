@@ -71,4 +71,4 @@ module load matlab
 
 # Run the MATLAB function
 # srun matlab -nodisplay -r "addpath(genpath('//dartfs-hpc/rc/lab/C/CANlab/modules/spm12')); addpath(genpath('//dartfs-hpc/rc/lab/C/CANlab/labdata/projects/WASABI/software')); move_betas_to_secondlvl('${map_dirs[${SLURM_ARRAY_TASK_ID}]}', '${data_dir}', 'symlink', ${conditions_str})"
-srun matlab -nodisplay -r "addpath(genpath('//dartfs-hpc/rc/lab/C/CANlab/modules/spm12')); addpath(genpath('//dartfs-hpc/rc/lab/C/CANlab/labdata/projects/WASABI/software')); move_betas_to_secondlvl('${map_dirs[${SLURM_ARRAY_TASK_ID}]}', '${data_dir}', 'symlink')"
+srun matlab -nodisplay -r "move_betas_to_secondlvl('${map_dirs[${SLURM_ARRAY_TASK_ID}]}', '${data_dir}', 'symlink')"
