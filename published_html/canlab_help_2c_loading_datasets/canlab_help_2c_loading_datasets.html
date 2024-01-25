@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Datasets used in CANlab tutorials</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-04-16"><meta name="DC.source" content="canlab_help_2c_loading_datasets.m"><style type="text/css">
+      --><title>Datasets used in CANlab tutorials</title><meta name="generator" content="MATLAB 9.13"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-08-25"><meta name="DC.source" content="canlab_help_2c_loading_datasets.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -76,6 +76,12 @@ drawnow, snapnow
 <span class="comment">% image_names is a list of the full image names with their path.</span>
 </pre><pre class="codeoutput">Direct calls to spm_defauts are deprecated.
 Please use spm('Defaults',modality) or spm_get_defaults instead.
+Defaults settings have been modified by file(s):
+  /Users/f003vz1/Dropbox (Dartmouth College)/Matlab_code_external/spm12/spm_my_defaults.m
+Modified fields: stats 
+Defaults settings have been modified by file(s):
+  /Users/f003vz1/Dropbox (Dartmouth College)/Matlab_code_external/spm12/spm_my_defaults.m
+Modified fields: stats 
 Setting up fmridisplay objects
 axial montage: 16574 voxels displayed, 19102 not displayed on these slices
 sagittal montage: 2230 voxels displayed, 33446 not displayed on these slices
@@ -86,7 +92,13 @@ disp(char(mapnames))
 o2 = montage(get_wh_image(bucknermaps, 1), <span class="string">'trans'</span>, <span class="string">'compact2'</span>, <span class="string">'color'</span>, rand(1, 3));
 <span class="keyword">for</span> i = 2:7, o2 = addblobs(o2, region(get_wh_image(bucknermaps, i)), <span class="string">'trans'</span>, <span class="string">'color'</span>, rand(1, 3)); <span class="keyword">end</span>
 drawnow, snapnow
-</pre><pre class="codeoutput">Visual        
+</pre><pre class="codeoutput">Defaults settings have been modified by file(s):
+  /Users/f003vz1/Dropbox (Dartmouth College)/Matlab_code_external/spm12/spm_my_defaults.m
+Modified fields: stats 
+Defaults settings have been modified by file(s):
+  /Users/f003vz1/Dropbox (Dartmouth College)/Matlab_code_external/spm12/spm_my_defaults.m
+Modified fields: stats 
+Visual        
 Somatomotor   
 dAttention    
 vAttention    
@@ -115,7 +127,7 @@ sagittal montage: 487 voxels displayed, 19015 not displayed on these slices
 Grouping contiguous voxels:  10 regions
 axial montage: 7133 voxels displayed, 22886 not displayed on these slices
 sagittal montage: 1583 voxels displayed, 28436 not displayed on these slices
-</pre><img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_02.png" alt=""> <h2 id="5">Pain, Cognition, Emotion balanced N = 270 dataset</h2><p>This Dataset is from Kragel et al. 2018, Nature Neuroscience. We thought it was too large for Github, and it's stored on Neurovault.org as collection #504. You could get it using:</p><p><tt>[files_on_disk, url_on_neurovault, mycollection, myimages] = retrieve_neurovault_collection(504);</tt></p><p>However, this may take a while to download, and you'd have to add metadata for the study category labels to use it. Therefore, we suggest you use the function below. It saves a file on your hard drive the first time you run it:</p><p><tt>kragel_2018_nat_neurosci_270_subjects_test_images.mat</tt></p><p>This file also has metadata that is not necessarily on Neurovault. If you save this file somewhere on your Matlab path, you'll be able to reload and reuse the dataset easily.</p><pre class="codeinput">[test_images, names] = load_image_set(<span class="string">'kragel18_alldata'</span>, <span class="string">'noverbose'</span>);
+</pre><img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_02.png" alt=""> <h2 id="5">Pain, Cognition, Emotion balanced N = 270 dataset</h2><p>This dataset is an fmri_data object class object created using CANlab tools (canlab.github.io). It contains 270 single-participant fMRI contrast maps across 18 studies (with 15 participants per study). Studies are grouped into three domains: Pain, Cognitive Control, and Negative Emotion, with 9 studies each. Each domain includes 3 subdomains, with 3 studies each.</p><p>The dataset is from Kragel et al. 2018, Nature Neuroscience. It is too large for Github, and it's stored on Neurovault.org as collection #504. You could get it using CANlab tools like this:</p><p><tt>[files_on_disk, url_on_neurovault, mycollection, myimages] = retrieve_neurovault_collection(504);</tt></p><p>It is also available on Figshare, with DOI 10.6084/m9.figshare.24033402 <a href="https://figshare.com/ndownloader/files/42143352">https://figshare.com/ndownloader/files/42143352</a></p><p>If you download from Neurovault, you'd have to add metadata for the study category labels to use it. Therefore, we suggest you use the CANLab load_image_set() function, as below. It saves a file on your hard drive the first time you run it:</p><p><tt>kragel_2018_nat_neurosci_270_subjects_test_images.mat</tt></p><p>This file also has metadata that is not necessarily on Neurovault. If you save this file somewhere on your Matlab path, you'll be able to reload and reuse the dataset easily.</p><pre class="codeinput">[test_images, names] = load_image_set(<span class="string">'kragel18_alldata'</span>, <span class="string">'noverbose'</span>);
 
 <span class="comment">% This field contains a table object with metadata for each image:</span>
 metadata = test_images.metadata_table;
@@ -142,7 +154,7 @@ disp(<span class="string">'Map of spatial correlations across the mean images fo
 
 plot_correlation_matrix(m.dat, <span class="string">'names'</span>, names, <span class="string">'partitions'</span>, [ones(1, 6) 2*ones(1, 6) 3*ones(1, 6)], <span class="string">'partitionlabels'</span>, {<span class="string">'Pain'</span>, <span class="string">'Cognition'</span>, <span class="string">'Emotion'</span>});
 drawnow, snapnow
-</pre><pre class="codeoutput">Loading /Users/torwager/Dropbox (Dartmouth College)/COURSES/Courses_Dartmouth/2021_3_Spring_fMRI_Class/PSYC60_Shared_resources_for_students/datasets/kragel_2018_nat_neurosci_270_subjects_test_images.mat
+</pre><pre class="codeoutput">Loading /Users/f003vz1/Downloads/kragel_2018_nat_neurosci_270_subjects_test_images.mat
 Metadata available in test_images.metadata_table:
 
 ans =
@@ -188,7 +200,8 @@ xlabel(<span class="string">'Temperature'</span>);
 ylabel(<span class="string">'Rating'</span>);
 set(gca, <span class="string">'XTickLabel'</span>, [44.3:49.3], <span class="string">'FontSize'</span>, 18);
 drawnow, snapnow
-</pre><pre class="codeoutput"> 
+</pre><pre class="codeoutput">Did not find data locally...downloading data file from figshare.com
+ 
 Source: BMRK3 dataset from CANlab, PI Tor Wager
 Data: .dat contains 6 images per participant, activation estimates during heat on L arm from level 1(44.3 degrees C) to level 6(49.3), in 1 degree increments.
  
@@ -209,7 +222,11 @@ ________________________________________________________________________________
 Summary of dataset
 ______________________________________________________
 Images: 198	Nonempty: 198	Complete: 198
-Voxels: 223707	Nonempty: 223707	Complete: 223707
+  Images missing &gt;50% of voxels:   0	
+Number of unique values in dataset: 35583281  Bit rate: 25.08 bits
+Warning: Number of unique values in dataset is low, indicating possible restriction of bit rate. For comparison, Int16 has 65,536 unique values
+  Images missing &gt;10% of voxels:   0	
+Voxels: 223707	Nonempty (1+ images have valid data): 223707	Complete  (all images have data): 223707
 Unique data values: 35583281
  
 Min: -11.529	Max: 7.862	Mean: -0.004	Std: 0.227
@@ -230,6 +247,8 @@ Min: -11.529	Max: 7.862	Mean: -0.004	Std: 0.227
        99.9            1.3177
 
  
+Saved desc.coverage_obj_binned with maps of number of valid images,
+and desc.coverage_obj_binned with values of 100=100% valid images, 80=80-99.9% valid, 50=50-80% valid, and 1=&gt;50% valid images
 </pre><img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_04.png" alt=""> <h2 id="7">CANlab 2018 Combined Atlas object</h2><p>An atlas-class object is a specialized subclass of fmri_data that stores information about a series of parcels, or pre-defined regions, and in some cases the probalistic maps that underlie the final parcellation.</p><p>A list of pre-defined atlases is contained in the function <tt>load_atlas</tt>. The default atlas for some CANlab functions is the "CANlab combined 2018" This was created by Tor Wager from other published atlases. It includes:</p><div><ul><li>Glasser 2016 Nature 180-region cortical parcellation (in MNI space, not indivdidualized)</li><li>Pauli 2016 PNAS basal ganglia subregions</li><li>Amygdala/hippocampal and basal forebrain regions from SPM Anatomy Toolbox</li><li>Thalamus regions from the Morel thalamus atlas</li><li>Subthalamus/Basal forebrain regions from Pauli "reinforcement learning" HCP atlas</li><li>Diedrichsen cerebellar atlas regions</li><li>Multiple named brainstem nuclei localized based on individual papers</li><li>Additional Shen atlas parcels to cover areas (esp. brainstem) not otherwise named</li></ul></div><p>References for the corresponding papers are stored in the atlas object, and printed in tables generated with the region.table() method.</p><pre class="codeinput">atlas_obj = load_atlas(<span class="string">'canlab2018'</span>);
 
 <span class="comment">% Create a figure showing cortical parcels</span>
@@ -250,7 +269,13 @@ disp(char(names))
 <span class="comment">% Plot spatial correlations</span>
 plot_correlation_matrix(test_dat.dat, <span class="string">'names'</span>, names);
 drawnow, snapnow
-</pre><pre class="codeoutput">Amused   
+</pre><pre class="codeoutput">Defaults settings have been modified by file(s):
+  /Users/f003vz1/Dropbox (Dartmouth College)/Matlab_code_external/spm12/spm_my_defaults.m
+Modified fields: stats 
+Defaults settings have been modified by file(s):
+  /Users/f003vz1/Dropbox (Dartmouth College)/Matlab_code_external/spm12/spm_my_defaults.m
+Modified fields: stats 
+Amused   
 Angry    
 Content  
 Fearful  
@@ -301,7 +326,7 @@ drawnow, snapnow
   Forebrain (non-basal ganglia)
   -----------------------------------------------------------
   'nacc'    Nucleus accumbens               % Pauli 2017 BioArxiv subcortical atlas
-  'hipp'    Hippocampus                     % MISSING/NEEDS UPDATE
+  'hipp'    Hippocampus                     % SPM Anatomy Toolbox, as stored in Canlab2018_combined atlas
   'BST'     Bed nuc. of stria term/SLEA     % Pauli 2017 BioArxiv subcortical atlas
  
   Basal ganglia
@@ -365,8 +390,26 @@ drawnow, snapnow
   [r, myatlas] = canlab_load_ROI('habenula'); num_regions(myatlas); orthviews(myatlas)
   r = canlab_load_ROI('habenula', 'noatlas'); orthviews(r)
 
+Defaults settings have been modified by file(s):
+  /Users/f003vz1/Dropbox (Dartmouth College)/Matlab_code_external/spm12/spm_my_defaults.m
+Modified fields: stats 
+Defaults settings have been modified by file(s):
+  /Users/f003vz1/Dropbox (Dartmouth College)/Matlab_code_external/spm12/spm_my_defaults.m
+Modified fields: stats 
 Grouping contiguous voxels:   2 regions
-</pre><img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_08.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+Defaults settings have been modified by file(s):
+  /Users/f003vz1/Dropbox (Dartmouth College)/Matlab_code_external/spm12/spm_my_defaults.m
+Modified fields: stats 
+Defaults settings have been modified by file(s):
+  /Users/f003vz1/Dropbox (Dartmouth College)/Matlab_code_external/spm12/spm_my_defaults.m
+Modified fields: stats 
+Defaults settings have been modified by file(s):
+  /Users/f003vz1/Dropbox (Dartmouth College)/Matlab_code_external/spm12/spm_my_defaults.m
+Modified fields: stats 
+Defaults settings have been modified by file(s):
+  /Users/f003vz1/Dropbox (Dartmouth College)/Matlab_code_external/spm12/spm_my_defaults.m
+Modified fields: stats 
+</pre><img vspace="5" hspace="5" src="canlab_help_2c_loading_datasets_08.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2022b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Datasets used in CANlab tutorials
 %
@@ -451,17 +494,25 @@ for i = 2:7, o2 = addblobs(o2, region(get_wh_image(bucknermaps, i)), 'trans', 'c
 drawnow, snapnow
 
 %% Pain, Cognition, Emotion balanced N = 270 dataset
-% 
-% This Dataset is from Kragel et al. 2018, Nature Neuroscience. 
-% We thought it was too large for Github, and it's stored on Neurovault.org
-% as collection #504. You could get it using:
+%
+% This dataset is an fmri_data object class object created using CANlab tools (canlab.github.io). 
+% It contains 270 single-participant fMRI contrast maps across 18 studies (with 15 participants per study). 
+% Studies are grouped into three domains: Pain, Cognitive Control, and Negative Emotion, with 9 studies each. 
+% Each domain includes 3 subdomains, with 3 studies each.
+%
+% The dataset is from Kragel et al. 2018, Nature Neuroscience. 
+% It is too large for Github, and it's stored on Neurovault.org
+% as collection #504. You could get it using CANlab tools like this:
 %
 % |[files_on_disk, url_on_neurovault, mycollection, myimages] = retrieve_neurovault_collection(504);|
 %
-% However, this may take a while to download, and you'd
+% It is also available on Figshare, with DOI 10.6084/m9.figshare.24033402
+% https://figshare.com/ndownloader/files/42143352
+%
+% If you download from Neurovault, you'd
 % have to add metadata for the study category labels to use it.
-% Therefore, we suggest you use the function below. It saves a file on your
-% hard drive the first time you run it:
+% Therefore, we suggest you use the CANLab load_image_set() function, as below. 
+% It saves a file on your hard drive the first time you run it:
 % 
 % |kragel_2018_nat_neurosci_270_subjects_test_images.mat|
 %

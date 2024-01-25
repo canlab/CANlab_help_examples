@@ -81,17 +81,25 @@ for i = 2:7, o2 = addblobs(o2, region(get_wh_image(bucknermaps, i)), 'trans', 'c
 drawnow, snapnow
 
 %% Pain, Cognition, Emotion balanced N = 270 dataset
-% 
-% This Dataset is from Kragel et al. 2018, Nature Neuroscience. 
-% We thought it was too large for Github, and it's stored on Neurovault.org
-% as collection #504. You could get it using:
+%
+% This dataset is an fmri_data object class object created using CANlab tools (canlab.github.io). 
+% It contains 270 single-participant fMRI contrast maps across 18 studies (with 15 participants per study). 
+% Studies are grouped into three domains: Pain, Cognitive Control, and Negative Emotion, with 9 studies each. 
+% Each domain includes 3 subdomains, with 3 studies each.
+%
+% The dataset is from Kragel et al. 2018, Nature Neuroscience. 
+% It is too large for Github, and it's stored on Neurovault.org
+% as collection #504. You could get it using CANlab tools like this:
 %
 % |[files_on_disk, url_on_neurovault, mycollection, myimages] = retrieve_neurovault_collection(504);|
 %
-% However, this may take a while to download, and you'd
+% It is also available on Figshare, with DOI 10.6084/m9.figshare.24033402
+% https://figshare.com/ndownloader/files/42143352
+%
+% If you download from Neurovault, you'd
 % have to add metadata for the study category labels to use it.
-% Therefore, we suggest you use the function below. It saves a file on your
-% hard drive the first time you run it:
+% Therefore, we suggest you use the CANLab load_image_set() function, as below. 
+% It saves a file on your hard drive the first time you run it:
 % 
 % |kragel_2018_nat_neurosci_270_subjects_test_images.mat|
 %
