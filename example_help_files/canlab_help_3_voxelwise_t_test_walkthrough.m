@@ -145,6 +145,16 @@ write(t, 'thresh')
 t_reloaded = statistic_image(t.fullpath, 'type', 'generic');
 orthviews(t_reloaded)
 
+
+%% Some useful optional extensions
+
+figure; surface(t);
+figure; surface(t, 'foursurfaces');
+figure; surface(t, 'coronal_slabs_5');
+
+table_of_atlas_regions_covered(t);
+
+
 %% Explore on your own
 %
 % 1. Click around the thresholded statistic image. What lobes of the brain

@@ -28,10 +28,10 @@
 # linking two pipelines of this kind. In the meantime though, this works.
 #
 # The second level tstats can be compared against the 
-# ${SID}_tfMRI_${TASK}_level2_hp200_s2.dscalar.nii files in 
+# ${SID}_tfMRI_${TASK}_level2_hp200_s2_MSMAll.dscalar.nii files in 
 # /dartfs/rc/lab/D/DBIC/DBIC/archive/HCP/HCP1200/ on discovery (which points
 # to the local copy of the AWS files). For example,
-# /dartfs/rc/lab/D/DBIC/DBIC/archive/HCP/HCP1200/100307/MNINonLinear/Results/tfMRI_EMOTION/tfMRI_EMOTION_hp200_s2_level2.feat/100308_tfMRI_EMOTION_level2_hp200_s2.dscalar.nii
+# /dartfs/rc/lab/D/DBIC/DBIC/archive/HCP/HCP1200/100307/MNINonLinear/Results/tfMRI_EMOTION/tfMRI_EMOTION_hp200_s2_level2_MSMAll.feat/100307_tfMRI_EMOTION_level2_hp200_s2_MSMAll.dscalar.nii
 
 from __future__ import print_function
 from __future__ import division
