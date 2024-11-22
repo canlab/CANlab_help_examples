@@ -1,1 +1,5 @@
-example nipype pipelines, meant to be run on discovery
+example nipype pipelines, meant to be run on discovery.
+
+Start with these:
+hcp_glm_basic.py
+hcp_glm_grayord.py

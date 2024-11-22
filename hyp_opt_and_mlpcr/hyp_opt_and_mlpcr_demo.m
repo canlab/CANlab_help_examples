@@ -136,20 +136,20 @@
 
 close all; clear all
 
-addpath(genpath('/projects/bope9760/spm12')); % canlabCore dependency
-addpath(genpath('/projects/bope9760/CanlabCore'));
+addpath('/dartfs-hpc/rc/home/m/f0042vm/software/spm12'); % canlabCore dependency
+addpath(genpath('/dartfs-hpc/rc/home/m/f0042vm/software/canlab/CanlabCore/CanlabCore'));
 % We don't use any functions from canlab_single_trials, except for data
 % importing functions.
-addpath(genpath('/projects/bope9760/software/canlab/canlab_single_trials/'))
+addpath(genpath('/dartfs-hpc/rc/home/m/f0042vm/software/canlab/canlab_single_trials/'))
 % we use a common data repository to share this resource across HPC users,
 % but if not found it will be automatically downloaded by load_image_set()
 % if you have the canlab_single_trials repository. Otherwise the bmrk5pain
 % data is unavailable to you.
-addpath(genpath('/work/ics/data/projects/wagerlab/labdata/projects/canlab_single_trials_for_git_repo/'))
+addpath(genpath('/dartfs/rc/lab/C/CANlab/labdata/projects/canlab_single_trials_for_git_repo'))
 
 %% load multiracial dataset
 
-bmrk5pain = load_image_set('bmrk5pain');
+bmrk5pain = fmri_data_st(load_image_set('bmrk5pain'));
 
 % shouldn't be necessary if I'd done a better job cleaning this data for 
 % the single trials repository, but I left the job unfinished in this 
@@ -172,7 +172,7 @@ n_subj = length(uniq_subject_id);
 % within-stimulus level).
 
 newdat = {};
-for i = 1:n_subj
+parfor i = 1:n_subj
     this_idx = find(uniq_subject_id(i) == subject_id);
     this_dat = bmrk5pain.get_wh_image(this_idx);
     
@@ -180,10 +180,13 @@ for i = 1:n_subj
     lvls = unique(T);
     n_lvls = length(lvls);
     
+    that_dat = cell(1,n_lvls);
     for j = 1:n_lvls
-        newdat{end+1} = mean(this_dat.get_wh_image(lvls(j) == T));
+        that_dat{j} = mean(this_dat.get_wh_image(lvls(j) == T));
     end
+    newdat{i} = that_dat;
 end
+newdat = [newdat{:}];
 newdat = cat(newdat{:});
 
 varLost = 1 - sum((newdat.Y - mean(newdat.Y)).^2) / sum((bmrk5pain.Y - mean(bmrk5pain.Y)).^2);
@@ -204,20 +207,23 @@ bmrk5pain = newdat; clear newdat;
 % fmri_data/predict respects subject membership, it may, but I know it will
 % if I tell it what the fold membership is myself. I use cvpartition2 which
 % is a class that's a part of canlab_single_trials, but it's not hard to do
-% manually either. fold_labels is just a vector of length size(bmrk5pain.dat,2)
-% where each entry is either a 1,2,3,4 or 5, indicating fold membership of
-% corresponding entries in bmrk5pain. Each subject belongs to a single fold to
-% retain indepencende across independence and test sets.
+% manually either [Edit: modified to do this manually since cvpartition2 was
+% based on a hack that was broken in post2023 matlab]. fold_labels is just 
+% a vector of length size(bmrk5pain.dat,2) where each entry is either a 
+% 1,2,3,4 or 5, indicating fold membership of corresponding entries in 
+% bmrk5pain. Each subject belongs to a single fold to retain indepencende 
+% across independence and test sets.
 
 [~,~,subject_id] = unique(bmrk5pain.metadata_table.subject_id,'stable');
 uniq_subject_id = unique(subject_id);
 n_subj = length(uniq_subject_id);
 
 kfolds = 5;
-cv = cvpartition2(ones(size(bmrk5pain.dat,2),1), 'KFOLD', kfolds, 'Stratify', subject_id);
+cv = cvpartition(n_subj, 'KFOLD', kfolds);
 fold_labels = zeros(size(bmrk5pain.dat,2),1);
 for j = 1:cv.NumTestSets
-    fold_labels(cv.test(j)) = j;
+    fold_sids = uniq_subject_id(cv.test(j));
+    fold_labels(ismember(subject_id,fold_sids)) = j;
 end
 
 %% Fit MVPA model using PCR
@@ -247,7 +253,7 @@ pcr_model.montage;
 % Note the specification of a subjIDs parameter. cv_mlpcr requires this.
 %
 % Note the performance penalty relative to PCR. It's not substantial but 
-% it's not negligible eithr.
+% it's not negligible either.
 
 % overall model prediction
 [mlpcr_cverr, mlpcr_stats, mlpcr_optout] = bmrk5pain.predict('algorithm_name','cv_mlpcr',...
@@ -417,7 +423,7 @@ set(gcf,'Position',[pos(1:2), 1205, 785]);
 %
 % In traditional regression analysis a null (intercept only) model shows a 
 % correlation of 0 not negative correlations. However in a cross validated
-% context the null intercept only model shows a ngative correlation. This is 
+% context the null intercept only model shows a negative correlation. This is 
 % because training set means are negatively biased estimates of the test 
 % set means, and the bias is especially severe for small datasets.
 % 
@@ -540,7 +546,7 @@ src.montage('trans');
 % Additionally, one might think that because these spurious between subject
 % predictions are noise in the within model and the within variance is
 % spurious in the between model, that perhaps you could take your model
-% predictive fractions (e.g. your within models predictions and your
+% predictive fractions (e.g. your within model's predictions and your
 % between model's predictions) and simply denoise them by centering or
 % averaging within subject (respectively) and then adding the results.
 % Whether or not this will work is unclear, but I suspect for it to work
@@ -709,12 +715,23 @@ nsf = newdat; clear newdat;
 uniq_subject_id = unique(subject_id);
 n_subj = length(uniq_subject_id);
 
+
+kfolds = 5;
+cv = cvpartition(n_subj, 'KFOLD', kfolds);
+fold_labels = zeros(size(bmrk5pain.dat,2),1);
+for j = 1:cv.NumTestSets
+    fold_sids = uniq_subject_id(cv.test(j));
+    fold_labels(ismember(subject_id,fold_sids)) = j;
+end
+%{
+
 kfolds = 5;
 cv = cvpartition2(ones(size(nsf.dat,2),1), 'KFOLD', kfolds, 'Stratify', subject_id);
 fold_labels = zeros(size(nsf.dat,2),1);
 for j = 1:cv.NumTestSets
     fold_labels(cv.test(j)) = j;
 end
+%}
 
 % perform optimization
 
@@ -1028,12 +1045,24 @@ function loss = lossEst(dim, dat)
     % let's get new CV folds to use on this iteration. If we revisit this
     % spot in the search space we'll get new slices and the variance can be
     % incorporated by bayesopt into its model of the loss function
+    
+    kfolds = 5;
+    cv = cvpartition(n_subj, 'KFOLD', kfolds);
+    fold_labels = zeros(size(bmrk5pain.dat,2),1);
+    for j = 1:cv.NumTestSets
+        fold_sids = uniq_subject_id(cv.test(j));
+        fold_labels(ismember(subject_id,fold_sids)) = j;
+    end
+    
+    % cvpartition2 is currently broken due to a matlab update in ~2023
+    %{
     kfolds = 5;
     cv = cvpartition2(ones(size(dat.dat,2),1), 'KFOLD', kfolds, 'Stratify', subject_id);
 
     [I,J] = find([cv.test(1),cv.test(2), cv.test(3), cv.test(4), cv.test(5)]);
     fold_labels = sortrows([I,J]);
     fold_labels = fold_labels(:,2);
+    %}
     
     r = dat.predict('algorithm_name','cv_mlpcr',...
            'nfolds',fold_labels,'numcomponents',[dim.btDims, dim.wiDims], ...
