@@ -1,4 +1,5 @@
 % vmpfc_index_vals = [121   122   127   128   129   130   175   176   185   186   327   328   329   330];
+atlas_obj = load_atlas('canlab2018_2mm');
 
 % Building a custom atlas with a set of ROIs
 
@@ -42,6 +43,8 @@ view(128, 22)
 set(surf_han2, 'Facealpha', 1)
 lightRestoreSingle
 
+%%
+
 %render_on_surface(combined_atlas, [surf_han2 surf_han2], 'colormap', 'winter', 'clim', [1 7]);
 cm = colormap_tor([.8 .1 .1], [1 1 0], [.9 .6 .1], 'n', 8);
 render_on_surface(combined_atlas, [surface_han surf_han2], 'colormap', cm, 'clim', [1 7]);
@@ -49,21 +52,21 @@ render_on_surface(combined_atlas, [surface_han surf_han2], 'colormap', 'winter',
 
 
 %%
-Keuken, M. C., P-L Bazin, L. Crown, J. Hootsmans, A. Laufer, C. Müller-Axt, R. Sier, et al. 2014. ?Quantifying Inter-Individual Anatomical 
-Variability in the Subcortex Using 7 T Structural MRI.? NeuroImage 94 (July): 40?46. 
-
-Keren, Noam I., Carl T. Lozar, Kelly C. Harris, Paul S. Morgan, and Mark A. Eckert. 2009. ?In Vivo Mapping of the Human Locus Coeruleus.? 
-
-Glasser, Matthew F., Timothy S. Coalson, Emma C. Robinson, Carl D. Hacker, John Harwell, Essa Yacoub, Kamil Ugurbil, et al. 2016. A 
-Multi-Modal Parcellation of Human Cerebral Cortex. Nature 536 (7615): 171?78. 
-
-Pauli, Wolfgang M., Randall C. O?Reilly, Tal Yarkoni, and Tor D. Wager. 2016. ?Regional Specialization within the Human Striatum for 
-Diverse Psychological Functions.? Proceedings of the National Academy of Sciences of the United States of America 113 (7): 1907?12.  
-
-Amunts,K. et al., (2005). Anat. Embryol. (Berl) 210, 343-352.
-
-Eickhoff S, Stephan KE, Mohlberg H, Grefkes C, Fink GR, Amunts K, Zilles K:
-A new SPM toolbox for combining probabilistic cytoarchitectonic maps and functional imaging data. NeuroImage 25(4), 1325-1335, 2005
-
+% Keuken, M. C., P-L Bazin, L. Crown, J. Hootsmans, A. Laufer, C. Müller-Axt, R. Sier, et al. 2014. ?Quantifying Inter-Individual Anatomical 
+% Variability in the Subcortex Using 7 T Structural MRI.? NeuroImage 94 (July): 40?46. 
+% 
+% Keren, Noam I., Carl T. Lozar, Kelly C. Harris, Paul S. Morgan, and Mark A. Eckert. 2009. ?In Vivo Mapping of the Human Locus Coeruleus.? 
+% 
+% Glasser, Matthew F., Timothy S. Coalson, Emma C. Robinson, Carl D. Hacker, John Harwell, Essa Yacoub, Kamil Ugurbil, et al. 2016. A 
+% Multi-Modal Parcellation of Human Cerebral Cortex. Nature 536 (7615): 171?78. 
+% 
+% Pauli, Wolfgang M., Randall C. O?Reilly, Tal Yarkoni, and Tor D. Wager. 2016. ?Regional Specialization within the Human Striatum for 
+% Diverse Psychological Functions.? Proceedings of the National Academy of Sciences of the United States of America 113 (7): 1907?12.  
+% 
+% Amunts,K. et al., (2005). Anat. Embryol. (Berl) 210, 343-352.
+% 
+% Eickhoff S, Stephan KE, Mohlberg H, Grefkes C, Fink GR, Amunts K, Zilles K:
+% A new SPM toolbox for combining probabilistic cytoarchitectonic maps and functional imaging data. NeuroImage 25(4), 1325-1335, 2005
+% 
 
 
