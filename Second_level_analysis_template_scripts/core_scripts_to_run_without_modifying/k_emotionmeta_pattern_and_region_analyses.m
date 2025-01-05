@@ -1,15 +1,24 @@
 roimask_imagename = 'Buhle_Silvers_2014_Emotion_Regulation_Meta_thresh.img';
+
 roimask = which(roimask_imagename); % not 1/0
+
+%% Add this to access the roimask
+if isempty(which(roimask))
+    gunzip(which([roimask_imagename, '.gz']))
+end
+
 roimask_shortname = 'EmoMetaMask'; % this is a short, unique name identifying this map in saved output
 
-mymetric = 'cosine_similarity'; % 'dotproduct', 'cosine_similarity', or 'correlation'
+mymetric = 'cosine_similarity'; % 'dotproduct/', 'cosine_similarity', or 'correlation'
 
 % If you hard-code region names for thresholded regions here, they will be
 % used in later table/plot output. 10 chars max for display in table object output.
 regionnames = {'L vl/dlPFC'    'L STS'    'R vlPFC'    'L IPL'    'R IPL'    'aMCC/pSMA' 'R dlPFC'};
 
 thresh_value = 2.68;  % height threshold for defining discrete ROIs, in raw units
-thresh_k_value = 75;  % extent threshold for defining discrete ROIs
+% thresh_k_value = 75;  % extent threshold for defining discrete ROIs
+thresh_k_value = 50;  % extent threshold for defining discrete ROIs; Change this to get to the 7 regions.
+
 
 %% Basic info
 

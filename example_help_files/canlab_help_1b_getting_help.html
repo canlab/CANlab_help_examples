@@ -1,0 +1,664 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,IE=9,chrome=1"><meta name="generator" content="MATLAB 2021b"><title>Getting help</title><style type="text/css">.rtcContent { padding: 30px; } .S0 { margin: 3px 10px 5px 4px; padding: 0px; line-height: 28.8px; min-height: 0px; white-space: pre-wrap; color: rgb(213, 80, 0); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 24px; font-weight: 400; text-align: left;  }
+.S1 { margin: 2px 10px 9px 4px; padding: 0px; line-height: 21px; min-height: 0px; white-space: pre-wrap; color: rgb(0, 0, 0); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 14px; font-weight: 400; text-align: left;  }
+.S2 { margin-bottom: 20px; padding-bottom: 4px;  }
+.S3 { margin: 0px; padding: 10px 0px 10px 5px; line-height: 21px; min-height: 0px; white-space: pre-wrap; color: rgb(0, 0, 0); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 14px; font-weight: 700; text-align: start;  }
+.S4 { margin: -1px 0px 0px; padding: 10px 0px 10px 7px; line-height: 21px; min-height: 0px; white-space: pre-wrap; color: rgb(0, 0, 0); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 14px; font-weight: 400; text-align: start;  }
+.S5 { margin: 20px 10px 5px 4px; padding: 0px; line-height: 20px; min-height: 0px; white-space: pre-wrap; color: rgb(60, 60, 60); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 20px; font-weight: 700; text-align: left;  }
+.S6 { margin: 15px 10px 5px 4px; padding: 0px; line-height: 18px; min-height: 0px; white-space: pre-wrap; color: rgb(60, 60, 60); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 17px; font-weight: 700; text-align: left;  }
+.S7 { margin: 3px 10px 5px 4px; padding: 0px; line-height: 20px; min-height: 0px; white-space: pre-wrap; color: rgb(60, 60, 60); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 20px; font-weight: 700; text-align: left;  }
+.S8 { border-left: 0px none rgb(0, 0, 0); border-right: 0px none rgb(0, 0, 0); border-top: 0px none rgb(0, 0, 0); border-bottom: 0px none rgb(0, 0, 0); border-radius: 0px; padding: 0px; line-height: 15.6px; min-height: 16px; white-space: pre; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12px;  }
+.CodeBlock { background-color: #F7F7F7; margin: 10px 0 10px 0;}
+.S9 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 1px solid rgb(233, 233, 233); border-bottom: 1px solid rgb(233, 233, 233); border-radius: 4px 4px 0px 0px; padding: 6px 45px 4px 13px; line-height: 17.234px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px;  }
+.S10 { color: rgb(64, 64, 64); padding: 10px 0px 6px 17px; background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px; overflow-x: hidden; line-height: 17.234px;  }
+/* Styling that is common to warnings and errors is in diagnosticOutput.css */.embeddedOutputsErrorElement {    min-height: 18px;    max-height: 550px;}
+.embeddedOutputsErrorElement .diagnosticMessage-errorType {    overflow: auto;}
+.embeddedOutputsErrorElement.inlineElement {}
+.embeddedOutputsErrorElement.rightPaneElement {}
+/* Styling that is common to warnings and errors is in diagnosticOutput.css */.embeddedOutputsWarningElement {    min-height: 18px;    max-height: 550px;}
+.embeddedOutputsWarningElement .diagnosticMessage-warningType {    overflow: auto;}
+.embeddedOutputsWarningElement.inlineElement {}
+.embeddedOutputsWarningElement.rightPaneElement {}
+/* Copyright 2015-2019 The MathWorks, Inc. *//* In this file, styles are not scoped to rtcContainer since they could be in the Dojo Tooltip */.diagnosticMessage-wrapper {    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;    font-size: 12px;}
+.diagnosticMessage-wrapper.diagnosticMessage-warningType {    color: rgb(255,100,0);}
+.diagnosticMessage-wrapper.diagnosticMessage-warningType a {    color: rgb(255,100,0);    text-decoration: underline;}
+.diagnosticMessage-wrapper.diagnosticMessage-errorType {    color: rgb(230,0,0);}
+.diagnosticMessage-wrapper.diagnosticMessage-errorType a {    color: rgb(230,0,0);    text-decoration: underline;}
+.diagnosticMessage-wrapper .diagnosticMessage-messagePart,.diagnosticMessage-wrapper .diagnosticMessage-causePart {    white-space: pre-wrap;}
+.diagnosticMessage-wrapper .diagnosticMessage-stackPart {    white-space: pre;}
+.embeddedOutputsTextElement,.embeddedOutputsVariableStringElement {    white-space: pre;    word-wrap:  initial;    min-height: 18px;    max-height: 550px;}
+.embeddedOutputsTextElement .textElement,.embeddedOutputsVariableStringElement .textElement {    overflow: auto;}
+.textElement,.rtcDataTipElement .textElement {    padding-top: 3px;}
+.embeddedOutputsTextElement.inlineElement,.embeddedOutputsVariableStringElement.inlineElement {}
+.inlineElement .textElement {}
+.embeddedOutputsTextElement.rightPaneElement,.embeddedOutputsVariableStringElement.rightPaneElement {    min-height: 16px;}
+.rightPaneElement .textElement {    padding-top: 2px;    padding-left: 9px;}
+.S11 { margin: 10px 10px 9px 4px; padding: 0px; line-height: 21px; min-height: 0px; white-space: pre-wrap; color: rgb(0, 0, 0); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 14px; font-weight: 400; text-align: left;  }
+.S12 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 1px solid rgb(233, 233, 233); border-bottom: 1px solid rgb(233, 233, 233); border-radius: 0px 0px 4px 4px; padding: 6px 45px 4px 13px; line-height: 17.234px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px;  }
+.S13 { margin: 10px 0px 20px; padding-left: 0px; font-family: Helvetica, Arial, sans-serif; font-size: 14px;  }
+.S14 { margin-left: 56px; line-height: 21px; min-height: 0px; text-align: left; white-space: pre-wrap;  }</style></head><body><div class = rtcContent><h1  class = 'S0' id = 'T_C120169F' ><span>Getting help</span></h1><div  class = 'S1'><span>There are several resources to get help using CANlab object-oriented tools.</span></div><div  class = 'S2'><div  class = 'S3'><span style=' font-weight: bold;'>Table of Contents</span></div><div  class = 'S4'><a href = "#H_B119F3AA"><span>Walkthroughs and tutorials
+</span></a><span>    </span><a href = "#H_3B8C780F"><span>How-to Walkthroughs
+</span></a><span>    </span><a href = "#H_664B06B7"><span>Didactic tutorials
+</span></a><span>    </span><a href = "#H_0F9313B7"><span>Batch scripts: Modular example code
+</span></a><span>    </span><a href = "#H_8511A3A1"><span>Additional CANlab examples and tutorials
+</span></a><a href = "#H_E126B8E5"><span>Interactive help within Matlab
+</span></a><a href = "#H_30A47AA1"><span>Other resources
+</span></a><span>    </span><a href = "#H_69694D83"><span>CANlab Core readthedocs
+</span></a><span>    </span><a href = "#H_19EC8045"><span>CANlab Repos Guide
+</span></a><span>    </span><a href = "#H_F6D04BD8"><span>CANlab Toolbox-specific help
+</span></a><span>    </span><a href = "#H_CEBBE1F2"><span>Study-specific repositories
+</span></a><span>    </span><a href = "#H_5465F865"><span>Resources for CANlab members: Data, templates, devices, more!
+</span></a><a href = "#H_562DB292"><span>Help with Matlab in general</span></a></div></div><h2  class = 'S5' id = 'H_B119F3AA' ><span>Walkthroughs and tutorials</span></h2><div  class = 'S1'><span>The “first stop” is </span><a href = "https://canlab.github.io/"><span>https://canlab.github.io/</span></a></div><div  class = 'S1'><span>  This includes pages on the object types and philosophy.  </span></div><div  class = 'S1'><span></span></div><div  class = 'S1'><span>There are two sets of Matlab tutorials:</span></div><div  class = 'S1'><span></span></div><h3  class = 'S6' id = 'H_3B8C780F' ><span>How-to Walkthroughs</span></h3><div  class = 'S1'><span>“Walkthroughs” is designed as a set of “how-to” documents for the tools, with examples and code. </span></div><div  class = 'S1'><a href = "https://canlab.github.io/walkthroughs/"><span>https://canlab.github.io/walkthroughs/</span></a></div><div  class = 'S1'><span></span></div><h3  class = 'S6' id = 'H_664B06B7' ><span>Didactic tutorials</span></h3><div  class = 'S1'><span>“Tutorials” are more didactic and include more conceptual description, along with data and code. This also has a section on the SPM GUI and running statistical models with SPM.</span></div><div  class = 'S1'><a href = "https://canlab.github.io/tutorials/"><span>https://canlab.github.io/tutorials/</span></a></div><div  class = 'S1'><span></span></div><h3  class = 'S6' id = 'H_0F9313B7' ><span>Batch scripts: Modular example code</span></h3><div  class = 'S1'><span>The "second-level batch scripts" run flexible pipelines for doing many things with CANlab object-oriented tools once you have a set of image files to work with (typically one image per task condition per participant). They also produce published reports. </span></div><div  class = 'S1'><span>These scripts illustrate commands and processes that can be used with image data at other levels of analysis, too. If you find output (figures, tables, etc.) that you want to know how to create, you can read the code to see how it's done.  </span></div><div  class = 'S1'><a href = "https://canlab.github.io/batch/"><span>https://canlab.github.io/batch/</span></a></div><div  class = 'S1'><span></span></div><h3  class = 'S6' id = 'H_8511A3A1' ><span>Additional CANlab examples and tutorials</span></h3><div  class = 'S1'><span>The code that generates the walkthroughs and tutorials on canlab.github.io, and the "second-level batch" code, is in a Github repository, here:</span></div><div  class = 'S1'><a href = "https://github.com/canlab/CANlab_help_examples"><span>https://github.com/canlab/CANlab_help_examples</span></a></div><div  class = 'S1'><span>It contains some "in progress" walkthroughs as well. We hope that people will be interested in contributing to and improving these!</span></div><div  class = 'S1'><span></span></div><h2  class = 'S7' id = 'H_E126B8E5' ><span>Interactive help within Matlab</span></h2><div  class = 'S1'><span>Much of the help available is embedded in the Matlab functions and object class definition files.</span></div><div  class = 'S1'><span>The info here is available by typing commands in Matlab:</span></div><div  class = 'S1'><span>doc &lt;object class name&gt;</span></div><div  class = 'S1'><span>And:</span></div><div  class = 'S1'><span>help &lt;function&gt;</span></div><div  class = 'S1'><span>Try these:</span></div><div class = 'preformatted-matlab' style = 'margin: 10px 3px 10px 55px; padding: 10px 10px 10px 5px; '><div  class = 'S8'><span style="white-space: pre"><span >doc </span><span style="color: rgb(170, 4, 249);">fmri_data</span></span></div><div  class = 'S8'><span style="white-space: pre"><span >doc </span><span style="color: rgb(170, 4, 249);">atlas</span></span></div></div><div  class = 'S1'><span>And this:</span></div><div class="CodeBlock"><div class="inlineWrapper outputs"><div  class = 'S9'><span style="white-space: pre"><span >help </span><span style="color: rgb(170, 4, 249);">fmri_data</span></span></div><div  class = 'S10'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement scrollableOutput" uid="EE19FFE7" data-scroll-top="null" data-scroll-left="null" data-testid="output_0" style="width: 877px; white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;"><div class="textElement eoOutputContent" data-width="847" data-height="4203" data-hashorizontaloverflow="true" style="max-height: 261px; white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">  <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong>: Data class for storing and analyzing neuroimaging datasets and associated information
+ 
+  '<strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong>' is a data class containing information about generic fmri
+  datasets stored in a structure-like object.  Using this has the
+  advantages that the properties and methods are standardized and controlled.
+  It also keeps track of the history of what was done to the dataset.
+ 
+  -------------------------------------------------------------------------
+  Features and philosophy:
+  -------------------------------------------------------------------------
+ 
+  - Store image data in a flat (2-d), space-efficient voxels x images matrix 
+  - Save space: Tools to remove out-of-image voxels and empty (zero/NaN) voxels, store data in single-precision format 
+  - Analysis-friendly: 2-d matrices can be read and analyzed in multiple packages/algorithms
+  - Meta-data included to convert back to 3-d image volume space, 
+    with easy tools (methods) to reconstruct and visualize images
+    Built-in resampling makes it easy to compare/combine datasets with different voxel sizes and image bounding boxes
+    Reduces overhead for statisticians/data scientists unfamiliar with neuroimaging to apply their algorithms.
+  - Multiple images can be stored in a single object
+  - Methods have short, intuitive names, and perform high-level functions specialized for neuroimaging:
+  - Visualization (plot, orthviews, surface, montage, histogram, isosurface methods)
+  - Image manipulation (apply_mask, get_wh_image, resample_space, compare_space, flip, threshold methods)
+  - Data extraction (apply_atlas, apply_parcellation, extract_gray_white_csf, extract_roi_averages)
+  - Analysis (ica, mahal, image_math, and many more in the <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> subclass)
+  - Provenance: Ability to track and update history of changes to objects
+ 
+  <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> is a subclass of the image_vector object and inherits its
+  properties and methods.
+ 
+  -------------------------------------------------------------------------
+  To construct/create a new instance of an object:
+  -------------------------------------------------------------------------
+ 
+  Basic usage:
+  obj = <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong>(image_names, [maskinput], [other optional inputs]) 
+ 
+  maskinput     :   [optional] name of mask image to use.  Default: 'brainmask_canlab.nii', a
+                    brain mask that is distributed with SPM software and in
+                    the CANlab Core Tools
+                    Alternative in CANlab tools: which('gray_matter_mask.img')
+  'noverbose'   :   Suppress verbose output during image loading
+  'sample2mask' :   Sample images to mask space. Default: Sample mask to
+                    image space, use native image space                            
+                             
+  Creating class instances
+  -----------------------------------------------------------------------
+  You can create an empty object by using:
+  fmri_dat = <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong>
+  - fmri_dat is the object.
+  - It will be created with a standard brain mask, brainmask_canlab.nii
+  - This image should be placed on your Matlab path
+  - The space information is stored in fmri_dat.volInfo
+  - Data is stored in fmri_dat.dat, in a [voxels x images] matrix
+  - You can replace or append data to the fmri_dat.dat field.
+ 
+  You can create an object by assembling an image_vector object from parts
+  (entering fields) and converting using fmri_obj = <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong>(image_vec_obj)
+  This can also be a structure with field names that match properties of
+  the new intended <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> object. e.g., 
+    new_obj.volInfo = MC_Setup.volInfo;
+    new_obj.dat = MC_Setup.unweighted_study_data(:, sym_cons);
+ 
+  You can create an <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> object with extacted image data.
+  - Let "imgs" be a string array or cell array of image names
+  - This command creates an object with your (4-D) image data:
+  - fmri_dat = <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong>(imgs);
+  - Images can be zipped (.gz) as well. <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong>() will unpack them.
+  - Only values in the standard brain mask, brainmask_canlab.nii, will be included.
+  - This saves memory by reducing the number of voxels saved dramatically.
+ 
+  You can specify any mask you'd like to extract data from.
+  - Let "maskimagename" be a string array with a mask image name.
+  - this command creates the object with data saved in the mask:
+  - fmri_dat = <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong>(imgs, maskimagename);
+  - The mask information is saved in fmri_dat.mask
+ 
+  e.g., this extracts data from images within the standard brain mask:
+  dat = <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong>(imgs, which('brainmask_canlab.nii'));
+ 
+  Defining the space of the extracted data
+  -----------------------------------------------------------------------
+  Note: There are two options for defining the space (i.e., coordinates/voxels)
+  that the data is mapped to.
+  By default, the mask is resliced to the same space as the first image in the
+  input image name set (not coregistered; just resliced to the same voxel sizes.
+  The images are assumed to be in register.)
+ 
+  Reampling to mask space: YOU CAN ALSO map the image data to the space of the mask, by entering
+  'sample2mask' as in input argument.
+  For loading images in different spaces together in one object, use the 'sample2mask' option.
+ 
+  Attaching additional data
+  -----------------------------------------------------------------------
+  The <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> object has a number of fields for appending specific types of data.
+ 
+  - You can replace or append data to the fmri_dat.dat field.
+  - The <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> object will also store predictor data (.X) also outcome data (.Y)
+  - There are many fields for descriptions, notes, etc., like "dat_descrip" and "source_notes"
+  - Attach custom descriptions in these fields to document your object.
+  - The "history" field stores a cell array of strings with the processing
+  history of the object. Some methods add to this history automatically.
+ 
+  -----------------------------------------------------------------------
+  Properties and methods
+  -----------------------------------------------------------------------
+  Properties are data fields associated with an object.
+  Type the name of an object (class instance) you create to see its
+  properties, and a link to its methods (things you can run specifically
+  with this object type). For example: After creating an <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> object 
+  called fmri_dat, as above, type fmri_dat to see its properties.
+ 
+  There are many other methods that you can apply to <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> objects to
+  do different things.
+  - Try typing methods(<strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong>) for a list.
+  - You always pass in an <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> object as the first argument.
+  - Methods include utilities for many functions - e.g.,:
+  - resample_space(fmri_dat) resamples the voxels
+  - write(fmri_dat) writes an image file to disk (careful not to overwrite by accident!)
+  - regress(fmri_dat) runs multiple regression
+  - predict(fmri_dat) runs cross-validated machine learning/prediction algorithms
+ 
+  Key properties and methods (a partial list; type doc <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> for more):
+  -------------------------------------------------------------------------
+  <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> Properties (a partial list; type doc <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> for more):
+    dat                     - Image data, a [voxels x images] matrix, single-format
+    fullpath                - List of image names loaded into object with full paths 
+    history                 - History of object processing, for provenance 
+    image_names             - List of image names loaded into object, no paths  
+    removed_images          - Vector of images that have been removed (saves space; see remove_empty.m, replace_empty.m) 
+    removed_voxels          - Vector of empty in-mask voxels that have been removed (saves space; see remove_empty.m, replace_empty.m) 
+    volInfo                 - Structure with info on brain mask (saves space) and mapping voxels to brain space
+ 
+  <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> Methods (a partial list; type doc <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> for more):
+    General:
+  . 	descriptives        -  Get descriptives for an <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> or other image_vector object 
+        enforce_variable_types	-  Re-casts variables in objects into standard data types, which can save 
+        flip                - Flips images stored in an object left-to-right
+      	history             - Display history for image_vector object 
+        write               - Write an image_vector object to hard drive as an Analyze image (uses .fullpath field for image names)     
+    Data extraction:
+        apply_atlas         - Computes the mean value or pattern expression for each reference region specified in an atlas object 
+        apply_mask          - Apply a mask image (image filename or fmri_mask_image object) to an image_vector object 
+        apply_parcellation  - Computes the mean value or pattern expression for each parcel specified in a data object 
+        extract_gray_white_csf	- Extracts mean values (values) and top 5 component scores (components) 
+        extract_roi_averages	- This image_vector method a extracts and averages data stored in an <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> object 
+          
+    Handling brain space and image selection:
+        compare_space           - Compare spaces of two image_vector objects 
+        get_wh_image            - For an image_vector with multiple images (cases, contrasts, etc.), select a subset. 
+        reconstruct_image       - Reconstruct a 3-D or 4-D image from image_vector object obj 
+        remove_empty            - remove vox: logical vector of custom voxels to remove, VOX x 1 
+        reparse_contiguous      - Re-construct list of contiguous voxels in an image based on in-image 
+        replace_empty           - Replace empty/missing values in an image data object 
+        resample_space          - Resample the images in an <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> object (obj) to the space of another 
+ 
+    Display and visualization:
+    	display_slices      - Creates 3 separate montage views - ax, cor, sagg in a special figure window 
+        histogram           - Create a histogram of image values or a series of histograms for each 
+        image_similarity_plot - Associations between images in object and set of 'spatial basis function' images (e.g., 'signatures' or pre-defined maps)
+        isosurface          - Create and visualize an isosurface created from the boundaries in an image object. 
+        montage             - Create a montage of an image_vector (or statistic_image or <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong>) 
+        orthviews               - display SPM orthviews for CANlab image_vector (or <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong>, statistic_image) object 
+        pattern_surf_plot_mip	- axial maximum intensity projection pattern surface plot 
+    	sagg_slice_movie	- Movie of successive differences (sagittal slice)
+        slices              - Create a montage of single-slice results for every image in an image_vector object
+        surface             - Render image data on brain surfaces; options for cutaways and canonical surfaces
+        wedge_plot_by_atlas	- Plot a data object or 'signature' pattern divided into local regions 
+ 
+    Data processing and analysis:
+    	ica                 - Spatial ICA of an <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> object 
+        image_math          - Perform simple mathematical and boolean operations on image objects (see also plus, minus, power)
+        mahal               - Mahalanobis distance for each image in a set compared to others in the set
+        mean                - Mean across a set of images. Returns a new image_vector object. 
+        preprocess          - Preprocesses data in an image_vector (e.g., <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong>) object; many options for filtering and outlier id 
+        qc_metrics_second_level	- Quality metrics for a 2nd-level analysis (set of images from different subjects) 
+        searchlight         - Run searchlight multivariate prediction/classification on an image_vector 
+        threshold           - Threshold image_vector (or <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> or fmri_obj_image) object based on raw threshold values
+        union               - ...and intersection masks for two image_vector objects 
+    
+  -------------------------------------------------------------------------
+  Examples and help:
+  -------------------------------------------------------------------------
+ 
+  To list properties and methods for this object, type:
+  doc <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong>, methods(<strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong>)
+ 
+  Example 1: Load images (and run a simple analysis)
+  % --------------------------------------------------------------------
+ 
+  Load a sample dataset into an <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> object (subclass of image_vector)
+  This loads one of a set of named image collections used in demos/help:
+  data_obj = load_image_set('emotionreg');
+ 
+  You can load the same images manually, by locating the files, listing
+  their names in a character array (or 1 x n cell array of strings), and
+  then passing those into <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong>:
+ 
+  data_obj = <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong>(which('Wager_2008_emo_reg_vs_look_neg_contrast_images.nii.gz'));
+ 
+  filedir = what(fullfile('CanlabCore', 'Sample_datasets', 'Wager_et_al_2008_Neuron_EmotionReg'));
+  image_names = filenames(fullfile(filedir.path, '*img'));
+  data_obj = <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong>(image_names);
+ 
+  Now you can interact with the object.  Try, e.g.,:
+  methods(data_obj)                               % List methods for object type
+  descriptives(data_obj);                         % Print summary of descriptive statistics for the dataset
+  plot(data_obj)                                  % Custom <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> specific plots
+  t = ttest(data_obj);                            % Perform a voxel-wise one-sample t-test across images
+  t = threshold(t, .005, 'unc', 'k', 10);         % Re-threshold with extent threshold of 10 contiguous voxels
+  r = region(t);                                  % Turn t-map into a region object with one element per contig region
+ 
+  Example 2: Extract data averaged over regions of interest:
+  % --------------------------------------------------------------------
+ 
+  First run Example 1.  Now you have a thresholded t-statistic map.
+  Extract averages (across voxels) for each subject in each contiguous
+  region by typing:
+ 
+  r = extract_roi_averages(data_obj, t);
+ 
+  This returns r, which is another object--a "region"-class object.
+  Region objects contain vectors, one element per pre-defined region in the
+  image (in this case, significant blobs from our analysis). 
+  Each element contains info that describes the region, including the voxels included,
+  and average and voxel-by-voxel data if extracted from images and attached.   
+  Type "doc region" for more info.  
+  r has properties that hold multiple types of data:
+  - .dat holds generic extracted data
+  - .all_data holds voxel-by-voxel extracted data
+ 
+  % --------------------------------------------------------------------
+  % Group one-sample t-test: 
+  % A simple, complete example of a group analysis
+  % For more, see walkthroughs on canlab.github.io 
+  % --------------------------------------------------------------------
+  % Load sample images, creating and <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data</strong> class object with 30 images     
+      imgs = load_image_set('emotionreg');
+ 
+  % Display a slice from each image in a montage:
+      slices(imgs);
+ 
+  % Display some useful summary plots of the dataset:
+      plot(imgs);
+ 
+  % Perform a t-test on each voxel, returning a statistic_image object
+  % containing t-stats and p-values:
+      t = ttest(imgs);
+ 
+  % Display the unthresholded results in a quick-render montage of image
+  % values only:
+      display_slices(t, 'axial'); colormap summer; colorbar;
+  
+  % Display the unthresholded results over an anatomical underlay, 
+  % on a combination of slices and surfaces, 
+  % returning an fmridisplay class object with registered handles
+      o2 = canlab_results_fmridisplay(t, 'full');
+ 
+  % Remove colors from slices and surfaces registered in the o2 object:
+      o2 = removeblobs(o2);
+ 
+  % Threshold the t-statistic_image object at p &lt; 0.005
+      t = threshold(t, .005, 'unc');
+ 
+  % Re-display the thresholded images on slices/surfaces registered in o2:
+      o2 = addblobs(o2, region(t), 'nolegend');
+ 
+  % Display the thresholded t-map with orthviews:
+      orthviews(t);
+ 
+  % display on a slice montage:
+     create_figure('slices'); axis off; 
+     montage(t);
+ 
+  % Re-threshold at q &lt; 0.05 FDR, and re-display on orthviews:
+      t = threshold(t, .05, 'fdr');
+      orthviews(t);
+ 
+  % Print a table of results, and return a region-class object r with labels
+  % from a default atlas (an atlas-class object):
+      r = table(t);
+ 
+  % Display a slice montage showing each activation blob, with labels:
+    montage(r, 'regioncenters', 'colormap');
+ 
+  --------------------------------------------------------------------
+  For more examples and walkthroughs, see 
+  walkthroughs on canlab.github.io
+  These are also found in the CANlab_help_examples
+  repository at https://github.com/canlab/CANlab_help_examples
+ 
+  Some example tutorials:
+  canlab_help_1_installing_tools
+  canlab_help_2_load_a_sample_dataset
+  canlab_help_3_voxelwise_t_test_walkthrough
+  canlab_help_4_write_data_to_image_file_format
+  canlab_help_5_regression_walkthrough
+  ... and more
+  % --------------------------------------------------------------------
+
+    Documentation for fmri_data</div></div></div></div></div><div  class = 'S1'><span>There are a few object types (or "classes") that organize most of the things you can do with image data.  Each class has </span><span style=' font-style: italic;'>methods</span><span> associated with it, which are things you can run. You can list these methods using </span><span style=' font-style: italic;'>doc</span><span> (see above) or using the "methods" command:</span></div><div class="CodeBlock"><div class="inlineWrapper outputs"><div  class = 'S9'><span style="white-space: pre"><span >methods(fmri_data)</span></span></div><div  class = 'S10'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement scrollableOutput" uid="D8ECE5C1" data-scroll-top="null" data-scroll-left="null" data-testid="output_1" style="width: 877px; white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;"><div class="textElement eoOutputContent" data-width="847" data-height="731" data-hashorizontaloverflow="false" style="max-height: 261px; white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">Defaults settings have been modified by file(s):
+  /Users/f003vz1/Dropbox (Dartmouth College)/Matlab_code_external/spm12/spm_my_defaults.m
+Modified fields: stats 
+Defaults settings have been modified by file(s):
+  /Users/f003vz1/Dropbox (Dartmouth College)/Matlab_code_external/spm12/spm_my_defaults.m
+Modified fields: stats 
+
+Methods for class fmri_data:
+
+apply_atlas                          prctile                              
+apply_mask                           predict                              
+apply_parcellation                   predict_test_suite                   
+canlab_connectivity_preproc          preprocess                           
+cat                                  qc_metrics_second_level              
+check_image_filenames                read_from_file                       
+compare_space                        rebuild_volinfo_from_dat             
+create                               reconstruct_image                    
+descriptives                         regress                              
+display_slices                       remove_empty                         
+enforce_variable_types               render_on_surface                    
+evaluate_spatial_scale               reparse_contiguous                   
+expand_into_atlas_subregions         replace_empty                        
+extract_gray_white_csf               resample_space                       
+extract_measures_batch               resample_time                        
+extract_roi_averages                 rescale                              
+flip                                 riverplot                            
+fmri_data                            rmssd_movie                          
+get_wh_image                         robfit_parcelwise                    
+histogram                            rsa_regression                       
+history                              saveplots                            
+horzcat                              searchlight                          
+hrf_fit                              select_voxels_by_value               
+ica                                  signtest                             
+image_math                           sim_data                             
+image_similarity_plot                slice_movie                          
+image_similarity_plot_bucknermaps    slices                               
+interpolate                          split                                
+isempty                              spm_coregister                       
+isosurface                           subdivide_by_atlas                   
+mahal                                surface                              
+mean                                 table                                
+minus                                test_generalizability                
+model_brain_pathway                  threshold                            
+montage                              trim_mask                            
+neurosynth_feature_labels            ttest                                
+orthviews                            ttest_table_and_lateralization_test  
+outliers                             union                                
+pattern_surf_plot_mip                wedge_plot_by_atlas                  
+plot                                 windsorize                           
+plot_current_orthviews_coord         write                                
+plus                                 
+power                                </div></div></div></div></div><div  class = 'S11'><span>Then you can get help on any method by typing help &lt;object class&gt;.&lt;method name&gt;. For example:</span></div><div class="CodeBlock"><div class="inlineWrapper outputs"><div  class = 'S9'><span style="white-space: pre"><span >help </span><span style="color: rgb(170, 4, 249);">fmri_data.apply_mask</span></span></div><div  class = 'S10'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement scrollableOutput" uid="1E834F19" data-scroll-top="null" data-scroll-left="null" data-testid="output_2" style="width: 877px; white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;"><div class="textElement eoOutputContent" data-width="847" data-height="969" data-hashorizontaloverflow="false" style="max-height: 261px; white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">  Apply a mask image (image filename or fmri_mask_image object) to an image_vector object
+  stored in dat.
+ 
+  This can be used to:
+   - Mask an image_vector or fmri_data object with a mask
+   - Obtain "pattern expression" for a weight map (entered as the
+     mask, here) in a series of images stored in dat.
+ 
+  The mask or weight map does not have to be in the same space as the dat;
+  it will be resampled to the space of the data in dat.
+ 
+  To extract pattern expression values for each ROI within a mask use extract_roi_averages()
+ 
+  :Optional Inputs:
+ 
+    **pattern_expression:**
+         calculate and return the dot product of each
+         image in dat and the values in the mask.  This is useful if comparing
+         expression values that are comprised of different datasets or differing
+         number of voxels.
+ 
+    **correlation:**
+         calculate the pearson correlation coefficient of each
+         image in dat and the values in the mask.
+ 
+    **norm_mask:**
+         normalize the mask weights by L2 norm, for patt expression
+         only.
+ 
+    **ignore_missing:**
+         use with pattern expression only. Ignore weights on voxels
+         with zero values in test image. If this is not entered, the function will
+         check for these values and give a warning.
+ 
+    **invert:**
+         Invert the mask so that out-of-mask voxels are now in (using
+         the mask as an 'exclude mask' rather than an include-mask. If pattern
+         expression is requested, the behavior is different, and it inverts the
+         sign of in-mask pattern weights.
+ 
+    **cosine_similarity:**
+         use with pattern expression only. scales expression by product of
+         l2 norms (norm(mask)*norm(dat))
+ 
+  :Examples:
+  ::
+ 
+      [dat, mask] = <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">apply_mask</strong>(dat, mask)
+      [dat, mask] = <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">apply_mask</strong>(dat, mask image name)
+      [dat, mask] = <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">apply_mask</strong>(dat, mask image vector object)
+      [pattern_exp_values] = <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">apply_mask</strong>(dat, weight map image, 'pattern_expression', 'ignore_missing')
+      [pattern_exp_values] = <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">apply_mask</strong>(dat, weight map image, 'pattern_expression', 'ignore_missing','correlation')
+ 
+ 
+  :See also:
+ 
+  extract_roi_averages, to get individual region averages / local pattern expression
+  apply_nps, which does whole-pattern and local regional expression
+ 
+  ..
+     Notes:
+     Last modified: 10/30/11 to add support for masks that are weight maps
+     12/15/13:  Luke Chang - added correlation option for pattern-expression
+     5/10/2016: Phil Kragel - added cosine similarity
+     8/2/2018: Tor Wager - if mask is a statistic_image object, apply .sig field
+ 
+  ..
+
+Help for <strong style="white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">fmri_data/apply_mask</strong> is inherited from superclass image_vector</div></div></div></div><div class="inlineWrapper"><div  class = 'S12'></div></div></div><div  class = 'S11'><span>Or, if there are not multiple "apply_mask" functions on your path, just:</span></div><div class = 'preformatted-matlab' style = 'margin: 10px 3px 10px 55px; padding: 10px 10px 10px 5px; '><div  class = 'S8'><span style="white-space: pre"><span >help </span><span style="color: rgb(170, 4, 249);">apply_mask</span></span></div></div><div  class = 'S1'><span></span></div><h2  class = 'S7' id = 'H_30A47AA1' ><span>Other resources</span></h2><div  class = 'S1'><span></span></div><div  class = 'S1'><span>Some older resources may also be helpful, and are here:</span></div><div  class = 'S1'><span></span></div><h3  class = 'S6' id = 'H_69694D83' ><span>CANlab Core readthedocs</span></h3><div  class = 'S1'><span>A "read" of the help included with Canlab Matlab functions. This describes the basic object types and methods, but has not been updated in several years.  </span></div><div  class = 'S1'><span></span></div><div  class = 'S1'><a href = "https://canlabcore.readthedocs.io/en/latest/"><span>https://canlabcore.readthedocs.io/en/latest/</span></a></div><div  class = 'S1'><span>Or, for a PDF version:</span></div><div  class = 'S1'><a href = "https://canlabcore.readthedocs.io/_/downloads/en/latest/pdf/"><span>https://canlabcore.readthedocs.io/_/downloads/en/latest/pdf/</span></a></div><div  class = 'S1'><span></span></div><div  class = 'S1'><span>The info here is available by typing commands in Matlab (see above):</span></div><div class = 'preformatted-matlab' style = 'margin: 10px 3px 10px 55px; padding: 10px 10px 10px 5px; '><div  class = 'S8'><span style="white-space: pre"><span >doc </span><span style="color: rgb(170, 4, 249);">&lt;object class name&gt;</span></span></div><div  class = 'S8'><span style="white-space: pre"><span >help </span><span style="color: rgb(170, 4, 249);">&lt;function&gt;</span></span></div></div><h3  class = 'S6' id = 'H_19EC8045' ><span>CANlab Repos Guide</span></h3><div  class = 'S1'><a href = "https://docs.google.com/document/d/15H0UheBqOxrNG1rjIF1XWx1I-XHphKw2WApF-kq-vaI/edit#"><span>https://docs.google.com/document/d/15H0UheBqOxrNG1rjIF1XWx1I-XHphKw2WApF-kq-vaI/edit#</span></a></div><div  class = 'S1'><span>This is a quite detailed document with information on:</span></div><ul  class = 'S13'><li  class = 'S14'><span>research computing (platform-specific but may be generally useful)</span></li><li  class = 'S14'><span>data checking and visualization</span></li><li  class = 'S14'><span>preprocessing</span></li><li  class = 'S14'><span>first-level models</span></li><li  class = 'S14'><span>second-level models</span></li><li  class = 'S14'><span>thresholding  </span></li><li  class = 'S14'><span>predictive models</span></li><li  class = 'S14'><span>data acquisition considerations</span></li><li  class = 'S14'><span>integrating physiology  </span></li></ul><h3  class = 'S6' id = 'H_F6D04BD8' ><span>CANlab Toolbox-specific help</span></h3><div  class = 'S1'><span></span></div><div  class = 'S1'><span>Toolboxes like the </span><a href = "https://github.com/canlab/MediationToolbox"><span>Mediation toolbox</span></a><span>, </span><a href = "https://github.com/canlab/RobustToolbox"><span>Robust regression toolbox</span></a><span>, and </span><a href = "https://github.com/canlab/Canlab_MKDA_MetaAnalysis"><span>meta-analysis toolbox</span></a><span> have their own help files as well. Increasingly, help is integrated into the Walkthroughs and Tutorials discussed above, but check out the Readme files in these Github repositories and documentation in the toolbox folders as well.</span></div><div  class = 'S1'><span></span></div><h3  class = 'S6' id = 'H_CEBBE1F2' ><span>Study-specific repositories</span></h3><div  class = 'S1'><span>The CANlab Github site contains many study-specific repositories, and many these are publicly available. Generally, they contain code and data that can be reused to generate new scripts and pipelines. You can search them here:</span></div><div  class = 'S1'><a href = "https://github.com/canlab"><span>https://github.com/canlab</span></a></div><div  class = 'S1'><span></span></div><h3  class = 'S6' id = 'H_5465F865' ><span>Resources for CANlab members: Data, templates, devices, more!</span></h3><div  class = 'S1'><span></span></div><div  class = 'S1'><span>For those with access to restricted files, CANlab has a private repository that contains a lot of useful information. We are happy to share most of this on request, but believe it is more useful for the lab specifically than for general public use.</span></div><div  class = 'S1'><a href = "https://github.com/canlab/CANlab_data_and_equipment_private"><span>https://github.com/canlab/CANlab_data_and_equipment_private</span></a></div><div  class = 'S1'><span>It includes:</span></div><ul  class = 'S13'><li  class = 'S14'><span style=' font-weight: bold;'>Datasets</span><span>: Behavioral datasets from some unpublished and published studies		</span></li><li  class = 'S14'><span style=' font-weight: bold;'>Equipment_and_devices</span><span>: Descriptions and information about devices we use, including thermal/pressure/etc. noxious stimulators	</span></li><li  class = 'S14'><span style=' font-weight: bold;'>Redcap</span><span>: Data and forms backing up some Redcap datasets</span></li><li  class = 'S14'><span style=' font-weight: bold;'>Lab_Photos</span><span>			</span></li><li  class = 'S14'><span style=' font-weight: bold;'>Lab_protocols_and_procedures</span><span>: A Project template including slides and folders, manuscript template, info on datalad, high-performance computing, pain calibration, IRB, file handling, and more.	</span></li><li  class = 'S14'><span style=' font-weight: bold;'>Paper_and_grant_templates: </span><span>Templates for posters, presentations, writing</span></li><li  class = 'S14'><span style=' font-weight: bold;'>Resources_and_information: </span><span>Misc info on MRI acquisition, chronic pain, Matlab programming (including beginners' guide), R, statistics, writing. Includes archival copy of CANlab Repos Guide!</span></li><li  class = 'S14'><span style=' font-weight: bold;'>Web_applications</span><span>: Code for online mediation and NPS calculations on web</span></li><li  class = 'S14'><span style=' font-weight: bold;'>Questionnaires</span><span>: Survey instruments and scoring</span></li></ul><h2  class = 'S7' id = 'H_562DB292' ><span>Help with Matlab in general</span></h2><div  class = 'S1'><span></span></div><div  class = 'S1'><span>This is not a comprehensive introduction to Matlab. It’s assumed that you will use other resources to supplement your basic understanding how to work with Matlab, including some linked here: </span><a href = "https://canlab.github.io/tutorials/"><span>https://canlab.github.io/tutorials/</span></a></div><div  class = 'S1'></div>
+<br>
+<!-- 
+##### SOURCE BEGIN #####
+%% Getting help
+% There are several resources to get help using CANlab object-oriented tools.
+%% Walkthroughs and tutorials
+% The “first stop” is <https://canlab.github.io/ https://canlab.github.io/>
+% 
+% This includes pages on the object types and philosophy.  
+% 
+% 
+% 
+% There are two sets of Matlab tutorials:
+% 
+% 
+% How-to Walkthroughs
+% “Walkthroughs” is designed as a set of “how-to” documents for the tools, with 
+% examples and code. 
+% 
+% <https://canlab.github.io/walkthroughs/ https://canlab.github.io/walkthroughs/>
+% 
+% 
+% Didactic tutorials
+% “Tutorials” are more didactic and include more conceptual description, along 
+% with data and code. This also has a section on the SPM GUI and running statistical 
+% models with SPM.
+% 
+% <https://canlab.github.io/tutorials/ https://canlab.github.io/tutorials/>
+% 
+% 
+% Batch scripts: Modular example code
+% The "second-level batch scripts" run flexible pipelines for doing many things 
+% with CANlab object-oriented tools once you have a set of image files to work 
+% with (typically one image per task condition per participant). They also produce 
+% published reports. 
+% 
+% These scripts illustrate commands and processes that can be used with image 
+% data at other levels of analysis, too. If you find output (figures, tables, 
+% etc.) that you want to know how to create, you can read the code to see how 
+% it's done.  
+% 
+% <https://canlab.github.io/batch/ https://canlab.github.io/batch/>
+% 
+% 
+% Additional CANlab examples and tutorials
+% The code that generates the walkthroughs and tutorials on canlab.github.io, 
+% and the "second-level batch" code, is in a Github repository, here:
+% 
+% <https://github.com/canlab/CANlab_help_examples https://github.com/canlab/CANlab_help_examples>
+% 
+% It contains some "in progress" walkthroughs as well. We hope that people will 
+% be interested in contributing to and improving these!
+% 
+% 
+%% Interactive help within Matlab
+% Much of the help available is embedded in the Matlab functions and object 
+% class definition files.
+% 
+% The info here is available by typing commands in Matlab:
+% 
+% doc <object class name>
+% 
+% And:
+% 
+% help <function>
+% 
+% Try these:
+%%
+% 
+%   doc fmri_data
+%   doc atlas
+%
+%% 
+% And this:
+
+help fmri_data
+%% 
+% There are a few object types (or "classes") that organize most of the things 
+% you can do with image data.  Each class has _methods_ associated with it, which 
+% are things you can run. You can list these methods using _doc_ (see above) or 
+% using the "methods" command:
+
+methods(fmri_data)
+%% 
+% Then you can get help on any method by typing help <object class>.<method 
+% name>. For example:
+
+help fmri_data.apply_mask
+
+%% 
+% Or, if there are not multiple "apply_mask" functions on your path, just:
+%%
+% 
+%   help apply_mask
+%
+%% 
+% 
+%% Other resources
+% 
+% 
+% Some older resources may also be helpful, and are here:
+% 
+% 
+% CANlab Core readthedocs
+% A "read" of the help included with Canlab Matlab functions. This describes 
+% the basic object types and methods, but has not been updated in several years.  
+% 
+% 
+% 
+% <https://canlabcore.readthedocs.io/en/latest/ https://canlabcore.readthedocs.io/en/latest/>
+% 
+% Or, for a PDF version:
+% 
+% <https://canlabcore.readthedocs.io/_/downloads/en/latest/pdf/ https://canlabcore.readthedocs.io/_/downloads/en/latest/pdf/>
+% 
+% 
+% 
+% The info here is available by typing commands in Matlab (see above):
+%%
+% 
+%   doc <object class name>
+%   help <function>
+%
+% CANlab Repos Guide
+% <https://docs.google.com/document/d/15H0UheBqOxrNG1rjIF1XWx1I-XHphKw2WApF-kq-vaI/edit# 
+% https://docs.google.com/document/d/15H0UheBqOxrNG1rjIF1XWx1I-XHphKw2WApF-kq-vaI/edit#>
+% 
+% This is a quite detailed document with information on:
+%% 
+% * research computing (platform-specific but may be generally useful)
+% * data checking and visualization
+% * preprocessing
+% * first-level models
+% * second-level models
+% * thresholding  
+% * predictive models
+% * data acquisition considerations
+% * integrating physiology  
+% CANlab Toolbox-specific help
+% 
+% 
+% Toolboxes like the <https://github.com/canlab/MediationToolbox Mediation toolbox>, 
+% <https://github.com/canlab/RobustToolbox Robust regression toolbox>, and <https://github.com/canlab/Canlab_MKDA_MetaAnalysis 
+% meta-analysis toolbox> have their own help files as well. Increasingly, help 
+% is integrated into the Walkthroughs and Tutorials discussed above, but check 
+% out the Readme files in these Github repositories and documentation in the toolbox 
+% folders as well.
+% 
+% 
+% Study-specific repositories
+% The CANlab Github site contains many study-specific repositories, and many 
+% these are publicly available. Generally, they contain code and data that can 
+% be reused to generate new scripts and pipelines. You can search them here:
+% 
+% <https://github.com/canlab https://github.com/canlab>
+% 
+% 
+% Resources for CANlab members: Data, templates, devices, more!
+% 
+% 
+% For those with access to restricted files, CANlab has a private repository 
+% that contains a lot of useful information. We are happy to share most of this 
+% on request, but believe it is more useful for the lab specifically than for 
+% general public use.
+% 
+% <https://github.com/canlab/CANlab_data_and_equipment_private https://github.com/canlab/CANlab_data_and_equipment_private>
+% 
+% It includes:
+%% 
+% * *Datasets*: Behavioral datasets from some unpublished and published studies		
+% * *Equipment_and_devices*: Descriptions and information about devices we use, 
+% including thermal/pressure/etc. noxious stimulators	
+% * *Redcap*: Data and forms backing up some Redcap datasets
+% * *Lab_Photos*			
+% * *Lab_protocols_and_procedures*: A Project template including slides and 
+% folders, manuscript template, info on datalad, high-performance computing, pain 
+% calibration, IRB, file handling, and more.	
+% * *Paper_and_grant_templates:* Templates for posters, presentations, writing
+% * *Resources_and_information:* Misc info on MRI acquisition, chronic pain, 
+% Matlab programming (including beginners' guide), R, statistics, writing. Includes 
+% archival copy of CANlab Repos Guide!
+% * *Web_applications*: Code for online mediation and NPS calculations on web
+% * *Questionnaires*: Survey instruments and scoring
+%% Help with Matlab in general
+% 
+% 
+% This is not a comprehensive introduction to Matlab. It’s assumed that you 
+% will use other resources to supplement your basic understanding how to work 
+% with Matlab, including some linked here: <https://canlab.github.io/tutorials/ 
+% https://canlab.github.io/tutorials/>
+% 
+%
+##### SOURCE END #####
+-->
+</div></body></html>
