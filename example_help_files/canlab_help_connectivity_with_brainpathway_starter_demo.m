@@ -125,14 +125,23 @@ plot_connectivity(brainpathway_obj_reordered, 'regions', 'partitions', brainpath
 % Example: Cluster regions into communities. (Assumes brainpathway has a method cluster_regions.)
 brainpathway_obj = brainpathway_obj.cluster_regions();
 disp('Atlas regions clustered into communities.');
-%
+
+% % OR
+% % Assign networks manually based on pre-defined networks stored in labels
+% [~, ~, condf] = string2indicator(brainpathway_obj.region_atlas.labels_5);
+% brainpathway_obj.node_clusters = condf';
+
 % Example: Compute graph metrics such as degree, modularity, and other properties.
-brainpathway_obj = brainpathway_obj.compute_graph_metrics();
+brainpathway_obj = brainpathway_obj.degree_calc();
 disp('Graph metrics extracted from connectivity data.');
+brainpathway_obj.graph_properties.regions
 
 %% Step 9: Visualize the Graph Metrics
 % Finally, you can visualize the connectivity or network graph using methods that plot 
 % connectivity matrices, network graphs, or other summaries of the graph properties.
-plot_connectivity(brainpathway_obj, 'regions');
+
+brainpathway_obj_reordered = copy(brainpathway_obj);
+plot_connectivity(brainpathway_obj_reordered, 'regions', 'partitions', brainpathway_obj_reordered.node_clusters);
+
 title('Final Connectivity Matrix After Clustering');
 disp('Graph metrics and connectivity visualization complete.');
