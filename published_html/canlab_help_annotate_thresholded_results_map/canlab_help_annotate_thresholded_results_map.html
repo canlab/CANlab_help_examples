@@ -1,0 +1,240 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>canlab_help_annotate_thresholded_results_map</title>
+<meta name="generator" content="MATLAB 24.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2025-03-02">
+<meta name="DC.source" content="canlab_help_annotate_thresholded_results_map.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.8em; color:#2C2D92; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.4em; color:#363538; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#363538; font-weight:bold; line-height:140%; }
+
+a { color:#4B4BA8; text-decoration:none; }
+a:hover { color:#2AAFDF; text-decoration:underline; }
+a:visited { color:#4B4BA8; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:14px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">Load a test map to use as an example</a>
+</li>
+<li>
+<a href="#2">Run annotations</a>
+</li>
+</ul>
+</div>
+<h2 id="1">Load a test map to use as an example</h2>
+<pre class="codeinput">ns=load(which(<span class="string">'neurosynth_data_obj.mat'</span>));test_map=get_wh_image(ns.topic_obj_reverseinference,1);<span class="comment">% somatosensory topic</span>
+</pre>
+<h2 id="2">Run annotations</h2>
+<pre class="codeinput">annotate_binary_results_map(test_map)
+</pre>
+<pre class="codeoutput">Transmodal vs. unimodal:  Principal gradient of functional connectivity
+</pre>
+<img vspace="5" hspace="5" src="canlab_help_annotate_thresholded_results_map_01.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_annotate_thresholded_results_map_02.png" alt=""> <pre class="codeoutput">Allen brain project transcriptomic gradients
+</pre>
+<img vspace="5" hspace="5" src="canlab_help_annotate_thresholded_results_map_03.png" alt=""> <pre class="codeoutput">Neuromaps PET neurochemical tracer maps
+</pre>
+<img vspace="5" hspace="5" src="canlab_help_annotate_thresholded_results_map_04.png" alt=""> <pre class="codeoutput">
+ 	Name	Pearson's r	
+5HT1a	0.0229	
+5HT1a	0.0319	
+5HT1b	0.0451	
+5HT1b	0.0831	
+5HT1b	0.0451	
+5HT2a	0.0330	
+5HT2a	0.0326	
+5HT2a	0.0245	
+5HT4	0.0056	
+5HT6	0.0566	
+5HTT	-0.0327	
+5HTT	-0.0054	
+a4b2	-0.0081	
+CB1	0.1152	
+CB1	0.0581	
+D1	-0.0247	
+D2	-0.0069	
+D2	-0.0012	
+D2	-0.0077	
+D2	0.0165	
+DAT	-0.0038	
+DAT	-0.0621	
+GABAa	0.0610	
+GABAabz	0.0736	
+H3	0.0245	
+M1	0.0879	
+mGluR5	0.0777	
+mGluR5	0.0906	
+mGluR5	0.1215	
+MOR	-0.0416	
+MOR	0.0048	
+NET	0.0835	
+NET	0.1811	
+VAChT	0.0143	
+VAChT	-0.0073	
+VAChT	0.0200	
+Neurosynth topic and term maps
+Neurosynth topics - forward inference maps
+Test image 1
+..cs\v4-topics-100_0_stimulation_somatosensory_tms_pFgA_z_FDR_0.01.nii
+_____________________________________________________________________
+    r_lowest         Term_or_Topic_lowest         r_highest        Term_or_Topic_highest    
+    _________    _____________________________    _________    _____________________________
+
+    -0.072766    {'Word Processing'          }      0.60286    {'Sensory Stimulation'      }
+    -0.063182    {'Emotion face'             }       0.2544    {'Pain Perception'          }
+    -0.062233    {'Familiarity &amp; recognition'}       0.2481    {'Motor movements'          }
+    -0.059672    {'Depression &amp; Disorders'   }      0.24004    {'Motor control'            }
+    -0.058889    {'Language comprehension'   }      0.07949    {'Motor Coordination'       }
+    -0.057834    {'Reading &amp; Writing'        }      0.07842    {'Creativity &amp; Acupuncture '}
+    -0.056539    {'Cognitive Conflict'       }     0.077318    {'Action Observation'       }
+    -0.054691    {'Memory &amp; Events'          }     0.038981    {'Auditory processing'      }
+    -0.054037    {'Task-switching'           }    0.0095692    {'Multiple Sclerosis'       }
+    -0.053809    {'Encoding &amp; Retrieval'     }     0.008167    {'Body perception'          }
+
+Neurosynth topics - reverse inference maps
+Test image 1
+..cs\v4-topics-100_0_stimulation_somatosensory_tms_pFgA_z_FDR_0.01.nii
+_____________________________________________________________________
+    r_lowest        Term_or_Topic_lowest        r_highest         Term_or_Topic_highest    
+    _________    __________________________    ___________    _____________________________
+
+    -0.051458    {'Reading &amp; Writing'     }              1    {'Sensory Stimulation'      }
+     -0.05124    {'Emotion face'          }        0.32365    {'Pain Perception'          }
+    -0.049365    {'Encoding &amp; Retrieval'  }        0.31546    {'Motor movements'          }
+      -0.0483    {'Memory &amp; Events'       }        0.23224    {'Motor control'            }
+    -0.046738    {'Working Memory'        }       0.088103    {'Action Observation'       }
+    -0.044211    {'Word Processing'       }        0.04632    {'Motor Coordination'       }
+     -0.04161    {'Language comprehension'}       0.041099    {'Creativity &amp; Acupuncture '}
+    -0.040511    {'Empathy &amp; Interaction' }       0.027829    {'Auditory processing'      }
+     -0.03783    {'Emotion Processing'    }       0.016815    {'Food &amp; weight'            }
+    -0.031803    {'Spatial Attention'     }    -0.00078825    {'Multiple Sclerosis'       }
+
+Neurosynth terms- reverse inference maps
+Test image 1
+..cs\v4-topics-100_0_stimulation_somatosensory_tms_pFgA_z_FDR_0.01.nii
+_____________________________________________________________________
+    r_lowest    Term_or_Topic_lowest    r_highest    Term_or_Topic_highest
+    ________    ____________________    _________    _____________________
+
+     -0.2424       {'memory'   }         0.47282       {'somatosensory'}  
+    -0.18946       {'retrieval'}         0.45236       {'tactile'      }  
+    -0.18554       {'correct'  }         0.42208       {'stimulation'  }  
+    -0.18174       {'number'   }         0.35855       {'hand'         }  
+    -0.17871       {'word'     }         0.32351       {'finger'       }  
+    -0.17504       {'work'     }         0.31912       {'muscle'       }  
+    -0.16633       {'verbal'   }         0.31753       {'pain'         }  
+    -0.16625       {'face'     }         0.31062       {'sensory'      }  
+    -0.16585       {'words'    }         0.30502       {'painful'      }  
+    -0.16482       {'encoding' }         0.30338       {'sensorimotor' }  
+
+Correlations with Yeo/Bucker resting-state networks
+Loaded images:
+/Users/f003vz1/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Combined_multiatlas_ROI_masks/rBucknerlab_7clusters_SPMAnat_Other_combined.img
+
+ 	Name	Pearson's r	
+Visual	-0.0541	
+Somatomotor	0.2994	
+dAttention	-0.0167	
+vAttention	0.0807	
+Limbic	-0.0438	
+Frontoparietal	-0.0638	
+Default	-0.0744	
+</pre>
+<img vspace="5" hspace="5" src="canlab_help_annotate_thresholded_results_map_05.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_annotate_thresholded_results_map_06.png" alt=""> <pre class="codeoutput">Prepping atlases: 
+yeo17networks Loading atlas: /Users/f003vz1/Documents/GitHub/Neuroimaging_Pattern_Masks/Atlases_and_parcellations/2018_Schaefer_Yeo_multires_cortical_parcellation/Schaefer2018Cortex_17networks_atlas_object.mat
+Note: Mean weights reflect homogeneity in sign and magnitude across region,
+not high spatial frequency/pattern information.
+
+____________________________________________________________________________________________________________________________________________
+Wedge plot:
+Wedge plots depict mean images values across voxels. Red indicates positive values and blue negative values. If multiple images were 
+entered, the darker shaded area indicates the standard error of the mean (SEM) across individuals.                                   
+____________________________________________________________________________________________________________________________________________
+</pre>
+<img vspace="5" hspace="5" src="canlab_help_annotate_thresholded_results_map_07.png" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2024b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% Load a test map to use as an example
+
+ns = load(which('neurosynth_data_obj.mat'));
+test_map = get_wh_image(ns.topic_obj_reverseinference, 1); % somatosensory topic
+
+
+%% Run annotations
+
+annotate_binary_results_map(test_map)
+
+
+##### SOURCE END #####
+-->
+</body>
+</html>

@@ -1,0 +1,996 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>Overview</title>
+<meta name="generator" content="MATLAB 24.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2025-03-31">
+<meta name="DC.source" content="canlab_help_connectivity_with_brainpathway_starter_demo.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.8em; color:#2C2D92; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.4em; color:#363538; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#363538; font-weight:bold; line-height:140%; }
+
+a { color:#4B4BA8; text-decoration:none; }
+a:hover { color:#2AAFDF; text-decoration:underline; }
+a:visited { color:#4B4BA8; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:14px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h1>Overview</h1>
+<!--introduction-->
+<p>A brainpathway object is a CANlab object designed for connectivity and computational model-based analysis of fMRI data. It holds an atlas (defining brain regions), voxel-level time series data, and derived node and region averages. In addition, it contains connectivity matrices and graph metrics (e.g., network degree, modularity) that can be computed from the data. This object allows you to attach preprocessed time series data, compute connectivity, reorder regions for clearer visualization, and extract graph theoretical metrics using state-of-the-art methods.</p>
+<p>In this demonstration, we will: 1. Create a brainpathway object using a default atlas or a custom atlas. 2. Load a subject's 4-D fMRI timeseries. 3. Preprocess the time series (denoising). 4. Attach the denoised time series into the brainpathway object. 5. Examine connectivity and region averages. 6. Reorder regions based on label groups. 7. (Additional) Cluster regions and extract graph metrics.</p>
+<!--/introduction-->
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">Step 1: Create a brainpathway object</a>
+</li>
+<li>
+<a href="#2">Step 1: (alternate option)</a>
+</li>
+<li>
+<a href="#3">Step 2: Load a 4-D timeseries object</a>
+</li>
+<li>
+<a href="#4">Step 3: Preprocess the time series images</a>
+</li>
+<li>
+<a href="#5">Step 3-4 (Alternate): Load a saved denoised timeseries object</a>
+</li>
+<li>
+<a href="#6">Step 5: Attach the time series data into the brainpathway object</a>
+</li>
+<li>
+<a href="#7">Step 6: Examine connectivity matrices and region averages</a>
+</li>
+<li>
+<a href="#9">Step 7: Reorder regions to make connectome plots more interpretable</a>
+</li>
+<li>
+<a href="#10">Step 8: Cluster regions and extract graph metrics</a>
+</li>
+<li>
+<a href="#11">Step 9: Visualize the Graph Metrics</a>
+</li>
+</ul>
+</div>
+<h2 id="1">Step 1: Create a brainpathway object</h2>
+<p>this will use a default atlas.</p>
+<pre class="codeinput">brainpathway_obj=brainpathway;
+</pre>
+<pre class="codeoutput">Loading atlas: CANlab_combined_atlas_object_2018_2mm.mat
+Initializing nodes to match regions.
+</pre>
+<h2 id="2">Step 1: (alternate option)</h2>
+<p>load an atlas that we'd like to use</p>
+<p>this will let us manipulate or customize the atlas if we want to e.g. reorder the regions to keep large groups together and in the order you want them in plots</p>
+<pre class="codeinput">atlas_obj=load_atlas(<span class="string">'canlab2024'</span>);<span class="comment">% Create a brainpathway object with this atlas</span><span class="comment">% (if we omit atlas_obj,</span>brainpathway_obj=brainpathway(atlas_obj);
+</pre>
+<pre class="codeoutput">Loading atlas: CANLab2024_MNI152NLin2009cAsym_coarse_2mm_atlas_object.mat
+Initializing nodes to match regions.
+</pre>
+<h2 id="3">Step 2: Load a 4-D timeseries object</h2>
+<p>Load a 4-D timeseries object from a subject to feed into brainpathways</p>
+<pre class="codeinput">
+<span class="comment">% Load the key 4-D image file into an fmri_data object.</span>fname=which(<span class="string">'swrsub-sid001567_task-pinel_acq-s1p2_run-03_bold.nii.gz'</span>);obj=fmri_data(fname);
+</pre>
+<pre class="codeoutput">Using default mask: /Users/f003vz1/Documents/GitHub/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/brainmask_canlab.nii
+loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 145720800 bytes
+Loading image number:   150
+Elapsed time is 0.410511 seconds.
+Image names entered, but fullpath attribute is empty. Getting path info.
+.fullpath should have image name for each image column in .dat
+Attempting to expand image filenames in case image list is unexpanded 4-D images
+Number of unique values in dataset: 493  Bit rate: 8.95 bits
+Warning: Number of unique values in dataset is low, indicating possible restriction of bit rate. For comparison, Int16 has 65,536 unique values
+</pre>
+<h2 id="4">Step 3: Preprocess the time series images</h2>
+<p>Preprocessing includes extracting the TR, loading the movement parameter file, and running the denoising pipeline.</p>
+<pre class="codeinput">
+<span class="comment">% Get the TR from the JSON file:</span>json_struct=jsondecode(fileread(which(<span class="string">'sub-sid001567_task-pinel_acq-s1p2_run-03_bold.json'</span>)));TR=json_struct.RepetitionTime;fprintf(<span class="string">'TR extracted: %.2f seconds\n'</span>,TR);<span class="comment">% Specify the movement parameter file:</span>mvmtfname=which(<span class="string">'rp_sub-sid001567_task-pinel_acq-s1p2_run-03_bold.txt'</span>);<span class="comment">% Run the denoising pipeline:</span><span class="comment">% (This pipeline regresses out nuisance covariates such as movement regressors,</span><span class="comment">% outlier indicators, and CSF signals, and applies a high-pass filter.)</span>obj_denoised=obj.denoise_timeseries_pipeline(TR,128,mvmtfname,<span class="string">'plot'</span>,false,<span class="string">'verbose'</span>,false);disp(<span class="string">'Time series denoised.'</span>);
+</pre>
+<pre class="codeoutput">TR extracted: 2.00 seconds
+______________________________________________________________
+Outlier analysis
+______________________________________________________________
+global mean | global mean to var | spatial MAD | rmssd | Missing values |   0 images 
+
+
+Retained 2 components for mahalanobis distance
+Expected 50% of points within 50% normal ellipsoid, found 18.67%
+Expected 7.50 outside 95% ellipsoid, found   6
+
+Potential outliers based on mahalanobis distance:
+Bonferroni corrected: 1 images		Cases 1 
+Uncorrected: 6 images		Cases 1 2 3 4 5 6 
+
+Retained 2 components for mahalanobis distance
+Expected 50% of points within 50% normal ellipsoid, found 22.67%
+Expected 7.50 outside 95% ellipsoid, found   6
+
+Potential outliers based on mahalanobis distance:
+Bonferroni corrected: 1 images		Cases 1 
+Uncorrected: 6 images		Cases 1 2 3 4 5 6 
+
+Mahalanobis (cov and corr, q&lt;0.05 corrected):
+  1 images 
+Framewise Displacement (before and after &gt;0.50 mm correction):
+  0 images 
+                               Outlier_count    Percentage
+                               _____________    __________
+
+    global_mean                      6                 4  
+    global_mean_to_variance          4            2.6667  
+    missing_values                   0                 0  
+    rmssd_dvars                      1           0.66667  
+    spatial_variability              4            2.6667  
+    mahal_cov_uncor                  6                 4  
+    mahal_cov_corrected              1           0.66667  
+    mahal_corr_uncor                 6                 4  
+    mahal_corr_corrected             1           0.66667  
+    fd                               0                 0  
+    Overall_uncorrected             10            6.6667  
+    Overall_corrected                8            5.3333  
+
+Extracting from gray_matter_mask_sparse.img.
+Removing 2565 voxels with one or more NaNs
+Extracting from canonical_white_matter.img.
+Removing 106 voxels with one or more NaNs
+Extracting from canonical_ventricles.img.
+Removing 158 voxels with one or more NaNs
+Time series denoised.
+</pre>
+<img vspace="5" hspace="5" src="canlab_help_connectivity_with_brainpathway_starter_demo_01.png" alt=""> <h2 id="5">Step 3-4 (Alternate): Load a saved denoised timeseries object</h2>
+<p>If you have already preprocessed the data, you can load a saved .mat file.</p>
+<pre class="codeinput">load(which(<span class="string">'swrsub-sid001567_task-pinel_acq-s1p2_run-03_bold_denoised.mat'</span>));disp(<span class="string">'Loaded saved denoised object (obj_denoised).'</span>);
+</pre>
+<pre class="codeoutput">Loaded saved denoised object (obj_denoised).
+</pre>
+<h2 id="6">Step 5: Attach the time series data into the brainpathway object</h2>
+<p>This step resamples the 4-D image data (in obj_denoised) to the atlas space and stores it in the brainpathway object (in the .voxel_dat field). This triggers several updates such as recalculation of region averages and connectivity matrices.</p>
+<pre class="codeinput">brainpathway_obj.attach_voxel_data(obj_denoised);disp(<span class="string">'Voxel data attached to brainpathway object.'</span>);
+</pre>
+<pre class="codeoutput">Updating node response data.
+Updating obj.connectivity.nodes.
+Updating obj.connectivity.nodes.
+Updating region averages.
+Updating obj.connectivity.regions.
+Updating obj.connectivity.regions.
+Voxel data attached to brainpathway object.
+</pre>
+<h2 id="7">Step 6: Examine connectivity matrices and region averages</h2>
+<p>Visualize the region-by-region connectivity matrix using the brainpathway object's connectivity data. You can also display connectivity based on a partition.</p>
+<pre class="codeinput">create_figure(<span class="string">'region averages'</span>);imagesc(zscore(brainpathway_obj.region_dat));title(<span class="string">'Region averages (z-scores)'</span>);disp(<span class="string">'Region x Region Connectome is in brainpathway_obj.connectivity.regions'</span>)brainpathway_obj.connectivity.regions<span class="comment">% Plot the region x region connectivity matrix:</span>plot_connectivity(brainpathway_obj,<span class="string">'regions'</span>);title(<span class="string">'Region x Region Connectivity'</span>);
+</pre>
+<pre class="codeoutput">Region x Region Connectome is in brainpathway_obj.connectivity.regions
+
+ans = 
+
+  struct with fields:
+
+    r: [518&times;518 single]
+    p: [518&times;518 single]
+
+</pre>
+<img vspace="5" hspace="5" src="canlab_help_connectivity_with_brainpathway_starter_demo_02.png" alt=""> <img vspace="5" hspace="5" src="canlab_help_connectivity_with_brainpathway_starter_demo_03.png" alt=""> <p>Plot connectivity matrix showing partitions Here we use a specific partition (e.g., based on labels_5 in the region_atlas):</p>
+<pre class="codeinput">plot_connectivity(brainpathway_obj,<span class="string">'regions'</span>,<span class="string">'partitions'</span>,brainpathway_obj.region_atlas.labels_5);title(<span class="string">'Region Connectivity (Partitioned by labels\_5)'</span>);
+</pre>
+<pre class="codeoutput">Note: Variables were re-ordered based on partitions. Reordered names saved in .var_names field.
+</pre>
+<img vspace="5" hspace="5" src="canlab_help_connectivity_with_brainpathway_starter_demo_04.png" alt=""> <h2 id="9">Step 7: Reorder regions to make connectome plots more interpretable</h2>
+<p>It is often helpful to reorder atlas regions so that similar regions are grouped together in plots. The following example uses label groups from the atlas.</p>
+<p>The group 'labels_5' was added using the script: canlab2024_add_labels_5_networks_and_large_structures</p>
+<p>First, create a labelgroup cell array from the unique values in labels_5, then reorder:</p>
+<pre class="codeinput">labelgroups=unique(brainpathway_obj.region_atlas.labels_5);labelgroups=labelgroups([5:2022:3712138392:4]);<span class="comment">% Reorder groups as desired</span><span class="comment">%</span><span class="comment">% To preserve the original object, create a copy (note: brainpathway is a handle class,</span><span class="comment">% so copying requires a dedicated method or function):</span>brainpathway_obj_reordered=copy(brainpathway_obj);<span class="comment">%</span><span class="comment">% Reorder the regions using the reorder_regions method, specifying the labelgroups and</span><span class="comment">% the atlas property ('label_5') to compare.</span>brainpathway_obj_reordered.reorder_regions(<span class="string">'labelgroups'</span>,labelgroups,<span class="string">'compare_property'</span>,<span class="string">'labels_5'</span>);disp(<span class="string">'Regions reordered based on label groups.'</span>);plot_connectivity(brainpathway_obj_reordered,<span class="string">'regions'</span>,<span class="string">'partitions'</span>,brainpathway_obj_reordered.region_atlas.labels_5);
+</pre>
+<pre class="codeoutput">Creating a copy of brainpathway object
+Initializing nodes to match regions.
+Updating node response data.
+Updating obj.connectivity.nodes.
+Updating obj.connectivity.nodes.
+Updating region averages.
+Updating obj.connectivity.regions.
+Updating obj.connectivity.regions.
+Updating obj.connectivity.nodes.
+Updating obj.connectivity.regions.
+Updating node response data.
+Updating obj.connectivity.nodes.
+Updating obj.connectivity.nodes.
+Updating obj.connectivity.regions.
+Updating obj.connectivity.nodes.
+Initializing nodes to match regions.
+Updating node response data.
+Updating obj.connectivity.nodes.
+Updating obj.connectivity.nodes.
+Updating region averages.
+Updating obj.connectivity.regions.
+Updating obj.connectivity.regions.
+Updating obj.connectivity.regions.
+Regions reordered based on label groups.
+Note: Variables were re-ordered based on partitions. Reordered names saved in .var_names field.
+</pre>
+<img vspace="5" hspace="5" src="canlab_help_connectivity_with_brainpathway_starter_demo_05.png" alt=""> <h2 id="10">Step 8: Cluster regions and extract graph metrics</h2>
+<p>Next, you can cluster the atlas regions into communities and extract graph-theoretic metrics from the connectivity data. These methods utilize functions from the Rubinov &amp; Sporns brain connectivity toolbox.</p>
+<p>Example: Cluster regions into communities. (Assumes brainpathway has a method cluster_regions.)</p>
+<pre class="codeinput">brainpathway_obj=brainpathway_obj.cluster_regions();disp(<span class="string">'Atlas regions clustered into communities.'</span>);<span class="comment">% % OR</span><span class="comment">% % Assign networks manually based on pre-defined networks stored in labels</span><span class="comment">% [~, ~, condf] = string2indicator(brainpathway_obj.region_atlas.labels_5);</span><span class="comment">% brainpathway_obj.node_clusters = condf';</span><span class="comment">% Example: Compute graph metrics such as degree, modularity, and other properties.</span>brainpathway_obj=brainpathway_obj.degree_calc();disp(<span class="string">'Graph metrics extracted from connectivity data.'</span>);brainpathway_obj.graph_properties.regions
+</pre>
+<pre class="codeoutput">Clustered regions using ward linkage, max clusters =   8
+Idenfied   8 clusters and assigned integer labels to obj.node_clusters
+Atlas regions clustered into communities.
+Calculated within- and between-network degree using   8 networks in obj.node_clusters
+Updated region table with network degree in obj.graph_properties.regions
+Graph metrics extracted from connectivity data.
+
+ans =
+
+  518&times;4 table
+
+    within_network_degree    between_network_degree    within_hubs    between_hubs
+    _____________________    ______________________    ___________    ____________
+
+            0.83215                       NaN             false          false    
+            0.83215                       NaN             false          false    
+            0.69844                       NaN             false          false    
+            0.73104                       NaN             true           false    
+            0.64226                       NaN             false          false    
+            0.60536                       NaN             false          false    
+            0.57865                       NaN             false          false    
+             0.3711                       NaN             false          false    
+                NaN                   0.15889             false          false    
+                NaN                    0.1347             false          false    
+                NaN                  0.043878             false          false    
+                NaN                   0.19688             false          false    
+                NaN                   0.26513             false          true     
+                NaN                   0.16626             false          false    
+                NaN                   0.28127             false          true     
+                NaN                    0.1806             false          false    
+                NaN                    0.1902             false          false    
+                NaN                   0.25566             false          true     
+                NaN                   0.16826             false          false    
+                NaN                   0.13501             false          false    
+                NaN                   0.23084             false          false    
+                NaN                   0.21219             false          false    
+                NaN                   0.20387             false          false    
+                NaN                  0.090598             false          false    
+                NaN                   0.29499             false          true     
+                NaN                  0.078434             false          false    
+                NaN                   0.17863             false          false    
+                NaN                   0.16678             false          false    
+                NaN                   0.23913             false          true     
+                NaN                  0.026988             false          false    
+                NaN                   0.21198             false          false    
+                NaN                  0.050704             false          false    
+                NaN                  0.075104             false          false    
+                NaN                   0.15775             false          false    
+                NaN                   0.13226             false          false    
+                NaN                   0.14083             false          false    
+                NaN                   0.11616             false          false    
+                NaN                 0.0033163             false          false    
+                NaN                  0.073094             false          false    
+                NaN                 0.0037243             false          false    
+                NaN                 -0.029428             false          false    
+                NaN                -0.0034349             false          false    
+                NaN                  0.022418             false          false    
+                NaN                0.00011334             false          false    
+                NaN                  0.044788             false          false    
+                NaN                 -0.023973             false          false    
+                NaN                       NaN             false          false    
+                NaN                  0.044216             false          false    
+                NaN                       NaN             false          false    
+                NaN                 0.0097157             false          false    
+                NaN                  0.012828             false          false    
+                NaN                -0.0086045             false          false    
+                NaN                  0.020207             false          false    
+                NaN                  0.026705             false          false    
+                NaN                   0.28149             false          true     
+                NaN                   0.20272             false          false    
+                NaN                  0.071802             false          false    
+                NaN                  0.019956             false          false    
+                NaN                  0.025032             false          false    
+                NaN                   0.18812             false          false    
+                NaN                       NaN             false          false    
+                NaN                       NaN             false          false    
+                NaN                 -0.026567             false          false    
+                NaN                       NaN             false          false    
+                NaN                -0.0004891             false          false    
+                NaN                 -0.066283             false          false    
+                NaN                 -0.013682             false          false    
+                NaN                       NaN             false          false    
+                NaN                       NaN             false          false    
+                NaN                  0.028305             false          false    
+                NaN                       NaN             false          false    
+                NaN                       NaN             false          false    
+                NaN                   0.16545             false          false    
+                NaN                 -0.087503             false          false    
+                NaN                  0.012063             false          false    
+                NaN                       NaN             false          false    
+                NaN                -0.0044121             false          false    
+            0.19196                       NaN             false          false    
+            0.23373                       NaN             false          false    
+            0.19804                       NaN             false          false    
+            0.12303                       NaN             false          false    
+            0.18494                       NaN             false          false    
+            0.24969                       NaN             false          false    
+            0.20316                       NaN             false          false    
+            0.16463                       NaN             false          false    
+           0.087335                       NaN             false          false    
+            0.25486                       NaN             false          false    
+            0.20659                       NaN             false          false    
+            0.20411                       NaN             false          false    
+             0.1686                       NaN             false          false    
+            0.23303                       NaN             false          false    
+            0.20741                       NaN             false          false    
+            0.17537                       NaN             false          false    
+            0.20726                       NaN             false          false    
+             0.2557                       NaN             false          false    
+            0.25923                       NaN             true           false    
+             0.2507                       NaN             false          false    
+            0.20786                       NaN             false          false    
+           0.078275                       NaN             false          false    
+            0.28522                       NaN             true           false    
+            0.30562                       NaN             true           false    
+            0.29285                       NaN             true           false    
+            0.27215                       NaN             true           false    
+            0.21008                       NaN             false          false    
+            0.24351                       NaN             false          false    
+            0.17495                       NaN             false          false    
+            0.23586                       NaN             false          false    
+            0.23348                       NaN             false          false    
+            0.13824                       NaN             false          false    
+             0.1514                       NaN             false          false    
+             0.2679                       NaN             true           false    
+             0.1423                       NaN             false          false    
+            0.24451                       NaN             false          false    
+            0.28125                       NaN             true           false    
+             0.2696                       NaN             true           false    
+           0.096994                       NaN             false          false    
+            0.13294                       NaN             false          false    
+            0.22688                       NaN             false          false    
+          -0.014723                       NaN             false          false    
+            0.11819                       NaN             false          false    
+            0.25937                       NaN             true           false    
+            0.15244                       NaN             false          false    
+            0.10769                       NaN             false          false    
+            0.22642                       NaN             false          false    
+            0.19025                       NaN             false          false    
+            0.23962                       NaN             false          false    
+            0.13533                       NaN             false          false    
+            0.17577                       NaN             false          false    
+            0.12329                       NaN             false          false    
+            0.20767                       NaN             false          false    
+            0.17955                       NaN             false          false    
+            0.11146                       NaN             false          false    
+            0.18483                       NaN             false          false    
+           0.083363                       NaN             false          false    
+            0.12694                       NaN             false          false    
+            0.19444                       NaN             false          false    
+            0.23183                       NaN             false          false    
+            0.15303                       NaN             false          false    
+            0.18414                       NaN             false          false    
+            0.24082                       NaN             false          false    
+            0.21357                       NaN             false          false    
+            0.22858                       NaN             false          false    
+            0.21121                       NaN             false          false    
+            0.17476                       NaN             false          false    
+            0.22283                       NaN             false          false    
+            0.22066                       NaN             false          false    
+            0.11669                       NaN             false          false    
+            0.20639                       NaN             false          false    
+            0.16306                       NaN             false          false    
+            0.21564                       NaN             false          false    
+            0.27573                       NaN             true           false    
+            0.14766                       NaN             false          false    
+             0.1496                       NaN             false          false    
+            0.23486                       NaN             false          false    
+            0.16974                       NaN             false          false    
+            0.17981                       NaN             false          false    
+            0.16901                       NaN             false          false    
+            0.24703                       NaN             false          false    
+            0.24201                       NaN             false          false    
+            0.24428                       NaN             false          false    
+            0.17827                       NaN             false          false    
+            0.23956                       NaN             false          false    
+           0.084354                       NaN             false          false    
+           0.067294                       NaN             false          false    
+             0.1318                       NaN             false          false    
+            0.10979                       NaN             false          false    
+           0.060307                       NaN             false          false    
+            0.15841                       NaN             false          false    
+            0.22552                       NaN             false          false    
+           0.059729                       NaN             false          false    
+            0.12453                       NaN             false          false    
+           0.038087                       NaN             false          false    
+           0.092027                       NaN             false          false    
+            0.16988                       NaN             false          false    
+            0.21473                       NaN             false          false    
+            0.22116                       NaN             false          false    
+            0.20088                       NaN             false          false    
+            0.12196                       NaN             false          false    
+           0.074727                       NaN             false          false    
+           -0.07181                       NaN             false          false    
+           -0.14755                       NaN             false          false    
+            0.18742                       NaN             false          false    
+           -0.11676                       NaN             false          false    
+            0.26835                       NaN             true           false    
+            0.20552                       NaN             false          false    
+           0.021131                       NaN             false          false    
+           0.017736                       NaN             false          false    
+            0.17767                       NaN             false          false    
+            0.15876                       NaN             false          false    
+            0.19297                       NaN             false          false    
+            0.20912                       NaN             false          false    
+            0.04302                       NaN             false          false    
+            0.33723                       NaN             true           false    
+            0.33131                       NaN             true           false    
+            0.33261                       NaN             true           false    
+            0.31653                       NaN             false          false    
+            0.31924                       NaN             false          false    
+            0.22984                       NaN             false          false    
+            0.18616                       NaN             false          false    
+            0.31809                       NaN             false          false    
+            0.15831                       NaN             false          false    
+            0.29341                       NaN             false          false    
+           0.097022                       NaN             false          false    
+            0.15394                       NaN             false          false    
+           0.069555                       NaN             false          false    
+           0.081431                       NaN             false          false    
+            0.24283                       NaN             false          false    
+            0.33189                       NaN             true           false    
+            0.33637                       NaN             true           false    
+            0.21912                       NaN             false          false    
+            0.30247                       NaN             false          false    
+            0.31004                       NaN             false          false    
+            0.12085                       NaN             false          false    
+           0.083716                       NaN             false          false    
+            0.28813                       NaN             false          false    
+            0.33419                       NaN             true           false    
+            0.26324                       NaN             false          false    
+            0.27611                       NaN             false          false    
+            0.26591                       NaN             false          false    
+            0.30794                       NaN             false          false    
+            0.16231                       NaN             false          false    
+             0.2737                       NaN             false          false    
+            0.20578                       NaN             false          false    
+            0.30739                       NaN             false          false    
+            0.27309                       NaN             false          false    
+             0.3243                       NaN             true           false    
+            0.30952                       NaN             false          false    
+            0.25765                       NaN             false          false    
+            0.27597                       NaN             false          false    
+             0.3229                       NaN             true           false    
+            0.36144                       NaN             true           false    
+             0.2943                       NaN             false          false    
+            0.10403                       NaN             false          false    
+            0.21896                       NaN             false          false    
+            0.18919                       NaN             false          false    
+            0.29778                       NaN             false          false    
+            0.25879                       NaN             false          false    
+            0.17853                       NaN             false          false    
+            0.25757                       NaN             false          false    
+            0.30455                       NaN             false          false    
+            0.18652                       NaN             false          false    
+            0.09763                       NaN             false          false    
+           0.097033                       NaN             false          false    
+            0.16304                       NaN             false          false    
+            0.12345                       NaN             false          false    
+            0.28503                       NaN             false          false    
+            0.32088                       NaN             false          false    
+            0.35461                       NaN             true           false    
+            0.25634                       NaN             false          false    
+             0.2092                       NaN             false          false    
+            0.12686                       NaN             false          false    
+            0.14043                       NaN             false          false    
+            0.02416                       NaN             false          false    
+           0.078037                       NaN             false          false    
+            0.30621                       NaN             false          false    
+           0.090242                       NaN             false          false    
+            0.12094                       NaN             false          false    
+           0.055667                       NaN             false          false    
+            0.28376                       NaN             false          false    
+            0.30252                       NaN             false          false    
+            0.21909                       NaN             false          false    
+            0.14797                       NaN             false          false    
+            0.26445                       NaN             false          false    
+            0.29772                       NaN             false          false    
+            0.23531                       NaN             false          false    
+            0.18516                       NaN             false          false    
+            0.30592                       NaN             false          false    
+            0.17078                       NaN             false          false    
+            0.28995                       NaN             false          false    
+             0.3057                       NaN             false          false    
+            0.30571                       NaN             false          false    
+            0.21604                       NaN             false          false    
+            0.12159                       NaN             false          false    
+            0.21296                       NaN             false          false    
+            0.13723                       NaN             false          false    
+            0.31213                       NaN             false          false    
+            0.33349                       NaN             true           false    
+            0.23639                       NaN             false          false    
+            0.14633                       NaN             false          false    
+            0.29695                       NaN             false          false    
+            0.30963                       NaN             false          false    
+            0.19318                       NaN             false          false    
+           0.032753                       NaN             false          false    
+            0.19847                       NaN             false          false    
+            0.14825                       NaN             false          false    
+            0.17906                       NaN             false          false    
+            0.18133                       NaN             false          false    
+            0.27045                       NaN             false          false    
+            0.16473                       NaN             false          false    
+            0.21812                       NaN             false          false    
+             0.2912                       NaN             false          false    
+            0.33178                       NaN             true           false    
+            0.30671                       NaN             false          false    
+            0.22855                       NaN             false          false    
+           0.072189                       NaN             false          false    
+            0.24113                       NaN             false          false    
+             0.2295                       NaN             false          false    
+            0.29221                       NaN             false          false    
+            0.14629                       NaN             false          false    
+            0.19277                       NaN             false          false    
+            0.26793                       NaN             false          false    
+           0.081233                       NaN             false          false    
+            0.14014                       NaN             false          false    
+           0.077077                       NaN             false          false    
+            0.11977                       NaN             false          false    
+            0.16495                       NaN             false          false    
+           0.088384                       NaN             false          false    
+            0.11954                       NaN             false          false    
+            0.11704                       NaN             false          false    
+            0.31564                       NaN             false          false    
+            0.12633                       NaN             false          false    
+            0.29163                       NaN             false          false    
+            0.25551                       NaN             false          false    
+            0.25053                       NaN             false          false    
+             0.2407                       NaN             false          false    
+           0.098902                       NaN             false          false    
+           0.052856                       NaN             false          false    
+            0.27664                       NaN             false          false    
+            0.11132                       NaN             false          false    
+           -0.19506                       NaN             false          false    
+            0.32202                       NaN             true           false    
+            0.30981                       NaN             false          false    
+            0.29998                       NaN             false          false    
+            0.20615                       NaN             false          false    
+           -0.21033                       NaN             false          false    
+           -0.10958                       NaN             false          false    
+            0.30787                       NaN             false          false    
+            0.20086                       NaN             false          false    
+           -0.13718                       NaN             false          false    
+          -0.099629                       NaN             false          false    
+            0.32348                       NaN             true           false    
+            0.33369                       NaN             true           false    
+           0.060622                       NaN             false          false    
+           0.077034                       NaN             false          false    
+            0.13595                       NaN             false          false    
+            0.17423                       NaN             false          false    
+          -0.051818                       NaN             false          false    
+            0.11808                       NaN             false          false    
+            0.17259                       NaN             false          false    
+           0.077189                       NaN             false          false    
+             0.3738                       NaN             false          false    
+           0.058938                       NaN             false          false    
+            0.11751                       NaN             false          false    
+            0.38368                       NaN             false          false    
+            0.42598                       NaN             true           false    
+            0.39046                       NaN             false          false    
+            0.43573                       NaN             true           false    
+            0.43224                       NaN             true           false    
+            0.44288                       NaN             true           false    
+             0.1998                       NaN             false          false    
+            0.32186                       NaN             false          false    
+            0.26084                       NaN             false          false    
+            0.30499                       NaN             false          false    
+            0.14533                       NaN             false          false    
+            0.21466                       NaN             false          false    
+           0.071226                       NaN             false          false    
+            0.24962                       NaN             false          false    
+            0.16266                       NaN             false          false    
+            0.39444                       NaN             false          false    
+            0.40701                       NaN             false          false    
+            0.31655                       NaN             false          false    
+            0.42907                       NaN             true           false    
+            0.26044                       NaN             false          false    
+           0.074391                       NaN             false          false    
+              0.278                       NaN             false          false    
+            0.32757                       NaN             false          false    
+            0.37303                       NaN             false          false    
+             0.4102                       NaN             false          false    
+            0.39384                       NaN             false          false    
+            0.39677                       NaN             false          false    
+            0.36496                       NaN             false          false    
+            0.38749                       NaN             false          false    
+           0.027833                       NaN             false          false    
+           -0.02094                       NaN             false          false    
+            0.21482                       NaN             false          false    
+            0.38565                       NaN             false          false    
+           0.087627                       NaN             false          false    
+            0.13011                       NaN             false          false    
+            0.34295                       NaN             false          false    
+            0.38369                       NaN             false          false    
+            0.28854                       NaN             false          false    
+            0.32422                       NaN             false          false    
+            0.30845                       NaN             false          false    
+             0.3515                       NaN             false          false    
+           0.098515                       NaN             false          false    
+           0.085455                       NaN             false          false    
+            0.15711                       NaN             false          false    
+             0.4245                       NaN             true           false    
+            0.29414                       NaN             false          false    
+            0.33517                       NaN             false          false    
+            0.37362                       NaN             false          false    
+            0.37263                       NaN             false          false    
+            0.33883                       NaN             false          false    
+            0.39613                       NaN             false          false    
+            0.44832                       NaN             true           false    
+            0.45732                       NaN             true           false    
+            0.18322                       NaN             false          false    
+            0.20602                       NaN             false          false    
+             0.1932                       NaN             false          false    
+             0.4072                       NaN             false          false    
+            0.29384                       NaN             false          false    
+            0.35553                       NaN             false          false    
+            0.36631                       NaN             false          false    
+            0.29419                       NaN             false          false    
+            0.19523                       NaN             false          false    
+            0.27771                       NaN             false          false    
+            0.37988                       NaN             false          false    
+            0.38596                       NaN             false          false    
+            0.33653                       NaN             false          false    
+            0.38789                       NaN             false          false    
+            0.38104                       NaN             false          false    
+            0.33644                       NaN             false          false    
+            0.23094                       NaN             false          false    
+            0.27519                       NaN             false          false    
+            0.32865                       NaN             false          false    
+            0.30734                       NaN             false          false    
+            0.32115                       NaN             false          false    
+            0.35357                       NaN             false          false    
+            0.34534                       NaN             false          false    
+            0.36019                       NaN             false          false    
+             0.4125                       NaN             true           false    
+            0.37731                       NaN             false          false    
+             0.3647                       NaN             false          false    
+            0.33836                       NaN             false          false    
+            0.30372                       NaN             false          false    
+            0.34923                       NaN             false          false    
+            0.23645                       NaN             false          false    
+            0.42979                       NaN             true           false    
+            0.43075                       NaN             true           false    
+            0.38175                       NaN             false          false    
+            0.36739                       NaN             false          false    
+            0.40153                       NaN             false          false    
+            0.34367                       NaN             false          false    
+             0.3346                       NaN             false          false    
+          -0.094706                       NaN             false          false    
+            0.03296                       NaN             false          false    
+            0.24561                       NaN             false          false    
+          -0.095828                       NaN             false          false    
+           0.039395                       NaN             false          false    
+            0.32305                       NaN             false          false    
+            0.19161                       NaN             false          false    
+            0.33759                       NaN             false          false    
+            0.15672                       NaN             false          false    
+            0.31003                       NaN             false          false    
+            0.37625                       NaN             false          false    
+            0.34126                       NaN             false          false    
+            0.21304                       NaN             false          false    
+            0.13677                       NaN             false          false    
+           0.098204                       NaN             false          false    
+            0.24837                       NaN             false          false    
+          -0.058134                       NaN             false          false    
+            0.29188                       NaN             false          false    
+            0.34031                       NaN             false          false    
+            0.25577                       NaN             false          false    
+            0.33477                       NaN             false          false    
+            0.17567                       NaN             false          false    
+            0.35947                       NaN             true           false    
+            0.23667                       NaN             false          false    
+            0.18706                       NaN             false          false    
+            0.18785                       NaN             false          false    
+            0.28369                       NaN             true           false    
+            0.24198                       NaN             false          false    
+            0.26408                       NaN             false          false    
+             0.2878                       NaN             true           false    
+            0.28975                       NaN             true           false    
+           0.090133                       NaN             false          false    
+           0.019226                       NaN             false          false    
+            0.26607                       NaN             false          false    
+            0.14015                       NaN             false          false    
+           0.049027                       NaN             false          false    
+            0.24675                       NaN             false          false    
+            0.22964                       NaN             false          false    
+            0.28334                       NaN             false          false    
+            0.27365                       NaN             false          false    
+            0.29858                       NaN             true           false    
+            0.25492                       NaN             false          false    
+            0.27715                       NaN             false          false    
+            0.24963                       NaN             false          false    
+            0.26159                       NaN             false          false    
+           0.049958                       NaN             false          false    
+            0.29961                       NaN             true           false    
+             0.2897                       NaN             true           false    
+            0.24833                       NaN             false          false    
+            0.20902                       NaN             false          false    
+            0.24962                       NaN             false          false    
+            0.20575                       NaN             false          false    
+           0.096609                       NaN             false          false    
+           0.086474                       NaN             false          false    
+            0.19053                       NaN             false          false    
+           0.064147                       NaN             false          false    
+            0.11387                       NaN             false          false    
+          0.0082038                       NaN             false          false    
+           0.064728                       NaN             false          false    
+           0.091851                       NaN             false          false    
+          -0.014483                       NaN             false          false    
+            0.10892                       NaN             false          false    
+            0.17076                       NaN             false          false    
+            0.09489                       NaN             false          false    
+            0.17509                       NaN             false          false    
+           0.069012                       NaN             false          false    
+            0.17185                       NaN             false          false    
+            0.19374                       NaN             false          false    
+           0.037903                       NaN             false          false    
+            0.14724                       NaN             false          false    
+            0.11055                       NaN             false          false    
+            0.14825                       NaN             false          false    
+           0.079316                       NaN             false          false    
+            0.18187                       NaN             false          false    
+            0.12219                       NaN             false          false    
+            0.18274                       NaN             false          false    
+            0.10627                       NaN             false          false    
+           0.037233                       NaN             false          false    
+           0.054201                       NaN             false          false    
+           0.068489                       NaN             false          false    
+            0.22107                       NaN             false          false    
+             0.1564                       NaN             false          false    
+           0.015532                       NaN             false          false    
+           0.051402                       NaN             false          false    
+
+</pre>
+<h2 id="11">Step 9: Visualize the Graph Metrics</h2>
+<p>Finally, you can visualize the connectivity or network graph using methods that plot connectivity matrices, network graphs, or other summaries of the graph properties.</p>
+<pre class="codeinput">brainpathway_obj_reordered=copy(brainpathway_obj);plot_connectivity(brainpathway_obj_reordered,<span class="string">'regions'</span>,<span class="string">'partitions'</span>,brainpathway_obj_reordered.node_clusters);title(<span class="string">'Final Connectivity Matrix After Clustering'</span>);disp(<span class="string">'Graph metrics and connectivity visualization complete.'</span>);
+</pre>
+<pre class="codeoutput">Creating a copy of brainpathway object
+Initializing nodes to match regions.
+Updating node response data.
+Updating obj.connectivity.nodes.
+Updating obj.connectivity.nodes.
+Updating region averages.
+Updating obj.connectivity.regions.
+Updating obj.connectivity.regions.
+Updating obj.connectivity.nodes.
+Updating obj.connectivity.regions.
+Updating node response data.
+Updating obj.connectivity.nodes.
+Updating obj.connectivity.nodes.
+Updating obj.connectivity.regions.
+Updating avg within/between cluster connectivity for regions.
+Updating obj.connectivity.nodes.
+Updating avg within/between cluster connectivity for nodes.
+Note: Variables were re-ordered based on partitions. Reordered names saved in .var_names field.
+Graph metrics and connectivity visualization complete.
+</pre>
+<img vspace="5" hspace="5" src="canlab_help_connectivity_with_brainpathway_starter_demo_06.png" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2024b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% Overview
+% A brainpathway object is a CANlab object designed for connectivity and
+% computational model-based analysis of fMRI data. It holds an atlas (defining
+% brain regions), voxel-level time series data, and derived node and region
+% averages. In addition, it contains connectivity matrices and graph metrics
+% (e.g., network degree, modularity) that can be computed from the data.
+% This object allows you to attach preprocessed time series data, compute
+% connectivity, reorder regions for clearer visualization, and extract graph
+% theoretical metrics using state-of-the-art methods.
+%
+% In this demonstration, we will:
+%   1. Create a brainpathway object using a default atlas or a custom atlas.
+%   2. Load a subject's 4-D fMRI timeseries.
+%   3. Preprocess the time series (denoising).
+%   4. Attach the denoised time series into the brainpathway object.
+%   5. Examine connectivity and region averages.
+%   6. Reorder regions based on label groups.
+%   7. (Additional) Cluster regions and extract graph metrics.
+
+%% Step 1: Create a brainpathway object
+% this will use a default atlas.
+
+brainpathway_obj = brainpathway;
+
+
+%% Step 1: (alternate option)
+% load an atlas that we'd like to use
+%
+% this will let us manipulate or customize the atlas if we want to
+% e.g. reorder the regions to keep large groups
+% together and in the order you want them in plots
+
+atlas_obj = load_atlas('canlab2024');
+
+% Create a brainpathway object with this atlas
+% (if we omit atlas_obj,
+brainpathway_obj = brainpathway(atlas_obj);
+
+%% Step 2: Load a 4-D timeseries object
+% Load a 4-D timeseries object from a subject to feed into brainpathways
+
+% Load the key 4-D image file into an fmri_data object.
+fname = which('swrsub-sid001567_task-pinel_acq-s1p2_run-03_bold.nii.gz');
+obj = fmri_data(fname);
+
+%% Step 3: Preprocess the time series images
+% Preprocessing includes extracting the TR, loading the movement parameter file,
+% and running the denoising pipeline.
+
+% Get the TR from the JSON file:
+json_struct = jsondecode(fileread(which('sub-sid001567_task-pinel_acq-s1p2_run-03_bold.json')));
+TR = json_struct.RepetitionTime;
+fprintf('TR extracted: %.2f seconds\n', TR);
+
+% Specify the movement parameter file:
+mvmtfname = which('rp_sub-sid001567_task-pinel_acq-s1p2_run-03_bold.txt');
+
+% Run the denoising pipeline:
+% (This pipeline regresses out nuisance covariates such as movement regressors,
+% outlier indicators, and CSF signals, and applies a high-pass filter.)
+obj_denoised = obj.denoise_timeseries_pipeline(TR, 128, mvmtfname, 'plot', false, 'verbose', false);
+disp('Time series denoised.');
+
+%% Step 3-4 (Alternate): Load a saved denoised timeseries object
+% If you have already preprocessed the data, you can load a saved .mat file.
+load(which('swrsub-sid001567_task-pinel_acq-s1p2_run-03_bold_denoised.mat'));
+disp('Loaded saved denoised object (obj_denoised).');
+
+%% Step 5: Attach the time series data into the brainpathway object
+% This step resamples the 4-D image data (in obj_denoised) to the atlas space
+% and stores it in the brainpathway object (in the .voxel_dat field). This triggers
+% several updates such as recalculation of region averages and connectivity matrices.
+brainpathway_obj.attach_voxel_data(obj_denoised);
+disp('Voxel data attached to brainpathway object.');
+
+%% Step 6: Examine connectivity matrices and region averages
+% Visualize the region-by-region connectivity matrix using the brainpathway object's
+% connectivity data. You can also display connectivity based on a partition.
+
+create_figure('region averages'); 
+imagesc(zscore(brainpathway_obj.region_dat)); 
+title('Region averages (z-scores)');
+
+disp('Region x Region Connectome is in brainpathway_obj.connectivity.regions')
+brainpathway_obj.connectivity.regions
+
+% Plot the region x region connectivity matrix:
+plot_connectivity(brainpathway_obj, 'regions');
+title('Region x Region Connectivity');
+
+%%
+% Plot connectivity matrix showing partitions
+% Here we use a specific partition (e.g., based on labels_5 in the region_atlas):
+
+plot_connectivity(brainpathway_obj, 'regions', 'partitions', brainpathway_obj.region_atlas.labels_5);
+title('Region Connectivity (Partitioned by labels\_5)');
+
+%% Step 7: Reorder regions to make connectome plots more interpretable
+% It is often helpful to reorder atlas regions so that similar regions are grouped 
+% together in plots. The following example uses label groups from the atlas.
+%
+% The group 'labels_5' was added using the script:
+%   canlab2024_add_labels_5_networks_and_large_structures
+%
+% First, create a labelgroup cell array from the unique values in labels_5, then reorder:
+labelgroups = unique(brainpathway_obj.region_atlas.labels_5);
+labelgroups = labelgroups([5:20 22:37 1 21 38 39  2:4]);  % Reorder groups as desired
+%
+% To preserve the original object, create a copy (note: brainpathway is a handle class,
+% so copying requires a dedicated method or function):
+brainpathway_obj_reordered = copy(brainpathway_obj);
+%
+% Reorder the regions using the reorder_regions method, specifying the labelgroups and
+% the atlas property ('label_5') to compare.
+brainpathway_obj_reordered.reorder_regions('labelgroups', labelgroups, 'compare_property', 'labels_5');
+disp('Regions reordered based on label groups.');
+
+plot_connectivity(brainpathway_obj_reordered, 'regions', 'partitions', brainpathway_obj_reordered.region_atlas.labels_5);
+
+%% Step 8: Cluster regions and extract graph metrics
+% Next, you can cluster the atlas regions into communities and extract graph-theoretic 
+% metrics from the connectivity data. These methods utilize functions from the Rubinov &
+% Sporns brain connectivity toolbox.
+%
+% Example: Cluster regions into communities. (Assumes brainpathway has a method cluster_regions.)
+brainpathway_obj = brainpathway_obj.cluster_regions();
+disp('Atlas regions clustered into communities.');
+
+% % OR
+% % Assign networks manually based on pre-defined networks stored in labels
+% [~, ~, condf] = string2indicator(brainpathway_obj.region_atlas.labels_5);
+% brainpathway_obj.node_clusters = condf';
+
+% Example: Compute graph metrics such as degree, modularity, and other properties.
+brainpathway_obj = brainpathway_obj.degree_calc();
+disp('Graph metrics extracted from connectivity data.');
+brainpathway_obj.graph_properties.regions
+
+%% Step 9: Visualize the Graph Metrics
+% Finally, you can visualize the connectivity or network graph using methods that plot 
+% connectivity matrices, network graphs, or other summaries of the graph properties.
+
+brainpathway_obj_reordered = copy(brainpathway_obj);
+plot_connectivity(brainpathway_obj_reordered, 'regions', 'partitions', brainpathway_obj_reordered.node_clusters);
+
+title('Final Connectivity Matrix After Clustering');
+disp('Graph metrics and connectivity visualization complete.');
+##### SOURCE END #####
+-->
+</body>
+</html>
