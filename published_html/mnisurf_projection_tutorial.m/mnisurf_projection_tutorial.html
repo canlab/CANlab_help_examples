@@ -1,0 +1,1138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>mnisurf_projection_tutorial</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2025-07-11">
+<meta name="DC.source" content="mnisurf_projection_tutorial.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.8em; color:#2C2D92; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.4em; color:#363538; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#363538; font-weight:bold; line-height:140%; }
+
+a { color:#4B4BA8; text-decoration:none; }
+a:hover { color:#2AAFDF; text-decoration:underline; }
+a:visited { color:#4B4BA8; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:14px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">Introduction</a>
+</li>
+<li>
+<a href="#3">Direct rendering to a MNI template surface segmentation</a>
+</li>
+<li>
+<a href="#6">MNISurf: Volume to Surface projection using default mappings</a>
+</li>
+<li>
+<a href="#8">Atlas mapping to surface</a>
+</li>
+<li>
+<a href="#15">Plotting surface data to surfaces</a>
+</li>
+<li>
+<a href="#19">Plotting grayordinate data</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">addpath(<span class="string">'/home/bogdan/.matlab/spm/spm12'</span>);addpath(genpath(<span class="string">'/home/bogdan/.software/canlab/CanlabCore'</span>));addpath(genpath(<span class="string">'/home/bogdan/.software/canlab/Neuroimaging_Pattern_Masks'</span>));addpath(genpath(<span class="string">'/home/bogdan/.matlab/canlab/canlab_single_trials'</span>));addpath(genpath(<span class="string">'/home/bogdan/.matlab/canlab/canlab_single_trials_private'</span>));
+</pre>
+<h2 id="2">Introduction</h2>
+<p>Let's assume you've run a volumetric analysis registered to a MNI template and you want to render this to a surface. This process is complex.</p>
+<p>3D graphics are represented as teselations, a mixture of vertex coordintaes and edges connecting adjacent vertices. Consider the central sulcus for instance, you may have multiple vertices in close proximity on opposite sulcal banks but these should not be connected, while proximal vertices on the same sulcal bank should be. That's what the tesellation achieves. To render from a volumetric image to a surface then you need a tesellation model of that surface along with vertex coordinates that coincide with your volumetric data. This is what freesurfer produces when you run surface segmentation: it generates a subject specific surface tesselation where the surface vertices overlap with coordinates in the volumetric nifti file from which the surface was generated. This allows direct sampling of volumetric data (e.g. BOLD timeseries aligned to the T1 used for surface modeling) to the surface, +/- interpolation among neighboring voxels.</p>
+<p>You can easily resample data from a T1 to its freesurfer surface model (although out of scope for this tutorial, look into the mri_surf2vol CLI), but once you've transformed your subject specific image into MNI space for group analysis you lose this possibility. There are group surface templates like the Conte69 template used by freesurfer and HCP, but these surfaces do not have vertices that correspond in any systematic way with those of any MNI template. In fact the radii aren't even the same as the MNI surface cortical ribbon. Most surface rendering options in canlab tools presume that the surface models used (most often BigBrain from the Julich institute) have vertices that overlap with MNI template gray matter ribbons, but this is not the case. Consequently the renderings are not veritical, not even in the assymptotic limit of infinite participants or infinite studies. They're systematically wrong. Thankfully there are principled ways to map from MNI space to a surface model which are built into canlab tools, if you know where to look.</p>
+<h2 id="3">Direct rendering to a MNI template surface segmentation</h2>
+<p>The simplest approach is to use freesurfer to segment a MNI template and then do a direct mapping from your MNI space brains to that template. As long as your segmentation is applied to the same template you used to do spatial normalization of your data this will work. Note however that there are multiple MNI templates, and they have different radii. Most often we're working with either MNI152NLin6Asym (the FSL standard, and widely used until the late 2010s) or MNI152NLin2009cAsym (the freesurfer default and now most widely used template). Let's see what this looks like. We're going to use paingen data because I (BP) know what template was used for this dataset during spatial normalization. Unfortunately this is still in canlab_single_trials_private, so if you may not be able to access it. If that's the case follow along using a different dataset from canlab_single_trials like bmrk3pain.</p>
+<pre class="codeinput">
+<span class="comment">% load a dataset. If you don't have access to canlab_single_trials_private</span><span class="comment">% try this instead:</span><span class="comment">% img = load_image_set('bmrk3pain');</span>img=load_image_set(<span class="string">'paingen_placebo'</span>);<span class="comment">% now let's get a mean image to work with.</span>mean_img=mean(img);<span class="comment">% We can plot it in traditional fashion, deleting the annoying color bar</span><span class="comment">% overlay. At the top you'll see a mapping to BigBrain</span>o2=mean_img.montage(<span class="string">'full2'</span>);delete(o2.activation_maps{1}.legendhandle)
+</pre>
+<pre class="codeoutput">Loading: /mnt/external/MyDocuments/canlab/single_trials/_private/paingen_placebo_data.nii.gz
+Using default mask: /home/bogdan/.matlab/canlab/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/brainmask_canlab.nii
+iimg_get_data: loading mask. mapping volumes. 
+checking that dimensions and voxel sizes of volumes are the same. 
+Pre-allocating data array. Needed: 2833772340 bytes
+Loading image number:  7077
+Elapsed time is 13.144061 seconds.
+Re-zipping image files.
+fmri_data.create: Converting 325542 NaNs to 0s.Number of unique values in dataset: 132959407  Bit rate: 26.99 bits
+Number of unique values in dataset: 100001  Bit rate: 16.61 bits
+ 
+Source: Info about image source here
+ 
+ 
+Summary of dataset
+______________________________________________________
+Images: 7077	Nonempty: 7077	Complete: 7076
+  Images missing &gt;50% of voxels:   0	
+Number of unique values in dataset: 132959407  Bit rate: 26.99 bits
+Warning: Number of unique values in dataset is low, indicating possible restriction of bit rate. For comparison, Int16 has 65,536 unique values
+  Images missing &gt;10% of voxels:   0	
+Voxels: 100105	Nonempty (1+ images have valid data): 100059	Complete  (all images have data): 99945
+Unique data values: 132959406
+ 
+Min: -224.738	Max: 250.302	Mean: -0.015	Std: 1.949
+ 
+    Percentiles     Values  
+    ___________    _________
+
+        0.1          -11.241
+        0.5          -6.7189
+          1          -5.3077
+          5          -2.8238
+         25         -0.91361
+         50        -0.010353
+         75           0.8902
+         95            2.783
+         99           5.2087
+       99.5           6.5831
+       99.9           11.079
+
+ 
+Saved desc.coverage_obj_binned with maps of number of valid images,
+and desc.coverage_obj_binned with values of 100=100% valid images, 80=80-99.9% valid, 50=50-80% valid, and 1=&gt;50% valid images
+Warning: Some voxels have data for 1+ images but not for all images
+Intensity ratings in image_obj.Y
+Additional metadata, including unpleasantness ratings and reaction times (RT), in image_obj.metadata_table
+Loaded images:
+Number of unique values in dataset: 100001  Bit rate: 16.61 bits
+Setting up fmridisplay objects
+Compressed NIfTI files are not supported.
+    35
+
+Warning: Connot determine orientation of image_metadata &gt; is_timeseries &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_single_trial_series
+&gt; . Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_first_level_maps &gt;
+. Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_MNI_space &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_HP_filtered &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; covariates_removed &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; TR_in_sec &gt; . Assuming
+rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; HP_filter_cutoff_sec &gt;
+. Assuming rows are trials.\n 
+sagittal montage: 21798 voxels displayed, 78261 not displayed on these slices
+coronal montage: 21115 voxels displayed, 78944 not displayed on these slices
+axial montage: 28573 voxels displayed, 71486 not displayed on these slices
+</pre>
+<img vspace="5" hspace="5" src="mnisurf_projection_tutorial_01.png" alt=""> <p>We can instead reader to a MNI surface using a minimally documented feature (the lack of documentation is intentional) like so,</p>
+<pre class="codeinput">figure;o2=canlab_results_fmridisplay(<span class="string">'MNI152NLin2009cAsym midthickness'</span>);o2=mean_img.montage(o2);
+</pre>
+<pre class="codeoutput">Setting up fmridisplay objects
+Compressed NIfTI files are not supported.
+Using existing fmridisplay object
+Warning: Connot determine orientation of image_metadata &gt; is_timeseries &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_single_trial_series
+&gt; . Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_first_level_maps &gt;
+. Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_MNI_space &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_HP_filtered &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; covariates_removed &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; TR_in_sec &gt; . Assuming
+rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; HP_filter_cutoff_sec &gt;
+. Assuming rows are trials.\n 
+</pre>
+<img vspace="5" hspace="5" src="mnisurf_projection_tutorial_02.png" alt=""> <p>The plotting method used above is the same one used for BigBrain: direct sampling of volumetric voxels at the coordinates of the surface mech, but unlike BigBrain this is valid here because the volumetric data is registered to the same brain this surface is segmented from. The difference when comparing with BigBrain isn't immediately obvious. Check out what happens if we use the same approach with freesurfer surfaces though.</p>
+<pre class="codeinput">figure;o2=canlab_results_fmridisplay(<span class="string">'freesurfer inflated'</span>);o2=mean_img.montage(o2);
+</pre>
+<pre class="codeoutput">Setting up fmridisplay objects
+Compressed NIfTI files are not supported.
+Using existing fmridisplay object
+Warning: Connot determine orientation of image_metadata &gt; is_timeseries &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_single_trial_series
+&gt; . Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_first_level_maps &gt;
+. Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_MNI_space &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_HP_filtered &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; covariates_removed &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; TR_in_sec &gt; . Assuming
+rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; HP_filter_cutoff_sec &gt;
+. Assuming rows are trials.\n 
+</pre>
+<img vspace="5" hspace="5" src="mnisurf_projection_tutorial_03.png" alt=""> <h2 id="6">MNISurf: Volume to Surface projection using default mappings</h2>
+<p>There are better ways to plot from MNI space to surfaces than direct vertex sampling based on the surface mesh coordinates. One generic method is known as MNISurf and is invoked in canlab core by specifying source spaces and target surfaces,</p>
+<pre class="codeinput">figure;o2=mean_img.montage(o2,<span class="string">'sourcespace'</span>,<span class="string">'MNI152NLin2009cAsym'</span>,<span class="string">'targetsurface'</span>,<span class="string">'fsaverage_164k'</span>);<span class="comment">% The projection above was obtained by getting a voxelwise mapping from</span><span class="comment">% MNI152NLin2009cAsym space to the segmented MNI surface, aligning the MNI</span><span class="comment">% surface to the Conte69 surface in freesurfer and concatenating the</span><span class="comment">% transformations. The result is saved in a file in CanlabCore and is used</span><span class="comment">% when appropriate target and source surfaces are designated. The mapping</span><span class="comment">% isn't based on the location of the vertices of the freesurfer surface,</span><span class="comment">% but rather on their index. This is important because the vertex locations</span><span class="comment">% differ for different levels of surface inflation, but indices do not.</span><span class="comment">% They always correspond 1-to-1 across the same surface at whatever level</span><span class="comment">% of inflation you pick.</span><span class="comment">%</span><span class="comment">% The documentation for this available in render_on_surface, which is</span><span class="comment">% invoked at the bottom of the stack by higher level functions like</span><span class="comment">% image_vector/montage.</span>help<span class="string">render_on_surface</span>
+</pre>
+<pre class="codeoutput">Using existing fmridisplay object
+Warning: Connot determine orientation of image_metadata &gt; is_timeseries &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_single_trial_series
+&gt; . Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_first_level_maps &gt;
+. Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_MNI_space &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_HP_filtered &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; covariates_removed &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; TR_in_sec &gt; . Assuming
+rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; HP_filter_cutoff_sec &gt;
+. Assuming rows are trials.\n 
+--- help for image_vector/render_on_surface ---
+
+  Map voxels in obj to isosurface (patch) handles in han and change surface colors according to values in obj
+ 
+  :Usage:
+  ::
+ 
+      cm = render_on_surface(obj, han, [optional inputs])
+ 
+  - Object can be thresholded or unthresholded get_data_range_image, or other image_vector object
+  - Uses only the first image in obj
+ 
+  ..
+      Author and copyright information:
+ 
+      Copyright (C) 2020 Tor Wager
+ 
+      This program is free software: you can redistribute it and/or modify
+      it under the terms of the GNU General Public License as published by
+      the Free Software Foundation, either version 3 of the License, or
+      (at your option) any later version.
+ 
+      This program is distributed in the hope that it will be useful,
+      but WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      GNU General Public License for more details.
+ 
+      You should have received a copy of the GNU General Public License
+      along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+  ..
+ 
+  :Inputs:
+ 
+    **obj:**
+        - image_vector object or subclasses
+        - e.g., fmri_data, thresholded or unthresholded statistic_image obj
+        - Uses only the first image in obj
+ 
+    **han:**
+        - A vector of one or more handles to patch objects (from surfaces)
+        - e.g., from patch(isosurface()), patch(isocaps()),
+        fmri_data.surface(), fmri_data.isosurface()
+        - Try: surface_handles = addbrain('left_cutaway');
+        - Try: surface_handles = addbrain('coronal_slabs_4');
+ 
+  :Optional Inputs:
+    **'clim':**
+         Followed by [lowerlimit upperlimit] values to define color limits
+ 
+    **'colormap':**
+         Followed by the name of a Matlab colormap string
+         e.g., 'hot' (default), 'summer', 'winter'
+         - Creates a split colormap with gray values where object values
+         are zero, and colors where object values are nonzero
+ 
+    **splitcolor':**
+         Positive and negative values are mapped to different
+         colormaps. Default is +=hot, -=cool colors.  Followed
+         optionally by cell array with vectors of 4 colors defining
+         max/min for +/- range, e.g., {[0 0 1] [.3 0 .8] [.8 .3 0] [1 1
+         0]}. This is ignored if pos_colormap or neg_colormap are
+         specified.
+ 
+    **'indexmap':**
+        Interpret data as indices into colormap. You must specify
+        'colormap' argument as well, otherwise this does nothing and a
+        warning is thrown. If specified, 'nearest' neighbor interpolation
+        is used automatically for volume to surface projection and 'interp'
+        option is ignored.
+ 
+    **'labels':**
+        Append cell-array or char/string labels to indexmap.
+ 
+    **'scaledtransparency':**
+        Transparency is a function of voxel value, lower values are more transparent. This will look very
+        strange without an underlay. To create an underlay render a two duplicate surfaces and invoke
+        render_on_surface only on the second duplicate.
+    
+     **'transcontrast':** 
+        If scaledtransparency is used transparency alpha values are a linear function of the data. This 
+        option makes them a sigmoidal function of the data with higher values disproportionately opaque and
+        lower values disproportionately transparent. This argument is followed by a scalar value which 
+        specifies how steep the sigmoidal part of the contrast curve should be. It works like a contrast 
+        curve in photoshop, but only affects alpha transparency, not colormapping, and therefore does not 
+        alter the data being shown.
+ 
+     **'interp':**
+        Interpolation method to use when projecting from volume to surface. Options: 'nearest', 'linear'. 
+        If 'indexmap' is specified this option is ignored, and 'nearest' is used automatically.
+ 
+     **'sourcespace':**
+        If specified together with a targetsurface then nonlinear mapping between the source volume and the 
+        target surface is performed according to the MNIsurf procedure described in Wu, Ngo, Greve et al. (2018)
+        Neuroimage. This is something you absolutely want to do if your sourcespace and targetsurface are
+        supported.
+        Supported sourcespaces = {'MNI152NLin2009cAsym','MNI152NLin6Asym','colin27'}
+ 
+     **'srcdepth':**
+  	Requires 'sourcespace' specification, and allows further specify desired surface depth to sample volume 
+        at. Typical options might be 'pial', 'white', or 'midthickness'. Requires that a file named 
+        '&lt;sourename&gt;_&lt;srcdepth&gt;_lh.mat' and '&lt;sourename&gt;_&lt;srcdepth&gt;_rh.mat' be in your matlab path. The pial surface 
+        and even midthickness will undersample from deep sulci, but the white surface may conversely suffer from 
+        partial volume effects if you've masked white matter out of your volumetric data. srcdepth can also be a cell 
+        array, in which case multiple depths are sampled and averaged (for linear interpolation) or the mode is taken 
+        (for nearest neighbor interpolation). If there is a modal tie, the default is to use whichever belongs first 
+        in your srcdepth list. Default: {'midthickness','pial','white'}, i.e. midthickness &gt; pial &gt; white for modal 
+        tie breaks.
+ 
+     **'targetsurface':**
+        If specified together with a targetsurface then nonlinear mapping between the source volume and the 
+        target surface is performed according to the MNIsurf procedure described in Wu, Ngo, Greve et al. (2018)
+        Neuroimage. This is something you absolutely want to do if your sourcespace and targetsurface are
+        supported.
+        Supported targetsurface = {'fsLR_32k', 'fsaverage_164k'}
+ 
+    
+ 
+  :Outputs:
+ 
+    **renders colors on surfaces:**
+    Note that it is not always possible to reset the surfaces to their
+    original colors completely; you may have to redraw them if you change
+    the threshold/voxels that should be colored.
+ 
+  :Examples:
+  ::
+ 
+  % Load a standard dataset (emotion regulation test data)
+  % Perform a t-test, and render the results on a series of coronal slabs
+ 
+  imgs = load_image_set('emotionreg', 'noverbose');
+  t = ttest(imgs, .01, 'unc');
+  figure; han = addbrain('coronal_slabs_4');
+ 
+  % When the t map has positive and negative values, creates a special
+  % bicolor split colormap that has warm colors for positive vals, and cool colors
+  % for negative vals:
+  render_on_surface(t, han);
+ 
+  % You can set the color limits (here, in t-values)
+  render_on_surface(t, han, 'clim', [-4 4]);
+ 
+  % You can set the colormap to any Matlab colormap:
+  render_on_surface(t, han, 'colormap', 'summer');
+ 
+  % If your image is positive-valued only (or negative-valued only), a
+  % bicolor split map will not be created:
+ 
+  t = threshold(t, [2 Inf], 'raw-between');
+  render_on_surface(t, han, 'colormap', 'winter', 'clim', [2 6]);
+ 
+  Note:
+  To erase rendered blobs, use:
+  sh = addbrain('eraseblobs', sh);
+
+</pre>
+<img vspace="5" hspace="5" src="mnisurf_projection_tutorial_04.png" alt=""> <img vspace="5" hspace="5" src="mnisurf_projection_tutorial_05.png" alt=""> <p>as you can see, multiple source spaces are available, and two target surfaces. BigBrain does not yet exist because a surface segmentation of BigBrain is not available. There are some esoteric difficulties associated with this particular brain. You can also select what depth you want to sample your data from. Usually midthickness is the default in most packages, but for visualization here the default is to sample at 3 depths and average the results.</p>
+<pre class="codeinput">figure;o2=canlab_results_fmridisplay(<span class="string">'freesurfer inflated'</span>);o2=mean_img.montage(o2,<span class="string">'sourcespace'</span>,<span class="string">'MNI152NLin2009cAsym'</span>,<span class="string">'targetsurface'</span>,<span class="string">'fsaverage_164k'</span>,<span class="string">'srcdepth'</span>,<span class="string">'pial'</span>);figure;o2=canlab_results_fmridisplay(<span class="string">'freesurfer inflated'</span>);o2=mean_img.montage(o2,<span class="string">'sourcespace'</span>,<span class="string">'MNI152NLin2009cAsym'</span>,<span class="string">'targetsurface'</span>,<span class="string">'fsaverage_164k'</span>,<span class="string">'srcdepth'</span>,<span class="string">'white'</span>);<span class="comment">% Generally the default srcdepth argument is adequate.</span><span class="comment">%</span><span class="comment">% There are better methods of volume to surface mapping though. The best</span><span class="comment">% method is known as registration fusion, and is available in the neuromaps</span><span class="comment">% python package, but is a bit more difficult to implement so it hasn't</span><span class="comment">% been added yet to canlab core. For more details on these methods,</span><span class="comment">% including registration fusion, refer to Wu et al. 2018 Human Brain</span><span class="comment">% Mapping. doi: 10.1002/hbm.24213</span><span class="comment">%</span><span class="comment">% It's important to note that this kind of projection of paingen ata to</span><span class="comment">% surfaces from volumetric space is not the same as doing your analysis in</span><span class="comment">% surface space to begin with. The latter results in better intersubject</span><span class="comment">% alignment, larger activation foci, and stronger effects in the final</span><span class="comment">% surface projection. Surface projection is simply a handy way of</span><span class="comment">% visualizing volumetric data, not a way to benefit from the analytic</span><span class="comment">% advantages of surface analysis.</span>
+</pre>
+<pre class="codeoutput">Setting up fmridisplay objects
+Compressed NIfTI files are not supported.
+Warning: Unknown input string option:srcdepth 
+Warning: Unknown input string option:pial 
+Using existing fmridisplay object
+Warning: Connot determine orientation of image_metadata &gt; is_timeseries &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_single_trial_series
+&gt; . Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_first_level_maps &gt;
+. Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_MNI_space &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_HP_filtered &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; covariates_removed &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; TR_in_sec &gt; . Assuming
+rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; HP_filter_cutoff_sec &gt;
+. Assuming rows are trials.\n 
+Setting up fmridisplay objects
+Compressed NIfTI files are not supported.
+Warning: Unknown input string option:srcdepth 
+Warning: Unknown input string option:white 
+Using existing fmridisplay object
+Warning: Connot determine orientation of image_metadata &gt; is_timeseries &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_single_trial_series
+&gt; . Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_first_level_maps &gt;
+. Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_MNI_space &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; is_HP_filtered &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; covariates_removed &gt; .
+Assuming rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; TR_in_sec &gt; . Assuming
+rows are trials.\n 
+Warning: Connot determine orientation of image_metadata &gt; HP_filter_cutoff_sec &gt;
+. Assuming rows are trials.\n 
+</pre>
+<img vspace="5" hspace="5" src="mnisurf_projection_tutorial_06.png" alt=""> <img vspace="5" hspace="5" src="mnisurf_projection_tutorial_07.png" alt=""> <h2 id="8">Atlas mapping to surface</h2>
+<p>Several atlases have been defined in volumetric space with particular care for alignment. These atlas have predefined sourcespaces, and there's some built in awareness of target surfaces, so these will automatically render correctlly. Consider canlab2024,</p>
+<pre class="codeinput">canlab2024=load_atlas(<span class="string">'canlab2024_fsl6'</span>);disp(canlab2024.space_description)
+</pre>
+<pre class="codeoutput">Loading atlas: CANLab2024_MNI152NLin6Asym_coarse_2mm_atlas_object.mat
+MNI152NLin6Asym
+</pre>
+<pre class="codeinput">canlab2024=load_atlas(<span class="string">'canlab2024'</span>);disp(canlab2024.space_description)
+</pre>
+<pre class="codeoutput">Loading atlas: CANLab2024_MNI152NLin2009cAsym_coarse_2mm_atlas_object.mat
+MNI152NLin2009cAsym
+</pre>
+<pre class="codeinput">canlab2024=canlab2024.threshold(0.2);<span class="comment">% let's threshold for a better gray matter ribbon</span><span class="comment">% It's available in multiple spaces, but you don't need to worry about</span><span class="comment">% wihch for rendering purposes because it's recorded internally.</span>figure;canlab2024.montage(<span class="string">'freesurfer inflated'</span>)
+</pre>
+<pre class="codeoutput">Keeping probability_map values above 0.20
+Compressed NIfTI files are not supported.
+
+ans = 
+
+  fmridisplay with properties:
+
+            overlay: '/home/bogdan/.matlab/canlab/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/fmriprep20_template.nii.gz'
+              SPACE: [1&times;1 struct]
+    activation_maps: {[1&times;1 struct]}
+            montage: {}
+            surface: {[1&times;1 struct]  [1&times;1 struct]  [1&times;1 struct]  [1&times;1 struct]}
+          orthviews: {}
+            history: {}
+    history_descrip: []
+    additional_info: ''
+
+</pre>
+<img vspace="5" hspace="5" src="mnisurf_projection_tutorial_08.png" alt=""> <p>It's available in multiple spaces, but you don't need to worry about wihch for rendering purposes because it's recorded internally. However, we can overwrite it, which is useful to illustrate the kinds of subtle problems that arise when you're missampling surfaces, ones that are much easier to identify by eye in discrete parcellations than continuous activation maps.</p>
+<pre class="codeinput">figure;canlab2024.montage(<span class="string">'sourcespace'</span>,[],<span class="string">'freesurfer inflated'</span>);
+</pre>
+<pre class="codeoutput">Compressed NIfTI files are not supported.
+Warning: target surface specified without source space. Please specify a
+sourcespace argument to perform accurate surface projection. You have these
+options:, 
+Warning: sourcespace = colin27
+sourcespace = MNI152NLin6Asym
+sourcespace = MNI152NLin2009cAsym
+ 
+Warning: target surface specified without source space. Please specify a
+sourcespace argument to perform accurate surface projection. You have these
+options:, 
+Warning: sourcespace = colin27
+sourcespace = MNI152NLin6Asym
+sourcespace = MNI152NLin2009cAsym
+ 
+Warning: target surface specified without source space. Please specify a
+sourcespace argument to perform accurate surface projection. You have these
+options:, 
+Warning: sourcespace = colin27
+sourcespace = MNI152NLin6Asym
+sourcespace = MNI152NLin2009cAsym
+ 
+Warning: target surface specified without source space. Please specify a
+sourcespace argument to perform accurate surface projection. You have these
+options:, 
+Warning: sourcespace = colin27
+sourcespace = MNI152NLin6Asym
+sourcespace = MNI152NLin2009cAsym
+ 
+</pre>
+<img vspace="5" hspace="5" src="mnisurf_projection_tutorial_09.png" alt=""> <p>even on big brain, which in the case of our contrast map above looked decent, the atlas does not look good without proper surface projection</p>
+<pre class="codeinput">figure;canlab2024.montage(<span class="string">'full2'</span>)
+</pre>
+<pre class="codeoutput">Compressed NIfTI files are not supported.
+    35
+
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+Warning: More indices were specified than colormap values. Looping colormap 
+sagittal montage: 21561 voxels displayed, 121672 not displayed on these slices
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+Warning: More indices were specified than colormap values. Looping colormap 
+coronal montage: 21448 voxels displayed, 121785 not displayed on these slices
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+Warning: More indices were specified than colormap values. Looping colormap 
+axial montage: 29756 voxels displayed, 113477 not displayed on these slices
+Warning: Source space specified without target surface. Please specify a
+targetsurface argument to perform accurate surface projection. You have these
+options, 
+Warning: targetsurface = fsaverage_164k
+targetsurface = fsLR_32k
+ 
+Warning: Source space specified without target surface. Please specify a
+targetsurface argument to perform accurate surface projection. You have these
+options, 
+Warning: targetsurface = fsaverage_164k
+targetsurface = fsLR_32k
+ 
+Warning: Source space specified without target surface. Please specify a
+targetsurface argument to perform accurate surface projection. You have these
+options, 
+Warning: targetsurface = fsaverage_164k
+targetsurface = fsLR_32k
+ 
+Warning: Source space specified without target surface. Please specify a
+targetsurface argument to perform accurate surface projection. You have these
+options, 
+Warning: targetsurface = fsaverage_164k
+targetsurface = fsLR_32k
+ 
+
+ans = 
+
+  fmridisplay with properties:
+
+            overlay: '/home/bogdan/.matlab/canlab/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/fmriprep20_template.nii.gz'
+              SPACE: [1&times;1 struct]
+    activation_maps: {[1&times;1 struct]}
+            montage: {[1&times;1 struct]  [1&times;1 struct]  [1&times;1 struct]}
+            surface: {[1&times;1 struct]  [1&times;1 struct]  [1&times;1 struct]  [1&times;1 struct]}
+          orthviews: {}
+            history: {}
+    history_descrip: []
+    additional_info: ''
+
+</pre>
+<img vspace="5" hspace="5" src="mnisurf_projection_tutorial_10.png" alt=""> <img vspace="5" hspace="5" src="mnisurf_projection_tutorial_11.png" alt=""> <p>it doesn't look any better on hcp surfaces, even though if you look at the volumetric data the atlas follows the gray matter ribbon very closely. You'd never want to publish a figure like this.</p>
+<pre class="codeinput">figure;canlab2024.montage(<span class="string">'sourcespace'</span>,[],<span class="string">'full hcp'</span>)
+</pre>
+<pre class="codeoutput">Compressed NIfTI files are not supported.
+    48
+
+Warning: Unknown input string option:fsLR_32k 
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+Warning: More indices were specified than colormap values. Looping colormap 
+sagittal montage: 21561 voxels displayed, 121672 not displayed on these slices
+Warning: Unknown input string option:fsLR_32k 
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+Warning: More indices were specified than colormap values. Looping colormap 
+coronal montage: 21448 voxels displayed, 121785 not displayed on these slices
+Warning: Unknown input string option:fsLR_32k 
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+Warning: More indices were specified than colormap values. Looping colormap 
+axial montage: 29756 voxels displayed, 113477 not displayed on these slices
+Warning: Unknown input string option:fsLR_32k 
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+Warning: More indices were specified than colormap values. Looping colormap 
+axial montage: 29576 voxels displayed, 113657 not displayed on these slices
+Warning: target surface specified without source space. Please specify a
+sourcespace argument to perform accurate surface projection. You have these
+options:, 
+Warning: sourcespace = colin27
+sourcespace = MNI152NLin6Asym
+sourcespace = MNI152NLin2009cAsym
+ 
+Warning: target surface specified without source space. Please specify a
+sourcespace argument to perform accurate surface projection. You have these
+options:, 
+Warning: sourcespace = colin27
+sourcespace = MNI152NLin6Asym
+sourcespace = MNI152NLin2009cAsym
+ 
+Warning: target surface specified without source space. Please specify a
+sourcespace argument to perform accurate surface projection. You have these
+options:, 
+Warning: sourcespace = colin27
+sourcespace = MNI152NLin6Asym
+sourcespace = MNI152NLin2009cAsym
+ 
+Warning: target surface specified without source space. Please specify a
+sourcespace argument to perform accurate surface projection. You have these
+options:, 
+Warning: sourcespace = colin27
+sourcespace = MNI152NLin6Asym
+sourcespace = MNI152NLin2009cAsym
+ 
+
+ans = 
+
+  fmridisplay with properties:
+
+            overlay: '/home/bogdan/.matlab/canlab/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/fmriprep20_template.nii.gz'
+              SPACE: [1&times;1 struct]
+    activation_maps: {[1&times;1 struct]}
+            montage: {[1&times;1 struct]  [1&times;1 struct]  [1&times;1 struct]  [1&times;1 struct]}
+            surface: {[1&times;1 struct]  [1&times;1 struct]  [1&times;1 struct]  [1&times;1 struct]}
+          orthviews: {}
+            history: {}
+    history_descrip: []
+    additional_info: ''
+
+</pre>
+<img vspace="5" hspace="5" src="mnisurf_projection_tutorial_12.png" alt=""> <img vspace="5" hspace="5" src="mnisurf_projection_tutorial_13.png" alt=""> <p>But with surface projection enabled, the holes in the map go away, and things are a bit closer to being publication ready.</p>
+<pre class="codeinput">figure;canlab2024.montage(<span class="string">'sourcespace'</span>,<span class="string">'MNI152NLin2009cAsym'</span>,<span class="string">'full hcp'</span>)<span class="comment">% These concerns about mismatches between templates, whether surface or</span><span class="comment">% volumetric, affect atlas parcel definitions. If you look carefully at</span><span class="comment">% load_atlas' help you'll see that many atlases have options for selecting</span><span class="comment">% a source space, either fmriprep20, which is MNI152NLin2009cAsym, or fsl6,</span><span class="comment">% which MNI152NLin6Asym. This is to facilitate working with different data</span><span class="comment">% types. Atlases that were defined in surface space (e.g. Glasser) were</span><span class="comment">% projected to their target spaces using registration fusion, so they're a</span><span class="comment">% bit more accurate than these renderings you see here. For atlases defined</span><span class="comment">% in surface space you're best off rendering the surface data directly</span><span class="comment">% rather than taking the volumetric version of the surface data and trying</span><span class="comment">% to back project it. Something will always be lost in translation.</span>
+</pre>
+<pre class="codeoutput">Compressed NIfTI files are not supported.
+    48
+
+Warning: Unknown input string option:fsLR_32k 
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+Warning: More indices were specified than colormap values. Looping colormap 
+sagittal montage: 21561 voxels displayed, 121672 not displayed on these slices
+Warning: Unknown input string option:fsLR_32k 
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+Warning: More indices were specified than colormap values. Looping colormap 
+coronal montage: 21448 voxels displayed, 121785 not displayed on these slices
+Warning: Unknown input string option:fsLR_32k 
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+Warning: More indices were specified than colormap values. Looping colormap 
+axial montage: 29756 voxels displayed, 113477 not displayed on these slices
+Warning: Unknown input string option:fsLR_32k 
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+Warning: More indices were specified than colormap values. Looping colormap 
+axial montage: 29576 voxels displayed, 113657 not displayed on these slices
+Warning: Size of surface 2 does not match size of target surface. Falling back
+to naive mesh interpolation. 
+Warning: Size of surface 2 does not match size of target surface. Falling back
+to naive mesh interpolation. 
+Warning: Size of surface 2 does not match size of target surface. Falling back
+to naive mesh interpolation. 
+Warning: Size of surface 2 does not match size of target surface. Falling back
+to naive mesh interpolation. 
+
+ans = 
+
+  fmridisplay with properties:
+
+            overlay: '/home/bogdan/.matlab/canlab/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/fmriprep20_template.nii.gz'
+              SPACE: [1&times;1 struct]
+    activation_maps: {[1&times;1 struct]}
+            montage: {[1&times;1 struct]  [1&times;1 struct]  [1&times;1 struct]  [1&times;1 struct]}
+            surface: {[1&times;1 struct]  [1&times;1 struct]  [1&times;1 struct]  [1&times;1 struct]}
+          orthviews: {}
+            history: {}
+    history_descrip: []
+    additional_info: ''
+
+</pre>
+<img vspace="5" hspace="5" src="mnisurf_projection_tutorial_14.png" alt=""> <img vspace="5" hspace="5" src="mnisurf_projection_tutorial_15.png" alt=""> <h2 id="15">Plotting surface data to surfaces</h2>
+<p>For the most part surface analysis is not supported by canlabCore, but for the sake of basic visualization I (BP) have started a new repo that currently has a couple of low level functions that may help to do things like plot surface formatted atlases to surface meshes.</p>
+<pre class="codeinput">addpath(genpath(<span class="string">'/home/bogdan/.matlab/canlab/canlabSurface'</span>));
+</pre>
+<p>For the most part, Neuroimaging_Pattern_Masks (where all our atlases are), contains all the data needed to regenerate them from source materials. In the case of atlases defined in surface formats like Glasser et al's HCP MMP 1.0, that means the surface files are available, and you can render to surface meshes that match their vertex indicing.</p>
+<p>This latter point is imporant. Vertices are not in the same order across all surfaces, even surfaces that sample the same space like fsaverage and HCP 32k. The corresponding surface should be clear from the filenames though. Let's start with glasser. Navigate to the Glasser atlas folder in Neuroimaging_Pattern_Masks and find the surface (gifti) files, Atlases_and_parcellations/2016_Glasser_Nature_HumanConnectomeParcellation/ You'll see they're called Glasser_2016.32k.[LR].label.gii. 32k indicates the HCP surface, so let's load it. Surfaces can be found in, CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/, and the gifti function comes from spm.</p>
+<pre class="codeinput">surfL=gifti(which(<span class="string">'S1200.L.midthickness_MSMAll.32k_fs_LR.surf.gii'</span>))surfR=gifti(which(<span class="string">'S1200.R.midthickness_MSMAll.32k_fs_LR.surf.gii'</span>))glasserL=gifti(which(<span class="string">'Glasser_2016.32k.L.label.gii'</span>))glasserR=gifti(which(<span class="string">'Glasser_2016.32k.L.label.gii'</span>))
+</pre>
+<pre class="codeoutput">
+surfL = 
+
+  struct with fields:
+
+       faces: [64980&times;3 int32]
+         mat: [4&times;4 double]
+    vertices: [32492&times;3 single]
+
+
+surfR = 
+
+  struct with fields:
+
+       faces: [64980&times;3 int32]
+         mat: [4&times;4 double]
+    vertices: [32492&times;3 single]
+
+
+glasserL = 
+
+  struct with fields:
+
+     cdata: [32492&times;1 int32]
+    labels: [1&times;1 struct]
+
+
+glasserR = 
+
+  struct with fields:
+
+     cdata: [32492&times;1 int32]
+    labels: [1&times;1 struct]
+
+</pre>
+<p>Notice how gifti files can either contain data or surface information. This separation is a feature because it allows you to sample the same data to multiple surfaces so long as they use the same coordinate system. Here we're sampling to an inflated surface, but you could just as easily sample to a midthickness surface, spherical surface, etc.</p>
+<p>First thing we need to do is create an image and render some surfaces.</p>
+<pre class="codeinput">figure;clfax1=subplot(2,2,1);s1=render_surface(surfL.vertices,surfL.faces,ax1);ax2=subplot(2,2,2);s2=render_surface(surfR.vertices,surfR.faces,ax2,<span class="string">'flip'</span>);ax3=subplot(2,2,3);s3=render_surface(surfL.vertices,surfL.faces,ax3,<span class="string">'flip'</span>);ax4=subplot(2,2,4);s4=render_surface(surfR.vertices,surfR.faces,ax4);<span class="comment">% now let's get a colormap to use when plotting. Surface label files</span><span class="comment">% contain this information as metadata,</span>cmapL=glasserL.labels.rgba(:,1:3);cmapR=glasserR.labels.rgba(:,1:3);<span class="comment">% Now we need to plot data to these surfaces. Note, this function was</span><span class="comment">% adapted from canlabCore's plot_to_surf. The documentation has not been</span><span class="comment">% updated, and may not be accurate, but it should look very similarly.</span>plot_surf_to_surf(glasserL.cdata,s1,<span class="string">'colormap'</span>,cmapL,<span class="string">'indexmap'</span>);plot_surf_to_surf(glasserR.cdata,s2,<span class="string">'colormap'</span>,cmapR,<span class="string">'indexmap'</span>);plot_surf_to_surf(glasserL.cdata,s3,<span class="string">'colormap'</span>,cmapL,<span class="string">'indexmap'</span>);plot_surf_to_surf(glasserR.cdata,s4,<span class="string">'colormap'</span>,cmapR,<span class="string">'indexmap'</span>);sgtitle(<span class="string">'HCP MMP 1.0'</span>,<span class="string">'FontWeight'</span>,<span class="string">'bold'</span>,<span class="string">'fontsize'</span>,16);<span class="comment">% You can get a nicer layout by using tiledlayout + nexttile() instead of</span><span class="comment">% subplots, but I used subplots because it's simpler.</span>
+</pre>
+<img vspace="5" hspace="5" src="mnisurf_projection_tutorial_16.png" alt=""> <h2 id="19">Plotting grayordinate data</h2>
+<p>Plotting grayordinate data from cifti files isn't all that different from plotting gifti data. The main difficulty arises from extracting subcortical data and plotting it, but we're also going to dispense with manual construction of our plotting layout and just use a convenience function here.</p>
+<pre class="codeinput">
+<span class="comment">% You can look at the source code for this file you want to create some new</span><span class="comment">% custom layouts. o2 represents the surface objects while o3 represents the</span><span class="comment">% subcortical surfaces. This function used tiledlayout instead of subplots</span><span class="comment">% and t0 is a handle to this layout which lets you modify appearance.</span>figure;[o2,o3,t0]=create_compact_hcp_grayordinate_figure(<span class="string">'overlay'</span>,<span class="string">'fsl6_hcp_template.nii.gz'</span>,<span class="string">'nocolorbar'</span>);<span class="comment">% Now let's import a cifti atlas. If you don't have this atlas you need to</span><span class="comment">% run create_CANLab2024_atlas_prep.sh and create_CANLab2024_atlas_cifti.sh</span><span class="comment">% in Neuroimaging_Pattern_Masks/Atlases_and_parcellations/2024_CANLab_atlas/src</span><span class="comment">% (as well as load_atlas('canlab2024_fsl6'), but if you're following along</span><span class="comment">% you'll have already invoked that above). You also need cifti_read from</span><span class="comment">% https://github.com/Washington-University/cifti-matlab</span>addpath(genpath(<span class="string">'/home/bogdan/.matlab/cifti-matlab'</span>));cifti_obj=cifti_read(which(<span class="string">'CANLab2024_MNI152NLin6Asym_coarse_2mm.dlabel.nii'</span>));<span class="comment">% cifti files are saved as xml files + a nifti component for volumetric</span><span class="comment">% data representation, and it can be a pain to map some components from the</span><span class="comment">% vectorized representation to their structures. I've created some utility</span><span class="comment">% functions to facilitate this.</span>canlab2024_cii=get_cifti_data(which(<span class="string">'CANLab2024_MNI152NLin6Asym_coarse_2mm.dlabel.nii'</span>));<span class="comment">% colormaps are stored in very similar format as gifti files</span>labels=cifti_obj.diminfo{2}.maps.table(2:end);cmap=zeros(length(labels),3);<span class="keyword">for</span>i=1:length(labels)cmap(i,:)=labels(i).rgba(1:3);<span class="keyword">end</span><span class="comment">% extracting subcortical data is quite annoying, so I've created a function</span><span class="comment">% to facilitate it that returns an fmri_data object.</span>vol=extract_vol_from_cifti(cifti_obj);<span class="comment">% Now we can plot in similar manner to the gifti images. Note, input must</span><span class="comment">% be a column vector.</span>plot_surf_to_surf(canlab2024_cii.cortex_left',o2.surface{1}.object_handle,<span class="string">'colormap'</span>,cmap,<span class="string">'indexmap'</span>);plot_surf_to_surf(canlab2024_cii.cortex_right',o2.surface{2}.object_handle,<span class="string">'colormap'</span>,cmap,<span class="string">'indexmap'</span>);plot_surf_to_surf(canlab2024_cii.cortex_left',o2.surface{3}.object_handle,<span class="string">'colormap'</span>,cmap,<span class="string">'indexmap'</span>);plot_surf_to_surf(canlab2024_cii.cortex_right',o2.surface{4}.object_handle,<span class="string">'colormap'</span>,cmap,<span class="string">'indexmap'</span>);<span class="comment">% now let's plot the subcortical data</span>n_ctx_rois=unique([canlab2024_cii.cortex_left,canlab2024_cii.cortex_right]);vol.montage(o3,<span class="string">'indexmap'</span>,cmap)<span class="comment">% Now let's add a title that doesn't overlap the plots by manipulating the</span><span class="comment">% tile layouts y-axis length, and adjust the image width for a more compact</span><span class="comment">% display</span>t0.Position(4)=0.85;pos=get(gcf,<span class="string">'Position'</span>);set(gcf,<span class="string">'Position'</span>,[pos(1:2),420,420]);t=sgtitle(<span class="string">'CANLab2024'</span>,<span class="string">'FontSize'</span>,16,<span class="string">'fontweight'</span>,<span class="string">'bold'</span>);
+</pre>
+<pre class="codeoutput">Compressed NIfTI files are not supported.
+Compressed NIfTI files are not supported.
+Warning: Converting dat field from double to single format 
+Number of unique values in dataset: 161  Bit rate: 7.33 bits
+Warning: Number of unique values in dataset is low, indicating possible restriction of bit rate. For comparison, Int16 has 65,536 unique values
+Using existing fmridisplay object
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+sagittal montage: 726 voxels displayed, 30941 not displayed on these slices
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+sagittal montage: 1016 voxels displayed, 30651 not displayed on these slices
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+sagittal montage: 913 voxels displayed, 30754 not displayed on these slices
+Warning: Indexmap requires 'interp','nearest' but these were not specified.
+Adding them automatically 
+axial montage: 1088 voxels displayed, 30579 not displayed on these slices
+Warning: No labels input for indexmap 
+
+ans = 
+
+  fmridisplay with properties:
+
+            overlay: '/home/bogdan/.matlab/canlab/CanlabCore/CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/fsl6_hcp_template.nii.gz'
+              SPACE: [1&times;1 struct]
+    activation_maps: {[1&times;1 struct]}
+            montage: {[1&times;1 struct]  [1&times;1 struct]  [1&times;1 struct]  [1&times;1 struct]}
+            surface: {}
+          orthviews: {}
+            history: {}
+    history_descrip: []
+    additional_info: ''
+
+</pre>
+<img vspace="5" hspace="5" src="mnisurf_projection_tutorial_17.png" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+addpath('/home/bogdan/.matlab/spm/spm12');
+addpath(genpath('/home/bogdan/.software/canlab/CanlabCore'));
+addpath(genpath('/home/bogdan/.software/canlab/Neuroimaging_Pattern_Masks'));
+addpath(genpath('/home/bogdan/.matlab/canlab/canlab_single_trials'));
+addpath(genpath('/home/bogdan/.matlab/canlab/canlab_single_trials_private'));
+
+%% Introduction
+% Let's assume you've run a volumetric analysis registered to a MNI
+% template and you want to render this to a surface. This process is
+% complex. 
+% 
+% 3D graphics are represented as teselations, a mixture of vertex
+% coordintaes and edges connecting adjacent vertices. Consider the central
+% sulcus for instance, you may have multiple vertices in close proximity on
+% opposite sulcal banks but these should not be connected, while proximal
+% vertices on the same sulcal bank should be. That's what the tesellation
+% achieves. To render from a volumetric image to a surface then you need a
+% tesellation model of that surface along with vertex coordinates that 
+% coincide with your volumetric data. This is what freesurfer produces when 
+% you run surface segmentation: it generates a subject specific surface 
+% tesselation where the surface vertices overlap with coordinates in the 
+% volumetric nifti file from which the surface was generated. This allows 
+% direct sampling of volumetric data (e.g. BOLD timeseries aligned to the 
+% T1 used for surface modeling) to the surface, +/- interpolation among 
+% neighboring voxels. 
+% 
+% You can easily resample data from a T1 to its freesurfer surface model 
+% (although out of scope for this tutorial, look into the mri_surf2vol CLI), 
+% but once you've transformed your subject specific image into MNI space 
+% for group analysis you lose this possibility. There are group surface 
+% templates like the Conte69 template used by freesurfer and HCP, but these 
+% surfaces do not have vertices that correspond in any systematic way with 
+% those of any MNI template. In fact the radii aren't even the same as the 
+% MNI surface cortical ribbon. Most surface rendering options in canlab 
+% tools presume that the surface models used (most often BigBrain from the 
+% Julich institute) have vertices that overlap with MNI template gray 
+% matter ribbons, but this is not the case. Consequently the renderings are 
+% not veritical, not even in the assymptotic limit of infinite participants 
+% or infinite studies. They're systematically wrong. Thankfully there are 
+% principled ways to map from MNI space to a surface model which are built 
+% into canlab tools, if you know where to look.
+%
+%
+
+%% Direct rendering to a MNI template surface segmentation
+% The simplest approach is to use freesurfer to segment a MNI template and
+% then do a direct mapping from your MNI space brains to that template. As
+% long as your segmentation is applied to the same template you used to do
+% spatial normalization of your data this will work. Note however that
+% there are multiple MNI templates, and they have different radii. Most
+% often we're working with either MNI152NLin6Asym (the FSL standard, and 
+% widely used until the late 2010s) or MNI152NLin2009cAsym (the freesurfer
+% default and now most widely used template). Let's see what this looks
+% like. We're going to use paingen data because I (BP) know what template
+% was used for this dataset during spatial normalization. Unfortunately
+% this is still in canlab_single_trials_private, so if you may not be able
+% to access it. If that's the case follow along using a different dataset
+% from canlab_single_trials like bmrk3pain.
+
+% load a dataset. If you don't have access to canlab_single_trials_private
+% try this instead:
+% img = load_image_set('bmrk3pain');
+img = load_image_set('paingen_placebo');
+
+% now let's get a mean image to work with.
+mean_img = mean(img);
+
+% We can plot it in traditional fashion, deleting the annoying color bar
+% overlay. At the top you'll see a mapping to BigBrain
+o2 = mean_img.montage('full2');
+delete(o2.activation_maps{1}.legendhandle)
+
+%%
+% We can instead reader to a MNI surface using a minimally documented 
+% feature (the lack of documentation is intentional) like so,
+figure;
+o2 = canlab_results_fmridisplay('MNI152NLin2009cAsym midthickness');
+o2 = mean_img.montage(o2);
+
+%%
+% The plotting method used above is the same one used for BigBrain: direct
+% sampling of volumetric voxels at the coordinates of the surface mech, but
+% unlike BigBrain this is valid here because the volumetric data is
+% registered to the same brain this surface is segmented from. The
+% difference when comparing with BigBrain isn't immediately obvious. Check
+% out what happens if we use the same approach with freesurfer surfaces
+% though.
+figure;
+o2 = canlab_results_fmridisplay('freesurfer inflated');
+o2 = mean_img.montage(o2);
+
+%% MNISurf: Volume to Surface projection using default mappings
+% There are better ways to plot from MNI space to surfaces than direct
+% vertex sampling based on the surface mesh coordinates. One generic method
+% is known as MNISurf and is invoked in canlab core by specifying source
+% spaces and target surfaces,
+figure;
+o2 = mean_img.montage(o2,'sourcespace','MNI152NLin2009cAsym','targetsurface','fsaverage_164k');
+
+% The projection above was obtained by getting a voxelwise mapping from
+% MNI152NLin2009cAsym space to the segmented MNI surface, aligning the MNI
+% surface to the Conte69 surface in freesurfer and concatenating the
+% transformations. The result is saved in a file in CanlabCore and is used
+% when appropriate target and source surfaces are designated. The mapping
+% isn't based on the location of the vertices of the freesurfer surface,
+% but rather on their index. This is important because the vertex locations
+% differ for different levels of surface inflation, but indices do not.
+% They always correspond 1-to-1 across the same surface at whatever level
+% of inflation you pick.
+% 
+% The documentation for this available in render_on_surface, which is 
+% invoked at the bottom of the stack by higher level functions like
+% image_vector/montage.
+help render_on_surface
+
+%%
+% as you can see, multiple source spaces are available, and two target
+% surfaces. BigBrain does not yet exist because a surface segmentation of
+% BigBrain is not available. There are some esoteric difficulties
+% associated with this particular brain. You can also select what depth you
+% want to sample your data from. Usually midthickness is the default in
+% most packages, but for visualization here the default is to sample at 3
+% depths and average the results.
+figure;
+o2 = canlab_results_fmridisplay('freesurfer inflated');
+o2 = mean_img.montage(o2,'sourcespace','MNI152NLin2009cAsym','targetsurface','fsaverage_164k','srcdepth','pial');
+
+
+figure;
+o2 = canlab_results_fmridisplay('freesurfer inflated');
+o2 = mean_img.montage(o2,'sourcespace','MNI152NLin2009cAsym','targetsurface','fsaverage_164k','srcdepth','white');
+
+% Generally the default srcdepth argument is adequate.
+%
+% There are better methods of volume to surface mapping though. The best
+% method is known as registration fusion, and is available in the neuromaps
+% python package, but is a bit more difficult to implement so it hasn't
+% been added yet to canlab core. For more details on these methods,
+% including registration fusion, refer to Wu et al. 2018 Human Brain
+% Mapping. doi: 10.1002/hbm.24213
+%
+% It's important to note that this kind of projection of paingen ata to
+% surfaces from volumetric space is not the same as doing your analysis in
+% surface space to begin with. The latter results in better intersubject
+% alignment, larger activation foci, and stronger effects in the final
+% surface projection. Surface projection is simply a handy way of
+% visualizing volumetric data, not a way to benefit from the analytic
+% advantages of surface analysis.
+
+%% Atlas mapping to surface
+% Several atlases have been defined in volumetric space with particular
+% care for alignment. These atlas have predefined sourcespaces, and there's
+% some built in awareness of target surfaces, so these will automatically
+% render correctlly. Consider canlab2024,
+
+canlab2024 = load_atlas('canlab2024_fsl6');
+disp(canlab2024.space_description)
+
+%%
+canlab2024 = load_atlas('canlab2024');
+disp(canlab2024.space_description)
+
+%%
+canlab2024 = canlab2024.threshold(0.2); % let's threshold for a better gray matter ribbon
+
+% It's available in multiple spaces, but you don't need to worry about
+% wihch for rendering purposes because it's recorded internally.
+figure;
+canlab2024.montage('freesurfer inflated')
+
+%%
+% It's available in multiple spaces, but you don't need to worry about
+% wihch for rendering purposes because it's recorded internally. However,
+% we can overwrite it, which is useful to illustrate the kinds of subtle
+% problems that arise when you're missampling surfaces, ones that are much
+% easier to identify by eye in discrete parcellations than continuous 
+% activation maps.
+figure;
+canlab2024.montage('sourcespace',[], 'freesurfer inflated');
+%%
+% even on big brain, which in the case of our contrast map above looked
+% decent, the atlas does not look good without proper surface projection
+figure;
+canlab2024.montage('full2')
+%%
+% it doesn't look any better on hcp surfaces, even though if you look at the
+% volumetric data the atlas follows the gray matter ribbon very closely. 
+% You'd never want to publish a figure like this.
+figure;
+canlab2024.montage('sourcespace', [], 'full hcp')
+%%
+% But with surface projection enabled, the holes in the map go away, and
+% things are a bit closer to being publication ready.
+figure;
+canlab2024.montage('sourcespace', 'MNI152NLin2009cAsym', 'full hcp')
+
+% These concerns about mismatches between templates, whether surface or
+% volumetric, affect atlas parcel definitions. If you look carefully at
+% load_atlas' help you'll see that many atlases have options for selecting
+% a source space, either fmriprep20, which is MNI152NLin2009cAsym, or fsl6,
+% which MNI152NLin6Asym. This is to facilitate working with different data
+% types. Atlases that were defined in surface space (e.g. Glasser) were
+% projected to their target spaces using registration fusion, so they're a
+% bit more accurate than these renderings you see here. For atlases defined
+% in surface space you're best off rendering the surface data directly
+% rather than taking the volumetric version of the surface data and trying
+% to back project it. Something will always be lost in translation.
+
+%% Plotting surface data to surfaces
+% For the most part surface analysis is not supported by canlabCore, but
+% for the sake of basic visualization I (BP) have started a new repo that
+% currently has a couple of low level functions that may help to do things
+% like plot surface formatted atlases to surface meshes. 
+
+addpath(genpath('/home/bogdan/.matlab/canlab/canlabSurface'));
+
+%%
+% For the most part, Neuroimaging_Pattern_Masks (where all our atlases are), 
+% contains all the data needed to regenerate them from source materials. 
+% In the case of atlases defined in surface formats like Glasser et al's 
+% HCP MMP 1.0, that means the surface files are available, and you can
+% render to surface meshes that match their vertex indicing.
+%
+% This latter point is imporant. Vertices are not in the same order across
+% all surfaces, even surfaces that sample the same space like fsaverage and
+% HCP 32k. The corresponding surface should be clear from the filenames
+% though. Let's start with glasser. Navigate to the Glasser atlas folder in
+% Neuroimaging_Pattern_Masks and find the surface (gifti) files,
+% Atlases_and_parcellations/2016_Glasser_Nature_HumanConnectomeParcellation/
+% You'll see they're called Glasser_2016.32k.[LR].label.gii. 32k indicates
+% the HCP surface, so let's load it. Surfaces can be found in,
+% CanlabCore/canlab_canonical_brains/Canonical_brains_surfaces/, and the
+% gifti function comes from spm.
+
+surfL = gifti(which('S1200.L.midthickness_MSMAll.32k_fs_LR.surf.gii'))
+surfR = gifti(which('S1200.R.midthickness_MSMAll.32k_fs_LR.surf.gii'))
+
+glasserL = gifti(which('Glasser_2016.32k.L.label.gii'))
+glasserR = gifti(which('Glasser_2016.32k.L.label.gii'))
+
+%%
+% Notice how gifti files can either contain data or surface information.
+% This separation is a feature because it allows you to sample the same
+% data to multiple surfaces so long as they use the same coordinate system.
+% Here we're sampling to an inflated surface, but you could just as
+% easily sample to a midthickness surface, spherical surface, etc.
+
+%%
+% First thing we need to do is create an image and render some surfaces.
+figure;
+clf
+
+ax1 = subplot(2,2,1);
+s1 = render_surface(surfL.vertices, surfL.faces, ax1);
+
+ax2 = subplot(2,2,2);
+s2 = render_surface(surfR.vertices, surfR.faces, ax2, 'flip');
+
+ax3 = subplot(2,2,3);
+s3 = render_surface(surfL.vertices, surfL.faces, ax3, 'flip');
+
+ax4 = subplot(2,2,4);
+s4 = render_surface(surfR.vertices, surfR.faces, ax4);
+
+% now let's get a colormap to use when plotting. Surface label files
+% contain this information as metadata,
+
+cmapL = glasserL.labels.rgba(:,1:3);
+cmapR = glasserR.labels.rgba(:,1:3);
+
+% Now we need to plot data to these surfaces. Note, this function was
+% adapted from canlabCore's plot_to_surf. The documentation has not been
+% updated, and may not be accurate, but it should look very similarly.
+plot_surf_to_surf(glasserL.cdata, s1, 'colormap', cmapL, 'indexmap');
+plot_surf_to_surf(glasserR.cdata, s2, 'colormap', cmapR, 'indexmap');
+plot_surf_to_surf(glasserL.cdata, s3, 'colormap', cmapL, 'indexmap');
+plot_surf_to_surf(glasserR.cdata, s4, 'colormap', cmapR, 'indexmap');
+
+sgtitle('HCP MMP 1.0','FontWeight','bold','fontsize',16);
+
+% You can get a nicer layout by using tiledlayout + nexttile() instead of 
+% subplots, but I used subplots because it's simpler.
+
+%% Plotting grayordinate data
+% Plotting grayordinate data from cifti files isn't all that different from
+% plotting gifti data. The main difficulty arises from extracting
+% subcortical data and plotting it, but we're also going to dispense with
+% manual construction of our plotting layout and just use a convenience
+% function here.
+
+% You can look at the source code for this file you want to create some new
+% custom layouts. o2 represents the surface objects while o3 represents the 
+% subcortical surfaces. This function used tiledlayout instead of subplots
+% and t0 is a handle to this layout which lets you modify appearance.
+figure;
+[o2,o3, t0] = create_compact_hcp_grayordinate_figure('overlay', 'fsl6_hcp_template.nii.gz', 'nocolorbar');
+
+% Now let's import a cifti atlas. If you don't have this atlas you need to
+% run create_CANLab2024_atlas_prep.sh and create_CANLab2024_atlas_cifti.sh
+% in Neuroimaging_Pattern_Masks/Atlases_and_parcellations/2024_CANLab_atlas/src
+% (as well as load_atlas('canlab2024_fsl6'), but if you're following along
+% you'll have already invoked that above). You also need cifti_read from 
+% https://github.com/Washington-University/cifti-matlab
+addpath(genpath('/home/bogdan/.matlab/cifti-matlab'));
+cifti_obj = cifti_read(which('CANLab2024_MNI152NLin6Asym_coarse_2mm.dlabel.nii'));
+
+% cifti files are saved as xml files + a nifti component for volumetric
+% data representation, and it can be a pain to map some components from the
+% vectorized representation to their structures. I've created some utility
+% functions to facilitate this.
+canlab2024_cii = get_cifti_data(which('CANLab2024_MNI152NLin6Asym_coarse_2mm.dlabel.nii'));
+
+% colormaps are stored in very similar format as gifti files
+labels = cifti_obj.diminfo{2}.maps.table(2:end);
+cmap = zeros(length(labels),3);
+for i = 1:length(labels)
+    cmap(i,:) = labels(i).rgba(1:3);
+end
+
+% extracting subcortical data is quite annoying, so I've created a function
+% to facilitate it that returns an fmri_data object.
+vol = extract_vol_from_cifti(cifti_obj);
+
+% Now we can plot in similar manner to the gifti images. Note, input must
+% be a column vector.
+plot_surf_to_surf(canlab2024_cii.cortex_left', o2.surface{1}.object_handle, 'colormap', cmap, 'indexmap');
+plot_surf_to_surf(canlab2024_cii.cortex_right', o2.surface{2}.object_handle, 'colormap', cmap, 'indexmap');
+plot_surf_to_surf(canlab2024_cii.cortex_left', o2.surface{3}.object_handle, 'colormap', cmap, 'indexmap');
+plot_surf_to_surf(canlab2024_cii.cortex_right', o2.surface{4}.object_handle, 'colormap', cmap, 'indexmap');
+
+% now let's plot the subcortical data
+n_ctx_rois = unique([canlab2024_cii.cortex_left, canlab2024_cii.cortex_right]);
+vol.montage(o3,'indexmap',cmap)
+
+% Now let's add a title that doesn't overlap the plots by manipulating the
+% tile layouts y-axis length, and adjust the image width for a more compact
+% display
+t0.Position(4) = 0.85;
+
+pos = get(gcf,'Position');
+set(gcf,'Position',[pos(1:2), 420, 420]);
+
+t = sgtitle('CANLab2024','FontSize',16,'fontweight','bold');
+##### SOURCE END #####
+-->
+</body>
+</html>
