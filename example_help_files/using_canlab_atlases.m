@@ -168,28 +168,6 @@ subset.orthviews();
 subset.threshold(0.2).orthviews();
 
 %%
-% the probabilities sum to 1 in places where gray matter probability is 1
-% but may sum to lesser values in areas near tissue boundaries.
-% Additionally, some areas had no probabilities associated with them in
-% their native atlases and were given surrogate probabilities, in
-% particular the thalamic nuclei and Shen's brainstem regions. The latter
-% are basically filler regions to label voxels outside of Bianciardi's
-% nuclei.
-%
-% We can visualize thse tissue probabilities by taking the sum of
-% probability maps. This is an improvisation, but serves to illustrate what
-% kind of information is stored in the probability_maps field of atlas
-% objects.
-
-close all;
-
-pmap = sum(canlab2023_fine_fmriprep20_1mm.probability_maps,2);
-pimg = fmri_data();
-pimg = pimg.resample_space(canlab2023_fine_fmriprep20_1mm);
-pimg.dat = pmap;
-pimg.montage;
-
-%%
 % subregions of the atlas can be selected individually and there are
 % multiple ways to do this. The most basic involves selecting a single
 % region
@@ -387,7 +365,7 @@ canlab2023_l3_thr.montage(o2, 'indexmap', cmap, 'interp', 'nearest');
 
 
 %%
-% note how labes_4 has become labels_2 after downsampling
+% note how labels_3 has become labels_2 after downsampling
 
 canlab2023_insula = canlab2023_l3.select_atlas_subset('insula','labels_2');
 canlab2023_insula_L = canlab2023_insula.select_atlas_subset({'_L'});
@@ -419,6 +397,12 @@ colors = scn_standard_colors(1+num_regions(canlab2023_insula_L));
 colors = cat(1,colors{:});
 addblobs(o2, canlab2023_insula_L.threshold(0.2), 'indexmap', colors, 'interp', 'nearest');
 
+%%
+% Notice that if the parcel names in whatever label field you're working
+% with are too obscure for you to understand you can also gain insight into
+% their identity by inspecting associated higher order label fields. The
+% label_descriptions{} property has also been populated and may provide
+% useful information to help orient you.
 
 %% Atlas spaces and resolutions
 % Atlases are defined in particular spaces. This information is stored in
@@ -438,7 +422,7 @@ canlab2023_fsl6.montage(o2, 'indexmap', cmap, 'interp', 'nearest');
 
 %%
 % We can compare some parcels from this atlas and the fmriprep20 version by
-% overlaying blobs with transparency. Let's use V1 as an example plotting
+% overlaying blob outlines instead of patches. Let's use V1 as an example plotting
 % the fsl space parcel in green and the fmriprep space parcel in red. We
 % don't need to bother with the indexmap here because we're only plotting a
 % single region, so we use the default addblobs plots for simplicity.
@@ -501,6 +485,65 @@ canlab2023_fine_fmriprep20_1mm.select_atlas_subset(missing).orthviews();
 
 % You can find more details on template spaces in the README.md file here:
 % https://github.com/canlab/Neuroimaging_Pattern_Masks/tree/master/templates
+
+%% Parcel probabilities
+% Parcel probabilities indicate the likelihood that a a voxel would be
+% assigned a particular label. Strictly speaking they represent the
+% frequency with which a particlar labelwas asigned to a voxel the original 
+% study which produced the atlas, and as a result the precision is only as
+% good as the sample size in that study and the biases of that study. These
+% will vary from one study to the next, but as long as you interpret the
+% probabilities loosely they can still be helpful. 
+% 
+% For instance, for regions that are distinguished histologically, you may 
+% not be able to perform histology yourself but you can use probabilities 
+% from the histological sample used to produce say the hippocampal atlas, to 
+% infer how likely an activation focus is to belong to any of several 
+% neighboring regions. It bears remembering though that those probabilities
+% were estimated in an elderly person's brain (because that's usually who
+% donates their bodies to these studies) and so may be somewhat biased when
+% used to infer structure labels in say an undergraduate student.
+%
+% There are two structures here which do not have probablistic labels: the
+% thalamus and the shen brainstem regions (large patches, not the nuclei
+% which are from Bianciardi's brianstem atlas). The shen parcels are
+% basically just fillers, so it's not an issue. They've been gien
+% probabilistic values that will cede identities to other atlases where
+% they're available. The thalamic atlas however is totally bogus
+% probabilities and may be replaced by a more modern probablistic atlas as
+% a result.
+%
+% Those two caveates aside the probabilities are true probabilities in the
+% sense that they sum to 1 in places where gray matter probability is 1
+% but may sum to lesser values in areas near tissue boundaries. 
+%
+% We can visualize thse tissue probabilities by taking the sum of
+% probability maps. This is an improvisation, but serves to illustrate what
+% kind of information is stored in the probability_maps field of atlas
+% objects.
+
+close all;
+
+pmap = sum(canlab2023_fine_fmriprep20_1mm.probability_maps,2);
+pimg = fmri_data();
+pimg = pimg.resample_space(canlab2023_fine_fmriprep20_1mm);
+pimg.dat = pmap;
+pimg.montage;
+
+%%
+% Probablistic labels enable mixing and matching different atlases, since 
+% the probablistic labels should handle boundary delineation between 
+% regions of different atlases in a principled way.
+ 
+add example of atlas merging by replcaing CTI168 GP with Tian2020 GP
+
+Could also sho how you can replace CIT168 red nucleus with bianciardi red nucleus
+
+%%
+% Probablistic values also enables using this atlas as a prior for bayesian
+% updating of atlases or bayesian segmentations in novel participants 
+% (e.g. conditioning label identity on some functional/structural feature
+% that updates the atlas prior).
 
 %% Parcel Manipulations
 % In the course of developing CANLab2023 I also created two new functions

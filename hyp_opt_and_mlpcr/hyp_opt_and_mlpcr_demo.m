@@ -194,7 +194,7 @@ bmrk5pain = newdat; clear newdat;
 
 % zscore images if desired. We don't do it, but I mention this here to
 % emphasize that any data averaging should be performed BEFORE image 
-% scaling.
+% scaling.(
 
 %% prep metadata for cross validation
 % there are number of reasons to manually specify cross validation fold

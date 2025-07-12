@@ -8,7 +8,11 @@
 %
 % The CANlab object-oriented tools have methods built in for rendering
 % volume data on brain surfaces. They generally use Matlab's isosurface and
-% isocaps functions.
+% isocaps functions. These tools can (optionally) incorporate information
+% about source volumetric templates and target surface templates to more
+% accurately render surface plots, and the use of these features is highly
+% recommended. If enabled, MNISurf projection is used, as detailed by Wu et
+% al. (2018) Human Brain Mapping.
 %
 
 %% Prepare sample statistical results maps
@@ -27,10 +31,12 @@
 [test_images, names] = load_image_set('kragel18_alldata', 'noverbose');
 
 % This field contains a table object with metadata for each image:
-metadata = test_images.dat_descrip;
+
+metadata = test_images.metadata_table;
 metadata(1:5, :)                        % Show the first 5 rows
 
 % Here are the 3 domains:
+
 disp(unique(metadata.Domain))
 
 % Find all the images of "Neg_Emotion" and pull those into a separate
@@ -69,10 +75,12 @@ t_pain = ttest(pain, .001, 'fdr');
 
 % This generates a series of 6 surfaces of different types, including a
 % subcortical cutaway
+
 surface(t);
 drawnow, snapnow
 
 % This generates a different plot 
+
 create_figure('lateral surfaces');
 surface_handles = surface(t, 'foursurfaces', 'noverbose');
 snapnow
@@ -84,6 +92,53 @@ snapnow
 
 render_on_surface(t, surface_handles, 'colormap', 'summer');
 snapnow
+
+%% Using MNISurf volume to surface projection
+% The above plots are rendered by cross referencing the coordinates of
+% voxels in MNI space with the coordinates of vertices in a brain surface
+% object, "BigBrain" in this case. These vertices of corresponding anatomy
+% does not in general coincide across these volume and surface formats. For
+% instance, the coordinates of the cortical gray matter mantel in a brain
+% registered to the MNI152NLin2009cAsym volumetric template may fall
+% at a greater radial distance from the center of the brain than the
+% cortical mantel in bigbrain or vice versa resulting incorrect rendering 
+% of deep cortical signals from the volumetric data to superficial 
+% locations in the surface template.
+%
+% To address this issue we've run segmentations of MNI templates using
+% freesurfer to obtain template specific cortical surfaces. These
+% template specific surfaces were then registered and resampled to 
+% a couple surface templates, initially HCP's fsLR 32k and freesurfer's 
+% fsaverage 164k, although more may be added in the future. These are then 
+% used to establish voxel-to-surface interpolation maps which will 
+% generalize to a particular surface (e.g. HCP's fsLR 32k) at any 
+% particular level of inflation from uninflated to flat maps. In order to 
+% take advantage of this functionality you simply need to specify the 
+% source space (a MNI template) and a target surface (fsLR_32k or 
+% fsaverage164k)
+
+% Here is an example of the above data projected to the inflated fsLR 32k
+% surface used by HCP grayordinate formats.
+
+create_figure('lateral surfaces');
+surface_handles = surface(t, 'hcp inflated left')
+
+% Here is an example of the same data remapped with source and target
+% awareness
+create_figure('lateral surfaces');
+surface_handles = surface(t, 'hcp inflated left', 'sourcespace', 'MNI152NLin2009cAsym', 'targetsurface', 'fsLR_32k')
+
+% Although we do not in this case know precisely which sourcespace to use 
+% (the kragel dataset is a multistudy aggregate that likely was registered 
+% to multiple different MNI templates), you can still see what an impact 
+% using MNISurf projection can have. Notably, there is no MNISurf
+% projection for the bigbrain surfaces. In some cases, the targetsurface
+% may be detected automatically (e.g. if using canlab_results_fmridisplay()
+% presets), and can be ommitted, but if needed you will be prompted by a
+% warning and available options are enumerated. However, you must always
+% specify a sourcespace manually so pay attention to what templates your
+% volumetric data are registered too to be able to use this functionality
+% correctly.
 
 %% Using the fmridisplay object to create a registry of montages/surfaces
 % The fmridisplay object is an object class that stores information about a
@@ -163,6 +218,8 @@ snapnow
 %
 % Try |help addbrain| for a list of surfaces, and |help cluster_surf| for
 % other color/display/scaling options.
+%
+% Note: this step requires access to the MasksPrivate repo
 
 % Let's build a surface by starting with a group of thalamic nuclei, and
 % adding the parabrachial complex and the red nucleus.
@@ -214,6 +271,8 @@ drawnow, snapnow
 % These surfaces can be rotated too (or zoom in/out, pan, set lighting,
 % etc.) Let's shift the angle.
 
+axes(get(surface_handles(1),'Parent'));
+
 view(222, 15);          % rotate
 camzoom(0.8);           % zoom out
 
@@ -228,6 +287,8 @@ drawnow, snapnow
 
 create_figure('cutaways'); axis off
 surface_handles = addbrain('limbic');
+ax = gca
+ax.Position(1) = ax.Position(1) - 0.1; % to avoid colorbar overlap
 t.surface('surface_handles', surface_handles, 'noverbose');
 
 %% Removing blobs and re-adding new colors
@@ -325,7 +386,7 @@ drawnow, snapnow
 % bicolor split map will not be created:
 
 t = threshold(t_thr, [2 Inf], 'raw-between');
-render_on_surface(t, surface_handles, 'colormap', 'winter', 'clim', [2 6]);
+surface_handles = surface(t, 'coronal_slabs');
 drawnow, snapnow
 
 %% Creating isosurfaces
@@ -396,10 +457,12 @@ create_figure('cutaways'); axis off
 
 surface_handles = isosurface(anat, 'thresh', 140, 'nosmooth', 'xlim', [-Inf 0], 'YLim', [-30 Inf], 'ZLim', [-Inf 40]);
 
-render_on_surface(t, surface_handles, 'colormap', 'hot');
-
+axes(get(surface_handles(1),'Parent'))
 view(-127, 33);
 set(surface_handles, 'FaceAlpha', .85);
+
+render_on_surface(t, surface_handles);
+
 snapnow
 
 %% Explore on your own
