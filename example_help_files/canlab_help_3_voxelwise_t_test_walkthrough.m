@@ -137,10 +137,12 @@ table(r);
 % get t-statistics for all voxels. 
 
 t.fullpath = fullfile(pwd, 'example_t_image.nii');
-write(t)
+write(t, 'overwrite')
 
 % If we use the 'thresh' option, we'll write thresholded values:
-write(t, 'thresh')
+% (write() does not overwrite an existing file unless asked, and we just
+% wrote this path above, so pass 'overwrite' here too.)
+write(t, 'thresh', 'overwrite')
 
 t_reloaded = statistic_image(t.fullpath, 'type', 'generic');
 orthviews(t_reloaded)

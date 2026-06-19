@@ -27,7 +27,7 @@
 [test_images, names] = load_image_set('kragel18_alldata', 'noverbose');
 
 % This field contains a table object with metadata for each image:
-metadata = test_images.dat_descrip;
+metadata = test_images.metadata_table;
 metadata(1:5, :)                        % Show the first 5 rows
 
 % Here are the 3 domains:
