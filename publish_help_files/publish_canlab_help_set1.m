@@ -2,28 +2,34 @@
 % Loading and manipulating data 
 % -------------------------------------------------------------------------
 
-canlab_help_publish('canlab_help_1_installing_tools')
-canlab_help_publish('canlab_help_2_load_a_sample_dataset')
-canlab_help_publish('canlab_help_2b_basic_image_visualization')
-canlab_help_publish('canlab_help_2c_loading_datasets')
-canlab_help_publish('canlab_help_2b_basic_image_visualization')
-canlab_help_publish('canlab_help_4b_3D_visualization')
+canlab_help_publish('canlab_help_1_installing_tools') % 1.1
+canlab_help_publish('canlab_help_2_load_a_sample_dataset') % 1.3
+canlab_help_publish('canlab_help_2b_basic_image_visualization') % 1.4
+canlab_help_publish('canlab_help_2c_loading_datasets') % 1.5
+canlab_help_publish('canlab_help_2d_publish_a_report') % 1.6
 
 % -------------------------------------------------------------------------
 % Basic statistical tests
 % -------------------------------------------------------------------------
 
-canlab_help_publish('canlab_help_3_voxelwise_t_test_walkthrough')
-canlab_help_publish('canlab_help_3b_atlases_and_ROI_analysis')
-canlab_help_publish('canlab_help_4_masking_and_writing_nifti_files')
-canlab_help_publish('canlab_help_5_regression_walkthrough')
-canlab_help_publish('first_level_design_matrix_exploration')
+canlab_help_publish('canlab_help_3_voxelwise_t_test_walkthrough') %2.1
+canlab_help_publish('canlab_help_3b_atlases_and_ROI_analysis')  %2.2
+canlab_help_publish('canlab_help_4_masking_and_writing_nifti_files')  %2.3
+canlab_help_publish('canlab_help_4b_3D_visualization') % 2.4
+canlab_help_publish('canlab_help_5_regression_walkthrough') %2.6
+canlab_help_publish('first_level_design_matrix_exploration') %2.5
+
 
 % -------------------------------------------------------------------------
 % Multivariate prediction of outcomes
 % -------------------------------------------------------------------------
 
-canlab_help_publish('canlab_help_7_multivariate_prediction_basics')
+canlab_help_publish('canlab_help_7_multivariate_prediction_basics') %3.1
+
+canlab_help_publish('canlab_help_8_apply_pattern_of_interest') % 3.3; 
+% needs "/Users/torwager/Google
+% Drive/SHARED_DATASETS_gdrive/A_Multi_lab_world_map/2016_CORT_Nback_Stress/data/CORT_WM_data.mat".
+
 
 canlab_help_publish('compare_pain_patterns_sens_spec')
 
